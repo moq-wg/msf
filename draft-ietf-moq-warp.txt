@@ -5,14 +5,14 @@
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
 Intended status: Informational                                 L. Curley
-Expires: 11 April 2026                                            Twitch
+Expires: 25 April 2026                                            Twitch
                                                              V. Vasiliev
                                                                   Google
                                                            S. Nandakumar
                                                                    Cisco
                                                                 K. Pugin
                                                                     Meta
-                                                          8 October 2025
+                                                         22 October 2025
 
 
                          WARP Streaming Format
@@ -55,7 +55,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 11 April 2026.
+   This Internet-Draft will expire on 25 April 2026.
 
 Copyright Notice
 
@@ -94,30 +94,31 @@ Table of Contents
        5.1.10. Track namespace
        5.1.11. Track name
        5.1.12. Packaging
-       5.1.13. Track role
-       5.1.14. Is Live
-       5.1.15. Target latency
-       5.1.16. Track label
-       5.1.17. Render group
-       5.1.18. Alternate group
-       5.1.19. Initialization data
-       5.1.20. Dependencies
-       5.1.21. Temporal ID
-       5.1.22. Spatial ID
-       5.1.23. Codec
-       5.1.24. Mimetype
-       5.1.25. Framerate
-       5.1.26. Timescale
-       5.1.27. Bitrate
-       5.1.28. Width
-       5.1.29. Height
-       5.1.30. Audio sample rate
-       5.1.31. Channel configuration
-       5.1.32. Display width
-       5.1.33. Display height
-       5.1.34. Language
-       5.1.35. Parent name
-       5.1.36. Track duration
+       5.1.13. Event timeline type
+       5.1.14. Track role
+       5.1.15. Is Live
+       5.1.16. Target latency
+       5.1.17. Track label
+       5.1.18. Render group
+       5.1.19. Alternate group
+       5.1.20. Initialization data
+       5.1.21. Dependencies
+       5.1.22. Temporal ID
+       5.1.23. Spatial ID
+       5.1.24. Codec
+       5.1.25. Mimetype
+       5.1.26. Framerate
+       5.1.27. Timescale
+       5.1.28. Bitrate
+       5.1.29. Width
+       5.1.30. Height
+       5.1.31. Audio sample rate
+       5.1.32. Channel configuration
+       5.1.33. Display width
+       5.1.34. Display height
+       5.1.35. Language
+       5.1.36. Parent name
+       5.1.37. Track duration
      5.2.  Delta updates
      5.3.  Catalog Examples
        5.3.1.  Time-aligned Audio/Video Tracks with single quality
@@ -130,7 +131,8 @@ Table of Contents
        5.3.6.  Time-aligned Audio/Video Tracks with custom field
                values
        5.3.7.  Time-aligned VOD Audio/Video Tracks
-       5.3.8.  Terminating a live broadcast
+       5.3.8.  Media timeline and Event timeline
+       5.3.9.  Terminating a live broadcast
    6.  Media transmission
      6.1.  Group numbering
    7.  Media Timeline track
@@ -143,7 +145,7 @@ Table of Contents
      8.3.  Event Timeline track updating
      8.4.  Event timeline track examples
        8.4.1.  Event timeline track with wallclock time indexing
-       8.4.2.  Event timeline track with Location indexing
+       8.4.2.  Event timeline track with MOQT Location indexing
    9.  Workflow
      9.1.  Initiating a broadcast
      9.2.  Ending a live broadcast
@@ -340,53 +342,55 @@ Table of Contents
         +-----------------------+---------------+----------------+
         | Packaging             | packaging     | Section 5.1.12 |
         +-----------------------+---------------+----------------+
-        | Is Live               | isLive        | Section 5.1.14 |
+        | Event timeline type   | eventType     | Section 5.1.13 |
         +-----------------------+---------------+----------------+
-        | Target latency        | targetLatency | Section 5.1.15 |
+        | Is Live               | isLive        | Section 5.1.15 |
         +-----------------------+---------------+----------------+
-        | Track role            | role          | Section 5.1.13 |
+        | Target latency        | targetLatency | Section 5.1.16 |
         +-----------------------+---------------+----------------+
-        | Track label           | label         | Section 5.1.16 |
+        | Track role            | role          | Section 5.1.14 |
         +-----------------------+---------------+----------------+
-        | Render group          | renderGroup   | Section 5.1.17 |
+        | Track label           | label         | Section 5.1.17 |
         +-----------------------+---------------+----------------+
-        | Alternate group       | altGroup      | Section 5.1.18 |
+        | Render group          | renderGroup   | Section 5.1.18 |
         +-----------------------+---------------+----------------+
-        | Initialization data   | initData      | Section 5.1.19 |
+        | Alternate group       | altGroup      | Section 5.1.19 |
         +-----------------------+---------------+----------------+
-        | Dependencies          | depends       | Section 5.1.20 |
+        | Initialization data   | initData      | Section 5.1.20 |
         +-----------------------+---------------+----------------+
-        | Temporal ID           | temporalId    | Section 5.1.21 |
+        | Dependencies          | depends       | Section 5.1.21 |
         +-----------------------+---------------+----------------+
-        | Spatial ID            | spatialId     | Section 5.1.22 |
+        | Temporal ID           | temporalId    | Section 5.1.22 |
         +-----------------------+---------------+----------------+
-        | Codec                 | codec         | Section 5.1.23 |
+        | Spatial ID            | spatialId     | Section 5.1.23 |
         +-----------------------+---------------+----------------+
-        | Mime type             | mimeType      | Section 5.1.24 |
+        | Codec                 | codec         | Section 5.1.24 |
         +-----------------------+---------------+----------------+
-        | Framerate             | framerate     | Section 5.1.25 |
+        | Mime type             | mimeType      | Section 5.1.25 |
         +-----------------------+---------------+----------------+
-        | Timescale             | timescale     | Section 5.1.26 |
+        | Framerate             | framerate     | Section 5.1.26 |
         +-----------------------+---------------+----------------+
-        | Bitrate               | bitrate       | Section 5.1.27 |
+        | Timescale             | timescale     | Section 5.1.27 |
         +-----------------------+---------------+----------------+
-        | Width                 | width         | Section 5.1.28 |
+        | Bitrate               | bitrate       | Section 5.1.28 |
         +-----------------------+---------------+----------------+
-        | Height                | height        | Section 5.1.29 |
+        | Width                 | width         | Section 5.1.29 |
         +-----------------------+---------------+----------------+
-        | Audio sample rate     | samplerate    | Section 5.1.30 |
+        | Height                | height        | Section 5.1.30 |
         +-----------------------+---------------+----------------+
-        | Channel configuration | channelConfig | Section 5.1.31 |
+        | Audio sample rate     | samplerate    | Section 5.1.31 |
         +-----------------------+---------------+----------------+
-        | Display width         | displayWidth  | Section 5.1.32 |
+        | Channel configuration | channelConfig | Section 5.1.32 |
         +-----------------------+---------------+----------------+
-        | Display height        | displayHeight | Section 5.1.33 |
+        | Display width         | displayWidth  | Section 5.1.33 |
         +-----------------------+---------------+----------------+
-        | Language              | lang          | Section 5.1.34 |
+        | Display height        | displayHeight | Section 5.1.34 |
         +-----------------------+---------------+----------------+
-        | Parent name           | parentName    | Section 5.1.35 |
+        | Language              | lang          | Section 5.1.35 |
         +-----------------------+---------------+----------------+
-        | Track duration        | trackDuration | Section 5.1.36 |
+        | Parent name           | parentName    | Section 5.1.36 |
+        +-----------------------+---------------+----------------+
+        | Track duration        | trackDuration | Section 5.1.37 |
         +-----------------------+---------------+----------------+
 
                                  Table 1
@@ -447,7 +451,7 @@ Table of Contents
    Indicates a delta processing instruction to clone new tracks from
    previously declared tracks.  The value of this field is an Array of
    track objects Section 5.1.9.  Each track object MUST include a Parent
-   Name Section 5.1.35 field.
+   Name Section 5.1.36 field.
 
 5.1.6.  Generated at
 
@@ -518,7 +522,19 @@ Table of Contents
 
                                  Table 3
 
-5.1.13.  Track role
+5.1.13.  Event timeline type
+
+   Location: T Required: Optional JSON Type: String
+
+   A String defining the type & structure of the data contained within
+   the data field of the Event timeline track.  Types are defined by the
+   application provider and are not centrally registered.  Implementers
+   are encouraged to use a unique naming scheme, such as Reverse Domain
+   Name Notation, to avoid naming collisions.  This field is required if
+   the Section 5.1.12 value is "eventtimeline".  This field MUST NOT be
+   used if the packaging value is not "eventtimeline".
+
+5.1.14.  Track role
 
    Location: T Required: Optional JSON Type: String
 
@@ -527,7 +543,7 @@ Table of Contents
    case-sensitive.
 
    This role field MAY be used in conjunction with the Mimetype
-   Section 5.1.24 to fully describe the content of the track.
+   Section 5.1.25 to fully describe the content of the track.
 
    Table 4: Reserved track roles
 
@@ -562,7 +578,7 @@ Table of Contents
    Custom roles MAY be used as long as they do not collide with the
    specified roles.
 
-5.1.14.  Is Live
+5.1.15.  Is Live
 
    Location: T Required: Required JSON Type: Boolean
 
@@ -571,7 +587,7 @@ Table of Contents
    conditions: * the publisher of a previously live track has ended the
    track. * the track is Video-On-Demand (VOD) and was never live.
 
-5.1.15.  Target latency
+5.1.16.  Target latency
 
    Location: T Required: Optional JSON Type: Number
 
@@ -587,7 +603,7 @@ Table of Contents
    then the player MAY choose the latency with which it renders the
    content.
 
-5.1.16.  Track label
+5.1.17.  Track label
 
    Location: T Required: Optional JSON Type: String
 
@@ -595,7 +611,7 @@ Table of Contents
    might be "Overhead camera view" or "Deutscher Kommentar".  Note that
    the [JSON] spec requires UTF-8 support by decoders.
 
-5.1.17.  Render group
+5.1.18.  Render group
 
    Location: T Required: Optional JSON Type: Number
 
@@ -605,7 +621,7 @@ Table of Contents
    accompany one another.  A common example would be tying together
    audio and video tracks.
 
-5.1.18.  Alternate group
+5.1.19.  Alternate group
 
    Location: T Required: Optional JSON Type: Number
 
@@ -617,14 +633,14 @@ Table of Contents
    number.  A common example would be a set video tracks of the same
    content offered in alternate bitrates.
 
-5.1.19.  Initialization data
+5.1.20.  Initialization data
 
    Location: T Required: Optional JSON Type: String
 
    A string holding Base64 [BASE64] encoded initialization data for the
    track.
 
-5.1.20.  Dependencies
+5.1.21.  Dependencies
 
    Location: T Required: Optional JSON Type: Array
 
@@ -634,7 +650,7 @@ Table of Contents
    namespace of the dependencies is assumed to match that of the track
    declaring the dependencies.
 
-5.1.21.  Temporal ID
+5.1.22.  Temporal ID
 
    Location: T Required: Optional JSON Type: Number
 
@@ -642,7 +658,7 @@ Table of Contents
    track, starting with 0 for the base layer, and increasing by 1 for
    the next higher temporal fidelity.
 
-5.1.22.  Spatial ID
+5.1.23.  Spatial ID
 
    Location: T Required: Optional JSON Type: Number
 
@@ -650,7 +666,7 @@ Table of Contents
    starting with 0 for the base layer, and increasing by 1 for the next
    higher fidelity.
 
-5.1.23.  Codec
+5.1.24.  Codec
 
    Location: T Required: Optional JSON Type: String
 
@@ -658,51 +674,51 @@ Table of Contents
    packaged content, the string codec registrations are defined in Sect
    3 and Section 4 of [WEBCODECS-CODEC-REGISTRY].
 
-5.1.24.  Mimetype
+5.1.25.  Mimetype
 
    Location: T Required: Optional JSON Type: String
 
    A string defining the mime type [MIME] of the track.
 
-5.1.25.  Framerate
+5.1.26.  Framerate
 
    Location: T Required: Optional JSON Type: Number
 
    A number defining the video framerate of the track, expressed as
    frames per second.
 
-5.1.26.  Timescale
+5.1.27.  Timescale
 
    Location: T Required: Optional JSON Type: Number
 
    The number of time units that pass per second.
 
-5.1.27.  Bitrate
+5.1.28.  Bitrate
 
    Location: T Required: Optional JSON Type: Number
 
    A number defining the bitrate of track, expressed in bits per second.
 
-5.1.28.  Width
+5.1.29.  Width
 
    Location: T Required: Optional JSON Type: Number
 
    A number expressing the encoded width of the video frames in pixels.
 
-5.1.29.  Height
+5.1.30.  Height
 
    Location: T Required: Optional JSON Type: Number
 
    A number expressing the encoded height of the video frames in pixels.
 
-5.1.30.  Audio sample rate
+5.1.31.  Audio sample rate
 
    Location: T Required: Optional JSON Type: Number
 
    The number of audio frame samples per second.  This property SHOULD
    only accompany audio codecs.
 
-5.1.31.  Channel configuration
+5.1.32.  Channel configuration
 
    Location: T Required: Optional JSON Type: String
 
@@ -711,21 +727,21 @@ Table of Contents
    provide the flexibility to describe complex channel configurations
    for multi-channel and Next Generation Audio schemas.
 
-5.1.32.  Display width
+5.1.33.  Display width
 
    Location: T Required: Optional JSON Type: Number
 
    A number expressing the intended display width of the track content
    in pixels.
 
-5.1.33.  Display height
+5.1.34.  Display height
 
    Location: T Required: Optional JSON Type: Number
 
    A number expressing the intended display height of the track content
    in pixels.
 
-5.1.34.  Language
+5.1.35.  Language
 
    Location: T Required: Optional JSON Type: String
 
@@ -733,7 +749,7 @@ Table of Contents
    MUST be one of the standard Tags for Identifying Languages as defined
    by [LANG].
 
-5.1.35.  Parent name
+5.1.36.  Parent name
 
    Location: T Required: Optional JSON Type: String
 
@@ -741,12 +757,12 @@ Table of Contents
    This field MUST only be included inside a Clone tracks Section 5.1.5
    object.
 
-5.1.36.  Track duration
+5.1.37.  Track duration
 
    Location: T Required: Optional JSON Type: Number
 
    The duration of the track expressed in integer milliseconds.  This
-   field MUST NOT be included if the isLive Section 5.1.14 field value
+   field MUST NOT be included if the isLive Section 5.1.15 field value
    is true.
 
 5.2.  Delta updates
@@ -782,7 +798,7 @@ Table of Contents
       continues until all operations are successfully applied.
 
    *  A Cloned track inherits all the attributes of the track defined by
-      the Parent Name Section 5.1.35, except the Track Name which MUST
+      the Parent Name Section 5.1.36, except the Track Name which MUST
       be new.  Attributes redefined in the cloning Object overwrite
       inherited values.
 
@@ -1130,7 +1146,63 @@ Table of Contents
       ]
    }
 
-5.3.8.  Terminating a live broadcast
+5.3.8.  Media timeline and Event timeline
+
+   This example shows a catalog for a media producer capable of sending
+   LOC packaged, time-aligned audio and video tracks, along with a Media
+   Timeline which describes the history of those tracks and an Event
+   Timeline providing synchronized data.
+
+   {
+     "version": 1,
+     "generatedAt": 1746104606044,
+     "tracks": [
+       {
+         "name": "history",
+         "namespace": "conference.example.com/conference123/alice",
+         "packaging": "mediatimeline",
+         "mimetype": "application/json",
+         "depends": ["1080p-video","audio"],
+       },
+       {
+         "name": "identified-objects",
+         "namespace": "another-provider/time-synchronized-data",
+         "packaging": "eventtimeline",
+         "eventTimelineType": "com.ai-extraction/appID/v3"
+         "mimetype": "application/json",
+         "depends": ["1080p-video"],
+       },
+       {
+         "name": "1080p-video",
+         "namespace": "conference.example.com/conference123/alice",
+         "packaging": "loc",
+         "isLive": true,
+         "targetLatency": 2000,
+         "role": "video",
+         "renderGroup": 1,
+         "codec":"av01.0.08M.10.0.110.09",
+         "width":1920,
+         "height":1080,
+         "framerate":30,
+         "bitrate":1500000
+       },
+       {
+         "name": "audio",
+         "namespace": "conference.example.com/conference123/alice",
+         "packaging": "loc",
+         "isLive": true,
+         "targetLatency": 2000,
+         "role": "audio",
+         "renderGroup": 1,
+         "codec":"opus",
+         "samplerate":48000,
+         "channelConfig":"2",
+         "bitrate":32000
+       }
+      ]
+   }
+
+5.3.9.  Terminating a live broadcast
 
    This example shows catalog for a media producer terminating a
    previously live broadcast containing a video and an audio track.
@@ -1173,53 +1245,49 @@ Table of Contents
    groups and their relationship to wallclock time and media time.
    Media timeline tracks allow players to seek to precise points behind
    the live head in a live broadcast, or for random access in a VOD
-   asset.  The optional metadata can describe a characteristic of any
-   record in the media timeline.  Media timeline tracks are optional.
-   Multiple media timeline tracks can exist inside a catalog.
+   asset.  Media timeline tracks are optional.  Multiple media timeline
+   tracks can exist inside a catalog.
 
 7.1.  Media Timeline track payload
 
-   The payload of a media timeline track is a UTF-8 encoded CSV text
-   file.  This payload is formatted according to RFC4180 "Common Format
-   and MIME Type for Comma-Separated Values (CSV)" Files [RFC4180].  The
-   separator is a comma and each line is separated by a carriage return.
-   The mime-type of a media timeline track MUST be specified as "text/
-   csv" in the catalog.
+   A media timeline track is a JSON [JSON] document.  This document MAY
+   be compressed using GZIP [GZIP].  The document contains an array of
+   records.  Each record consists of an array of three required items,
+   whose ordinal position defines their type:
 
-   Each media timeline track begins with a header row of GROUP_ID,
-   OBJECT_ID, MEDIA_PTS, WALLCLOCK,METADATA.  This row defines the 5
-   columns of data within each record.
+   *  The first item holds the media presentation timestamp, expressed
+      as a JSON Number.  This value MUST match the media presentation
+      timestamp, rounded to the nearest millisecond, of the first media
+      sample in the referenced Object
 
-   *  GROUP_ID: the MOQT Group ID.  This entry MUST not be empty.
+   *  The second item holds the MOQT Location of the entry, defined as a
+      tuple of the MOQT Group ID and MOQT Object ID, and expressed as a
+      JSON Array of Numbers, where the first number is the Group ID and
+      the second number is the Object ID.
 
-   *  OBJECT_ID: the MOQT Object ID.  This entry MAY be empty.  If this
-      entry is present and equal to -1, then Object ID is unknown.
-      Otherwise if this entry is absent, then the Object ID is 0.
+   *  The third time holds the wallclock time at which the media was
+      encoded, defined as the number of milliseconds that have elapsed
+      since January 1, 1970 (midnight UTC/GMT) and expressed as a JSON
+      Number.  For VOD assets, or if the wallclock time is not known,
+      the value SHOULD be 0.
 
-   *  MEDIA_PTS: a media timestamp rounded to the nearest millisecond.
-      This entry MUST NOT be empty.  If the Object ID entry is present
-      and equal to -1, this value MUST match the media presentation
-      timestamp of the first media sample in an Object that is in the
-      Group but is not the first Object in the Group.  Otherwise, this
-      value MUST match the media presentation timestamp of the first
-      media sample in the referenced Object.
+   An example media timeline is shown below:
 
-   *  WALLCLOCK: the wallclock time at which the media was encoded,
-      expressed as the number of milliseconds that have elapsed since
-      January 1, 1970 (midnight UTC/GMT).  For VOD assets, or if the
-      wallclock time is not known, the value SHOULD be 0.
-
-   *  METADATA: a flexible field holding arbitrary string metadata.
-      This field may be empty.  If not empty, it MUST be enclosed in
-      double quotes.  A double-quote appearing inside this field MUST be
-      escaped by preceding it with another double quote.
+   [
+     [0, [0,0], 1759924158381],
+     [2002, [1,0], 1759924160383],
+     [4004, [2,0], 1759924162385],
+     [6006, [3,0], 1759924164387],
+     [8008, [4,0], 1759924166389]
+   ]
 
 7.2.  Media Timeline Catalog requirements
 
    A media timeline track MUST carry a 'type' identifier in the Catalog
    with a value of "mediatimeline".  A media timeline track MUST carry a
    'depends' attribute which contains an array of all track names to
-   which the media timeline track applies.
+   which the media timeline track applies.  The mime-type of a media
+   timeline track MUST be specified as "application/json".
 
 7.3.  Media Timeline track updating
 
@@ -1242,7 +1310,9 @@ Table of Contents
    Location.
 
    Event timeline tracks are optional.  Multiple event timeline tracks
-   can exist inside a catalog.
+   can exist inside a catalog.  The type & structure of the data
+   contained within each event timeline track is declared in the
+   catalog, to facilitate client selection and parsing.
 
 8.1.  Event Timeline data format
 
@@ -1261,20 +1331,22 @@ Table of Contents
       Array of Numbers, where the first item represents the MOQT GroupID
       and the second item the MOQT Object ID.
 
-   *  A 'type' field, which is a String defining the type of data
-      contained within the data field.  Types are defined by the
-      application provider and are not centrally registered.
-      Implementers are encouraged to use a unique naming scheme, such as
-      Reverse Domain Name Notation, to avoid naming collisions.
-
-   *  A 'data' Object, whose structure is defined by the 'type' value.
+   *  A 'data' Object, whose structure is defined by the Section 5.1.13
+      value declared for this track in the Catalog.
 
 8.2.  Event Timeline Catalog requirements
 
-   An event timeline track MUST carry a 'type' identifier in the Catalog
-   with a value of "eventtimeline".  An event timeline track MUST carry
-   a 'depends' attribute which contains an array of all track names to
-   which the event timeline track applies.
+   An event timeline track MUST carry:
+
+   *  a Section 5.1.12 attribute with a value of "eventtimeline".
+
+   *  a Section 5.1.21 attribute which contains an array of all track
+      names to which the event timeline track applies.
+
+   *  a Section 5.1.25 attribute with a value of "application/json".
+
+   *  an Section 5.1.13 attribute declaring the type & structure of data
+      contained in the event timeline track.
 
 8.3.  Event Timeline track updating
 
@@ -1294,7 +1366,6 @@ Table of Contents
    [
        {
            "t": 1756885678361,
-           "type": "com.example.custom.live-score-data",
            "data": {
                "status": "in_progress",
                "period": 1,
@@ -1306,7 +1377,6 @@ Table of Contents
        },
        {
            "t": 1756885981542,
-           "type": "com.example.custom.live-score-data",
            "data": {
                "status": "in_progress",
                "period": 1,
@@ -1318,7 +1388,7 @@ Table of Contents
        }
    ]
 
-8.4.2.  Event timeline track with Location indexing
+8.4.2.  Event timeline track with MOQT Location indexing
 
    This example shows drone GPS coordinates synched with the start of
    each Group.
@@ -1326,12 +1396,10 @@ Table of Contents
    [
        {
            "l": [0,0],
-           "type": "org.example-tracking.gps",
            "data": [47.1812,8.4592]
        },
        {
            "l": [1,0],
-           "type": "org.example-tracking.gps",
            "data": [47.1662,8.5155]
        }
    ]
@@ -1355,8 +1423,8 @@ Table of Contents
 
    *  If the live stream is being converted instantly to a VOD asset,
       then publish an independent (non-delta) catalog update which, for
-      each track, sets isLive Section 5.1.14 to FALSE and adds a track
-      duration Section 5.1.36 field.
+      each track, sets isLive Section 5.1.15 to FALSE and adds a track
+      duration Section 5.1.37 field.
 
    *  If the live stream is being terminated permanently without
       conversion to VOD, then publish an independent catalog update

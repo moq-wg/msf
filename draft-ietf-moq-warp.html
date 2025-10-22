@@ -13,24 +13,23 @@
 <meta content="
        This document specifies the WARP Streaming Format, designed to operate on Media Over QUIC Transport. 
     " name="description">
-<meta content="xml2rfc 3.30.2" name="generator">
+<meta content="xml2rfc 3.31.0" name="generator">
 <meta content="MoQ" name="keyword">
 <meta content="MoQTransport" name="keyword">
 <meta content="WARP" name="keyword">
 <meta content="draft-ietf-moq-warp-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.30.2
-    Python 3.12.11
+  xml2rfc 3.31.0
+    Python 3.12.12
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
     intervaltree 3.1.0
     Jinja2 3.1.6
     lxml 5.3.1
-    platformdirs 4.4.0
+    platformdirs 4.5.0
     pycountry 24.6.1
     PyYAML 6.0.2
     requests 2.32.5
-    setuptools 80.9.0
     wcwidth 0.2.14
 -->
 <link href="draft-ietf-moq-warp.xml" rel="alternate" type="application/rfc+xml">
@@ -1054,7 +1053,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Law, et al.</td>
-<td class="center">Expires 11 April 2026</td>
+<td class="center">Expires 25 April 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1067,12 +1066,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-moq-warp-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-10-08" class="published">8 October 2025</time>
+<time datetime="2025-10-22" class="published">22 October 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-04-11">11 April 2026</time></dd>
+<dd class="expires"><time datetime="2026-04-25">25 April 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1138,7 +1137,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 11 April 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 25 April 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1233,76 +1232,79 @@ svg :is([fill="white"], [fill^="#fff"]) {
                     <p id="section-toc.1-1.5.2.1.2.12.1"><a href="#section-5.1.12" class="auto internal xref">5.1.12</a>. <a href="#name-packaging" class="internal xref">Packaging</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.13">
-                    <p id="section-toc.1-1.5.2.1.2.13.1"><a href="#section-5.1.13" class="auto internal xref">5.1.13</a>. <a href="#name-track-role" class="internal xref">Track role</a></p>
+                    <p id="section-toc.1-1.5.2.1.2.13.1"><a href="#section-5.1.13" class="auto internal xref">5.1.13</a>. <a href="#name-event-timeline-type" class="internal xref">Event timeline type</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.14">
-                    <p id="section-toc.1-1.5.2.1.2.14.1"><a href="#section-5.1.14" class="auto internal xref">5.1.14</a>. <a href="#name-is-live" class="internal xref">Is Live</a></p>
+                    <p id="section-toc.1-1.5.2.1.2.14.1"><a href="#section-5.1.14" class="auto internal xref">5.1.14</a>. <a href="#name-track-role" class="internal xref">Track role</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.15">
-                    <p id="section-toc.1-1.5.2.1.2.15.1"><a href="#section-5.1.15" class="auto internal xref">5.1.15</a>. <a href="#name-target-latency" class="internal xref">Target latency</a></p>
+                    <p id="section-toc.1-1.5.2.1.2.15.1"><a href="#section-5.1.15" class="auto internal xref">5.1.15</a>. <a href="#name-is-live" class="internal xref">Is Live</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.16">
-                    <p id="section-toc.1-1.5.2.1.2.16.1"><a href="#section-5.1.16" class="auto internal xref">5.1.16</a>. <a href="#name-track-label" class="internal xref">Track label</a></p>
+                    <p id="section-toc.1-1.5.2.1.2.16.1"><a href="#section-5.1.16" class="auto internal xref">5.1.16</a>. <a href="#name-target-latency" class="internal xref">Target latency</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.17">
-                    <p id="section-toc.1-1.5.2.1.2.17.1"><a href="#section-5.1.17" class="auto internal xref">5.1.17</a>. <a href="#name-render-group" class="internal xref">Render group</a></p>
+                    <p id="section-toc.1-1.5.2.1.2.17.1"><a href="#section-5.1.17" class="auto internal xref">5.1.17</a>. <a href="#name-track-label" class="internal xref">Track label</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.18">
-                    <p id="section-toc.1-1.5.2.1.2.18.1"><a href="#section-5.1.18" class="auto internal xref">5.1.18</a>. <a href="#name-alternate-group" class="internal xref">Alternate group</a></p>
+                    <p id="section-toc.1-1.5.2.1.2.18.1"><a href="#section-5.1.18" class="auto internal xref">5.1.18</a>. <a href="#name-render-group" class="internal xref">Render group</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.19">
-                    <p id="section-toc.1-1.5.2.1.2.19.1"><a href="#section-5.1.19" class="auto internal xref">5.1.19</a>. <a href="#name-initialization-data" class="internal xref">Initialization data</a></p>
+                    <p id="section-toc.1-1.5.2.1.2.19.1"><a href="#section-5.1.19" class="auto internal xref">5.1.19</a>. <a href="#name-alternate-group" class="internal xref">Alternate group</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.20">
-                    <p id="section-toc.1-1.5.2.1.2.20.1"><a href="#section-5.1.20" class="auto internal xref">5.1.20</a>. <a href="#name-dependencies" class="internal xref">Dependencies</a></p>
+                    <p id="section-toc.1-1.5.2.1.2.20.1"><a href="#section-5.1.20" class="auto internal xref">5.1.20</a>. <a href="#name-initialization-data" class="internal xref">Initialization data</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.21">
-                    <p id="section-toc.1-1.5.2.1.2.21.1"><a href="#section-5.1.21" class="auto internal xref">5.1.21</a>. <a href="#name-temporal-id" class="internal xref">Temporal ID</a></p>
+                    <p id="section-toc.1-1.5.2.1.2.21.1"><a href="#section-5.1.21" class="auto internal xref">5.1.21</a>. <a href="#name-dependencies" class="internal xref">Dependencies</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.22">
-                    <p id="section-toc.1-1.5.2.1.2.22.1"><a href="#section-5.1.22" class="auto internal xref">5.1.22</a>. <a href="#name-spatial-id" class="internal xref">Spatial ID</a></p>
+                    <p id="section-toc.1-1.5.2.1.2.22.1"><a href="#section-5.1.22" class="auto internal xref">5.1.22</a>. <a href="#name-temporal-id" class="internal xref">Temporal ID</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.23">
-                    <p id="section-toc.1-1.5.2.1.2.23.1"><a href="#section-5.1.23" class="auto internal xref">5.1.23</a>. <a href="#name-codec" class="internal xref">Codec</a></p>
+                    <p id="section-toc.1-1.5.2.1.2.23.1"><a href="#section-5.1.23" class="auto internal xref">5.1.23</a>. <a href="#name-spatial-id" class="internal xref">Spatial ID</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.24">
-                    <p id="section-toc.1-1.5.2.1.2.24.1"><a href="#section-5.1.24" class="auto internal xref">5.1.24</a>. <a href="#name-mimetype" class="internal xref">Mimetype</a></p>
+                    <p id="section-toc.1-1.5.2.1.2.24.1"><a href="#section-5.1.24" class="auto internal xref">5.1.24</a>. <a href="#name-codec" class="internal xref">Codec</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.25">
-                    <p id="section-toc.1-1.5.2.1.2.25.1"><a href="#section-5.1.25" class="auto internal xref">5.1.25</a>. <a href="#name-framerate" class="internal xref">Framerate</a></p>
+                    <p id="section-toc.1-1.5.2.1.2.25.1"><a href="#section-5.1.25" class="auto internal xref">5.1.25</a>. <a href="#name-mimetype" class="internal xref">Mimetype</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.26">
-                    <p id="section-toc.1-1.5.2.1.2.26.1"><a href="#section-5.1.26" class="auto internal xref">5.1.26</a>. <a href="#name-timescale" class="internal xref">Timescale</a></p>
+                    <p id="section-toc.1-1.5.2.1.2.26.1"><a href="#section-5.1.26" class="auto internal xref">5.1.26</a>. <a href="#name-framerate" class="internal xref">Framerate</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.27">
-                    <p id="section-toc.1-1.5.2.1.2.27.1"><a href="#section-5.1.27" class="auto internal xref">5.1.27</a>. <a href="#name-bitrate" class="internal xref">Bitrate</a></p>
+                    <p id="section-toc.1-1.5.2.1.2.27.1"><a href="#section-5.1.27" class="auto internal xref">5.1.27</a>. <a href="#name-timescale" class="internal xref">Timescale</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.28">
-                    <p id="section-toc.1-1.5.2.1.2.28.1"><a href="#section-5.1.28" class="auto internal xref">5.1.28</a>. <a href="#name-width" class="internal xref">Width</a></p>
+                    <p id="section-toc.1-1.5.2.1.2.28.1"><a href="#section-5.1.28" class="auto internal xref">5.1.28</a>. <a href="#name-bitrate" class="internal xref">Bitrate</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.29">
-                    <p id="section-toc.1-1.5.2.1.2.29.1"><a href="#section-5.1.29" class="auto internal xref">5.1.29</a>. <a href="#name-height" class="internal xref">Height</a></p>
+                    <p id="section-toc.1-1.5.2.1.2.29.1"><a href="#section-5.1.29" class="auto internal xref">5.1.29</a>. <a href="#name-width" class="internal xref">Width</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.30">
-                    <p id="section-toc.1-1.5.2.1.2.30.1"><a href="#section-5.1.30" class="auto internal xref">5.1.30</a>. <a href="#name-audio-sample-rate" class="internal xref">Audio sample rate</a></p>
+                    <p id="section-toc.1-1.5.2.1.2.30.1"><a href="#section-5.1.30" class="auto internal xref">5.1.30</a>. <a href="#name-height" class="internal xref">Height</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.31">
-                    <p id="section-toc.1-1.5.2.1.2.31.1"><a href="#section-5.1.31" class="auto internal xref">5.1.31</a>. <a href="#name-channel-configuration" class="internal xref">Channel configuration</a></p>
+                    <p id="section-toc.1-1.5.2.1.2.31.1"><a href="#section-5.1.31" class="auto internal xref">5.1.31</a>. <a href="#name-audio-sample-rate" class="internal xref">Audio sample rate</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.32">
-                    <p id="section-toc.1-1.5.2.1.2.32.1"><a href="#section-5.1.32" class="auto internal xref">5.1.32</a>. <a href="#name-display-width" class="internal xref">Display width</a></p>
+                    <p id="section-toc.1-1.5.2.1.2.32.1"><a href="#section-5.1.32" class="auto internal xref">5.1.32</a>. <a href="#name-channel-configuration" class="internal xref">Channel configuration</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.33">
-                    <p id="section-toc.1-1.5.2.1.2.33.1"><a href="#section-5.1.33" class="auto internal xref">5.1.33</a>. <a href="#name-display-height" class="internal xref">Display height</a></p>
+                    <p id="section-toc.1-1.5.2.1.2.33.1"><a href="#section-5.1.33" class="auto internal xref">5.1.33</a>. <a href="#name-display-width" class="internal xref">Display width</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.34">
-                    <p id="section-toc.1-1.5.2.1.2.34.1"><a href="#section-5.1.34" class="auto internal xref">5.1.34</a>. <a href="#name-language" class="internal xref">Language</a></p>
+                    <p id="section-toc.1-1.5.2.1.2.34.1"><a href="#section-5.1.34" class="auto internal xref">5.1.34</a>. <a href="#name-display-height" class="internal xref">Display height</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.35">
-                    <p id="section-toc.1-1.5.2.1.2.35.1"><a href="#section-5.1.35" class="auto internal xref">5.1.35</a>. <a href="#name-parent-name" class="internal xref">Parent name</a></p>
+                    <p id="section-toc.1-1.5.2.1.2.35.1"><a href="#section-5.1.35" class="auto internal xref">5.1.35</a>. <a href="#name-language" class="internal xref">Language</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.36">
-                    <p id="section-toc.1-1.5.2.1.2.36.1"><a href="#section-5.1.36" class="auto internal xref">5.1.36</a>. <a href="#name-track-duration" class="internal xref">Track duration</a></p>
+                    <p id="section-toc.1-1.5.2.1.2.36.1"><a href="#section-5.1.36" class="auto internal xref">5.1.36</a>. <a href="#name-parent-name" class="internal xref">Parent name</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.37">
+                    <p id="section-toc.1-1.5.2.1.2.37.1"><a href="#section-5.1.37" class="auto internal xref">5.1.37</a>. <a href="#name-track-duration" class="internal xref">Track duration</a></p>
 </li>
                 </ul>
 </li>
@@ -1334,7 +1336,10 @@ svg :is([fill="white"], [fill^="#fff"]) {
                     <p id="section-toc.1-1.5.2.3.2.7.1"><a href="#section-5.3.7" class="auto internal xref">5.3.7</a>.  <a href="#name-time-aligned-vod-audio-vide" class="internal xref">Time-aligned VOD Audio/Video Tracks</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.3.2.8">
-                    <p id="section-toc.1-1.5.2.3.2.8.1"><a href="#section-5.3.8" class="auto internal xref">5.3.8</a>.  <a href="#name-terminating-a-live-broadcas" class="internal xref">Terminating a live broadcast</a></p>
+                    <p id="section-toc.1-1.5.2.3.2.8.1"><a href="#section-5.3.8" class="auto internal xref">5.3.8</a>.  <a href="#name-media-timeline-and-event-ti" class="internal xref">Media timeline and Event timeline</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.3.2.9">
+                    <p id="section-toc.1-1.5.2.3.2.9.1"><a href="#section-5.3.9" class="auto internal xref">5.3.9</a>.  <a href="#name-terminating-a-live-broadcas" class="internal xref">Terminating a live broadcast</a></p>
 </li>
                 </ul>
 </li>
@@ -1381,7 +1386,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
                     <p id="section-toc.1-1.8.2.4.2.1.1"><a href="#section-8.4.1" class="auto internal xref">8.4.1</a>.  <a href="#name-event-timeline-track-with-w" class="internal xref">Event timeline track with wallclock time indexing</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.4.2.2">
-                    <p id="section-toc.1-1.8.2.4.2.2.1"><a href="#section-8.4.2" class="auto internal xref">8.4.2</a>.  <a href="#name-event-timeline-track-with-l" class="internal xref">Event timeline track with Location indexing</a></p>
+                    <p id="section-toc.1-1.8.2.4.2.2.1"><a href="#section-8.4.2" class="auto internal xref">8.4.2</a>.  <a href="#name-event-timeline-track-with-m" class="internal xref">Event timeline track with MOQT Location indexing</a></p>
 </li>
                 </ul>
 </li>
@@ -1702,171 +1707,178 @@ of field names within the JSON document is not important.<a href="#section-5.1-1
 </td>
             </tr>
             <tr>
+              <td class="text-left" rowspan="1" colspan="1">Event timeline type</td>
+              <td class="text-left" rowspan="1" colspan="1">eventType</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <a href="#eventtype" class="auto internal xref">Section 5.1.13</a>
+</td>
+            </tr>
+            <tr>
               <td class="text-left" rowspan="1" colspan="1">Is Live</td>
               <td class="text-left" rowspan="1" colspan="1">isLive</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <a href="#islive" class="auto internal xref">Section 5.1.14</a>
+                <a href="#islive" class="auto internal xref">Section 5.1.15</a>
 </td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Target latency</td>
               <td class="text-left" rowspan="1" colspan="1">targetLatency</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <a href="#targetlatency" class="auto internal xref">Section 5.1.15</a>
+                <a href="#targetlatency" class="auto internal xref">Section 5.1.16</a>
 </td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Track role</td>
               <td class="text-left" rowspan="1" colspan="1">role</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <a href="#trackrole" class="auto internal xref">Section 5.1.13</a>
+                <a href="#trackrole" class="auto internal xref">Section 5.1.14</a>
 </td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Track label</td>
               <td class="text-left" rowspan="1" colspan="1">label</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <a href="#tracklabel" class="auto internal xref">Section 5.1.16</a>
+                <a href="#tracklabel" class="auto internal xref">Section 5.1.17</a>
 </td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Render group</td>
               <td class="text-left" rowspan="1" colspan="1">renderGroup</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <a href="#rendergroup" class="auto internal xref">Section 5.1.17</a>
+                <a href="#rendergroup" class="auto internal xref">Section 5.1.18</a>
 </td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Alternate group</td>
               <td class="text-left" rowspan="1" colspan="1">altGroup</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <a href="#altgroup" class="auto internal xref">Section 5.1.18</a>
+                <a href="#altgroup" class="auto internal xref">Section 5.1.19</a>
 </td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Initialization data</td>
               <td class="text-left" rowspan="1" colspan="1">initData</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <a href="#initdata" class="auto internal xref">Section 5.1.19</a>
+                <a href="#initdata" class="auto internal xref">Section 5.1.20</a>
 </td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Dependencies</td>
               <td class="text-left" rowspan="1" colspan="1">depends</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <a href="#dependencies" class="auto internal xref">Section 5.1.20</a>
+                <a href="#dependencies" class="auto internal xref">Section 5.1.21</a>
 </td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Temporal ID</td>
               <td class="text-left" rowspan="1" colspan="1">temporalId</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <a href="#temporalid" class="auto internal xref">Section 5.1.21</a>
+                <a href="#temporalid" class="auto internal xref">Section 5.1.22</a>
 </td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Spatial ID</td>
               <td class="text-left" rowspan="1" colspan="1">spatialId</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <a href="#spatialid" class="auto internal xref">Section 5.1.22</a>
+                <a href="#spatialid" class="auto internal xref">Section 5.1.23</a>
 </td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Codec</td>
               <td class="text-left" rowspan="1" colspan="1">codec</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <a href="#codec" class="auto internal xref">Section 5.1.23</a>
+                <a href="#codec" class="auto internal xref">Section 5.1.24</a>
 </td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Mime type</td>
               <td class="text-left" rowspan="1" colspan="1">mimeType</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <a href="#mimetype" class="auto internal xref">Section 5.1.24</a>
+                <a href="#mimetype" class="auto internal xref">Section 5.1.25</a>
 </td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Framerate</td>
               <td class="text-left" rowspan="1" colspan="1">framerate</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <a href="#framerate" class="auto internal xref">Section 5.1.25</a>
+                <a href="#framerate" class="auto internal xref">Section 5.1.26</a>
 </td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Timescale</td>
               <td class="text-left" rowspan="1" colspan="1">timescale</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <a href="#timescale" class="auto internal xref">Section 5.1.26</a>
+                <a href="#timescale" class="auto internal xref">Section 5.1.27</a>
 </td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Bitrate</td>
               <td class="text-left" rowspan="1" colspan="1">bitrate</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <a href="#bitrate" class="auto internal xref">Section 5.1.27</a>
+                <a href="#bitrate" class="auto internal xref">Section 5.1.28</a>
 </td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Width</td>
               <td class="text-left" rowspan="1" colspan="1">width</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <a href="#width" class="auto internal xref">Section 5.1.28</a>
+                <a href="#width" class="auto internal xref">Section 5.1.29</a>
 </td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Height</td>
               <td class="text-left" rowspan="1" colspan="1">height</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <a href="#height" class="auto internal xref">Section 5.1.29</a>
+                <a href="#height" class="auto internal xref">Section 5.1.30</a>
 </td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Audio sample rate</td>
               <td class="text-left" rowspan="1" colspan="1">samplerate</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <a href="#audiosamplerate" class="auto internal xref">Section 5.1.30</a>
+                <a href="#audiosamplerate" class="auto internal xref">Section 5.1.31</a>
 </td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Channel configuration</td>
               <td class="text-left" rowspan="1" colspan="1">channelConfig</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <a href="#channelconfiguration" class="auto internal xref">Section 5.1.31</a>
+                <a href="#channelconfiguration" class="auto internal xref">Section 5.1.32</a>
 </td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Display width</td>
               <td class="text-left" rowspan="1" colspan="1">displayWidth</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <a href="#displaywidth" class="auto internal xref">Section 5.1.32</a>
+                <a href="#displaywidth" class="auto internal xref">Section 5.1.33</a>
 </td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Display height</td>
               <td class="text-left" rowspan="1" colspan="1">displayHeight</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <a href="#displayheight" class="auto internal xref">Section 5.1.33</a>
+                <a href="#displayheight" class="auto internal xref">Section 5.1.34</a>
 </td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Language</td>
               <td class="text-left" rowspan="1" colspan="1">lang</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <a href="#language" class="auto internal xref">Section 5.1.34</a>
+                <a href="#language" class="auto internal xref">Section 5.1.35</a>
 </td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Parent name</td>
               <td class="text-left" rowspan="1" colspan="1">parentName</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <a href="#parentname" class="auto internal xref">Section 5.1.35</a>
+                <a href="#parentname" class="auto internal xref">Section 5.1.36</a>
 </td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Track duration</td>
               <td class="text-left" rowspan="1" colspan="1">trackDuration</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <a href="#trackduration" class="auto internal xref">Section 5.1.36</a>
+                <a href="#trackduration" class="auto internal xref">Section 5.1.37</a>
 </td>
             </tr>
           </tbody>
@@ -1945,7 +1957,7 @@ field and <span class="bcp14">MUST NOT</span> hold any other fields.<a href="#se
 <p id="section-5.1.5-1">Location: R    Required: Optional    JSON Type: Array<a href="#section-5.1.5-1" class="pilcrow">¶</a></p>
 <p id="section-5.1.5-2">Indicates a delta processing instruction to clone new tracks from previously declared
 tracks. The value of this field is an Array of track objects <a href="#trackobject" class="auto internal xref">Section 5.1.9</a>. Each
-track object <span class="bcp14">MUST</span> include a Parent Name <a href="#parentname" class="auto internal xref">Section 5.1.35</a> field.<a href="#section-5.1.5-2" class="pilcrow">¶</a></p>
+track object <span class="bcp14">MUST</span> include a Parent Name <a href="#parentname" class="auto internal xref">Section 5.1.36</a> field.<a href="#section-5.1.5-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="generatedat">
@@ -2051,17 +2063,31 @@ as defined in Table 3.<a href="#section-5.1.12-2" class="pilcrow">¶</a></p>
           </table>
 </section>
 </div>
-<div id="trackrole">
+<div id="eventtype">
 <section id="section-5.1.13">
-          <h4 id="name-track-role">
-<a href="#section-5.1.13" class="section-number selfRef">5.1.13. </a><a href="#name-track-role" class="section-name selfRef">Track role</a>
+          <h4 id="name-event-timeline-type">
+<a href="#section-5.1.13" class="section-number selfRef">5.1.13. </a><a href="#name-event-timeline-type" class="section-name selfRef">Event timeline type</a>
           </h4>
 <p id="section-5.1.13-1">Location: T    Required: Optional   JSON Type: String<a href="#section-5.1.13-1" class="pilcrow">¶</a></p>
-<p id="section-5.1.13-2">A string defining the role of content carried by the track. Specified roles
-are described in Table 4. These role values are case-sensitive.<a href="#section-5.1.13-2" class="pilcrow">¶</a></p>
-<p id="section-5.1.13-3">This role field <span class="bcp14">MAY</span> be used in conjunction with the Mimetype <a href="#mimetype" class="auto internal xref">Section 5.1.24</a> to
-fully describe the content of the track.<a href="#section-5.1.13-3" class="pilcrow">¶</a></p>
-<p id="section-5.1.13-4">Table 4: Reserved track roles<a href="#section-5.1.13-4" class="pilcrow">¶</a></p>
+<p id="section-5.1.13-2">A String defining the type &amp; structure of the data contained within the data
+field of the Event timeline track. Types are defined by the application provider
+and are not centrally registered. Implementers are encouraged to use a unique
+naming scheme, such as Reverse Domain Name Notation, to avoid naming collisions.
+This field is required if the <a href="#packaging" class="auto internal xref">Section 5.1.12</a> value is "eventtimeline".
+This field <span class="bcp14">MUST NOT</span> be used if the packaging value is not "eventtimeline".<a href="#section-5.1.13-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="trackrole">
+<section id="section-5.1.14">
+          <h4 id="name-track-role">
+<a href="#section-5.1.14" class="section-number selfRef">5.1.14. </a><a href="#name-track-role" class="section-name selfRef">Track role</a>
+          </h4>
+<p id="section-5.1.14-1">Location: T    Required: Optional   JSON Type: String<a href="#section-5.1.14-1" class="pilcrow">¶</a></p>
+<p id="section-5.1.14-2">A string defining the role of content carried by the track. Specified roles
+are described in Table 4. These role values are case-sensitive.<a href="#section-5.1.14-2" class="pilcrow">¶</a></p>
+<p id="section-5.1.14-3">This role field <span class="bcp14">MAY</span> be used in conjunction with the Mimetype <a href="#mimetype" class="auto internal xref">Section 5.1.25</a> to
+fully describe the content of the track.<a href="#section-5.1.14-3" class="pilcrow">¶</a></p>
+<p id="section-5.1.14-4">Table 4: Reserved track roles<a href="#section-5.1.14-4" class="pilcrow">¶</a></p>
 <table class="center" id="table-4">
             <caption><a href="#table-4" class="selfRef">Table 4</a></caption>
 <thead>
@@ -2107,29 +2133,29 @@ fully describe the content of the track.<a href="#section-5.1.13-3" class="pilcr
               </tr>
             </tbody>
           </table>
-<p id="section-5.1.13-6">Custom roles <span class="bcp14">MAY</span> be used as long as they do not collide with the specified roles.<a href="#section-5.1.13-6" class="pilcrow">¶</a></p>
+<p id="section-5.1.14-6">Custom roles <span class="bcp14">MAY</span> be used as long as they do not collide with the specified roles.<a href="#section-5.1.14-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="islive">
-<section id="section-5.1.14">
+<section id="section-5.1.15">
           <h4 id="name-is-live">
-<a href="#section-5.1.14" class="section-number selfRef">5.1.14. </a><a href="#name-is-live" class="section-name selfRef">Is Live</a>
+<a href="#section-5.1.15" class="section-number selfRef">5.1.15. </a><a href="#name-is-live" class="section-name selfRef">Is Live</a>
           </h4>
-<p id="section-5.1.14-1">Location: T    Required: Required  JSON Type: Boolean<a href="#section-5.1.14-1" class="pilcrow">¶</a></p>
-<p id="section-5.1.14-2">True if new Objects will be added to the track.
+<p id="section-5.1.15-1">Location: T    Required: Required  JSON Type: Boolean<a href="#section-5.1.15-1" class="pilcrow">¶</a></p>
+<p id="section-5.1.15-2">True if new Objects will be added to the track.
 False if no new Objects will be added to the track. This is sent under two
 possible conditions:
 * the publisher of a previously live track has ended the track.
-* the track is Video-On-Demand (VOD) and was never live.<a href="#section-5.1.14-2" class="pilcrow">¶</a></p>
+* the track is Video-On-Demand (VOD) and was never live.<a href="#section-5.1.15-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="targetlatency">
-<section id="section-5.1.15">
+<section id="section-5.1.16">
           <h4 id="name-target-latency">
-<a href="#section-5.1.15" class="section-number selfRef">5.1.15. </a><a href="#name-target-latency" class="section-name selfRef">Target latency</a>
+<a href="#section-5.1.16" class="section-number selfRef">5.1.16. </a><a href="#name-target-latency" class="section-name selfRef">Target latency</a>
           </h4>
-<p id="section-5.1.15-1">Location: T    Required: Optional  JSON Type: Number<a href="#section-5.1.15-1" class="pilcrow">¶</a></p>
-<p id="section-5.1.15-2">The target latency in milliseconds. Target latency is defined as the offset in
+<p id="section-5.1.16-1">Location: T    Required: Optional  JSON Type: Number<a href="#section-5.1.16-1" class="pilcrow">¶</a></p>
+<p id="section-5.1.16-2">The target latency in milliseconds. Target latency is defined as the offset in
 wallclock time between when content was encoded and when it is displayed to the
 end user. For example, if a frame of video is encoded at 10:08:32.638 UTC and the
 target latency is 5000, then that frame should be rendered to the end-user at
@@ -2137,222 +2163,222 @@ target latency is 5000, then that frame should be rendered to the end-user at
 belonging to the same render group <span class="bcp14">MUST</span> have identical target latencies. All tracks
 belonging to the same alternate group <span class="bcp14">MUST</span> have identical target latencies. If this
 field is absent from the track definition, then the player <span class="bcp14">MAY</span> choose the latency
-with which it renders the content.<a href="#section-5.1.15-2" class="pilcrow">¶</a></p>
+with which it renders the content.<a href="#section-5.1.16-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="tracklabel">
-<section id="section-5.1.16">
+<section id="section-5.1.17">
           <h4 id="name-track-label">
-<a href="#section-5.1.16" class="section-number selfRef">5.1.16. </a><a href="#name-track-label" class="section-name selfRef">Track label</a>
+<a href="#section-5.1.17" class="section-number selfRef">5.1.17. </a><a href="#name-track-label" class="section-name selfRef">Track label</a>
           </h4>
-<p id="section-5.1.16-1">Location: T    Required: Optional   JSON Type: String<a href="#section-5.1.16-1" class="pilcrow">¶</a></p>
-<p id="section-5.1.16-2">A string defining a human-readable label for the track. Examples might be
+<p id="section-5.1.17-1">Location: T    Required: Optional   JSON Type: String<a href="#section-5.1.17-1" class="pilcrow">¶</a></p>
+<p id="section-5.1.17-2">A string defining a human-readable label for the track. Examples might be
 "Overhead camera view" or "Deutscher Kommentar". Note that the <span>[<a href="#JSON" class="cite xref">JSON</a>]</span> spec
-requires UTF-8 support by decoders.<a href="#section-5.1.16-2" class="pilcrow">¶</a></p>
+requires UTF-8 support by decoders.<a href="#section-5.1.17-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="rendergroup">
-<section id="section-5.1.17">
+<section id="section-5.1.18">
           <h4 id="name-render-group">
-<a href="#section-5.1.17" class="section-number selfRef">5.1.17. </a><a href="#name-render-group" class="section-name selfRef">Render group</a>
+<a href="#section-5.1.18" class="section-number selfRef">5.1.18. </a><a href="#name-render-group" class="section-name selfRef">Render group</a>
           </h4>
-<p id="section-5.1.17-1">Location: T    Required: Optional   JSON Type: Number<a href="#section-5.1.17-1" class="pilcrow">¶</a></p>
-<p id="section-5.1.17-2">An integer specifying a group of tracks which are designed to be rendered
+<p id="section-5.1.18-1">Location: T    Required: Optional   JSON Type: Number<a href="#section-5.1.18-1" class="pilcrow">¶</a></p>
+<p id="section-5.1.18-2">An integer specifying a group of tracks which are designed to be rendered
 together. Tracks with the same group number <span class="bcp14">SHOULD</span> be rendered simultaneously,
 are time-aligned and are designed to accompany one another. A common
-example would be tying together audio and video tracks.<a href="#section-5.1.17-2" class="pilcrow">¶</a></p>
+example would be tying together audio and video tracks.<a href="#section-5.1.18-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="altgroup">
-<section id="section-5.1.18">
+<section id="section-5.1.19">
           <h4 id="name-alternate-group">
-<a href="#section-5.1.18" class="section-number selfRef">5.1.18. </a><a href="#name-alternate-group" class="section-name selfRef">Alternate group</a>
+<a href="#section-5.1.19" class="section-number selfRef">5.1.19. </a><a href="#name-alternate-group" class="section-name selfRef">Alternate group</a>
           </h4>
-<p id="section-5.1.18-1">Location: T    Required: Optional   JSON Type: Number<a href="#section-5.1.18-1" class="pilcrow">¶</a></p>
-<p id="section-5.1.18-2">An integer specifying a group of tracks which are alternate versions of
+<p id="section-5.1.19-1">Location: T    Required: Optional   JSON Type: Number<a href="#section-5.1.19-1" class="pilcrow">¶</a></p>
+<p id="section-5.1.19-2">An integer specifying a group of tracks which are alternate versions of
 one-another. Alternate tracks represent the same media content, but differ in
 their selection properties. Alternate tracks <span class="bcp14">MUST</span> have matching media time
 sequences. A subscriber typically subscribes to one track from a set of
 tracks specifying the same alternate group number. A common example would be
-a set video tracks of the same content offered in alternate bitrates.<a href="#section-5.1.18-2" class="pilcrow">¶</a></p>
+a set video tracks of the same content offered in alternate bitrates.<a href="#section-5.1.19-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="initdata">
-<section id="section-5.1.19">
+<section id="section-5.1.20">
           <h4 id="name-initialization-data">
-<a href="#section-5.1.19" class="section-number selfRef">5.1.19. </a><a href="#name-initialization-data" class="section-name selfRef">Initialization data</a>
+<a href="#section-5.1.20" class="section-number selfRef">5.1.20. </a><a href="#name-initialization-data" class="section-name selfRef">Initialization data</a>
           </h4>
-<p id="section-5.1.19-1">Location: T    Required: Optional   JSON Type: String<a href="#section-5.1.19-1" class="pilcrow">¶</a></p>
-<p id="section-5.1.19-2">A string holding Base64 <span>[<a href="#BASE64" class="cite xref">BASE64</a>]</span> encoded initialization data for the track.<a href="#section-5.1.19-2" class="pilcrow">¶</a></p>
+<p id="section-5.1.20-1">Location: T    Required: Optional   JSON Type: String<a href="#section-5.1.20-1" class="pilcrow">¶</a></p>
+<p id="section-5.1.20-2">A string holding Base64 <span>[<a href="#BASE64" class="cite xref">BASE64</a>]</span> encoded initialization data for the track.<a href="#section-5.1.20-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="dependencies">
-<section id="section-5.1.20">
+<section id="section-5.1.21">
           <h4 id="name-dependencies">
-<a href="#section-5.1.20" class="section-number selfRef">5.1.20. </a><a href="#name-dependencies" class="section-name selfRef">Dependencies</a>
+<a href="#section-5.1.21" class="section-number selfRef">5.1.21. </a><a href="#name-dependencies" class="section-name selfRef">Dependencies</a>
           </h4>
-<p id="section-5.1.20-1">Location: T    Required: Optional   JSON Type: Array<a href="#section-5.1.20-1" class="pilcrow">¶</a></p>
-<p id="section-5.1.20-2">Certain tracks may depend on other tracks for decoding. Dependencies holds an
+<p id="section-5.1.21-1">Location: T    Required: Optional   JSON Type: Array<a href="#section-5.1.21-1" class="pilcrow">¶</a></p>
+<p id="section-5.1.21-2">Certain tracks may depend on other tracks for decoding. Dependencies holds an
 array of track names <a href="#trackname" class="auto internal xref">Section 5.1.11</a> on which the current track is dependent.
 Since only the track name is signaled, the namespace of the dependencies is
-assumed to match that of the track declaring the dependencies.<a href="#section-5.1.20-2" class="pilcrow">¶</a></p>
+assumed to match that of the track declaring the dependencies.<a href="#section-5.1.21-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="temporalid">
-<section id="section-5.1.21">
+<section id="section-5.1.22">
           <h4 id="name-temporal-id">
-<a href="#section-5.1.21" class="section-number selfRef">5.1.21. </a><a href="#name-temporal-id" class="section-name selfRef">Temporal ID</a>
+<a href="#section-5.1.22" class="section-number selfRef">5.1.22. </a><a href="#name-temporal-id" class="section-name selfRef">Temporal ID</a>
           </h4>
-<p id="section-5.1.21-1">Location: T    Required: Optional   JSON Type: Number<a href="#section-5.1.21-1" class="pilcrow">¶</a></p>
-<p id="section-5.1.21-2">A number identifying the temporal layer/sub-layer encoding of the track,
+<p id="section-5.1.22-1">Location: T    Required: Optional   JSON Type: Number<a href="#section-5.1.22-1" class="pilcrow">¶</a></p>
+<p id="section-5.1.22-2">A number identifying the temporal layer/sub-layer encoding of the track,
 starting with 0 for the base layer, and increasing by 1 for the next higher
-temporal fidelity.<a href="#section-5.1.21-2" class="pilcrow">¶</a></p>
+temporal fidelity.<a href="#section-5.1.22-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="spatialid">
-<section id="section-5.1.22">
+<section id="section-5.1.23">
           <h4 id="name-spatial-id">
-<a href="#section-5.1.22" class="section-number selfRef">5.1.22. </a><a href="#name-spatial-id" class="section-name selfRef">Spatial ID</a>
+<a href="#section-5.1.23" class="section-number selfRef">5.1.23. </a><a href="#name-spatial-id" class="section-name selfRef">Spatial ID</a>
           </h4>
-<p id="section-5.1.22-1">Location: T    Required: Optional   JSON Type: Number<a href="#section-5.1.22-1" class="pilcrow">¶</a></p>
-<p id="section-5.1.22-2">A number identifying the spatial layer encoding of the track, starting with 0
-for the base layer, and increasing by 1 for the next higher fidelity.<a href="#section-5.1.22-2" class="pilcrow">¶</a></p>
+<p id="section-5.1.23-1">Location: T    Required: Optional   JSON Type: Number<a href="#section-5.1.23-1" class="pilcrow">¶</a></p>
+<p id="section-5.1.23-2">A number identifying the spatial layer encoding of the track, starting with 0
+for the base layer, and increasing by 1 for the next higher fidelity.<a href="#section-5.1.23-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="codec">
-<section id="section-5.1.23">
+<section id="section-5.1.24">
           <h4 id="name-codec">
-<a href="#section-5.1.23" class="section-number selfRef">5.1.23. </a><a href="#name-codec" class="section-name selfRef">Codec</a>
+<a href="#section-5.1.24" class="section-number selfRef">5.1.24. </a><a href="#name-codec" class="section-name selfRef">Codec</a>
           </h4>
-<p id="section-5.1.23-1">Location: T    Required: Optional   JSON Type: String<a href="#section-5.1.23-1" class="pilcrow">¶</a></p>
-<p id="section-5.1.23-2">A string defining the codec used to encode the track.
+<p id="section-5.1.24-1">Location: T    Required: Optional   JSON Type: String<a href="#section-5.1.24-1" class="pilcrow">¶</a></p>
+<p id="section-5.1.24-2">A string defining the codec used to encode the track.
 For LOC packaged content, the string codec registrations are defined in Sect 3
-and Section 4 of <span>[<a href="#WEBCODECS-CODEC-REGISTRY" class="cite xref">WEBCODECS-CODEC-REGISTRY</a>]</span>.<a href="#section-5.1.23-2" class="pilcrow">¶</a></p>
+and Section 4 of <span>[<a href="#WEBCODECS-CODEC-REGISTRY" class="cite xref">WEBCODECS-CODEC-REGISTRY</a>]</span>.<a href="#section-5.1.24-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="mimetype">
-<section id="section-5.1.24">
+<section id="section-5.1.25">
           <h4 id="name-mimetype">
-<a href="#section-5.1.24" class="section-number selfRef">5.1.24. </a><a href="#name-mimetype" class="section-name selfRef">Mimetype</a>
+<a href="#section-5.1.25" class="section-number selfRef">5.1.25. </a><a href="#name-mimetype" class="section-name selfRef">Mimetype</a>
           </h4>
-<p id="section-5.1.24-1">Location: T    Required: Optional   JSON Type: String<a href="#section-5.1.24-1" class="pilcrow">¶</a></p>
-<p id="section-5.1.24-2">A string defining the mime type <span>[<a href="#MIME" class="cite xref">MIME</a>]</span> of the track.<a href="#section-5.1.24-2" class="pilcrow">¶</a></p>
+<p id="section-5.1.25-1">Location: T    Required: Optional   JSON Type: String<a href="#section-5.1.25-1" class="pilcrow">¶</a></p>
+<p id="section-5.1.25-2">A string defining the mime type <span>[<a href="#MIME" class="cite xref">MIME</a>]</span> of the track.<a href="#section-5.1.25-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="framerate">
-<section id="section-5.1.25">
+<section id="section-5.1.26">
           <h4 id="name-framerate">
-<a href="#section-5.1.25" class="section-number selfRef">5.1.25. </a><a href="#name-framerate" class="section-name selfRef">Framerate</a>
+<a href="#section-5.1.26" class="section-number selfRef">5.1.26. </a><a href="#name-framerate" class="section-name selfRef">Framerate</a>
           </h4>
-<p id="section-5.1.25-1">Location: T    Required: Optional   JSON Type: Number<a href="#section-5.1.25-1" class="pilcrow">¶</a></p>
-<p id="section-5.1.25-2">A number defining the video framerate of the track, expressed as frames per
-second.<a href="#section-5.1.25-2" class="pilcrow">¶</a></p>
+<p id="section-5.1.26-1">Location: T    Required: Optional   JSON Type: Number<a href="#section-5.1.26-1" class="pilcrow">¶</a></p>
+<p id="section-5.1.26-2">A number defining the video framerate of the track, expressed as frames per
+second.<a href="#section-5.1.26-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="timescale">
-<section id="section-5.1.26">
+<section id="section-5.1.27">
           <h4 id="name-timescale">
-<a href="#section-5.1.26" class="section-number selfRef">5.1.26. </a><a href="#name-timescale" class="section-name selfRef">Timescale</a>
+<a href="#section-5.1.27" class="section-number selfRef">5.1.27. </a><a href="#name-timescale" class="section-name selfRef">Timescale</a>
           </h4>
-<p id="section-5.1.26-1">Location: T    Required: Optional   JSON Type: Number<a href="#section-5.1.26-1" class="pilcrow">¶</a></p>
-<p id="section-5.1.26-2">The number of time units that pass per second.<a href="#section-5.1.26-2" class="pilcrow">¶</a></p>
+<p id="section-5.1.27-1">Location: T    Required: Optional   JSON Type: Number<a href="#section-5.1.27-1" class="pilcrow">¶</a></p>
+<p id="section-5.1.27-2">The number of time units that pass per second.<a href="#section-5.1.27-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="bitrate">
-<section id="section-5.1.27">
+<section id="section-5.1.28">
           <h4 id="name-bitrate">
-<a href="#section-5.1.27" class="section-number selfRef">5.1.27. </a><a href="#name-bitrate" class="section-name selfRef">Bitrate</a>
+<a href="#section-5.1.28" class="section-number selfRef">5.1.28. </a><a href="#name-bitrate" class="section-name selfRef">Bitrate</a>
           </h4>
-<p id="section-5.1.27-1">Location: T    Required: Optional   JSON Type: Number<a href="#section-5.1.27-1" class="pilcrow">¶</a></p>
-<p id="section-5.1.27-2">A number defining the bitrate of track, expressed in bits per second.<a href="#section-5.1.27-2" class="pilcrow">¶</a></p>
+<p id="section-5.1.28-1">Location: T    Required: Optional   JSON Type: Number<a href="#section-5.1.28-1" class="pilcrow">¶</a></p>
+<p id="section-5.1.28-2">A number defining the bitrate of track, expressed in bits per second.<a href="#section-5.1.28-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="width">
-<section id="section-5.1.28">
+<section id="section-5.1.29">
           <h4 id="name-width">
-<a href="#section-5.1.28" class="section-number selfRef">5.1.28. </a><a href="#name-width" class="section-name selfRef">Width</a>
+<a href="#section-5.1.29" class="section-number selfRef">5.1.29. </a><a href="#name-width" class="section-name selfRef">Width</a>
           </h4>
-<p id="section-5.1.28-1">Location: T    Required: Optional   JSON Type: Number<a href="#section-5.1.28-1" class="pilcrow">¶</a></p>
-<p id="section-5.1.28-2">A number expressing the encoded width of the video frames in pixels.<a href="#section-5.1.28-2" class="pilcrow">¶</a></p>
+<p id="section-5.1.29-1">Location: T    Required: Optional   JSON Type: Number<a href="#section-5.1.29-1" class="pilcrow">¶</a></p>
+<p id="section-5.1.29-2">A number expressing the encoded width of the video frames in pixels.<a href="#section-5.1.29-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="height">
-<section id="section-5.1.29">
+<section id="section-5.1.30">
           <h4 id="name-height">
-<a href="#section-5.1.29" class="section-number selfRef">5.1.29. </a><a href="#name-height" class="section-name selfRef">Height</a>
+<a href="#section-5.1.30" class="section-number selfRef">5.1.30. </a><a href="#name-height" class="section-name selfRef">Height</a>
           </h4>
-<p id="section-5.1.29-1">Location: T    Required: Optional   JSON Type: Number<a href="#section-5.1.29-1" class="pilcrow">¶</a></p>
-<p id="section-5.1.29-2">A number expressing the encoded height of the video frames in pixels.<a href="#section-5.1.29-2" class="pilcrow">¶</a></p>
+<p id="section-5.1.30-1">Location: T    Required: Optional   JSON Type: Number<a href="#section-5.1.30-1" class="pilcrow">¶</a></p>
+<p id="section-5.1.30-2">A number expressing the encoded height of the video frames in pixels.<a href="#section-5.1.30-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="audiosamplerate">
-<section id="section-5.1.30">
+<section id="section-5.1.31">
           <h4 id="name-audio-sample-rate">
-<a href="#section-5.1.30" class="section-number selfRef">5.1.30. </a><a href="#name-audio-sample-rate" class="section-name selfRef">Audio sample rate</a>
+<a href="#section-5.1.31" class="section-number selfRef">5.1.31. </a><a href="#name-audio-sample-rate" class="section-name selfRef">Audio sample rate</a>
           </h4>
-<p id="section-5.1.30-1">Location: T    Required: Optional   JSON Type: Number<a href="#section-5.1.30-1" class="pilcrow">¶</a></p>
-<p id="section-5.1.30-2">The number of audio frame samples per second. This property <span class="bcp14">SHOULD</span> only
-accompany audio codecs.<a href="#section-5.1.30-2" class="pilcrow">¶</a></p>
+<p id="section-5.1.31-1">Location: T    Required: Optional   JSON Type: Number<a href="#section-5.1.31-1" class="pilcrow">¶</a></p>
+<p id="section-5.1.31-2">The number of audio frame samples per second. This property <span class="bcp14">SHOULD</span> only
+accompany audio codecs.<a href="#section-5.1.31-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="channelconfiguration">
-<section id="section-5.1.31">
+<section id="section-5.1.32">
           <h4 id="name-channel-configuration">
-<a href="#section-5.1.31" class="section-number selfRef">5.1.31. </a><a href="#name-channel-configuration" class="section-name selfRef">Channel configuration</a>
+<a href="#section-5.1.32" class="section-number selfRef">5.1.32. </a><a href="#name-channel-configuration" class="section-name selfRef">Channel configuration</a>
           </h4>
-<p id="section-5.1.31-1">Location: T    Required: Optional   JSON Type: String<a href="#section-5.1.31-1" class="pilcrow">¶</a></p>
-<p id="section-5.1.31-2">A string specifying the audio channel configuration. This property <span class="bcp14">SHOULD</span> only
+<p id="section-5.1.32-1">Location: T    Required: Optional   JSON Type: String<a href="#section-5.1.32-1" class="pilcrow">¶</a></p>
+<p id="section-5.1.32-2">A string specifying the audio channel configuration. This property <span class="bcp14">SHOULD</span> only
 accompany audio codecs. A string is used in order to provide the flexibility to
 describe complex channel configurations for multi-channel and Next Generation
-Audio schemas.<a href="#section-5.1.31-2" class="pilcrow">¶</a></p>
+Audio schemas.<a href="#section-5.1.32-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="displaywidth">
-<section id="section-5.1.32">
+<section id="section-5.1.33">
           <h4 id="name-display-width">
-<a href="#section-5.1.32" class="section-number selfRef">5.1.32. </a><a href="#name-display-width" class="section-name selfRef">Display width</a>
+<a href="#section-5.1.33" class="section-number selfRef">5.1.33. </a><a href="#name-display-width" class="section-name selfRef">Display width</a>
           </h4>
-<p id="section-5.1.32-1">Location: T    Required: Optional   JSON Type: Number<a href="#section-5.1.32-1" class="pilcrow">¶</a></p>
-<p id="section-5.1.32-2">A number expressing the intended display width of the track content in pixels.<a href="#section-5.1.32-2" class="pilcrow">¶</a></p>
+<p id="section-5.1.33-1">Location: T    Required: Optional   JSON Type: Number<a href="#section-5.1.33-1" class="pilcrow">¶</a></p>
+<p id="section-5.1.33-2">A number expressing the intended display width of the track content in pixels.<a href="#section-5.1.33-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="displayheight">
-<section id="section-5.1.33">
+<section id="section-5.1.34">
           <h4 id="name-display-height">
-<a href="#section-5.1.33" class="section-number selfRef">5.1.33. </a><a href="#name-display-height" class="section-name selfRef">Display height</a>
+<a href="#section-5.1.34" class="section-number selfRef">5.1.34. </a><a href="#name-display-height" class="section-name selfRef">Display height</a>
           </h4>
-<p id="section-5.1.33-1">Location: T    Required: Optional   JSON Type: Number<a href="#section-5.1.33-1" class="pilcrow">¶</a></p>
-<p id="section-5.1.33-2">A number expressing the intended display height of the track content in pixels.<a href="#section-5.1.33-2" class="pilcrow">¶</a></p>
+<p id="section-5.1.34-1">Location: T    Required: Optional   JSON Type: Number<a href="#section-5.1.34-1" class="pilcrow">¶</a></p>
+<p id="section-5.1.34-2">A number expressing the intended display height of the track content in pixels.<a href="#section-5.1.34-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="language">
-<section id="section-5.1.34">
+<section id="section-5.1.35">
           <h4 id="name-language">
-<a href="#section-5.1.34" class="section-number selfRef">5.1.34. </a><a href="#name-language" class="section-name selfRef">Language</a>
+<a href="#section-5.1.35" class="section-number selfRef">5.1.35. </a><a href="#name-language" class="section-name selfRef">Language</a>
           </h4>
-<p id="section-5.1.34-1">Location: T    Required: Optional   JSON Type: String<a href="#section-5.1.34-1" class="pilcrow">¶</a></p>
-<p id="section-5.1.34-2">A string defining the dominant language of the track. The string <span class="bcp14">MUST</span> be one of
-the standard Tags for Identifying Languages as defined by <span>[<a href="#LANG" class="cite xref">LANG</a>]</span>.<a href="#section-5.1.34-2" class="pilcrow">¶</a></p>
+<p id="section-5.1.35-1">Location: T    Required: Optional   JSON Type: String<a href="#section-5.1.35-1" class="pilcrow">¶</a></p>
+<p id="section-5.1.35-2">A string defining the dominant language of the track. The string <span class="bcp14">MUST</span> be one of
+the standard Tags for Identifying Languages as defined by <span>[<a href="#LANG" class="cite xref">LANG</a>]</span>.<a href="#section-5.1.35-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="parentname">
-<section id="section-5.1.35">
+<section id="section-5.1.36">
           <h4 id="name-parent-name">
-<a href="#section-5.1.35" class="section-number selfRef">5.1.35. </a><a href="#name-parent-name" class="section-name selfRef">Parent name</a>
+<a href="#section-5.1.36" class="section-number selfRef">5.1.36. </a><a href="#name-parent-name" class="section-name selfRef">Parent name</a>
           </h4>
-<p id="section-5.1.35-1">Location: T    Required: Optional   JSON Type: String<a href="#section-5.1.35-1" class="pilcrow">¶</a></p>
-<p id="section-5.1.35-2">A string defining the parent track name <a href="#trackname" class="auto internal xref">Section 5.1.11</a> to be cloned. This field
-<span class="bcp14">MUST</span> only be included inside a Clone tracks <a href="#clonetracks" class="auto internal xref">Section 5.1.5</a> object.<a href="#section-5.1.35-2" class="pilcrow">¶</a></p>
+<p id="section-5.1.36-1">Location: T    Required: Optional   JSON Type: String<a href="#section-5.1.36-1" class="pilcrow">¶</a></p>
+<p id="section-5.1.36-2">A string defining the parent track name <a href="#trackname" class="auto internal xref">Section 5.1.11</a> to be cloned. This field
+<span class="bcp14">MUST</span> only be included inside a Clone tracks <a href="#clonetracks" class="auto internal xref">Section 5.1.5</a> object.<a href="#section-5.1.36-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="trackduration">
-<section id="section-5.1.36">
+<section id="section-5.1.37">
           <h4 id="name-track-duration">
-<a href="#section-5.1.36" class="section-number selfRef">5.1.36. </a><a href="#name-track-duration" class="section-name selfRef">Track duration</a>
+<a href="#section-5.1.37" class="section-number selfRef">5.1.37. </a><a href="#name-track-duration" class="section-name selfRef">Track duration</a>
           </h4>
-<p id="section-5.1.36-1">Location: T    Required: Optional   JSON Type: Number<a href="#section-5.1.36-1" class="pilcrow">¶</a></p>
-<p id="section-5.1.36-2">The duration of the track expressed in integer milliseconds. This field <span class="bcp14">MUST NOT</span>
-be included if the isLive <a href="#islive" class="auto internal xref">Section 5.1.14</a> field value is true.<a href="#section-5.1.36-2" class="pilcrow">¶</a></p>
+<p id="section-5.1.37-1">Location: T    Required: Optional   JSON Type: Number<a href="#section-5.1.37-1" class="pilcrow">¶</a></p>
+<p id="section-5.1.37-2">The duration of the track expressed in integer milliseconds. This field <span class="bcp14">MUST NOT</span>
+be included if the isLive <a href="#islive" class="auto internal xref">Section 5.1.15</a> field value is true.<a href="#section-5.1.37-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2390,7 +2416,7 @@ Evaluation continues until all operations are successfully applied.<a href="#sec
 </li>
           <li class="normal" id="section-5.2-4.4">
             <p id="section-5.2-4.4.1">A Cloned track inherits all the attributes of the track defined by the Parent Name
-<a href="#parentname" class="auto internal xref">Section 5.1.35</a>, except the Track Name which <span class="bcp14">MUST</span> be new. Attributes redefined
+<a href="#parentname" class="auto internal xref">Section 5.1.36</a>, except the Track Name which <span class="bcp14">MUST</span> be new. Attributes redefined
 in the cloning Object overwrite inherited values.<a href="#section-5.2-4.4.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.2-4.5">
@@ -2796,14 +2822,78 @@ and video tracks.<a href="#section-5.3.7-1" class="pilcrow">¶</a></p>
 </div>
 </section>
 </div>
-<div id="terminating-a-live-broadcast">
+<div id="media-timeline-and-event-timeline">
 <section id="section-5.3.8">
-          <h4 id="name-terminating-a-live-broadcas">
-<a href="#section-5.3.8" class="section-number selfRef">5.3.8. </a><a href="#name-terminating-a-live-broadcas" class="section-name selfRef">Terminating a live broadcast</a>
+          <h4 id="name-media-timeline-and-event-ti">
+<a href="#section-5.3.8" class="section-number selfRef">5.3.8. </a><a href="#name-media-timeline-and-event-ti" class="section-name selfRef">Media timeline and Event timeline</a>
           </h4>
-<p id="section-5.3.8-1">This example shows catalog for a media producer terminating a previously
-live broadcast containing a video and an audio track.<a href="#section-5.3.8-1" class="pilcrow">¶</a></p>
-<div class="lang-json sourcecode" id="section-5.3.8-2">
+<p id="section-5.3.8-1">This example shows a catalog for a media producer capable of sending LOC
+packaged, time-aligned audio and video tracks, along with a Media Timeline
+which describes the history of those tracks and an Event Timeline providing
+synchronized data.<a href="#section-5.3.8-1" class="pilcrow">¶</a></p>
+<div class="breakable lang-json sourcecode" id="section-5.3.8-2">
+<pre>
+{
+  "version": 1,
+  "generatedAt": 1746104606044,
+  "tracks": [
+    {
+      "name": "history",
+      "namespace": "conference.example.com/conference123/alice",
+      "packaging": "mediatimeline",
+      "mimetype": "application/json",
+      "depends": ["1080p-video","audio"],
+    },
+    {
+      "name": "identified-objects",
+      "namespace": "another-provider/time-synchronized-data",
+      "packaging": "eventtimeline",
+      "eventTimelineType": "com.ai-extraction/appID/v3"
+      "mimetype": "application/json",
+      "depends": ["1080p-video"],
+    },
+    {
+      "name": "1080p-video",
+      "namespace": "conference.example.com/conference123/alice",
+      "packaging": "loc",
+      "isLive": true,
+      "targetLatency": 2000,
+      "role": "video",
+      "renderGroup": 1,
+      "codec":"av01.0.08M.10.0.110.09",
+      "width":1920,
+      "height":1080,
+      "framerate":30,
+      "bitrate":1500000
+    },
+    {
+      "name": "audio",
+      "namespace": "conference.example.com/conference123/alice",
+      "packaging": "loc",
+      "isLive": true,
+      "targetLatency": 2000,
+      "role": "audio",
+      "renderGroup": 1,
+      "codec":"opus",
+      "samplerate":48000,
+      "channelConfig":"2",
+      "bitrate":32000
+    }
+   ]
+}
+
+</pre><a href="#section-5.3.8-2" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="terminating-a-live-broadcast">
+<section id="section-5.3.9">
+          <h4 id="name-terminating-a-live-broadcas">
+<a href="#section-5.3.9" class="section-number selfRef">5.3.9. </a><a href="#name-terminating-a-live-broadcas" class="section-name selfRef">Terminating a live broadcast</a>
+          </h4>
+<p id="section-5.3.9-1">This example shows catalog for a media producer terminating a previously
+live broadcast containing a video and an audio track.<a href="#section-5.3.9-1" class="pilcrow">¶</a></p>
+<div class="lang-json sourcecode" id="section-5.3.9-2">
 <pre>
 {
   "version": 1,
@@ -2812,7 +2902,7 @@ live broadcast containing a video and an audio track.<a href="#section-5.3.8-1" 
   "tracks": []
 }
 
-</pre><a href="#section-5.3.8-2" class="pilcrow">¶</a>
+</pre><a href="#section-5.3.9-2" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
@@ -2856,51 +2946,46 @@ in Group IDs using the MOQT Prior Group ID Gap Extension header.<a href="#sectio
 <p id="section-7-1">The media timeline track provides data about the previously published groups and their
 relationship to wallclock time and media time. Media timeline tracks allow players to
 seek to precise points behind the live head in a live broadcast, or for random access
-in a VOD asset. The optional metadata can describe a characteristic of any record in
-the media timeline. Media timeline tracks are optional. Multiple media timeline tracks
+in a VOD asset. Media timeline tracks are optional. Multiple media timeline tracks
 can exist inside a catalog.<a href="#section-7-1" class="pilcrow">¶</a></p>
 <div id="mediatimelinepayload">
 <section id="section-7.1">
         <h3 id="name-media-timeline-track-payloa">
 <a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-media-timeline-track-payloa" class="section-name selfRef">Media Timeline track payload</a>
         </h3>
-<p id="section-7.1-1">The payload of a media timeline track is a UTF-8 encoded CSV text file. This
-payload is formatted according to RFC4180 "Common Format and MIME Type for
-Comma-Separated Values (CSV)" Files <span>[<a href="#RFC4180" class="cite xref">RFC4180</a>]</span>. The separator is a comma and
-each line is separated by a carriage return. The mime-type of a media timeline
-track <span class="bcp14">MUST</span> be specified as "text/csv" in the catalog.<a href="#section-7.1-1" class="pilcrow">¶</a></p>
-<p id="section-7.1-2">Each media timeline track begins with a header row of GROUP_ID, OBJECT_ID, MEDIA_PTS,
-WALLCLOCK,METADATA. This row defines the 5 columns of data within each record.<a href="#section-7.1-2" class="pilcrow">¶</a></p>
+<p id="section-7.1-1">A media timeline track is a JSON <span>[<a href="#JSON" class="cite xref">JSON</a>]</span> document. This document <span class="bcp14">MAY</span> be compressed
+using GZIP <span>[<a href="#GZIP" class="cite xref">GZIP</a>]</span>. The document contains an array of records. Each record consists of
+an array of three required items, whose ordinal position defines their type:<a href="#section-7.1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-7.1-3.1">
-            <p id="section-7.1-3.1.1">GROUP_ID: the MOQT Group ID. This entry <span class="bcp14">MUST</span> not be empty.<a href="#section-7.1-3.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-7.1-2.1">
+            <p id="section-7.1-2.1.1">The first item holds the media presentation timestamp, expressed as a JSON Number.
+This value <span class="bcp14">MUST</span> match the media presentation timestamp, rounded to the nearest
+millisecond, of the first media sample in the referenced Object<a href="#section-7.1-2.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-7.1-3.2">
-            <p id="section-7.1-3.2.1">OBJECT_ID: the MOQT Object ID. This entry <span class="bcp14">MAY</span> be empty. If this entry is
-present and equal to -1, then Object ID is unknown. Otherwise if this entry
-is absent, then the Object ID is 0.<a href="#section-7.1-3.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-7.1-2.2">
+            <p id="section-7.1-2.2.1">The second item holds the MOQT Location of the entry, defined as a tuple of the MOQT
+Group ID and MOQT Object ID, and expressed as a JSON Array of Numbers, where the
+first number is the Group ID and the second number is the Object ID.<a href="#section-7.1-2.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-7.1-3.3">
-            <p id="section-7.1-3.3.1">MEDIA_PTS: a media timestamp rounded to the nearest millisecond. This entry
-<span class="bcp14">MUST NOT</span> be empty. If the Object ID entry is present and equal to -1, this
-value <span class="bcp14">MUST</span> match the media presentation timestamp of the first media sample
-in an Object that is in the Group but is not the first Object in the Group.
-Otherwise, this value <span class="bcp14">MUST</span> match the media presentation timestamp of the
-first media sample in the referenced Object.<a href="#section-7.1-3.3.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-7.1-3.4">
-            <p id="section-7.1-3.4.1">WALLCLOCK: the wallclock time at which the media was encoded, expressed as
+          <li class="normal" id="section-7.1-2.3">
+            <p id="section-7.1-2.3.1">The third time holds the wallclock time at which the media was encoded, defined as
 the number of milliseconds that have elapsed since January 1, 1970
-(midnight UTC/GMT). For VOD assets, or if the wallclock time is not known,
-the value <span class="bcp14">SHOULD</span> be 0.<a href="#section-7.1-3.4.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-7.1-3.5">
-            <p id="section-7.1-3.5.1">METADATA: a flexible field holding arbitrary string metadata. This field may
-be empty. If not empty, it <span class="bcp14">MUST</span> be enclosed in double quotes. A double-quote
-appearing inside this field <span class="bcp14">MUST</span> be escaped by preceding it with another
-double quote.<a href="#section-7.1-3.5.1" class="pilcrow">¶</a></p>
+(midnight UTC/GMT) and expressed as a JSON Number. For VOD assets, or if the
+wallclock time is not known, the value <span class="bcp14">SHOULD</span> be 0.<a href="#section-7.1-2.3.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
+<p id="section-7.1-3">An example media timeline is shown below:<a href="#section-7.1-3" class="pilcrow">¶</a></p>
+<div class="lang-json sourcecode" id="section-7.1-4">
+<pre>
+[
+  [0, [0,0], 1759924158381],
+  [2002, [1,0], 1759924160383],
+  [4004, [2,0], 1759924162385],
+  [6006, [3,0], 1759924164387],
+  [8008, [4,0], 1759924166389]
+]
+</pre><a href="#section-7.1-4" class="pilcrow">¶</a>
+</div>
 </section>
 </div>
 <div id="media-timeline-catalog-requirements">
@@ -2910,7 +2995,8 @@ double quote.<a href="#section-7.1-3.5.1" class="pilcrow">¶</a></p>
         </h3>
 <p id="section-7.2-1">A media timeline track <span class="bcp14">MUST</span> carry a 'type' identifier in the Catalog with a value
 of "mediatimeline". A media timeline track <span class="bcp14">MUST</span> carry a 'depends' attribute which
-contains an array of all track names to which the media timeline track applies.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
+contains an array of all track names to which the media timeline track applies.
+The mime-type of a media timeline track <span class="bcp14">MUST</span> be specified as "application/json".<a href="#section-7.2-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="media-timeline-track-updating">
@@ -2938,7 +3024,8 @@ cars, SAP-types for media segments or active speaker notifications in web confer
 the media timeline track, each event record <span class="bcp14">MUST</span> contain a reference to one of
 Media PTS, wallclock time or MOQT Location.<a href="#section-8-2" class="pilcrow">¶</a></p>
 <p id="section-8-3">Event timeline tracks are optional. Multiple event timeline tracks can exist inside a
-catalog.<a href="#section-8-3" class="pilcrow">¶</a></p>
+catalog. The type &amp; structure of the data contained within each event timeline track is
+declared in the catalog, to facilitate client selection and parsing.<a href="#section-8-3" class="pilcrow">¶</a></p>
 <div id="eventtimelineformat">
 <section id="section-8.1">
         <h3 id="name-event-timeline-data-format">
@@ -2958,13 +3045,8 @@ while Location value is an Array of Numbers, where the first item represents the
 GroupID and the second item the MOQT Object ID.<a href="#section-8.1-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.1-2.2">
-            <p id="section-8.1-2.2.1">A 'type' field, which is a String defining the type of data contained within the data
-field. Types are defined by the application provider and are not centrally registered.
-Implementers are encouraged to use a unique naming scheme, such as Reverse Domain Name
-Notation, to avoid naming collisions.<a href="#section-8.1-2.2.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-8.1-2.3">
-            <p id="section-8.1-2.3.1">A 'data' Object, whose structure is defined by the 'type' value.<a href="#section-8.1-2.3.1" class="pilcrow">¶</a></p>
+            <p id="section-8.1-2.2.1">A 'data' Object, whose structure is defined by the <a href="#eventtype" class="auto internal xref">Section 5.1.13</a> value declared for this
+track in the Catalog.<a href="#section-8.1-2.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
@@ -2974,9 +3056,23 @@ Notation, to avoid naming collisions.<a href="#section-8.1-2.2.1" class="pilcrow
         <h3 id="name-event-timeline-catalog-requ">
 <a href="#section-8.2" class="section-number selfRef">8.2. </a><a href="#name-event-timeline-catalog-requ" class="section-name selfRef">Event Timeline Catalog requirements</a>
         </h3>
-<p id="section-8.2-1">An event timeline track <span class="bcp14">MUST</span> carry a 'type' identifier in the Catalog with a value
-of "eventtimeline". An event timeline track <span class="bcp14">MUST</span> carry a 'depends' attribute which
-contains an array of all track names to which the event timeline track applies.<a href="#section-8.2-1" class="pilcrow">¶</a></p>
+<p id="section-8.2-1">An event timeline track <span class="bcp14">MUST</span> carry:<a href="#section-8.2-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-8.2-2.1">
+            <p id="section-8.2-2.1.1">a <a href="#packaging" class="auto internal xref">Section 5.1.12</a> attribute with a value of "eventtimeline".<a href="#section-8.2-2.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-8.2-2.2">
+            <p id="section-8.2-2.2.1">a <a href="#dependencies" class="auto internal xref">Section 5.1.21</a> attribute which contains an array of all track names to which the event
+timeline track applies.<a href="#section-8.2-2.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-8.2-2.3">
+            <p id="section-8.2-2.3.1">a <a href="#mimetype" class="auto internal xref">Section 5.1.25</a> attribute with a value of "application/json".<a href="#section-8.2-2.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-8.2-2.4">
+            <p id="section-8.2-2.4.1">an <a href="#eventtype" class="auto internal xref">Section 5.1.13</a> attribute declaring the type &amp; structure of data contained in the
+event timeline track.<a href="#section-8.2-2.4.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
 </section>
 </div>
 <div id="event-timeline-track-updating">
@@ -3007,7 +3103,6 @@ sports broadcast.<a href="#section-8.4.1-1" class="pilcrow">¶</a></p>
 [
     {
         "t": 1756885678361,
-        "type": "com.example.custom.live-score-data",
         "data": {
             "status": "in_progress",
             "period": 1,
@@ -3019,7 +3114,6 @@ sports broadcast.<a href="#section-8.4.1-1" class="pilcrow">¶</a></p>
     },
     {
         "t": 1756885981542,
-        "type": "com.example.custom.live-score-data",
         "data": {
             "status": "in_progress",
             "period": 1,
@@ -3035,10 +3129,10 @@ sports broadcast.<a href="#section-8.4.1-1" class="pilcrow">¶</a></p>
 </div>
 </section>
 </div>
-<div id="event-timeline-track-with-location-indexing">
+<div id="event-timeline-track-with-moqt-location-indexing">
 <section id="section-8.4.2">
-          <h4 id="name-event-timeline-track-with-l">
-<a href="#section-8.4.2" class="section-number selfRef">8.4.2. </a><a href="#name-event-timeline-track-with-l" class="section-name selfRef">Event timeline track with Location indexing</a>
+          <h4 id="name-event-timeline-track-with-m">
+<a href="#section-8.4.2" class="section-number selfRef">8.4.2. </a><a href="#name-event-timeline-track-with-m" class="section-name selfRef">Event timeline track with MOQT Location indexing</a>
           </h4>
 <p id="section-8.4.2-1">This example shows drone GPS coordinates synched with the start of each Group.<a href="#section-8.4.2-1" class="pilcrow">¶</a></p>
 <div class="lang-json sourcecode" id="section-8.4.2-2">
@@ -3046,12 +3140,10 @@ sports broadcast.<a href="#section-8.4.1-1" class="pilcrow">¶</a></p>
 [
     {
         "l": [0,0],
-        "type": "org.example-tracking.gps",
         "data": [47.1812,8.4592]
     },
     {
         "l": [1,0],
-        "type": "org.example-tracking.gps",
         "data": [47.1662,8.5155]
     }
 ]
@@ -3089,12 +3181,12 @@ is complete by taking the following steps:<a href="#section-9.2-1" class="pilcro
 <ul class="normal">
 <li class="normal" id="section-9.2-2.1">
             <p id="section-9.2-2.1.1">Send a SUBSCRIBE_DONE (See MOQT Sect 8.1.2) message for all active tracks using
-status code 0x2       Track Ended.<a href="#section-9.2-2.1.1" class="pilcrow">¶</a></p>
+status code 0x2 Track Ended.<a href="#section-9.2-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-9.2-2.2">
             <p id="section-9.2-2.2.1">If the live stream is being converted instantly to a VOD asset, then publish an
-independent (non-delta) catalog update which, for each track, sets isLive <a href="#islive" class="auto internal xref">Section 5.1.14</a>
-to FALSE and adds a track duration <a href="#trackduration" class="auto internal xref">Section 5.1.36</a> field.<a href="#section-9.2-2.2.1" class="pilcrow">¶</a></p>
+independent (non-delta) catalog update which, for each track, sets isLive <a href="#islive" class="auto internal xref">Section 5.1.15</a>
+to FALSE and adds a track duration <a href="#trackduration" class="auto internal xref">Section 5.1.37</a> field.<a href="#section-9.2-2.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-9.2-2.3">
             <p id="section-9.2-2.3.1">If the live stream is being terminated permanently without conversion to VOD, then
