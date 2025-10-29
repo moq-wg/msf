@@ -5,22 +5,22 @@
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
 Intended status: Informational                                 L. Curley
-Expires: 11 April 2026                                            Twitch
+Expires: 2 May 2026                                               Twitch
                                                              V. Vasiliev
                                                                   Google
                                                            S. Nandakumar
                                                                    Cisco
                                                                 K. Pugin
                                                                     Meta
-                                                          8 October 2025
+                                                         29 October 2025
 
 
-                         WARP Streaming Format
+                         MOQT Streaming Format
                        draft-ietf-moq-warp-latest
 
 Abstract
 
-   This document specifies the WARP Streaming Format, designed to
+   This document specifies the MOQT Streaming Format, designed to
    operate on Media Over QUIC Transport.
 
 About This Document
@@ -55,7 +55,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 11 April 2026.
+   This Internet-Draft will expire on 2 May 2026.
 
 Copyright Notice
 
@@ -82,7 +82,7 @@ Table of Contents
      4.3.  Content protection and encryption
    5.  Catalog
      5.1.  Catalog Fields
-       5.1.1.  WARP version
+       5.1.1.  MSF version
        5.1.2.  Delta update
        5.1.3.  Add tracks
        5.1.4.  Remove tracks
@@ -157,16 +157,16 @@ Table of Contents
 
 1.  Introduction
 
-   WARP Streaming Format (WARP) is a media format designed to deliver
-   LOC [LOC] compliant media content over Media Over QUIC Transport
-   (MOQT) [MoQTransport].  WARP works by fragmenting the bitstream into
-   objects that can be independently transmitted.  WARP leverages a
-   catalog format to describe the output of the original publisher.
-   WARP specifies how content should be packaged and signaled, defines
-   how the catalog communicates the content, specifies prioritization
+   MOQT Streaming Format (MSF) is a media format designed to deliver LOC
+   [LOC] compliant media content over Media Over QUIC Transport (MOQT)
+   [MoQTransport].  MSF works by fragmenting the bitstream into objects
+   that can be independently transmitted.  MSF leverages a catalog
+   format to describe the output of the original publisher.  MSF
+   specifies how content should be packaged and signaled, defines how
+   the catalog communicates the content, specifies prioritization
    strategies for real-time and workflows for beginning and terminating
-   broadcasts.  WARP also details how end-subscribers may perform
-   adaptive bitrate switching.  WARP is targeted at real-time and
+   broadcasts.  MSF also details how end-subscribers may perform
+   adaptive bitrate switching.  MSF is targeted at real-time and
    interactive levels of live latency, as well as VOD content.
 
    This document describes version 1 of the streaming format.
@@ -184,7 +184,7 @@ Table of Contents
 
 3.  Scope
 
-   The purpose of WARP is to provide an interoperable media streaming
+   The purpose of MSF is to provide an interoperable media streaming
    format operating over [MoQTransport].  Interoperability implies that:
 
    *  An original publisher can package incoming media content into
@@ -200,7 +200,7 @@ Table of Contents
    *  A final subscriber can parse the catalog, request tracks, decode
       and render the received media data.
 
-   WARP is intended to provide a format for delivering commercial media
+   MSF is intended to provide a format for delivering commercial media
    content.  To that end, the following features are within scope:
 
    *  Video codecs - all codecs supported by [LOC]
@@ -243,13 +243,13 @@ Table of Contents
    *  Logs and analytics management - support for the reporting of
       client-side QoE and relay delivery actions.
 
-   Initial verisons of WARP will prioritize basic features necessary to
+   Initial verisons of MSF will prioritize basic features necessary to
    exercise interoperability across delivery systems.  Later versions
    will add commercially necessary features.
 
 4.  Media packaging
 
-   WARP delivers LOC [LOC] packaged media bitstreams.
+   MSF delivers LOC [LOC] packaged media bitstreams.
 
 4.1.  LOC packaging
 
@@ -265,7 +265,7 @@ Table of Contents
 
 4.2.  Time-alignment
 
-   WARP Tracks MAY be time-aligned.  Those that are, are subject to the
+   MSF Tracks MAY be time-aligned.  Those that are, are subject to the
    following requirements:
 
    *  Tracks advertised in the catalog as belonging to a common render
@@ -275,7 +275,7 @@ Table of Contents
       numbered MOQT Group, after decoding, MUST have overlapping
       presentation time.
 
-   A consequence of this restriction is that a WARP receiver SHOULD be
+   A consequence of this restriction is that a MSF receiver SHOULD be
    able to cleanly switch between time-aligned media tracks at group
    boundaries.
 
@@ -286,7 +286,7 @@ Table of Contents
 5.  Catalog
 
    A Catalog is an MOQT Track that provides information about the other
-   tracks being produced by a WARP publisher.  A Catalog is used by WARP
+   tracks being produced by a MSF publisher.  A Catalog is used by MSF
    publishers for advertising their output and for subscribers in
    consuming that output.  The payload of the Catalog object is opaque
    to Relays and can be end-to-end encrypted.  The Catalog provides the
@@ -320,7 +320,7 @@ Table of Contents
         +=======================+===============+================+
         | Field                 | Name          | Definition     |
         +=======================+===============+================+
-        | WARP version          | version       | Section 5.1.1  |
+        | MSF version           | version       | Section 5.1.1  |
         +-----------------------+---------------+----------------+
         | Delta update          | deltaUpdate   | Section 5.1.2  |
         +-----------------------+---------------+----------------+
@@ -408,15 +408,15 @@ Table of Contents
 
                                  Table 2
 
-5.1.1.  WARP version
+5.1.1.  MSF version
 
    Location: R Required: Yes JSON Type: Number
 
-   Specifies the version of WARP referenced by this catalog.  There is
-   no guarantee that future catalog versions are backwards compatible
-   and field definitions and interpretation may change between versions.
-   A subscriber MUST NOT attempt to parse a catalog version which it
-   does not understand.
+   Specifies the version of MSF referenced by this catalog.  There is no
+   guarantee that future catalog versions are backwards compatible and
+   field definitions and interpretation may change between versions.  A
+   subscriber MUST NOT attempt to parse a catalog version which it does
+   not understand.
 
 5.1.2.  Delta update
 
@@ -557,10 +557,10 @@ Table of Contents
               +------------------+--------------------------+
               | audio            | Audio content            |
               +------------------+--------------------------+
-              | mediatimeline    | A WARP media timeline    |
+              | mediatimeline    | A MSF media timeline     |
               |                  | Section 7                |
               +------------------+--------------------------+
-              | eventtimeline    | A WARP event timeline    |
+              | eventtimeline    | A MSF event timeline     |
               |                  | Section 8                |
               +------------------+--------------------------+
               | caption          | A textual representation |
@@ -788,7 +788,7 @@ Table of Contents
    *  A delta update catalog MUST contain at least one instance of Add
       tracks Section 5.1.3, Remove tracks Section 5.1.4 or Clone Tracks
       Section 5.1.5 fields and MAY contain more.  It MUST NOT contain an
-      instance of a Tracks Section 5.1.8 field or a WARP version
+      instance of a Tracks Section 5.1.8 field or a MSF version
       Section 5.1.1 field.
 
    *  The Add, Delete and Clone operations are applied sequentially in
@@ -1408,8 +1408,8 @@ Table of Contents
 
 9.1.  Initiating a broadcast
 
-   A WARP publisher MUST publish a catalog track object before
-   publishing any media track objects.
+   A MSF publisher MUST publish a catalog track object before publishing
+   any media track objects.
 
 9.2.  Ending a live broadcast
 
@@ -1439,7 +1439,7 @@ Table of Contents
 
    This document creates a new entry in the "MoQ Streaming Format"
    Registry (see [MoQTransport] Sect 8).  The type value is 0x001, the
-   name is "WARP Streaming Format" and the RFC is XXX.
+   name is "MOQT Streaming Format" and the RFC is XXX.
 
 12.  Normative References
 
