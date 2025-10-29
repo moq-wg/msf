@@ -1,5 +1,5 @@
 ---
-title: "WARP Streaming Format"
+title: "MOQT Streaming Format"
 category: info
 
 docname: draft-ietf-moq-warp-latest
@@ -13,7 +13,7 @@ workgroup: "Media Over QUIC"
 keyword:
  - MoQ
  - MoQTransport
- - WARP
+ - MSF
 venue:
   group: "Media Over QUIC"
   type: "Working Group"
@@ -73,22 +73,22 @@ informative:
 
 --- abstract
 
-This document specifies the WARP Streaming Format, designed to operate on Media Over QUIC Transport.
+This document specifies the MOQT Streaming Format, designed to operate on Media Over QUIC Transport.
 
 
 --- middle
 
 # Introduction
 
-WARP Streaming Format (WARP) is a media format designed to deliver LOC {{LOC}}
+MOQT Streaming Format (MSF) is a media format designed to deliver LOC {{LOC}}
 compliant media content over Media Over QUIC Transport (MOQT) {{MoQTransport}}.
-WARP works by fragmenting the bitstream into objects that can be independently
-transmitted. WARP leverages a catalog format to describe the output of the
-original publisher. WARP specifies how content should be packaged and signaled,
+MSF works by fragmenting the bitstream into objects that can be independently
+transmitted. MSF leverages a catalog format to describe the output of the
+original publisher. MSF specifies how content should be packaged and signaled,
 defines how the catalog communicates the content, specifies prioritization
 strategies for real-time and workflows for beginning and terminating broadcasts.
-WARP also details how end-subscribers may perform adaptive bitrate switching.
-WARP is targeted at real-time and interactive levels of live latency, as well as
+MSF also details how end-subscribers may perform adaptive bitrate switching.
+MSF is targeted at real-time and interactive levels of live latency, as well as
 VOD content.
 
 This document describes version 1 of the streaming format.
@@ -102,7 +102,7 @@ describing the binary encoding.
 
 # Scope
 
-The purpose of WARP is to provide an interoperable media streaming format
+The purpose of MSF is to provide an interoperable media streaming format
 operating over {{MoQTransport}}. Interoperability implies that:
 
 * An original publisher can package incoming media content into tracks, prepare
@@ -114,7 +114,7 @@ operating over {{MoQTransport}}. Interoperability implies that:
 * A final subscriber can parse the catalog, request tracks, decode and render
   the received media data.
 
-WARP is intended to provide a format for delivering commercial media content. To
+MSF is intended to provide a format for delivering commercial media content. To
 that end, the following features are within scope:
 
 * Video codecs - all codecs supported by {{LOC}}
@@ -141,12 +141,12 @@ that end, the following features are within scope:
 * Logs and analytics management - support for the reporting of client-side QoE
    and relay delivery actions.
 
-Initial verisons of WARP will prioritize basic features necessary to exercise
+Initial verisons of MSF will prioritize basic features necessary to exercise
 interoperability across delivery systems. Later versions will add commercially
 necessary features.
 
 # Media packaging {#mediapackaging}
-WARP delivers LOC {{LOC}} packaged media bitstreams.
+MSF delivers LOC {{LOC}} packaged media bitstreams.
 
 ## LOC packaging
 This specification references Low Overhead Container (LOC) {{LOC}} to define how
@@ -159,7 +159,7 @@ When LOC packaging is used for a track, the catalog packaging attribute
 ({{packaging}}) MUST be present and it MUST be populated with a value of "loc".
 
 ## Time-alignment {#timealignment}
-WARP Tracks MAY be time-aligned. Those that are, are subject to the following
+MSF Tracks MAY be time-aligned. Those that are, are subject to the following
 requirements:
 
 * Tracks advertised in the catalog as belonging to a common render group MUST
@@ -167,7 +167,7 @@ requirements:
 * The render duration of the first media object of each equally numbered MOQT
   Group, after decoding, MUST have overlapping presentation time.
 
-A consequence of this restriction is that a WARP receiver SHOULD be able to
+A consequence of this restriction is that a MSF receiver SHOULD be able to
 cleanly switch between time-aligned media tracks at group boundaries.
 
 ## Content protection and encryption {#contentprotection}
@@ -176,7 +176,7 @@ ToDo - content protection for LOC-packaged content.
 
 # Catalog {#catalog}
 A Catalog is an MOQT Track that provides information about the other tracks being
-produced by a WARP publisher. A Catalog is used by WARP publishers for
+produced by a MSF publisher. A Catalog is used by MSF publishers for
 advertising their output and for subscribers in consuming that output. The
 payload of the Catalog object is opaque to Relays and can be end-to-end
 encrypted. The Catalog provides the names and namespaces of the tracks being
@@ -207,7 +207,7 @@ Table 1 provides an overview of all fields defined by this document.
 
 | Field                   |  Name                  |           Definition      |
 |:========================|:=======================|:==========================|
-| WARP version            | version                | {{warpversion}}           |
+| MSF version             | version                | {{msfversion}}            |
 | Delta update            | deltaUpdate            | {{deltaupdate}}           |
 | Add tracks              | addTracks              | {{addtracks}}             |
 | Remove tracks           | removeTracks           | {{removetracks}}          |
@@ -252,10 +252,10 @@ Table 2 defines the allowed locations for these fields within the document
 | T        | Track object                                                  |
 
 
-### WARP version {#warpversion}
+### MSF version {#msfversion}
 Location: R    Required: Yes    JSON Type: Number
 
-Specifies the version of WARP referenced by this catalog. There is no guarantee
+Specifies the version of MSF referenced by this catalog. There is no guarantee
 that future catalog versions are backwards compatible and field definitions and
 interpretation may change between versions. A subscriber MUST NOT attempt to
 parse a catalog version which it does not understand.
@@ -369,8 +369,8 @@ Table 4: Reserved track roles
 | audiodescription | An audio description for visually impaired users           |
 | video            | Visual content                                             |
 | audio            | Audio content                                              |
-| mediatimeline    | A WARP media timeline {{mediatimelinetrack}}               |
-| eventtimeline    | A WARP event timeline {{eventtimelinetrack}}               |
+| mediatimeline    | A MSF media timeline {{mediatimelinetrack}}                |
+| eventtimeline    | A MSF event timeline {{eventtimelinetrack}}                |
 | caption          | A textual representation of the audio track                |
 | subtitle         | A transcription of the spoken dialogue                     |
 | signlanguage     | A visual track for hearing impaired users.                 |
@@ -550,7 +550,7 @@ The following rules are to be followed in constructing and processing delta upda
 * A delta update catalog MUST contain at least one instance of Add tracks
   {{addtracks}}, Remove tracks {{removetracks}} or Clone Tracks {{clonetracks}}
   fields and MAY contain more. It MUST NOT contain an instance of a Tracks
-  {{tracks}} field or a WARP version {{warpversion}} field.
+  {{tracks}} field or a MSF version {{msfversion}} field.
 * The Add, Delete and Clone operations are applied sequentially in the order they
   are declared in the document. Each operation in the sequence is applied to the
   target document; the resulting document becomes the target of the next operation.
@@ -1172,7 +1172,7 @@ This example shows drone GPS coordinates synched with the start of each Group.
 # Workflow
 
 ## Initiating a broadcast
-A WARP publisher MUST publish a catalog track object before publishing any media
+A MSF publisher MUST publish a catalog track object before publishing any media
 track objects.
 
 ## Ending a live broadcast
@@ -1197,7 +1197,7 @@ ToDo
 
 This document creates a new entry in the "MoQ Streaming Format" Registry
 (see {{MoQTransport}} Sect 8).  The type value is 0x001, the name is
-"WARP Streaming Format" and the RFC is XXX.
+"MOQT Streaming Format" and the RFC is XXX.
 
 --- back
 
