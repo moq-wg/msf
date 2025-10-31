@@ -1508,9 +1508,9 @@ Table of Contents
 
    *  URL pointing at a catalog and supplying a token
       moqt://example.com/relay-app/relayID?ns=customerID/
-      broadcastID&c4m=gqhkYWxnIGVzaGFyqGR0eXB lY2NhdZ9hdWQAY3VybGZlbWlzc
-      wZleWV2aW5uZWlhdGVwQWNyZW5lYnJmcmVqMTIzNDU2NzgwMHZpc3VlZF9hdD0xN
-      zMwNDM4NDAw
+      broadcastID&c4m=gqhkYWxnIGVzaGFyqGR0 eXBNhdZ9hdWQAY3VybGZlbWlzcwZl
+      eWV2aW5uZWlhdGVwQWNyZW5lYnJmcmVqMTIzNDU2Nzgw
+      MHZpc3VlZF9hdD0xNzMwNDM4NDAw
 
 9.1.2.  Connection using WebTransport
 
