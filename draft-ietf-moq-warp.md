@@ -1247,16 +1247,16 @@ Example URLs
   moqt://example.com/relay-app/relayID?ns=customerID/broadcastID&location-range=34-0-64-16
 
 * URL pointing at a catalog and supplying a token
-  moqt://example.com/relay-app/relayID?ns=customerID/broadcastID&c4m=gqhkYWxnIGV
-  zaGFyqGR0eXBNhdZ9hdWQAY3VybGZlbWlzcwZleWV2aW5uZWlhdGVwQWNyZW5lYnJmcmVqMTIzNDU2
-  NzgwMHZpc3VlZF9hdD0xNzMwNDM4NDAw
+  moqt://example.com/relay-app/relayID?ns=customerID/broadcastID
+  &c4m=gqhkYWxnIGVzaGFyqGR0eXBNhdZ9hdWQAY3VybGZlbWlzcwZleWV2aW5u
+  ZWlhdGVwQWNyZW5lYnJmcmVqMTIzNDU2NzgwMHZpc3VlZF9hdD0xNzMwNDM
 
 ### Connection using WebTransport
 Assuming a WARP URL of
 
-moqt://example.com/relay-app/relayID?ns=customerID/broadcastID&c4m=gqhkYWxnIGV
-zaGFyqGR0eXBNhdZ9hdWQAY3VybGZlbWlzcwZleWV2aW5uZWlhdGVwQWNyZW5lYnJmcmVqMTIzNDU2
-NzgwMHZpc3VlZF9hdD0xNzMwNDM4NDAw
+moqt://example.com/relay-app/relayID?ns=customerID/broadcastID
+&c4m=gqhkYWxnIGVzaGFyqGR0eXBNhdZ9hdWQAY3VybGZlbWlzcwZleWV2aW5u
+ZWlhdGVwQWNyZW5lYnJmcmVqMTIzNDU2NzgwMHZpc3VlZF9hdD0xNzMwNDM
 
 1. The player generates the WebTransport URL by substituting https for moqt and stripping off
    all query args. The token bytes are extracted and stored separately.
@@ -1269,9 +1269,9 @@ NzgwMHZpc3VlZF9hdD0xNzMwNDM4NDAw
 ### Connection using raw QUIC
 Assuming a WARP URL of
 
-moqt://example.com/relay-app/relayID?ns=customerID/broadcastID&c4m=gqhkYWxnIGV
-zaGFyqGR0eXBNhdZ9hdWQAY3VybGZlbWlzcwZleWV2aW5uZWlhdGVwQWNyZW5lYnJmcmVqMTIzNDU2
-NzgwMHZpc3VlZF9hdD0xNzMwNDM4NDAw
+moqt://example.com/relay-app/relayID?ns=customerID/broadcastID
+&c4m=gqhkYWxnIGVzaGFyqGR0eXBNhdZ9hdWQAY3VybGZlbWlzcwZleWV2aW5u
+ZWlhdGVwQWNyZW5lYnJmcmVqMTIzNDU2NzgwMHZpc3VlZF9hdD0xNzMwNDM
 
 1. The player generates the AUTHORITY value of 'example.com' by stripping off the protocol,
    path and query components from the WARp URL. The token bytes are extracted and stored separately.
