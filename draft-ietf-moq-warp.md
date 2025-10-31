@@ -54,6 +54,7 @@ normative:
   MIME: RFC6838
   RFC9000: RFC9000
   RFC4180: RFC4180
+  RFC3986: RFC3986
   GZIP: RFC1952
   WEBCODECS-CODEC-REGISTRY:
     title: "WebCodecs Codec Registry"
@@ -1170,6 +1171,117 @@ This example shows drone GPS coordinates synched with the start of each Group.
 ~~~
 
 # Workflow
+
+## URL construction & interpretation
+A WARP URL is a String with the following components
+
+moqt:// + authority + path + query
+
+* THe URL MUST conform with {{RFC3986}}.
+* The protocol is moqt and is required.
+* The authority is required and holds the host and optional port. The default port
+  will be 443. The authority holds the information needed for the client to connect
+  to the distribution service, using either WebTransport or Raw QUIC.
+* The path is optional. If present, it contains information that might be used by
+  the server in initializing and configuring the connection.
+* The query is optional. If present, it holds key-value data. Certain keys are reserved
+  by this specificaiton to hold special data. Multiple key/value pairs MAY be included,
+  separated by an ampersand. Query options MUST be stripped from the path when the path
+  is sent to the server at conneciton establishment. Query arguments are intended only
+  for the player and MUST NOT be transmitted to the server.
+
+An example URL is shown below:
+
+moqt://example.com/relay-app/relayID?c=customerID/broadcastID/catalog&c4m=12345
+
+
+### Reserved query arguments
+
+Table 5 defines reserved key names for the query portion of the URL. Keynames are
+case-sensitive.
+
+| Name            |                Description                       |
+|:================|:=================================================|
+| ns              | The Namespace of the track                       |
+| t               | The Name of a non-catalog track                  |
+| wallclock-range | A subclip defined by a wallclock time range      |
+| mediatime-range | A subclip defined by a media time range          |
+| location-range  | A subclip defined by a MOQT Location range       |
+| c4m             | A base64 encoded C4M token                       |
+
+ * ns - the Namespace of the track. The '/' character in the String defines
+   tuple field boundaries and is not included in the tuple fields. The '/' character
+   MUST NOT be used other than to define tuple boundaries. A closing '/' for the
+   last tuple field MUST NOT be included. This key MUST be included if 't' is present.
+ * t - the track name of a non-catalog track. This field MUST NOT be included if the
+   URL is referencing a catalog track.
+ * wallclock-range - a range defined by start and end wallclock times, each expressed
+   as milliseconds since Unix Epoch and separated by a "-" dash.
+ * mediatime-range - a range defined by start and end media times, each expressed
+    as milliseconds and separated by a "-" dash.
+ * location-range - a range defined by start and end media MOQT Location tuples and
+   expressed as Start Group ID, Start Object ID, End Group ID, End Object ID, each
+   separated by a "-" dash.
+
+Only one of wallclock-range, mediatime-range or location-range MAY be included in each
+URL. Inclusion of a range query-arg is an instruction to the player to only play the track
+content over the range specified.
+If 't' is omitted, then the URL is assumed to point at a catalog, in which case the track
+name is automatically 'catalog'.
+If 'ns' and 't' are omitted, then the player is assumed to have out-of-band information
+for accessing tracks and the URL purely defines the connection to the delivery network. 
+
+Example query args
+* wallclock-range=1761759637565-1761759836189
+* mediatime-range=0-13421
+* location-range=34-0-2145-16
+
+Example URLs
+* URL pointing at a catalog
+  moqt://example.com/relay-app/relayID?ns=customerID/broadcastID
+
+* URL pointing at a non-catalog track
+  moqt://example.com/relay-app/relayID?ns=customerID/broadcastID&t=video
+
+* URL pointing at a subclip of a catalog
+  moqt://example.com/relay-app/relayID?ns=customerID/broadcastID&location-range=34-0-64-16
+
+* URL pointing at a catalog and supplying a token
+  moqt://example.com/relay-app/relayID?ns=customerID/broadcastID&c4m=gqhkYWxnIGVzaGFyqGR0eXB
+  lY2NhdZ9hdWQAY3VybGZlbWlzcwZleWV2aW5uZWlhdGVwQWNyZW5lYnJmcmVqMTIzNDU2NzgwMHZpc3VlZF9hdD0xN
+  zMwNDM4NDAw
+ 
+### Connection using WebTransport
+Assuming a WARP URL of
+
+  moqt://example.com/relay-app/relayID?ns=customerID/broadcastID&c4m=gqhkYWxnIGVzaGFyqGR0eXB
+  lY2NhdZ9hdWQAY3VybGZlbWlzcwZleWV2aW5uZWlhdGVwQWNyZW5lYnJmcmVqMTIzNDU2NzgwMHZpc3VlZF9hdD0xN
+  zMwNDM4NDAw
+
+1. The player generates the WebTransport URL by substituting https for moqt and stripping off
+   all query args. The token bytes are extracted and stored separately.
+2. Player establishes a Webtransport connection to 'https://example.com/relay-app/relayID' and
+   once connected, it executes CLIENT_SETUP supplying the token bytes via an AUTHORIZATION TOKEN
+   parameter and registering a token alias.
+3. Player subscribes to NAMESPACE customerID | broadcastID (where | represents the tuple
+   boundary) and to NAME catalog, along with the token alias.
+
+### Connection using raw QUIC
+Assuming a WARP URL of
+
+  moqt://example.com/relay-app/relayID?ns=customerID/broadcastID&c4m=gqhkYWxnIGVzaGFyqGR0eXB
+  lY2NhdZ9hdWQAY3VybGZlbWlzcwZleWV2aW5uZWlhdGVwQWNyZW5lYnJmcmVqMTIzNDU2NzgwMHZpc3VlZF9hdD0xN
+  zMwNDM4NDAw
+
+1. The player generates the AUTHORITY value of 'example.com' by stripping off the protocol,
+   path and query components from the WARp URL. The token bytes are extracted and stored separately.
+2. The player generates the PATH value of 'relay-app/relayID' by removing the protocol, authority
+   and query arguments from the WARP URL.
+   Player establishes a QUIC connection to the host and port identified by the AUTHORITY value and
+   then executes CLIENT_SETUP supplying the AUTHORTY, PATH and AUTHORIZATION TOKEN as parameters,
+   registering an alias against the token.
+3. Player subscribes to NAMESPACE customerID | broadcastID ( '|' defines the tuple boundary)
+   and to NAME catalog, along with the token alias.
 
 ## Initiating a broadcast
 A WARP publisher MUST publish a catalog track object before publishing any media
