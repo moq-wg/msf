@@ -1254,9 +1254,9 @@ Example URLs
 ### Connection using WebTransport
 Assuming a WARP URL of
 
-  moqt://example.com/relay-app/relayID?ns=customerID/broadcastID&c4m=gqhkYWxnIGVzaGFyqGR0eXB
-  lY2NhdZ9hdWQAY3VybGZlbWlzcwZleWV2aW5uZWlhdGVwQWNyZW5lYnJmcmVqMTIzNDU2NzgwMHZpc3VlZF9hdD0xN
-  zMwNDM4NDAw
+  moqt://example.com/relay-app/relayID?ns=customerID/broadcastID&c4m=gqhkYWxnIGVzaGFyqGR0
+  eXBNhdZ9hdWQAY3VybGZlbWlzcwZleWV2aW5uZWlhdGVwQWNyZW5lYnJmcmVqMTIzNDU2Nzgw
+  MHZpc3VlZF9hdD0xNzMwNDM4NDAw
 
 1. The player generates the WebTransport URL by substituting https for moqt and stripping off
    all query args. The token bytes are extracted and stored separately.
