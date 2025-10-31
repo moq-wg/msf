@@ -1229,7 +1229,7 @@ content over the range specified.
 If 't' is omitted, then the URL is assumed to point at a catalog, in which case the track
 name is automatically 'catalog'.
 If 'ns' and 't' are omitted, then the player is assumed to have out-of-band information
-for accessing tracks and the URL purely defines the connection to the delivery network. 
+for accessing tracks and the URL purely defines the connection to the delivery network.
 
 Example query args
 * wallclock-range=1761759637565-1761759836189
@@ -1250,7 +1250,7 @@ Example URLs
   moqt://example.com/relay-app/relayID?ns=customerID/broadcastID&c4m=gqhkYWxnIGVzaGFyqGR0eXB
   lY2NhdZ9hdWQAY3VybGZlbWlzcwZleWV2aW5uZWlhdGVwQWNyZW5lYnJmcmVqMTIzNDU2NzgwMHZpc3VlZF9hdD0xN
   zMwNDM4NDAw
- 
+
 ### Connection using WebTransport
 Assuming a WARP URL of
 
