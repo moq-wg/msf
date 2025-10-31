@@ -1247,9 +1247,9 @@ Example URLs
   moqt://example.com/relay-app/relayID?ns=customerID/broadcastID&location-range=34-0-64-16
 
 * URL pointing at a catalog and supplying a token
-  moqt://example.com/relay-app/relayID?ns=customerID/broadcastID&c4m=gqhkYWxnIGVzaGFyqGR0eXB
-  lY2NhdZ9hdWQAY3VybGZlbWlzcwZleWV2aW5uZWlhdGVwQWNyZW5lYnJmcmVqMTIzNDU2NzgwMHZpc3VlZF9hdD0xN
-  zMwNDM4NDAw
+  moqt://example.com/relay-app/relayID?ns=customerID/broadcastID&c4m=gqhkYWxnIGVzaGFyqGR0
+  eXBNhdZ9hdWQAY3VybGZlbWlzcwZleWV2aW5uZWlhdGVwQWNyZW5lYnJmcmVqMTIzNDU2Nzgw
+  MHZpc3VlZF9hdD0xNzMwNDM4NDAw
 
 ### Connection using WebTransport
 Assuming a WARP URL of
