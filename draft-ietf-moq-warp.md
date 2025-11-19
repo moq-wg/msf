@@ -167,7 +167,7 @@ requirements:
 * The render duration of the first media object of each equally numbered MOQT
   Group, after decoding, MUST have overlapping presentation time.
 
-A consequence of this restriction is that a MSF receiver SHOULD be able to
+A consequence of this restriction is that an MSF receiver SHOULD be able to
 cleanly switch between time-aligned media tracks at group boundaries.
 
 ## Content protection and encryption {#contentprotection}
@@ -369,8 +369,8 @@ Table 4: Reserved track roles
 | audiodescription | An audio description for visually impaired users           |
 | video            | Visual content                                             |
 | audio            | Audio content                                              |
-| mediatimeline    | A MSF media timeline {{mediatimelinetrack}}                |
-| eventtimeline    | A MSF event timeline {{eventtimelinetrack}}                |
+| mediatimeline    | An MSF media timeline {{mediatimelinetrack}}                |
+| eventtimeline    | An MSF event timeline {{eventtimelinetrack}}                |
 | caption          | A textual representation of the audio track                |
 | subtitle         | A transcription of the spoken dialogue                     |
 | signlanguage     | A visual track for hearing impaired users.                 |
@@ -550,7 +550,7 @@ The following rules are to be followed in constructing and processing delta upda
 * A delta update catalog MUST contain at least one instance of Add tracks
   {{addtracks}}, Remove tracks {{removetracks}} or Clone Tracks {{clonetracks}}
   fields and MAY contain more. It MUST NOT contain an instance of a Tracks
-  {{tracks}} field or a MSF version {{msfversion}} field.
+  {{tracks}} field or an MSF version {{msfversion}} field.
 * The Add, Delete and Clone operations are applied sequentially in the order they
   are declared in the document. Each operation in the sequence is applied to the
   target document; the resulting document becomes the target of the next operation.
@@ -1172,7 +1172,7 @@ This example shows drone GPS coordinates synched with the start of each Group.
 # Workflow
 
 ## Initiating a broadcast
-A MSF publisher MUST publish a catalog track object before publishing any media
+An MSF publisher MUST publish a catalog track object before publishing any media
 track objects.
 
 ## Ending a live broadcast
