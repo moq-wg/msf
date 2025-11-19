@@ -5,14 +5,14 @@
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
 Intended status: Informational                                 L. Curley
-Expires: 2 May 2026                                               Twitch
+Expires: 23 May 2026                                              Twitch
                                                              V. Vasiliev
                                                                   Google
                                                            S. Nandakumar
                                                                    Cisco
                                                                 K. Pugin
                                                                     Meta
-                                                         29 October 2025
+                                                        19 November 2025
 
 
                          MOQT Streaming Format
@@ -55,7 +55,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 2 May 2026.
+   This Internet-Draft will expire on 23 May 2026.
 
 Copyright Notice
 
@@ -275,7 +275,7 @@ Table of Contents
       numbered MOQT Group, after decoding, MUST have overlapping
       presentation time.
 
-   A consequence of this restriction is that a MSF receiver SHOULD be
+   A consequence of this restriction is that an MSF receiver SHOULD be
    able to cleanly switch between time-aligned media tracks at group
    boundaries.
 
@@ -557,10 +557,10 @@ Table of Contents
               +------------------+--------------------------+
               | audio            | Audio content            |
               +------------------+--------------------------+
-              | mediatimeline    | A MSF media timeline     |
+              | mediatimeline    | An MSF media timeline    |
               |                  | Section 7                |
               +------------------+--------------------------+
-              | eventtimeline    | A MSF event timeline     |
+              | eventtimeline    | An MSF event timeline    |
               |                  | Section 8                |
               +------------------+--------------------------+
               | caption          | A textual representation |
@@ -788,7 +788,7 @@ Table of Contents
    *  A delta update catalog MUST contain at least one instance of Add
       tracks Section 5.1.3, Remove tracks Section 5.1.4 or Clone Tracks
       Section 5.1.5 fields and MAY contain more.  It MUST NOT contain an
-      instance of a Tracks Section 5.1.8 field or a MSF version
+      instance of a Tracks Section 5.1.8 field or an MSF version
       Section 5.1.1 field.
 
    *  The Add, Delete and Clone operations are applied sequentially in
@@ -1408,8 +1408,8 @@ Table of Contents
 
 9.1.  Initiating a broadcast
 
-   A MSF publisher MUST publish a catalog track object before publishing
-   any media track objects.
+   An MSF publisher MUST publish a catalog track object before
+   publishing any media track objects.
 
 9.2.  Ending a live broadcast
 
