@@ -4,19 +4,19 @@
 <meta charset="utf-8">
 <meta content="Common,Latin" name="scripts">
 <meta content="initial-scale=1.0" name="viewport">
-<title>WARP Streaming Format</title>
+<title>MOQT Streaming Format</title>
 <meta content="Will Law" name="author">
 <meta content="Luke Curley" name="author">
 <meta content="Victor Vasiliev" name="author">
 <meta content="Suhas Nandakumar" name="author">
 <meta content="Kirill Pugin" name="author">
 <meta content="
-       This document specifies the WARP Streaming Format, designed to operate on Media Over QUIC Transport. 
+       This document specifies the MOQT Streaming Format, designed to operate on Media Over QUIC Transport. 
     " name="description">
 <meta content="xml2rfc 3.31.0" name="generator">
 <meta content="MoQ" name="keyword">
 <meta content="MoQTransport" name="keyword">
-<meta content="WARP" name="keyword">
+<meta content="MSF" name="keyword">
 <meta content="draft-ietf-moq-warp-latest" name="ietf.draft">
 <!-- Generator version information:
   xml2rfc 3.31.0
@@ -1048,12 +1048,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <table class="ears">
 <thead><tr>
 <td class="left">Internet-Draft</td>
-<td class="center">WARP Streaming Format</td>
-<td class="right">October 2025</td>
+<td class="center">MOQT Streaming Format</td>
+<td class="right">November 2025</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Law, et al.</td>
-<td class="center">Expires 25 April 2026</td>
+<td class="center">Expires 30 May 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1066,12 +1066,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-moq-warp-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-10-22" class="published">22 October 2025</time>
+<time datetime="2025-11-26" class="published">26 November 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-04-25">25 April 2026</time></dd>
+<dd class="expires"><time datetime="2026-05-30">30 May 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1097,10 +1097,10 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </dd>
 </dl>
 </div>
-<h1 id="title">WARP Streaming Format</h1>
+<h1 id="title">MOQT Streaming Format</h1>
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
-<p id="section-abstract-1">This document specifies the WARP Streaming Format, designed to operate on Media Over QUIC Transport.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-1">This document specifies the MOQT Streaming Format, designed to operate on Media Over QUIC Transport.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-about-this-document">
@@ -1137,7 +1137,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 25 April 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 30 May 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1196,7 +1196,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
                 <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-catalog-fields" class="internal xref">Catalog Fields</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.1">
-                    <p id="section-toc.1-1.5.2.1.2.1.1"><a href="#section-5.1.1" class="auto internal xref">5.1.1</a>.  <a href="#name-warp-version" class="internal xref">WARP version</a></p>
+                    <p id="section-toc.1-1.5.2.1.2.1.1"><a href="#section-5.1.1" class="auto internal xref">5.1.1</a>.  <a href="#name-msf-version" class="internal xref">MSF version</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.2">
                     <p id="section-toc.1-1.5.2.1.2.2.1"><a href="#section-5.1.2" class="auto internal xref">5.1.2</a>.  <a href="#name-delta-update" class="internal xref">Delta update</a></p>
@@ -1427,15 +1427,15 @@ svg :is([fill="white"], [fill^="#fff"]) {
       <h2 id="name-introduction">
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
-<p id="section-1-1">WARP Streaming Format (WARP) is a media format designed to deliver LOC <span>[<a href="#LOC" class="cite xref">LOC</a>]</span>
+<p id="section-1-1">MOQT Streaming Format (MSF) is a media format designed to deliver LOC <span>[<a href="#LOC" class="cite xref">LOC</a>]</span>
 compliant media content over Media Over QUIC Transport (MOQT) <span>[<a href="#MoQTransport" class="cite xref">MoQTransport</a>]</span>.
-WARP works by fragmenting the bitstream into objects that can be independently
-transmitted. WARP leverages a catalog format to describe the output of the
-original publisher. WARP specifies how content should be packaged and signaled,
+MSF works by fragmenting the bitstream into objects that can be independently
+transmitted. MSF leverages a catalog format to describe the output of the
+original publisher. MSF specifies how content should be packaged and signaled,
 defines how the catalog communicates the content, specifies prioritization
 strategies for real-time and workflows for beginning and terminating broadcasts.
-WARP also details how end-subscribers may perform adaptive bitrate switching.
-WARP is targeted at real-time and interactive levels of live latency, as well as
+MSF also details how end-subscribers may perform adaptive bitrate switching.
+MSF is targeted at real-time and interactive levels of live latency, as well as
 VOD content.<a href="#section-1-1" class="pilcrow">¶</a></p>
 <p id="section-1-2">This document describes version 1 of the streaming format.<a href="#section-1-2" class="pilcrow">¶</a></p>
 </section>
@@ -1458,7 +1458,7 @@ describing the binary encoding.<a href="#section-2-2" class="pilcrow">¶</a></p>
       <h2 id="name-scope">
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-scope" class="section-name selfRef">Scope</a>
       </h2>
-<p id="section-3-1">The purpose of WARP is to provide an interoperable media streaming format
+<p id="section-3-1">The purpose of MSF is to provide an interoperable media streaming format
 operating over <span>[<a href="#MoQTransport" class="cite xref">MoQTransport</a>]</span>. Interoperability implies that:<a href="#section-3-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3-2.1">
@@ -1476,7 +1476,7 @@ tracks, both to other relays or to the final subscriber.<a href="#section-3-2.2.
 the received media data.<a href="#section-3-2.3.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-3-3">WARP is intended to provide a format for delivering commercial media content. To
+<p id="section-3-3">MSF is intended to provide a format for delivering commercial media content. To
 that end, the following features are within scope:<a href="#section-3-3" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3-4.1">
@@ -1533,7 +1533,7 @@ fconditions of throughput variability.<a href="#section-3-4.13.1" class="pilcrow
  and relay delivery actions.<a href="#section-3-4.15.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-3-5">Initial verisons of WARP will prioritize basic features necessary to exercise
+<p id="section-3-5">Initial verisons of MSF will prioritize basic features necessary to exercise
 interoperability across delivery systems. Later versions will add commercially
 necessary features.<a href="#section-3-5" class="pilcrow">¶</a></p>
 </section>
@@ -1543,7 +1543,7 @@ necessary features.<a href="#section-3-5" class="pilcrow">¶</a></p>
       <h2 id="name-media-packaging">
 <a href="#section-4" class="section-number selfRef">4. </a><a href="#name-media-packaging" class="section-name selfRef">Media packaging</a>
       </h2>
-<p id="section-4-1">WARP delivers LOC <span>[<a href="#LOC" class="cite xref">LOC</a>]</span> packaged media bitstreams.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<p id="section-4-1">MSF delivers LOC <span>[<a href="#LOC" class="cite xref">LOC</a>]</span> packaged media bitstreams.<a href="#section-4-1" class="pilcrow">¶</a></p>
 <div id="loc-packaging">
 <section id="section-4.1">
         <h3 id="name-loc-packaging">
@@ -1563,7 +1563,7 @@ within the same MOQT Group.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
         <h3 id="name-time-alignment">
 <a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-time-alignment" class="section-name selfRef">Time-alignment</a>
         </h3>
-<p id="section-4.2-1">WARP Tracks <span class="bcp14">MAY</span> be time-aligned. Those that are, are subject to the following
+<p id="section-4.2-1">MSF Tracks <span class="bcp14">MAY</span> be time-aligned. Those that are, are subject to the following
 requirements:<a href="#section-4.2-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4.2-2.1">
@@ -1575,7 +1575,7 @@ be time-aligned.<a href="#section-4.2-2.1.1" class="pilcrow">¶</a></p>
 Group, after decoding, <span class="bcp14">MUST</span> have overlapping presentation time.<a href="#section-4.2-2.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-4.2-3">A consequence of this restriction is that a WARP receiver <span class="bcp14">SHOULD</span> be able to
+<p id="section-4.2-3">A consequence of this restriction is that an MSF receiver <span class="bcp14">SHOULD</span> be able to
 cleanly switch between time-aligned media tracks at group boundaries.<a href="#section-4.2-3" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1595,7 +1595,7 @@ cleanly switch between time-aligned media tracks at group boundaries.<a href="#s
 <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-catalog" class="section-name selfRef">Catalog</a>
       </h2>
 <p id="section-5-1">A Catalog is an MOQT Track that provides information about the other tracks being
-produced by a WARP publisher. A Catalog is used by WARP publishers for
+produced by a MSF publisher. A Catalog is used by MSF publishers for
 advertising their output and for subscribers in consuming that output. The
 payload of the Catalog object is opaque to Relays and can be end-to-end
 encrypted. The Catalog provides the names and namespaces of the tracks being
@@ -1630,10 +1630,10 @@ of field names within the JSON document is not important.<a href="#section-5.1-1
           </thead>
           <tbody>
             <tr>
-              <td class="text-left" rowspan="1" colspan="1">WARP version</td>
+              <td class="text-left" rowspan="1" colspan="1">MSF version</td>
               <td class="text-left" rowspan="1" colspan="1">version</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <a href="#warpversion" class="auto internal xref">Section 5.1.1</a>
+                <a href="#msfversion" class="auto internal xref">Section 5.1.1</a>
 </td>
             </tr>
             <tr>
@@ -1903,13 +1903,13 @@ of field names within the JSON document is not important.<a href="#section-5.1-1
             </tr>
           </tbody>
         </table>
-<div id="warpversion">
+<div id="msfversion">
 <section id="section-5.1.1">
-          <h4 id="name-warp-version">
-<a href="#section-5.1.1" class="section-number selfRef">5.1.1. </a><a href="#name-warp-version" class="section-name selfRef">WARP version</a>
+          <h4 id="name-msf-version">
+<a href="#section-5.1.1" class="section-number selfRef">5.1.1. </a><a href="#name-msf-version" class="section-name selfRef">MSF version</a>
           </h4>
 <p id="section-5.1.1-1">Location: R    Required: Yes    JSON Type: Number<a href="#section-5.1.1-1" class="pilcrow">¶</a></p>
-<p id="section-5.1.1-2">Specifies the version of WARP referenced by this catalog. There is no guarantee
+<p id="section-5.1.1-2">Specifies the version of MSF referenced by this catalog. There is no guarantee
 that future catalog versions are backwards compatible and field definitions and
 interpretation may change between versions. A subscriber <span class="bcp14">MUST NOT</span> attempt to
 parse a catalog version which it does not understand.<a href="#section-5.1.1-2" class="pilcrow">¶</a></p>
@@ -2111,12 +2111,12 @@ fully describe the content of the track.<a href="#section-5.1.14-3" class="pilcr
               </tr>
               <tr>
                 <td class="text-left" rowspan="1" colspan="1">mediatimeline</td>
-                <td class="text-left" rowspan="1" colspan="1">A WARP media timeline <a href="#mediatimelinetrack" class="auto internal xref">Section 7</a>
+                <td class="text-left" rowspan="1" colspan="1">An MSF media timeline <a href="#mediatimelinetrack" class="auto internal xref">Section 7</a>
 </td>
               </tr>
               <tr>
                 <td class="text-left" rowspan="1" colspan="1">eventtimeline</td>
-                <td class="text-left" rowspan="1" colspan="1">A WARP event timeline <a href="#eventtimelinetrack" class="auto internal xref">Section 8</a>
+                <td class="text-left" rowspan="1" colspan="1">An MSF event timeline <a href="#eventtimelinetrack" class="auto internal xref">Section 8</a>
 </td>
               </tr>
               <tr>
@@ -2406,7 +2406,7 @@ a prior delta update.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
             <p id="section-5.2-4.2.1">A delta update catalog <span class="bcp14">MUST</span> contain at least one instance of Add tracks
 <a href="#addtracks" class="auto internal xref">Section 5.1.3</a>, Remove tracks <a href="#removetracks" class="auto internal xref">Section 5.1.4</a> or Clone Tracks <a href="#clonetracks" class="auto internal xref">Section 5.1.5</a>
 fields and <span class="bcp14">MAY</span> contain more. It <span class="bcp14">MUST NOT</span> contain an instance of a Tracks
-<a href="#tracks" class="auto internal xref">Section 5.1.8</a> field or a WARP version <a href="#warpversion" class="auto internal xref">Section 5.1.1</a> field.<a href="#section-5.2-4.2.1" class="pilcrow">¶</a></p>
+<a href="#tracks" class="auto internal xref">Section 5.1.8</a> field or an MSF version <a href="#msfversion" class="auto internal xref">Section 5.1.1</a> field.<a href="#section-5.2-4.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.2-4.3">
             <p id="section-5.2-4.3.1">The Add, Delete and Clone operations are applied sequentially in the order they
@@ -3166,7 +3166,7 @@ sports broadcast.<a href="#section-8.4.1-1" class="pilcrow">¶</a></p>
         <h3 id="name-initiating-a-broadcast">
 <a href="#section-9.1" class="section-number selfRef">9.1. </a><a href="#name-initiating-a-broadcast" class="section-name selfRef">Initiating a broadcast</a>
         </h3>
-<p id="section-9.1-1">A WARP publisher <span class="bcp14">MUST</span> publish a catalog track object before publishing any media
+<p id="section-9.1-1">An MSF publisher <span class="bcp14">MUST</span> publish a catalog track object before publishing any media
 track objects.<a href="#section-9.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -3213,7 +3213,7 @@ TRUE and which contains an empty Tracks <a href="#tracks" class="auto internal x
       </h2>
 <p id="section-11-1">This document creates a new entry in the "MoQ Streaming Format" Registry
 (see <span>[<a href="#MoQTransport" class="cite xref">MoQTransport</a>]</span> Sect 8).  The type value is 0x001, the name is
-"WARP Streaming Format" and the RFC is XXX.<a href="#section-11-1" class="pilcrow">¶</a></p>
+"MOQT Streaming Format" and the RFC is XXX.<a href="#section-11-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-normative-references">
