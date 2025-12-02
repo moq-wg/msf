@@ -2,7 +2,7 @@
 title: "MOQT Streaming Format"
 category: info
 
-docname: draft-ietf-moq-warp-latest
+docname: draft-ietf-moq-msf-latest
 submissiontype: IETF  # also: "independent", "IAB", or "IRTF"
 number:
 date:
@@ -19,9 +19,9 @@ venue:
   type: "Working Group"
   mail: "moq@ietf.org"
   arch: "https://mailarchive.ietf.org/arch/browse/moq/"
-  github: "moq-wg/warp-streaming-format"
-  latest: "https://moq-wg.github.io/warp-streaming-format/
-           draft-ietf-moq-warp.html"
+  github: "moq-wg/msf"
+  latest: "https://moq-wg.github.io/msf/
+           draft-ietf-moq-msf.html"
 
 author:
  -
