@@ -5,18 +5,18 @@
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
 Intended status: Informational                                 L. Curley
-Expires: 30 May 2026                                              Twitch
+Expires: 1 July 2026                                              Twitch
                                                              V. Vasiliev
                                                                   Google
                                                            S. Nandakumar
                                                                    Cisco
                                                                 K. Pugin
                                                                     Meta
-                                                        26 November 2025
+                                                        28 December 2025
 
 
                          MOQT Streaming Format
-                       draft-ietf-moq-warp-latest
+                       draft-ietf-moq-msf-latest
 
 Abstract
 
@@ -28,9 +28,9 @@ About This Document
    This note is to be removed before publishing as an RFC.
 
    The latest revision of this draft can be found at https://moq-
-   wg.github.io/warp-streaming-format/ draft-ietf-moq-warp.html.  Status
-   information for this document may be found at
-   https://datatracker.ietf.org/doc/draft-ietf-moq-warp/.
+   wg.github.io/msf/ draft-ietf-moq-msf.html.  Status information for
+   this document may be found at https://datatracker.ietf.org/doc/draft-
+   ietf-moq-msf/.
 
    Discussion of this document takes place on the Media Over QUIC
    Working Group mailing list (mailto:moq@ietf.org), which is archived
@@ -38,7 +38,7 @@ About This Document
    https://www.ietf.org/mailman/listinfo/moq/.
 
    Source for this draft and an issue tracker can be found at
-   https://github.com/moq-wg/warp-streaming-format.
+   https://github.com/moq-wg/msf.
 
 Status of This Memo
 
@@ -55,7 +55,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 30 May 2026.
+   This Internet-Draft will expire on 1 July 2026.
 
 Copyright Notice
 
