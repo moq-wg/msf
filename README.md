@@ -1,6 +1,6 @@
 # MOQT Streaming Format
 
-This is the working area for the individual Internet-Draft, "WARP Streaming Format".
+This is the working area for the individual Internet-Draft, "MOQT Streaming Format".
 
 * [Editor's Copy](https://moq-wg.github.io/msf)
 * [Datatracker Page](https://datatracker.ietf.org/doc/draft-ietf-moq-msf)
