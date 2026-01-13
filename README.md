@@ -1,4 +1,4 @@
-# WARP Streaming Format
+# MOQT Streaming Format
 
 This is the working area for the individual Internet-Draft, "WARP Streaming Format".
 
