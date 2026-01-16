@@ -1192,7 +1192,7 @@ Component Definitions:
 * Query: Optional. Contains key-value pairs separated by &. If the query is absent,
   the ? separator MUST be omitted. Query arguments are visible to both the server and
   the client and may carry information applicable to either application. Certain
-  query-args are reserved to have special meaning within MSF - see {{reservedqueryargs}} 
+  query-args are reserved to have special meaning within MSF - see {{reservedqueryargs}}
 * Fragment: Optional. Identifies a specific Track or Catalog. If present, it MUST be
   formatted as an MSF namespace-name string (see {{namespacenameencoding}}. The client
   uses this identifier to initiate a SUBSCRIBE or FETCH command once the transport
@@ -1223,7 +1223,7 @@ case-sensitive.
   separated by a "-" dash. The End Group ID and End Object ID MAY be omitted to
   indicate an open range in which the first two values are interpreted as
   StartGroupID-StartObjectID.
-* c4m - a base64 encoded token, as defined by {{C4M}}. 
+* c4m - a base64 encoded token, as defined by {{C4M}}.
 
 Example query args:
 
