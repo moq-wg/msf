@@ -1176,8 +1176,8 @@ This example shows drone GPS coordinates synched with the start of each Group.
 
 ## URL construction and interpretation
 
-An MSF (Media Streaming Framework) URL identifies a MOQT session and an optional
-sub-resource within that session. It follows the generic URI syntax:
+An MSF URL identifies a MOQT session and an optional sub-resource within that session.
+It follows the generic URI syntax:
 
 scheme : // authority / path ? query # fragment
 
@@ -1246,7 +1246,7 @@ fragment, MSF uses a specific encoding convention:
 * Delimiter: The Track Name is appended to the end, separated from the namespace by
   a double hyphen (--).
 * Character Escaping:
-    * Unreserved characters [a-z, A-Z, 0-9, _] are represented literally.
+    * Unreserved characters [```a-z, A-Z, 0-9, _```] are represented literally.
     * All other byte values (including hyphens and periods used as data) MUST be
     * percent-encoded using a period (.) followed by two lowercase hexadecimal digits
       (e.g., a literal hyphen in a name becomes .2d).
@@ -1257,6 +1257,7 @@ Note: This encoding ensures that the structural delimiters (- and --) remain una
 The following ABNF defines the MSF URL structure, importing core rules from {{RFC5234}} and
 {{RFC3986}}.
 
+{:.alphabet}
 ```abnf
 msf-url         = msf-scheme "://" authority path-abempty [ "?" query ] [ "#" msf-fragment ]
 
