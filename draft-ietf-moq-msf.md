@@ -1246,7 +1246,7 @@ fragment, MSF uses a specific encoding convention:
 * Delimiter: The Track Name is appended to the end, separated from the namespace by
   a double hyphen (--).
 * Character Escaping:
-    * Unreserved characters [```a-z, A-Z, 0-9, _```] are represented literally.
+    * Unreserved characters (a-z, A-Z, 0-9, _) are represented literally.
     * All other byte values (including hyphens and periods used as data) MUST be
     * percent-encoded using a period (.) followed by two lowercase hexadecimal digits
       (e.g., a literal hyphen in a name becomes .2d).
@@ -1257,8 +1257,7 @@ Note: This encoding ensures that the structural delimiters (- and --) remain una
 The following ABNF defines the MSF URL structure, importing core rules from {{RFC5234}} and
 {{RFC3986}}.
 
-{:.alphabet}
-```abnf
+~~~ abnf
 msf-url         = msf-scheme "://" authority path-abempty [ "?" query ] [ "#" msf-fragment ]
 
 msf-scheme      = "moqt" / "https"
@@ -1270,7 +1269,8 @@ msf-track-name  = msf-encoded-string
 msf-encoded-string = *( unreserved / "." 2HEXDIG )
 unreserved      = ALPHA / DIGIT / "_"
 
-msf-query-arg   = wallclock-arg / mediatime-arg / location-arg / token-arg / other-arg
+msf-query-arg   = wallclock-arg / mediatime-arg /
+                  location-arg / token-arg / other-arg
 wallclock-arg   = "wallclock-range=" 1*DIGIT [ "-" 1*DIGIT ]
 mediatime-arg   = "mediatime-range=" 1*DIGIT [ "-" 1*DIGIT ]
 location-arg    = "location-range=" start-loc [ "-" end-loc ]
@@ -1279,7 +1279,7 @@ end-loc         = group-id "-" object-id
 group-id        = 1*DIGIT
 object-id       = 1*DIGIT
 token-arg       = "c4m=" 1*( ALPHA / DIGIT / "-" / "_" ) [ "=" / "==" ]
-```
+~~~
 
 ### Example MSF URLs
 
