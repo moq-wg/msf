@@ -28,22 +28,6 @@ author:
     fullname: Will Law
     organization: Akamai
     email: wilaw@akamai.com
- -
-    fullname: Luke Curley
-    organization: Twitch
-    email: kixelated@gmail.com
- -
-    fullname: Victor Vasiliev
-    organization: Google
-    email: vasilvv@google.com
- -
-    fullname: Suhas Nandakumar
-    organization: Cisco
-    email: snandaku@cisco.com
- -
-    fullname: Kirill Pugin
-    organization: Meta
-    email: ikir@meta.com
 
 normative:
   MoQTransport: I-D.draft-ietf-moq-transport-11
@@ -1205,3 +1189,14 @@ This document creates a new entry in the "MoQ Streaming Format" Registry
 {:numbered="false"}
 
 - the MoQ Workgroup and mailing lists.
+
+# Contributors
+{:numbered="false"}
+
+The following persons where the co-authors of the individual draft (draft-law-moq-warpstreamingformat) this document is based on:
+
+* Luke Curley
+* Victor Vasiliev
+* Suhas Nandakumar
+* Kirill Pugin
+* Will Law
