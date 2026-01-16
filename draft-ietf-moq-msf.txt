@@ -4,15 +4,8 @@
 
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
-Intended status: Informational                                 L. Curley
-Expires: 1 July 2026                                              Twitch
-                                                             V. Vasiliev
-                                                                  Google
-                                                           S. Nandakumar
-                                                                   Cisco
-                                                                K. Pugin
-                                                                    Meta
-                                                        28 December 2025
+Intended status: Informational                           16 January 2026
+Expires: 20 July 2026
 
 
                          MOQT Streaming Format
@@ -55,11 +48,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 1 July 2026.
+   This Internet-Draft will expire on 20 July 2026.
 
 Copyright Notice
 
-   Copyright (c) 2025 IETF Trust and the persons identified as the
+   Copyright (c) 2026 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -153,7 +146,8 @@ Table of Contents
    11. IANA Considerations
    12. Normative References
    Acknowledgments
-   Authors' Addresses
+   Contributors
+   Author's Address
 
 1.  Introduction
 
@@ -1513,28 +1507,23 @@ Acknowledgments
 
    *  the MoQ Workgroup and mailing lists.
 
-Authors' Addresses
+Contributors
+
+   The following persons where the co-authors of the individual draft
+   (draft-law-moq-warpstreamingformat) this document is based on:
+
+   *  Luke Curley
+
+   *  Victor Vasiliev
+
+   *  Suhas Nandakumar
+
+   *  Kirill Pugin
+
+   *  Will Law
+
+Author's Address
 
    Will Law
    Akamai
    Email: wilaw@akamai.com
-
-
-   Luke Curley
-   Twitch
-   Email: kixelated@gmail.com
-
-
-   Victor Vasiliev
-   Google
-   Email: vasilvv@google.com
-
-
-   Suhas Nandakumar
-   Cisco
-   Email: snandaku@cisco.com
-
-
-   Kirill Pugin
-   Meta
-   Email: ikir@meta.com
