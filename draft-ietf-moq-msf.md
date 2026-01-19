@@ -120,12 +120,12 @@ that end, the following features are within scope:
 * Content encryption
 * ABR between time-synced tracks - subscribers may switch between tracks
   at different quality levels in order to maximize visual or audio quality under
-  fconditions of throughput variability.
+  conditions of throughput variability.
 * Capable of delivering interstitial advertising.
 * Logs and analytics management - support for the reporting of client-side QoE
    and relay delivery actions.
 
-Initial verisons of MSF will prioritize basic features necessary to exercise
+Initial versions of MSF will prioritize basic features necessary to exercise
 interoperability across delivery systems. Later versions will add commercially
 necessary features.
 
@@ -363,7 +363,7 @@ Table 4: Reserved track roles
 Custom roles MAY be used as long as they do not collide with the specified roles.
 
 ### Is Live {#islive}
-Location: T    Required: Required  JSON Type: Boolean
+Location: T    Required: Yes  JSON Type: Boolean
 
 True if new Objects will be added to the track.
 False if no new Objects will be added to the track. This is sent under two
@@ -933,15 +933,15 @@ synchronized data.
       "namespace": "conference.example.com/conference123/alice",
       "packaging": "mediatimeline",
       "mimetype": "application/json",
-      "depends": ["1080p-video","audio"],
+      "depends": ["1080p-video","audio"]
     },
     {
       "name": "identified-objects",
       "namespace": "another-provider/time-synchronized-data",
       "packaging": "eventtimeline",
-      "eventTimelineType": "com.ai-extraction/appID/v3"
+      "eventType": "com.ai-extraction/appID/v3",
       "mimetype": "application/json",
-      "depends": ["1080p-video"],
+      "depends": ["1080p-video"]
     },
     {
       "name": "1080p-video",
@@ -984,7 +984,7 @@ live broadcast containing a video and an audio track.
 {
   "version": 1,
   "generatedAt": 1746104606044,
-  "isComplete": TRUE,
+  "isComplete": true,
   "tracks": []
 }
 
@@ -1053,7 +1053,7 @@ contains an array of all track names to which the media timeline track applies.
 The mime-type of a media timeline track MUST be specified as "application/json".
 
 ## Media Timeline track updating
-The publisher MUST publish an indepdendent media timeline in the first MOQT Object
+The publisher MUST publish an independent media timeline in the first MOQT Object
 of each MOQT Group of a media timeline track. The publisher MAY publish incremental
 updates in the second and subsequent Objects within each Group. Incremental updates
 only contain media timeline records since the last media timeline Object.
@@ -1097,7 +1097,7 @@ An event timeline track MUST carry:
   event timeline track.
 
 ## Event Timeline track updating
-The publisher MUST publish an indepdendent event timeline in the first MOQT Object
+The publisher MUST publish an independent event timeline in the first MOQT Object
 of each MOQT Group of an event timeline track. The publisher MAY publish incremental
 updates in the second and subsequent Objects within each Group. Incremental updates
 only contain event timeline records since the last event timeline Object.
