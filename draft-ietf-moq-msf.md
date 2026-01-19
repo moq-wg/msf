@@ -2,7 +2,7 @@
 title: "MOQT Streaming Format"
 category: info
 
-docname: draft-ietf-moq-msf-latest
+docname: draft-ietf-moq-msf-00
 submissiontype: IETF  # also: "independent", "IAB", or "IRTF"
 number:
 date:
