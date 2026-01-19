@@ -4,8 +4,8 @@
 
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
-Intended status: Informational                           16 January 2026
-Expires: 20 July 2026
+Intended status: Informational                           19 January 2026
+Expires: 23 July 2026
 
 
                          MOQT Streaming Format
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 20 July 2026.
+   This Internet-Draft will expire on 23 July 2026.
 
 Copyright Notice
 
@@ -230,14 +230,14 @@ Table of Contents
 
    *  ABR between time-synced tracks - subscribers may switch between
       tracks at different quality levels in order to maximize visual or
-      audio quality under fconditions of throughput variability.
+      audio quality under conditions of throughput variability.
 
    *  Capable of delivering interstitial advertising.
 
    *  Logs and analytics management - support for the reporting of
       client-side QoE and relay delivery actions.
 
-   Initial verisons of MSF will prioritize basic features necessary to
+   Initial versions of MSF will prioritize basic features necessary to
    exercise interoperability across delivery systems.  Later versions
    will add commercially necessary features.
 
@@ -574,7 +574,7 @@ Table of Contents
 
 5.1.15.  Is Live
 
-   Location: T Required: Required JSON Type: Boolean
+   Location: T Required: Yes JSON Type: Boolean
 
    True if new Objects will be added to the track.  False if no new
    Objects will be added to the track.  This is sent under two possible
@@ -1156,15 +1156,15 @@ Table of Contents
          "namespace": "conference.example.com/conference123/alice",
          "packaging": "mediatimeline",
          "mimetype": "application/json",
-         "depends": ["1080p-video","audio"],
+         "depends": ["1080p-video","audio"]
        },
        {
          "name": "identified-objects",
          "namespace": "another-provider/time-synchronized-data",
          "packaging": "eventtimeline",
-         "eventTimelineType": "com.ai-extraction/appID/v3"
+         "eventType": "com.ai-extraction/appID/v3",
          "mimetype": "application/json",
-         "depends": ["1080p-video"],
+         "depends": ["1080p-video"]
        },
        {
          "name": "1080p-video",
@@ -1204,7 +1204,7 @@ Table of Contents
    {
      "version": 1,
      "generatedAt": 1746104606044,
-     "isComplete": TRUE,
+     "isComplete": true,
      "tracks": []
    }
 
@@ -1285,8 +1285,8 @@ Table of Contents
 
 7.3.  Media Timeline track updating
 
-   The publisher MUST publish an indepdendent media timeline in the
-   first MOQT Object of each MOQT Group of a media timeline track.  The
+   The publisher MUST publish an independent media timeline in the first
+   MOQT Object of each MOQT Group of a media timeline track.  The
    publisher MAY publish incremental updates in the second and
    subsequent Objects within each Group.  Incremental updates only
    contain media timeline records since the last media timeline Object.
@@ -1344,8 +1344,8 @@ Table of Contents
 
 8.3.  Event Timeline track updating
 
-   The publisher MUST publish an indepdendent event timeline in the
-   first MOQT Object of each MOQT Group of an event timeline track.  The
+   The publisher MUST publish an independent event timeline in the first
+   MOQT Object of each MOQT Group of an event timeline track.  The
    publisher MAY publish incremental updates in the second and
    subsequent Objects within each Group.  Incremental updates only
    contain event timeline records since the last event timeline Object.
