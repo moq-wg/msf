@@ -1338,7 +1338,18 @@ and publisher implementation.
 ### Presenting Authorization
 
 Once credentials are obtained, subscribers present them according to the
-scheme specification:
+scheme specification. Tokens MAY be presented at two points during
+the connection lifecycle:
+
+* **Connection establishment**: Tokens may be included in the SETUP message
+  to authorize the connection itself or to pre-authorize subsequent operations.
+
+* **Per-operation**: Tokens may be included in individual control messages
+  (SUBSCRIBE, FETCH, PUBLISH, ANNOUNCE) to authorize specific operations.
+  When a subscriber initiates a session, the first SUBSCRIBE or FETCH message
+  sent for a protected track MUST include valid authorization credentials.
+
+The specific token format and placement depends on the authorization scheme:
 
 * **Privacy Pass**: Tokens are included in MOQT control messages
   (SUBSCRIBE, FETCH, PUBLISH, ANNOUNCE) via the authorization parameter
