@@ -381,8 +381,7 @@ Table 3 lists the fields defined within each track object.
 | Language                | lang                   | {{language}}              |
 | Parent name             | parentName             | {{parentname}}            |
 | Track duration          | trackDuration          | {{trackduration}}         |
-| Connection URI          | connectionUri          | {{connectionuri}}         |
-| Token                   | token                  | {{token}}                 |
+| Authorization Info      | authInfo               | {{authinfo}}              |
 
 ### Tracks object {#trackobject}
 
