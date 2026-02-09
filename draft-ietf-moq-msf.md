@@ -368,6 +368,9 @@ Table 3 lists the fields defined within each track object.
 | Language                | lang                   | {{language}}              |
 | Parent name             | parentName             | {{parentname}}            |
 | Track duration          | trackDuration          | {{trackduration}}         |
+| Authorization Schemes   | authSchemes            | {{authschemes}}           |
+| Authorization Required  | authRequired           | {{authrequired}}          |
+| Authorization Info      | authInfo               | {{authinfo}}              |
 
 ### Tracks object {#trackobject}
 
