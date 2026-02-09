@@ -34,6 +34,7 @@ normative:
   LOC: I-D.draft-mzanaty-moq-loc-05
   SecureObjects: I-D.draft-jennings-moq-secure-objects
   C4M: I-D.draft-ietf-moq-c4m
+  PrivacyPassAuth: I-D.draft-ietf-moq-privacy-pass-auth
   BASE64: RFC4648
   JSON: RFC8259
   LANG: RFC5646
