@@ -32,6 +32,8 @@ author:
 normative:
   MoQTransport: I-D.draft-ietf-moq-transport-11
   LOC: I-D.draft-mzanaty-moq-loc-05
+  PrivacyPassAuth: I-D.draft-ietf-moq-privacy-pass-auth
+  CATAuth: I-D.draft-ietf-moq-c4m
   BASE64: RFC4648
   JSON: RFC8259
   LANG: RFC5646
