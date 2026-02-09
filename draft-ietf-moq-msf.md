@@ -240,7 +240,6 @@ Table 2 defines the allowed locations for these fields within the document
 | R        | The Root of the JSON object                                   |
 | T        | Track object                                                  |
 
-
 ### MSF version {#msfversion}
 Location: R    Required: Yes    JSON Type: Number
 
