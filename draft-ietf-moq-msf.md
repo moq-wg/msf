@@ -725,6 +725,28 @@ the track name and other parameters defined in ({{SecureObjects, Section 5}}),
 is used to derive the actual encryption keys. Publishers and subscribers MUST
 use matching trackBaseKey values for successful decryption.
 
+### Authorization Schemes {#authschemes}
+Location: R    Required: Optional    JSON Type: Array
+
+An array of strings indicating the authorization mechanisms supported by the
+publisher for accessing tracks in this catalog. Subscribers MUST authenticate
+using one of the advertised schemes before accessing protected tracks.
+
+Table 7: Registered Authorization Schemes
+
+| Scheme           | Value          | Reference                              |
+|:================|:===============|:======================================|
+| Privacy Pass     | privacy-pass   | {{PrivacyPassAuth}}                    |
+| CAT              | cat            | {{C4M}}                                |
+
+Publishers MAY support multiple authorization schemes simultaneously. When
+multiple schemes are listed, they are presented in order of publisher preference.
+A subscriber SHOULD use the first scheme it supports from the list.
+
+Custom authorization schemes MAY be used. Custom scheme names MUST use a
+unique naming convention, such as Reverse Domain Name Notation
+(e.g., "com.example.custom-auth"), to avoid naming collisions.
+
 ## Delta updates {#deltaupdates}
 A catalog update might contain incremental changes. This is a useful property if
 many tracks may be initially declared but then there are small changes to a
