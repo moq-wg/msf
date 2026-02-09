@@ -229,6 +229,9 @@ Table 1 provides an overview of all fields defined by this document.
 | Language                | lang                   | {{language}}              |
 | Parent name             | parentName             | {{parentname}}            |
 | Track duration          | trackDuration          | {{trackduration}}         |
+| Authorization Schemes   | authSchemes            | {{authschemes}}           |
+| Authorization Required  | authRequired           | {{authrequired}}          |
+| Authorization Info      | authInfo               | {{authinfo}}              |
 
 Table 2 defines the allowed locations for these fields within the document
 
