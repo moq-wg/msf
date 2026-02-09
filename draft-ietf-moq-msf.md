@@ -542,6 +542,17 @@ Custom authorization schemes MAY be used. Custom scheme names MUST use a
 unique naming convention, such as Reverse Domain Name Notation
 (e.g., "com.example.custom-auth"), to avoid naming collisions.
 
+### Authorization Required {#authrequired}
+Location: T    Required: Optional    JSON Type: Boolean
+
+A Boolean indicating whether authorization is required to access this track.
+If true, subscribers MUST present valid authorization credentials using one
+of the schemes defined in authSchemes {{authschemes}} before the relay will
+deliver content from this track.
+
+If this field is absent, the default value is false (no authorization required).
+This field SHOULD NOT be included if its value is false.
+
 ## Delta updates {#deltaupdates}
 A catalog update might contain incremental changes. This is a useful property if
 many tracks may be initially declared but then there are small changes to a
