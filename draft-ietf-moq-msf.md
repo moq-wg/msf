@@ -553,6 +553,32 @@ deliver content from this track.
 If this field is absent, the default value is false (no authorization required).
 This field SHOULD NOT be included if its value is false.
 
+### Authorization Info {#authinfo}
+Location: T    Required: Optional    JSON Type: Object
+
+An object containing scheme-specific authorization metadata for the track.
+This field is only meaningful when authRequired {{authrequired}} is true.
+
+The keys of this object are authorization scheme identifiers matching those
+defined in authSchemes {{authschemes}}. The values are scheme-specific
+configuration objects.
+
+For Privacy Pass authentication (scheme "privacy-pass"), the object MAY contain:
+
+| Field           | Type    | Description                                    |
+|:===============|:========|:==============================================|
+| tokenTypes      | Array   | Supported Privacy Pass token type codes        |
+| issuerUrl       | String  | URL of the token issuer                        |
+| scope           | String  | Required scope pattern for token validation    |
+
+For CAT authentication (scheme "cat"), the object MAY contain:
+
+| Field           | Type    | Description                                    |
+|:===============|:========|:==============================================|
+| actions         | Array   | Required MOQT action codes (0-8)               |
+| revalInterval   | Number  | Token revalidation interval in seconds         |
+| dpopRequired    | Boolean | Whether DPoP proof binding is required         |
+
 ## Delta updates {#deltaupdates}
 A catalog update might contain incremental changes. This is a useful property if
 many tracks may be initially declared but then there are small changes to a
