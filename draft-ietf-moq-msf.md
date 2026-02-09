@@ -1308,6 +1308,60 @@ is complete by taking the following steps:
   publish an independent catalog update which signals isComplete {{iscomplete}} as
   TRUE and which contains an empty Tracks {{tracks}} field.
 
+## Authorization {#authorization}
+
+MSF supports token-based authorization through pluggable authentication schemes.
+Authorization enables publishers to control access to tracks based on subscriber
+credentials.
+
+### Discovering Authorization Requirements
+
+Subscribers discover authorization requirements by parsing the catalog:
+
+1. Check if `authSchemes` is present at the catalog root level
+2. For each track of interest, check if `authRequired` is true
+3. If authorization is required, examine `authInfo` for scheme-specific details
+4. Select a supported scheme from `authSchemes` and obtain appropriate credentials
+
+### Token Acquisition
+
+Token acquisition is out of scope for this specification. Subscribers typically
+obtain tokens through:
+
+* Direct authentication with a distribution service
+* OAuth 2.0 or OpenID Connect flows
+* Out-of-band provisioning
+
+The token acquisition endpoint and flow depend on the authorization scheme
+and publisher implementation.
+
+### Presenting Authorization
+
+Once credentials are obtained, subscribers present them according to the
+scheme specification:
+
+* **Privacy Pass**: Tokens are included in MOQT control messages
+  (SUBSCRIBE, FETCH, PUBLISH, ANNOUNCE) via the authorization parameter
+  with auth_scheme 0x01. Connection-level tokens may be included in the
+  SETUP message. See {{PrivacyPassAuth}} for details.
+
+* **CAT**: Tokens are supplied via MOQT's AUTHENTICATION parameter.
+  When DPoP is required, each operation includes a fresh DPoP proof JWT
+  bound to the subscriber's public key. See {{CATAuth}} for details.
+
+### Relay Authorization Enforcement
+
+Relays receiving subscription or fetch requests for protected tracks MUST:
+
+1. Verify the subscriber has presented valid credentials
+2. Validate the token cryptographically
+3. Check that the token scope authorizes the requested operation
+4. Check that the token scope covers the requested namespace and track
+5. For CAT with revalidation, enforce the moqt-reval interval
+6. Reject requests that fail any validation step
+
+Relays SHOULD return an appropriate error if authorization fails.
+
 # Security Considerations
 
 ToDo
