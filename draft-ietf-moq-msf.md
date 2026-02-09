@@ -520,6 +520,28 @@ Location: T    Required: Optional   JSON Type: Number
 The duration of the track expressed in integer milliseconds. This field MUST NOT
 be included if the isLive {{islive}} field value is true.
 
+### Authorization Schemes {#authschemes}
+Location: R    Required: Optional    JSON Type: Array
+
+An array of strings indicating the authorization mechanisms supported by the
+publisher for accessing tracks in this catalog. Subscribers MUST authenticate
+using one of the advertised schemes before accessing protected tracks.
+
+Table 4: Registered Authorization Schemes
+
+| Scheme           | Value          | Reference                              |
+|:================|:===============|:======================================|
+| Privacy Pass     | privacy-pass   | {{PrivacyPassAuth}}                    |
+| CAT              | cat            | {{CATAuth}}                            |
+
+Publishers MAY support multiple authorization schemes simultaneously. When
+multiple schemes are listed, they are presented in order of publisher preference.
+A subscriber SHOULD use the first scheme it supports from the list.
+
+Custom authorization schemes MAY be used. Custom scheme names MUST use a
+unique naming convention, such as Reverse Domain Name Notation
+(e.g., "com.example.custom-auth"), to avoid naming collisions.
+
 ## Delta updates {#deltaupdates}
 A catalog update might contain incremental changes. This is a useful property if
 many tracks may be initially declared but then there are small changes to a
