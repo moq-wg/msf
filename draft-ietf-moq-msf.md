@@ -1053,6 +1053,78 @@ live broadcast containing a video and an audio track.
 
 ~~~
 
+### Time-aligned Audio/Video Tracks with Authorization
+
+This example shows a catalog for a media producer requiring CAT authorization
+for premium content and Privacy Pass for standard content.
+
+~~~json
+{
+  "version": 1,
+  "generatedAt": 1746104606044,
+  "authSchemes": ["cat", "privacy-pass"],
+  "tracks": [
+    {
+      "name": "premium-4k-video",
+      "namespace": "streaming.example.com/live/sports",
+      "packaging": "loc",
+      "isLive": true,
+      "targetLatency": 2000,
+      "role": "video",
+      "renderGroup": 1,
+      "codec": "av01.0.12M.10.0.110.09",
+      "width": 3840,
+      "height": 2160,
+      "framerate": 60,
+      "bitrate": 15000000,
+      "authRequired": true,
+      "authInfo": {
+        "cat": {
+          "actions": [4, 7],
+          "revalInterval": 3600,
+          "dpopRequired": true
+        }
+      }
+    },
+    {
+      "name": "standard-720p-video",
+      "namespace": "streaming.example.com/live/sports",
+      "packaging": "loc",
+      "isLive": true,
+      "targetLatency": 2000,
+      "role": "video",
+      "renderGroup": 2,
+      "codec": "av01.0.05M.10.0.110.09",
+      "width": 1280,
+      "height": 720,
+      "framerate": 30,
+      "bitrate": 2500000,
+      "authRequired": true,
+      "authInfo": {
+        "privacy-pass": {
+          "tokenTypes": [2, 1],
+          "issuerUrl": "https://issuer.example.com",
+          "scope": "subscribe:streaming.example.com/live/*"
+        }
+      }
+    },
+    {
+      "name": "audio",
+      "namespace": "streaming.example.com/live/sports",
+      "packaging": "loc",
+      "isLive": true,
+      "targetLatency": 2000,
+      "role": "audio",
+      "renderGroup": 1,
+      "codec": "opus",
+      "samplerate": 48000,
+      "channelConfig": "2",
+      "bitrate": 128000
+    }
+  ]
+}
+~~~
+
 
 # Media transmission
 The MOQT Groups and MOQT Objects need to be mapped to MOQT Streams. Irrespective
