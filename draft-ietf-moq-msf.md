@@ -330,8 +330,8 @@ Table 3: Allowed packaging values
 | LOC             | loc            | See RFC XXXX               |
 | Media Timeline  | mediatimeline  | See {{mediatimelinetrack}} |
 | Event Timeline  | eventtimeline  | See {{eventtimelinetrack}} |
-| MoQ Log         | moq-log        | See {{MOQLOG}}             |
-| MoQ Metrics     | moq-metrics    | See {{MOQMETRICS}}         |
+| MoQ Log         | moqlog         | See {{MOQLOG}}             |
+| MoQ Metrics     | moqmetrics     | See {{MOQMETRICS}}         |
 
 
 ### Event timeline type {#eventtype}
@@ -563,7 +563,7 @@ metrics tracks. The levels follow the severity definitions in {{MOQLOG}} and
 
 Lower numbers indicate higher priority. Subscribers SHOULD publish data at or
 below the specified verbosity level. This field is applicable when the packaging
-value is "moq-log" or "moq-metrics".
+value is "moqlog" or "moqmetrics".
 
 ### Token {#token}
 Location: T    Required: Optional   JSON Type: String
@@ -1090,7 +1090,7 @@ back to the delivery system using these track definitions.
     {
       "name": "client-metrics-%clientId%",
       "namespace": "metrics.example.com/qoe/stream1",
-      "packaging": "moq-metrics",
+      "packaging": "moqmetrics",
       "role": "metrics",
       "verbosity": 4,
       "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
@@ -1098,7 +1098,7 @@ back to the delivery system using these track definitions.
     {
       "name": "client-logs-%clientId%",
       "namespace": "logs.example.com/player/stream1",
-      "packaging": "moq-log",
+      "packaging": "moqlog",
       "role": "log",
       "verbosity": 6,
       "connectionUri": "moqt://logs.example.com:4443",
@@ -1290,7 +1290,7 @@ and coordinated with {{MOQLOG}}.
 Log tracks provide a mechanism for subscribers to publish diagnostic and
 operational log data back to the delivery system. This enables QoE monitoring,
 debugging, and analytics collection. Log tracks are defined in the catalog's
-publishTracks array with a packaging value of "moq-log".
+publishTracks array with a packaging value of "moqlog".
 
 ## Log track payload {#logpayload}
 
@@ -1350,7 +1350,7 @@ An example log payload is shown below:
 
 A log track MUST be declared in the publishTracks array of the catalog with:
 
-* a {{packaging}} attribute with a value of "moq-log".
+* a {{packaging}} attribute with a value of "moqlog".
 * a {{trackrole}} attribute with a value of "log".
 
 A log track MAY include:
@@ -1375,7 +1375,7 @@ and coordinated with {{MOQMETRICS}}.
 Metrics tracks provide a mechanism for subscribers to publish quantitative
 measurements back to the delivery system. This enables QoE analytics, performance
 monitoring, and operational dashboards. Metrics tracks are defined in the catalog's
-publishTracks array with a packaging value of "moq-metrics".
+publishTracks array with a packaging value of "moqmetrics".
 
 ## Metrics track payload {#metricspayload}
 
@@ -1460,7 +1460,7 @@ An example metrics payload is shown below:
 
 A metrics track MUST be declared in the publishTracks array of the catalog with:
 
-* a {{packaging}} attribute with a value of "moq-metrics".
+* a {{packaging}} attribute with a value of "moqmetrics".
 * a {{trackrole}} attribute with a value of "metrics".
 
 A metrics track MAY include:
