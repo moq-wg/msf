@@ -53,7 +53,8 @@ normative:
     target: https://www.w3.org/TR/ttml-imsc1/
 
 informative:
-
+  MOQLOG: I-D.draft-jennings-moq-log
+  MOQMETRICS: I-D.draft-jennings-moq-metrics
 
 --- abstract
 
@@ -123,7 +124,7 @@ that end, the following features are within scope:
   conditions of throughput variability.
 * Capable of delivering interstitial advertising.
 * Logs and analytics management - support for the reporting of client-side QoE
-   and relay delivery actions.
+   and relay delivery actions via publish tracks using {{MOQLOG}} and {{MOQMETRICS}}.
 
 Initial versions of MSF will prioritize basic features necessary to exercise
 interoperability across delivery systems. Later versions will add commercially
@@ -227,6 +228,10 @@ Table 1 provides an overview of all fields defined by this document.
 | Language                | lang                   | {{language}}              |
 | Parent name             | parentName             | {{parentname}}            |
 | Track duration          | trackDuration          | {{trackduration}}         |
+| Publish tracks          | publishTracks          | {{publishtracks}}         |
+| Connection URI          | connectionUri          | {{connectionuri}}         |
+| Verbosity               | verbosity              | {{verbosity}}             |
+| Token                   | token                  | {{token}}                 |
 
 Table 2 defines the allowed locations for these fields within the document
 
@@ -325,6 +330,8 @@ Table 3: Allowed packaging values
 | LOC             | loc            | See RFC XXXX               |
 | Media Timeline  | mediatimeline  | See {{mediatimelinetrack}} |
 | Event Timeline  | eventtimeline  | See {{eventtimelinetrack}} |
+| MoQ Log         | moq-log        | See {{MOQLOG}}             |
+| MoQ Metrics     | moq-metrics    | See {{MOQMETRICS}}         |
 
 
 ### Event timeline type {#eventtype}
@@ -358,6 +365,8 @@ Table 4: Reserved track roles
 | caption          | A textual representation of the audio track                |
 | subtitle         | A transcription of the spoken dialogue                     |
 | signlanguage     | A visual track for hearing impaired users.                 |
+| log              | A log publishing track per {{MOQLOG}}.                     |
+| metrics          | A metrics publishing track per {{MOQMETRICS}}.             |
 |------------------|------------------------------------------------------------|
 
 Custom roles MAY be used as long as they do not collide with the specified roles.
@@ -515,6 +524,53 @@ Location: T    Required: Optional   JSON Type: Number
 
 The duration of the track expressed in integer milliseconds. This field MUST NOT
 be included if the isLive {{islive}} field value is true.
+
+### Publish tracks {#publishtracks}
+Location: R    Required: Optional    JSON Type: Array
+
+An array of publish track objects. Publish tracks define tracks to which the
+subscriber can publish data, such as logs, metrics, or other QoE data. This enables
+bi-directional communication where the subscriber acts as a publisher for specific
+tracks. Each publish track object follows the same structure as a regular track
+object {{trackobject}} but is used for the reverse direction of data flow.
+
+### Connection URI {#connectionuri}
+Location: T    Required: Optional   JSON Type: String
+
+A string containing the MOQT connection endpoint URI for the publish track. When
+specified, the subscriber MUST establish a new MOQT connection to this URI for
+publishing the track data. If this field is absent, the subscriber SHOULD reuse
+the existing MOQT connection that was used to receive the catalog.
+
+The URI MUST be a valid MOQT endpoint URI. Examples include
+"moqt://logs.example.com:4443" or "moqt://metrics.example.com:8443".
+
+### Verbosity {#verbosity}
+Location: T    Required: Optional   JSON Type: Number
+
+A number from 0 to 7 indicating the verbosity or priority level for log and
+metrics tracks. The levels follow the severity definitions in {{MOQLOG}} and
+{{MOQMETRICS}}:
+
+* 0 - Emergency: System is unusable
+* 1 - Alert: Action must be taken immediately
+* 2 - Critical: Critical conditions
+* 3 - Error: Error conditions
+* 4 - Warning: Warning conditions
+* 5 - Notice: Normal but significant conditions
+* 6 - Informational: Informational messages
+* 7 - Debug: Debug-level messages
+
+Lower numbers indicate higher priority. Subscribers SHOULD publish data at or
+below the specified verbosity level. This field is applicable when the packaging
+value is "moq-log" or "moq-metrics".
+
+### Token {#token}
+Location: T    Required: Optional   JSON Type: String
+
+A string containing an authentication token or credential for the track. For
+publish tracks, this token authorizes the subscriber to publish data to the
+specified track. The format and validation of the token is application-specific.
 
 ## Delta updates {#deltaupdates}
 A catalog update might contain incremental changes. This is a useful property if
@@ -989,6 +1045,79 @@ live broadcast containing a video and an audio track.
 }
 
 ~~~
+
+
+### Publish tracks for logs and metrics
+
+This example shows a catalog that includes publish tracks for client-side
+logging and metrics collection. The subscriber can publish QoE data and logs
+back to the delivery system using these track definitions.
+
+~~~json
+{
+  "version": 1,
+  "generatedAt": 1746104606044,
+  "tracks": [
+    {
+      "name": "video",
+      "namespace": "broadcast.example.com/live/stream1",
+      "packaging": "loc",
+      "isLive": true,
+      "targetLatency": 2000,
+      "role": "video",
+      "renderGroup": 1,
+      "codec": "av01.0.08M.10.0.110.09",
+      "width": 1920,
+      "height": 1080,
+      "framerate": 30,
+      "bitrate": 1500000
+    },
+    {
+      "name": "audio",
+      "namespace": "broadcast.example.com/live/stream1",
+      "packaging": "loc",
+      "isLive": true,
+      "targetLatency": 2000,
+      "role": "audio",
+      "renderGroup": 1,
+      "codec": "opus",
+      "samplerate": 48000,
+      "channelConfig": "2",
+      "bitrate": 32000
+    }
+  ],
+  "publishTracks": [
+    {
+      "name": "client-metrics-%clientId%",
+      "namespace": "metrics.example.com/qoe/stream1",
+      "packaging": "moq-metrics",
+      "role": "metrics",
+      "verbosity": 4,
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+    },
+    {
+      "name": "client-logs-%clientId%",
+      "namespace": "logs.example.com/player/stream1",
+      "packaging": "moq-log",
+      "role": "log",
+      "verbosity": 6,
+      "connectionUri": "moqt://logs.example.com:4443",
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+    }
+  ]
+}
+
+~~~
+
+In this example:
+
+* The "client-metrics" track uses the existing MOQT connection (no connectionUri
+  specified) and publishes metrics at Warning level (4) or higher priority.
+* The "client-logs" track establishes a separate connection to logs.example.com
+  and publishes logs at Informational level (6) or higher priority.
+* The %clientId% variable in track names allows unique identification of each
+  subscriber's published data.
+* Both tracks include authentication tokens for publishing authorization.
 
 
 # Media transmission
