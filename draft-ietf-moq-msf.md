@@ -185,15 +185,15 @@ distribution {{E2EE-MLS}} or other out-of-band key exchange mechanisms.
 Depending on the key management mechanism in use, a keyId MAY be scoped to:
 
 * A single track
-* A single MSF session
-* Multiple tracks across one or more MSF sessions
+* A single MoQ Session
+* Multiple tracks across one or more MoQ sessions
 
 Publishers and subscribers MUST use the same key management system and agree
 on the keyId scope semantics for interoperable operation.
 
-### Default encryption scheme
+### Recommended encryption scheme
 
-The default and RECOMMENDED encryption scheme for MSF is "moq-secure-objects".
+The RECOMMENDED encryption scheme for MSF is "moq-secure-objects".
 Implementations supporting content encryption MUST implement the
 "moq-secure-objects" scheme as defined in {{SecureObjects}}.
 
