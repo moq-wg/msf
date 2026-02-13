@@ -171,10 +171,20 @@ The catalog track MUST have a case-sensitive Track Name of "catalog".
 
 A catalog object MAY be independent of other catalog objects or it MAY represent
 a delta update of a prior catalog object. The first catalog object published
-within a new group MUST be independent.  A catalog object SHOULD be
+within a new group MUST be independent and MUST provide a complete catalog that
+does not require any prior catalog object for interpretation. This object MAY
+aggregate the effects of prior delta updates and MAY start a new catalog
+instance. Any catalog objects that precede the first object of the latest group MUST be
+ignored.
+
+A catalog object SHOULD be
 published only when the availability of tracks changes.
 
 Each catalog update MUST be mapped to an MOQT Object.
+
+Subscribers accessing the catalog MUST use SUBSCRIBE with a Joining FETCH
+(offset = 0) in order to obtain the latest complete catalog along with all subsequent catalog objects, including
+delta updates, that follow.
 
 
 ## Catalog Fields
@@ -547,6 +557,7 @@ The following rules are to be followed in constructing and processing delta upda
   which MUST NOT be modified after being declared. To modify any attribute, a new
   track with a different Namespace|Name tuple is created by Adding or Cloning and then
   the old track is removed.
+* Producers that publish frequent delta updates SHOULD periodically publish a new independent catalog in a new MOQT Group in order to bound the amount of delta processing required for joining subscribers.
 
 
 ## Catalog Examples
