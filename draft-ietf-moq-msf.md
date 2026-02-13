@@ -174,7 +174,7 @@ a delta update of a prior catalog object. The first catalog object published
 within a new group MUST be independent and MUST provide a complete catalog that
 does not require any prior catalog object for interpretation. This object MAY
 aggregate the effects of prior delta updates and MAY start a new catalog
-instance. Any catalog objects that precede the first object of a group MUST be
+instance. Any catalog objects that precede the first object of the latest group MUST be
 ignored.
 
 A catalog object SHOULD be
