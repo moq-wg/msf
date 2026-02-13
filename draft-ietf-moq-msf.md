@@ -205,7 +205,7 @@ When using the "moq-secure-objects" scheme:
 
 ### Encrypted object structure
 
-For LOC-packaged tracks with encryption enabled:
+For LOC-packaged tracks with encryption enabled (see {{SecureObjects, Section 4}}):
 
 * The immutable header extensions (including Group ID and Object ID) remain
   in plaintext and are authenticated
