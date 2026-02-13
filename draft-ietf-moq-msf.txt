@@ -4,8 +4,8 @@
 
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
-Intended status: Informational                           19 January 2026
-Expires: 23 July 2026
+Intended status: Informational                          13 February 2026
+Expires: 17 August 2026
 
 
                          MOQT Streaming Format
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 23 July 2026.
+   This Internet-Draft will expire on 17 August 2026.
 
 Copyright Notice
 
@@ -485,7 +485,7 @@ Table of Contents
    2.3 of [MoQTransport].  The track namespace is optional.  If it is
    not declared within a track, then each track MUST inherit the
    namespace of the catalog track.  A namespace declared in a track
-   object overwrites any inherited name space.
+   object overrides any inherited name space.
 
 5.1.11.  Track name
 
@@ -577,9 +577,10 @@ Table of Contents
    Location: T Required: Yes JSON Type: Boolean
 
    True if new Objects will be added to the track.  False if no new
-   Objects will be added to the track.  This is sent under two possible
-   conditions: * the publisher of a previously live track has ended the
-   track. * the track is Video-On-Demand (VOD) and was never live.
+   Objects will be added to the track.  A False value is sent under two
+   possible conditions: * the publisher of a previously live track has
+   ended the track. * the track is Video-On-Demand (VOD) and was never
+   live.  A True value MUST never follow a False value.
 
 5.1.16.  Target latency
 
@@ -679,7 +680,7 @@ Table of Contents
    Location: T Required: Optional JSON Type: Number
 
    A number defining the video framerate of the track, expressed as
-   frames per second.
+   frames per second.  This property SHOULD only accompany video codecs.
 
 5.1.27.  Timescale
 
@@ -793,7 +794,7 @@ Table of Contents
 
    *  A Cloned track inherits all the attributes of the track defined by
       the Parent Name Section 5.1.36, except the Track Name which MUST
-      be new.  Attributes redefined in the cloning Object overwrite
+      be new.  Attributes redefined in the cloning Object override
       inherited values.
 
    *  The tuple of Track Namespace and Track Name defines a fixed set of
@@ -848,8 +849,8 @@ Table of Contents
 
 5.3.2.  Simulcast video tracks - 3 alternate qualities along with audio
 
-   This example shows catalog for a media producer capable of sending 3
-   time-aligned video tracks for high definition, low definition and
+   This example shows a catalog for a media producer capable of sending
+   3 time-aligned video tracks for high definition, low definition and
    medium definition video qualities, along with an audio track.  In
    this example the namespace is absent, which infers that each track
    must inherit the namespace of the catalog.
@@ -917,7 +918,7 @@ Table of Contents
 
 5.3.3.  SVC video tracks with 2 spatial and 2 temporal qualities
 
-   This example shows catalog for a media producer capable of sending
+   This example shows a catalog for a media producer capable of sending
    scalable video codec with 2 spatial and 2 temporal layers with a
    dependency relation as shown below:
 
@@ -1064,7 +1065,7 @@ Table of Contents
 
 5.3.6.  Time-aligned Audio/Video Tracks with custom field values
 
-   This example shows catalog for a media producer capable of sending
+   This example shows a catalog for a media producer capable of sending
    LOC packaged, time-aligned audio and video tracks along with custom
    fields in each track description.
 
@@ -1105,7 +1106,7 @@ Table of Contents
 
 5.3.7.  Time-aligned VOD Audio/Video Tracks
 
-   This example shows catalog for a media producer offering VOD (video
+   This example shows a catalog for a media producer offering VOD (video
    on-demand) non-live content.  The content is LOC packaged, and
    includes time-aligned audio and video tracks.
 
@@ -1198,7 +1199,7 @@ Table of Contents
 
 5.3.9.  Terminating a live broadcast
 
-   This example shows catalog for a media producer terminating a
+   This example shows a catalog for a media producer terminating a
    previously live broadcast containing a video and an audio track.
 
    {
@@ -1225,7 +1226,7 @@ Table of Contents
    future, such as after a loss of connectivity or an encoder restart,
    will not result in smaller or duplicate Group IDs for the same track
    name.  Note that this method does not prevent duplication if more
-   than 1000 groups are published per second.
+   than 1000 Groups are published per second.
 
    Each subsequent Group ID MUST increase by 1.
 
@@ -1236,7 +1237,7 @@ Table of Contents
 7.  Media Timeline track
 
    The media timeline track provides data about the previously published
-   groups and their relationship to wallclock time and media time.
+   Groups and their relationship to wallclock time and media time.
    Media timeline tracks allow players to seek to precise points behind
    the live head in a live broadcast, or for random access in a VOD
    asset.  Media timeline tracks are optional.  Multiple media timeline

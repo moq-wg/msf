@@ -26,7 +26,7 @@
     pycountry 24.6.1
     PyYAML 6.0.3
     requests 2.32.5
-    wcwidth 0.2.14
+    wcwidth 0.3.0
 -->
 <link href="draft-ietf-moq-msf.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -167,7 +167,7 @@
   font-weight: 400;
   font-display: swap;
   src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin-ext.woff2') format('woff2');
-  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 @font-face {
   font-family: 'Oxygen Mono';
@@ -175,7 +175,8 @@
   font-weight: 400;
   font-display: swap;
   src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
 }
 
 @font-face {
@@ -567,6 +568,7 @@ aside, blockquote {
 }
 blockquote {
   margin: 1em 0;
+  border-left: 2px var(--pilcrow-strong) solid;
 }
 cite {
   display: block;
@@ -637,7 +639,7 @@ a.pilcrow {
   }
 }
 @media not print {
-  :hover > a.pilcrow {
+  :hover > a.pilcrow, a.pilcrow:focus {
     opacity: 1;
   }
   a.pilcrow[href]:hover {
@@ -1045,11 +1047,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">MOQT Streaming Format</td>
-<td class="right">January 2026</td>
+<td class="right">February 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Law</td>
-<td class="center">Expires 23 July 2026</td>
+<td class="center">Expires 17 August 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1062,12 +1064,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-moq-msf-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-01-19" class="published">19 January 2026</time>
+<time datetime="2026-02-13" class="published">13 February 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-07-23">23 July 2026</time></dd>
+<dd class="expires"><time datetime="2026-08-17">17 August 2026</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1117,7 +1119,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 23 July 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 17 August 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1993,7 +1995,7 @@ is specified 'T' in Table 2.<a href="#section-5.1.9-1" class="pilcrow">¶</a></p
 <p id="section-5.1.10-2">The name space under which the track name is defined. See section 2.3 of
 <span>[<a href="#MoQTransport" class="cite xref">MoQTransport</a>]</span>. The track namespace is optional. If it is not declared within
 a track, then each track <span class="bcp14">MUST</span> inherit the namespace of the catalog track. A
-namespace declared in a track object overwrites any inherited name space.<a href="#section-5.1.10-2" class="pilcrow">¶</a></p>
+namespace declared in a track object overrides any inherited name space.<a href="#section-5.1.10-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="trackname">
@@ -2126,10 +2128,11 @@ fully describe the content of the track.<a href="#section-5.1.14-3" class="pilcr
           </h4>
 <p id="section-5.1.15-1">Location: T    Required: Yes  JSON Type: Boolean<a href="#section-5.1.15-1" class="pilcrow">¶</a></p>
 <p id="section-5.1.15-2">True if new Objects will be added to the track.
-False if no new Objects will be added to the track. This is sent under two
+False if no new Objects will be added to the track. A False value is sent under two
 possible conditions:
 * the publisher of a previously live track has ended the track.
-* the track is Video-On-Demand (VOD) and was never live.<a href="#section-5.1.15-2" class="pilcrow">¶</a></p>
+* the track is Video-On-Demand (VOD) and was never live.
+A True value <span class="bcp14">MUST</span> never follow a False value.<a href="#section-5.1.15-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="targetlatency">
@@ -2255,7 +2258,7 @@ and Section 4 of <span>[<a href="#WEBCODECS-CODEC-REGISTRY" class="cite xref">WE
           </h4>
 <p id="section-5.1.26-1">Location: T    Required: Optional   JSON Type: Number<a href="#section-5.1.26-1" class="pilcrow">¶</a></p>
 <p id="section-5.1.26-2">A number defining the video framerate of the track, expressed as frames per
-second.<a href="#section-5.1.26-2" class="pilcrow">¶</a></p>
+second. This property <span class="bcp14">SHOULD</span> only accompany video codecs.<a href="#section-5.1.26-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="timescale">
@@ -2400,7 +2403,7 @@ Evaluation continues until all operations are successfully applied.<a href="#sec
           <li class="normal" id="section-5.2-4.4">
             <p id="section-5.2-4.4.1">A Cloned track inherits all the attributes of the track defined by the Parent Name
 <a href="#parentname" class="auto internal xref">Section 5.1.36</a>, except the Track Name which <span class="bcp14">MUST</span> be new. Attributes redefined
-in the cloning Object overwrite inherited values.<a href="#section-5.2-4.4.1" class="pilcrow">¶</a></p>
+in the cloning Object override inherited values.<a href="#section-5.2-4.4.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.2-4.5">
             <p id="section-5.2-4.5.1">The tuple of Track Namespace and Track Name defines a fixed set of Track attributes
@@ -2470,7 +2473,7 @@ packaged, time-aligned audio and video tracks.<a href="#section-5.3.1-1" class="
           <h4 id="name-simulcast-video-tracks-3-al">
 <a href="#section-5.3.2" class="section-number selfRef">5.3.2. </a><a href="#name-simulcast-video-tracks-3-al" class="section-name selfRef">Simulcast video tracks - 3 alternate qualities along with audio</a>
           </h4>
-<p id="section-5.3.2-1">This example shows catalog for a media producer capable of sending 3
+<p id="section-5.3.2-1">This example shows a catalog for a media producer capable of sending 3
 time-aligned video tracks for high definition, low definition and medium
 definition video qualities, along with an audio track. In this example the
 namespace is absent, which infers that each track must inherit the namespace
@@ -2546,7 +2549,7 @@ of the catalog.<a href="#section-5.3.2-1" class="pilcrow">¶</a></p>
           <h4 id="name-svc-video-tracks-with-2-spa">
 <a href="#section-5.3.3" class="section-number selfRef">5.3.3. </a><a href="#name-svc-video-tracks-with-2-spa" class="section-name selfRef">SVC video tracks with 2 spatial and 2 temporal qualities</a>
           </h4>
-<p id="section-5.3.3-1">This example shows catalog for a media producer capable
+<p id="section-5.3.3-1">This example shows a catalog for a media producer capable
 of sending scalable video codec with 2 spatial and 2 temporal
 layers with a dependency relation as shown below:<a href="#section-5.3.3-1" class="pilcrow">¶</a></p>
 <div class="lang-ascii-figure sourcecode" id="section-5.3.3-2">
@@ -2716,7 +2719,7 @@ from an established video conference.<a href="#section-5.3.5-1" class="pilcrow">
           <h4 id="name-time-aligned-audio-video-tra">
 <a href="#section-5.3.6" class="section-number selfRef">5.3.6. </a><a href="#name-time-aligned-audio-video-tra" class="section-name selfRef">Time-aligned Audio/Video Tracks with custom field values</a>
           </h4>
-<p id="section-5.3.6-1">This example shows catalog for a media producer capable of sending LOC packaged,
+<p id="section-5.3.6-1">This example shows a catalog for a media producer capable of sending LOC packaged,
 time-aligned audio and video tracks along with custom fields in each track
 description.<a href="#section-5.3.6-1" class="pilcrow">¶</a></p>
 <div class="lang-json sourcecode" id="section-5.3.6-2">
@@ -2765,7 +2768,7 @@ description.<a href="#section-5.3.6-1" class="pilcrow">¶</a></p>
           <h4 id="name-time-aligned-vod-audio-vide">
 <a href="#section-5.3.7" class="section-number selfRef">5.3.7. </a><a href="#name-time-aligned-vod-audio-vide" class="section-name selfRef">Time-aligned VOD Audio/Video Tracks</a>
           </h4>
-<p id="section-5.3.7-1">This example shows catalog for a media producer offering VOD (video on-demand)
+<p id="section-5.3.7-1">This example shows a catalog for a media producer offering VOD (video on-demand)
 non-live content. The content is LOC packaged, and includes time-aligned audio
 and video tracks.<a href="#section-5.3.7-1" class="pilcrow">¶</a></p>
 <div class="lang-json sourcecode" id="section-5.3.7-2">
@@ -2874,7 +2877,7 @@ synchronized data.<a href="#section-5.3.8-1" class="pilcrow">¶</a></p>
           <h4 id="name-terminating-a-live-broadcas">
 <a href="#section-5.3.9" class="section-number selfRef">5.3.9. </a><a href="#name-terminating-a-live-broadcas" class="section-name selfRef">Terminating a live broadcast</a>
           </h4>
-<p id="section-5.3.9-1">This example shows catalog for a media producer terminating a previously
+<p id="section-5.3.9-1">This example shows a catalog for a media producer terminating a previously
 live broadcast containing a video and an audio track.<a href="#section-5.3.9-1" class="pilcrow">¶</a></p>
 <div class="lang-json sourcecode" id="section-5.3.9-2">
 <pre>
@@ -2913,7 +2916,7 @@ group, represented as the number of milliseconds since the Unix epoch, rounded t
 the nearest millisecond. This ensures that republishing the same track in the
 future, such as after a loss of connectivity or an encoder restart, will not result
 in smaller or duplicate Group IDs for the same track name. Note that this method
-does not prevent duplication if more than 1000 groups are published per second.<a href="#section-6.1-1" class="pilcrow">¶</a></p>
+does not prevent duplication if more than 1000 Groups are published per second.<a href="#section-6.1-1" class="pilcrow">¶</a></p>
 <p id="section-6.1-2">Each subsequent Group ID <span class="bcp14">MUST</span> increase by 1.<a href="#section-6.1-2" class="pilcrow">¶</a></p>
 <p id="section-6.1-3">If a publisher is able to maintain state across a republish, it <span class="bcp14">MUST</span> signal the gap
 in Group IDs using the MOQT Prior Group ID Gap Extension header.<a href="#section-6.1-3" class="pilcrow">¶</a></p>
@@ -2926,7 +2929,7 @@ in Group IDs using the MOQT Prior Group ID Gap Extension header.<a href="#sectio
       <h2 id="name-media-timeline-track">
 <a href="#section-7" class="section-number selfRef">7. </a><a href="#name-media-timeline-track" class="section-name selfRef">Media Timeline track</a>
       </h2>
-<p id="section-7-1">The media timeline track provides data about the previously published groups and their
+<p id="section-7-1">The media timeline track provides data about the previously published Groups and their
 relationship to wallclock time and media time. Media timeline tracks allow players to
 seek to precise points behind the live head in a live broadcast, or for random access
 in a VOD asset. Media timeline tracks are optional. Multiple media timeline tracks
