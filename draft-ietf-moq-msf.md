@@ -1367,6 +1367,115 @@ Log entries within an Object SHOULD be ordered by timestamp. Publishers MUST
 NOT publish log entries with a severity level numerically greater than the
 verbosity specified in the catalog.
 
+# Metrics track {#metricstrack}
+
+TODO: The metrics payload format defined in this section needs to be revisited
+and coordinated with {{MOQMETRICS}}.
+
+Metrics tracks provide a mechanism for subscribers to publish quantitative
+measurements back to the delivery system. This enables QoE analytics, performance
+monitoring, and operational dashboards. Metrics tracks are defined in the catalog's
+publishTracks array with a packaging value of "moq-metrics".
+
+## Metrics track payload {#metricspayload}
+
+A metrics track payload is a JSON {{JSON}} document. This document MAY be compressed
+using GZIP {{GZIP}}. The document contains an array of metric records. Each record
+consists of a JSON Object containing the following fields:
+
+* "ts" (required): The timestamp of the metric sample, expressed as the number of
+  milliseconds that have elapsed since January 1, 1970 (midnight UTC/GMT).
+* "name" (required): A string identifying the metric. Metric names SHOULD use
+  lowercase characters and underscores (e.g., "buffer_health_ms", "frames_dropped").
+* "type" (required): A string indicating the metric type. Allowed values are:
+  * "counter": A cumulative value that only increases (e.g., total frames decoded).
+  * "gauge": A point-in-time measurement that can increase or decrease
+    (e.g., current buffer level).
+  * "histogram": A distribution of values, represented as an object with "buckets"
+    and "sum" fields.
+* "value" (required): The metric value. For "counter" and "gauge" types, this is a
+  JSON Number. For "histogram" type, this is a JSON Object containing:
+  * "buckets": An array of [upperBound, count] tuples.
+  * "sum": The sum of all observed values.
+  * "count": The total number of observations.
+* "labels" (optional): A JSON Object containing key-value pairs that provide
+  dimensional metadata for the metric (e.g., track name, codec, resolution).
+
+An example metrics payload is shown below:
+
+~~~json
+[
+  {
+    "ts": 1759924158381,
+    "name": "buffer_health_ms",
+    "type": "gauge",
+    "value": 2500,
+    "labels": {
+      "track": "video-hd",
+      "renderGroup": 1
+    }
+  },
+  {
+    "ts": 1759924158381,
+    "name": "frames_decoded_total",
+    "type": "counter",
+    "value": 14582,
+    "labels": {
+      "track": "video-hd"
+    }
+  },
+  {
+    "ts": 1759924158381,
+    "name": "frames_dropped_total",
+    "type": "counter",
+    "value": 12,
+    "labels": {
+      "track": "video-hd",
+      "reason": "late"
+    }
+  },
+  {
+    "ts": 1759924158381,
+    "name": "frame_decode_duration_ms",
+    "type": "histogram",
+    "value": {
+      "buckets": [[5, 8420], [10, 5200], [20, 890], [50, 72]],
+      "sum": 98234.5,
+      "count": 14582
+    },
+    "labels": {
+      "track": "video-hd"
+    }
+  },
+  {
+    "ts": 1759924158381,
+    "name": "estimated_bandwidth_bps",
+    "type": "gauge",
+    "value": 8500000
+  }
+]
+~~~
+
+## Metrics track catalog requirements
+
+A metrics track MUST be declared in the publishTracks array of the catalog with:
+
+* a {{packaging}} attribute with a value of "moq-metrics".
+* a {{trackrole}} attribute with a value of "metrics".
+
+A metrics track MAY include:
+
+* a {{verbosity}} attribute indicating the level of detail to publish.
+* a {{connectionuri}} attribute if metrics should be published to a different endpoint.
+* a {{token}} attribute for publish authorization.
+
+## Metrics track publishing
+
+The publisher SHOULD batch multiple metric samples into a single MOQT Object to
+reduce overhead. Each MOQT Object MUST contain a complete, valid JSON array.
+Publishers SHOULD publish metrics at regular intervals appropriate for the use
+case (e.g., every 1-5 seconds for real-time monitoring).
+
 # Workflow
 
 ## Initiating a broadcast
