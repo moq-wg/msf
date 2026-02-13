@@ -183,8 +183,7 @@ published only when the availability of tracks changes.
 Each catalog update MUST be mapped to an MOQT Object.
 
 Subscribers accessing the catalog MUST use SUBSCRIBE with a Joining FETCH
-(offset = 0) in order to obtain the latest complete catalog (carried in the
-first object of the latest group) and all subsequent catalog objects, including
+(offset = 0) in order to obtain the latest complete catalog along with all subsequent catalog objects, including
 delta updates, that follow.
 
 
