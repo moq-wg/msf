@@ -54,7 +54,7 @@ normative:
     target: https://www.w3.org/TR/ttml-imsc1/
 
 informative:
-
+  E2EE-MLS: I-D.draft-jennings-moq-e2ee-mls
 
 --- abstract
 
@@ -170,9 +170,26 @@ following track-level fields:
 * encryptionScheme {{encryptionscheme}} - identifies the encryption mechanism
 * cipherSuite {{ciphersuite}} - specifies the AEAD algorithm
 * keyId {{keyid}} - identifies the key material for decryption
+* trackBaseKey {{trackbasekey}} - the base key material for this track
 
 When the encryptionScheme field is present in a track definition, subscribers
 MUST decrypt the object payload using the specified scheme before processing.
+
+### Key management
+
+The keyId and trackBaseKey values are obtained from an external key management
+system and the mechanism for obtaining these values is out of scope for this
+specification. Examples of key management systems include MLS-based key
+distribution {{E2EE-MLS}} or other out-of-band key exchange mechanisms.
+
+Depending on the key management mechanism in use, a keyId MAY be scoped to:
+
+* A single track
+* A single MSF session
+* Multiple tracks across one or more MSF sessions
+
+Publishers and subscribers MUST use the same key management system and agree
+on the keyId scope semantics for interoperable operation.
 
 ### Default encryption scheme
 
@@ -184,7 +201,7 @@ When using the "moq-secure-objects" scheme:
 
 * The cipherSuite field MUST be present and set to a supported cipher suite value
 * The keyId field SHOULD be present to identify the key material
-* Key distribution and management are out of scope for this specification
+* The trackBaseKey field SHOULD be present to provide the base key material
 
 ### Encrypted object structure
 
@@ -267,6 +284,7 @@ Table 1 provides an overview of all fields defined by this document.
 | Encryption scheme       | encryptionScheme       | {{encryptionscheme}}      |
 | Cipher suite            | cipherSuite            | {{ciphersuite}}           |
 | Key ID                  | keyId                  | {{keyid}}                 |
+| Track Base Key          | trackBaseKey           | {{trackbasekey}}          |
 
 Table 2 defines the allowed locations for these fields within the document
 
@@ -595,13 +613,33 @@ authentication tags.
 Location: T    Required: Optional   JSON Type: String
 
 A string identifying the key material used for encryption. This value is
-transmitted in the Secure Object KID extension header (type 0x2) of each
-encrypted object. The format and semantics of the Key ID are determined by
-the key management system in use and are out of scope for this specification.
+transmitted in the Secure Object KID extension header as defined in
+({{SecureObjects, Section 4.2}}) of each encrypted object.
 
-When multiple tracks share the same Key ID, they MAY share the same base
-key material, though per-track keys are derived using the track name as
-defined in {{SecureObjects}}.
+The keyId and associated trackBaseKey are obtained from an external key
+management system. The mechanism for obtaining these values is out of scope
+for this specification. Examples include MLS-based key distribution
+{{E2EE-MLS}} or other out-of-band key exchange mechanisms.
+
+The scope of a keyId is determined by the key management system in use. A
+keyId MAY be scoped to a single track, a single MSF session, or multiple
+tracks and sessions. When multiple tracks share the same Key ID, they MAY
+share the same base key material, though per-track keys are derived using
+the track name as defined in ({{SecureObjects, Section 5}}).
+
+### Track Base Key {#trackbasekey}
+Location: T    Required: Optional   JSON Type: String
+
+A base64-encoded {{BASE64}} string containing the base key material for this
+track, as defined in ({{SecureObjects, Section 5}}). This field works in
+conjunction with keyId to provide the cryptographic material needed for
+decryption. The trackBaseKey is obtained from the same key management system
+that provides the keyId.
+
+When present, this field contains the raw key material that, together with
+the track name and other parameters defined in ({{SecureObjects, Section 5}}),
+is used to derive the actual encryption keys. Publishers and subscribers MUST
+use matching trackBaseKey values for successful decryption.
 
 ## Delta updates {#deltaupdates}
 A catalog update might contain incremental changes. This is a useful property if
@@ -1028,7 +1066,8 @@ tracks using MoQ Secure Objects with AES-128-GCM.
       "bitrate": 1500000,
       "encryptionScheme": "moq-secure-objects",
       "cipherSuite": "aes-128-gcm-sha256",
-      "keyId": "key-2024-q1-premium"
+      "keyId": "key-2024-q1-premium",
+      "trackBaseKey": "dGhpc2lzYXNhbXBsZWJhc2VrZXk="
     },
     {
       "name": "audio",
@@ -1044,7 +1083,8 @@ tracks using MoQ Secure Objects with AES-128-GCM.
       "bitrate": 32000,
       "encryptionScheme": "moq-secure-objects",
       "cipherSuite": "aes-128-gcm-sha256",
-      "keyId": "key-2024-q1-premium"
+      "keyId": "key-2024-q1-premium",
+      "trackBaseKey": "dGhpc2lzYXNhbXBsZWJhc2VrZXk="
     }
   ]
 }
