@@ -4,8 +4,8 @@
 
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
-Intended status: Informational                           9 February 2026
-Expires: 13 August 2026
+Intended status: Informational                          13 February 2026
+Expires: 17 August 2026
 
 
                          MOQT Streaming Format
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 13 August 2026.
+   This Internet-Draft will expire on 17 August 2026.
 
 Copyright Notice
 
@@ -74,8 +74,9 @@ Table of Contents
      4.2.  Time-alignment
      4.3.  Content protection and encryption
        4.3.1.  Encryption scheme signaling
-       4.3.2.  Default encryption scheme
-       4.3.3.  Encrypted object structure
+       4.3.2.  Key management
+       4.3.3.  Default encryption scheme
+       4.3.4.  Encrypted object structure
    5.  Catalog
      5.1.  Catalog Fields
        5.1.1.  MSF version
@@ -118,6 +119,7 @@ Table of Contents
        5.1.38. Encryption scheme
        5.1.39. Cipher suite
        5.1.40. Key ID
+       5.1.41. Track Base Key
      5.2.  Delta updates
      5.3.  Catalog Examples
        5.3.1.  Time-aligned Audio/Video Tracks with single quality
@@ -151,7 +153,9 @@ Table of Contents
      9.2.  Ending a live broadcast
    10. Security Considerations
    11. IANA Considerations
-   12. Normative References
+   12. References
+     12.1.  Normative References
+     12.2.  Informative References
    Acknowledgments
    Contributors
    Author's Address
@@ -300,11 +304,33 @@ Table of Contents
 
    *  keyId Section 5.1.40 - identifies the key material for decryption
 
+   *  trackBaseKey Section 5.1.41 - the base key material for this track
+
    When the encryptionScheme field is present in a track definition,
    subscribers MUST decrypt the object payload using the specified
    scheme before processing.
 
-4.3.2.  Default encryption scheme
+4.3.2.  Key management
+
+   The keyId and trackBaseKey values are obtained from an external key
+   management system and the mechanism for obtaining these values is out
+   of scope for this specification.  Examples of key management systems
+   include MLS-based key distribution [E2EE-MLS] or other out-of-band
+   key exchange mechanisms.
+
+   Depending on the key management mechanism in use, a keyId MAY be
+   scoped to:
+
+   *  A single track
+
+   *  A single MSF session
+
+   *  Multiple tracks across one or more MSF sessions
+
+   Publishers and subscribers MUST use the same key management system
+   and agree on the keyId scope semantics for interoperable operation.
+
+4.3.3.  Default encryption scheme
 
    The default and RECOMMENDED encryption scheme for MSF is "moq-secure-
    objects".  Implementations supporting content encryption MUST
@@ -318,10 +344,10 @@ Table of Contents
 
    *  The keyId field SHOULD be present to identify the key material
 
-   *  Key distribution and management are out of scope for this
-      specification
+   *  The trackBaseKey field SHOULD be present to provide the base key
+      material
 
-4.3.3.  Encrypted object structure
+4.3.4.  Encrypted object structure
 
    For LOC-packaged tracks with encryption enabled:
 
@@ -448,6 +474,8 @@ Table of Contents
        | Cipher suite          | cipherSuite      | Section 5.1.39 |
        +-----------------------+------------------+----------------+
        | Key ID                | keyId            | Section 5.1.40 |
+       +-----------------------+------------------+----------------+
+       | Track Base Key        | trackBaseKey     | Section 5.1.41 |
        +-----------------------+------------------+----------------+
 
                                   Table 1
@@ -880,14 +908,36 @@ Table of Contents
    Location: T Required: Optional JSON Type: String
 
    A string identifying the key material used for encryption.  This
-   value is transmitted in the Secure Object KID extension header (type
-   0x2) of each encrypted object.  The format and semantics of the Key
-   ID are determined by the key management system in use and are out of
-   scope for this specification.
+   value is transmitted in the Secure Object KID extension header as
+   defined in ([SecureObjects], Section 4.2) of each encrypted object.
 
-   When multiple tracks share the same Key ID, they MAY share the same
-   base key material, though per-track keys are derived using the track
-   name as defined in [SecureObjects].
+   The keyId and associated trackBaseKey are obtained from an external
+   key management system.  The mechanism for obtaining these values is
+   out of scope for this specification.  Examples include MLS-based key
+   distribution [E2EE-MLS] or other out-of-band key exchange mechanisms.
+
+   The scope of a keyId is determined by the key management system in
+   use.  A keyId MAY be scoped to a single track, a single MSF session,
+   or multiple tracks and sessions.  When multiple tracks share the same
+   Key ID, they MAY share the same base key material, though per-track
+   keys are derived using the track name as defined in ([SecureObjects],
+   Section 5).
+
+5.1.41.  Track Base Key
+
+   Location: T Required: Optional JSON Type: String
+
+   A base64-encoded [BASE64] string containing the base key material for
+   this track, as defined in ([SecureObjects], Section 5).  This field
+   works in conjunction with keyId to provide the cryptographic material
+   needed for decryption.  The trackBaseKey is obtained from the same
+   key management system that provides the keyId.
+
+   When present, this field contains the raw key material that, together
+   with the track name and other parameters defined in ([SecureObjects],
+   Section 5), is used to derive the actual encryption keys.  Publishers
+   and subscribers MUST use matching trackBaseKey values for successful
+   decryption.
 
 5.2.  Delta updates
 
@@ -1294,7 +1344,8 @@ Table of Contents
          "bitrate": 1500000,
          "encryptionScheme": "moq-secure-objects",
          "cipherSuite": "aes-128-gcm-sha256",
-         "keyId": "key-2024-q1-premium"
+         "keyId": "key-2024-q1-premium",
+         "trackBaseKey": "dGhpc2lzYXNhbXBsZWJhc2VrZXk="
        },
        {
          "name": "audio",
@@ -1310,7 +1361,8 @@ Table of Contents
          "bitrate": 32000,
          "encryptionScheme": "moq-secure-objects",
          "cipherSuite": "aes-128-gcm-sha256",
-         "keyId": "key-2024-q1-premium"
+         "keyId": "key-2024-q1-premium",
+         "trackBaseKey": "dGhpc2lzYXNhbXBsZWJhc2VrZXk="
        }
      ]
    }
@@ -1610,7 +1662,9 @@ Table of Contents
    Registry (see [MoQTransport] Sect 8).  The type value is 0x001, the
    name is "MOQT Streaming Format" and the RFC is XXX.
 
-12.  Normative References
+12.  References
+
+12.1.  Normative References
 
    [BASE64]   Josefsson, S., "The Base16, Base32, and Base64 Data
               Encodings", RFC 4648, DOI 10.17487/RFC4648, October 2006,
@@ -1685,6 +1739,14 @@ Table of Contents
    [WEBVTT]   "World Wide Web Consortium (W3C), WebVTT: The Web Video
               Text Tracks Format", April 2019,
               <https://www.w3.org/TR/webvtt1/>.
+
+12.2.  Informative References
+
+   [E2EE-MLS] Jennings, C. F., Nandakumar, S., and R. Barnes, "End-to-
+              end Security for Media over QUIC", Work in Progress,
+              Internet-Draft, draft-jennings-moq-e2ee-mls-03, 30 June
+              2025, <https://datatracker.ietf.org/doc/html/draft-
+              jennings-moq-e2ee-mls-03>.
 
 Acknowledgments
 

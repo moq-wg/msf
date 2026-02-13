@@ -167,7 +167,7 @@
   font-weight: 400;
   font-display: swap;
   src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin-ext.woff2') format('woff2');
-  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 @font-face {
   font-family: 'Oxygen Mono';
@@ -175,7 +175,8 @@
   font-weight: 400;
   font-display: swap;
   src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
 }
 
 @font-face {
@@ -1050,7 +1051,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Law</td>
-<td class="center">Expires 13 August 2026</td>
+<td class="center">Expires 17 August 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1063,12 +1064,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-moq-msf-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-02-09" class="published">9 February 2026</time>
+<time datetime="2026-02-13" class="published">13 February 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-08-13">13 August 2026</time></dd>
+<dd class="expires"><time datetime="2026-08-17">17 August 2026</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1118,7 +1119,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 13 August 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 17 August 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1172,10 +1173,13 @@ svg :is([fill="white"], [fill^="#fff"]) {
                     <p id="section-toc.1-1.4.2.3.2.1.1"><a href="#section-4.3.1" class="auto internal xref">4.3.1</a>.  <a href="#name-encryption-scheme-signaling" class="internal xref">Encryption scheme signaling</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.3.2.2">
-                    <p id="section-toc.1-1.4.2.3.2.2.1"><a href="#section-4.3.2" class="auto internal xref">4.3.2</a>.  <a href="#name-default-encryption-scheme" class="internal xref">Default encryption scheme</a></p>
+                    <p id="section-toc.1-1.4.2.3.2.2.1"><a href="#section-4.3.2" class="auto internal xref">4.3.2</a>.  <a href="#name-key-management" class="internal xref">Key management</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.3.2.3">
-                    <p id="section-toc.1-1.4.2.3.2.3.1"><a href="#section-4.3.3" class="auto internal xref">4.3.3</a>.  <a href="#name-encrypted-object-structure" class="internal xref">Encrypted object structure</a></p>
+                    <p id="section-toc.1-1.4.2.3.2.3.1"><a href="#section-4.3.3" class="auto internal xref">4.3.3</a>.  <a href="#name-default-encryption-scheme" class="internal xref">Default encryption scheme</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.3.2.4">
+                    <p id="section-toc.1-1.4.2.3.2.4.1"><a href="#section-4.3.4" class="auto internal xref">4.3.4</a>.  <a href="#name-encrypted-object-structure" class="internal xref">Encrypted object structure</a></p>
 </li>
                 </ul>
 </li>
@@ -1307,6 +1311,9 @@ svg :is([fill="white"], [fill^="#fff"]) {
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.40">
                     <p id="section-toc.1-1.5.2.1.2.40.1"><a href="#section-5.1.40" class="auto internal xref">5.1.40</a>. <a href="#name-key-id" class="internal xref">Key ID</a></p>
 </li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.41">
+                    <p id="section-toc.1-1.5.2.1.2.41.1"><a href="#section-5.1.41" class="auto internal xref">5.1.41</a>. <a href="#name-track-base-key" class="internal xref">Track Base Key</a></p>
+</li>
                 </ul>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2">
@@ -1414,7 +1421,15 @@ svg :is([fill="white"], [fill^="#fff"]) {
             <p id="section-toc.1-1.11.1"><a href="#section-11" class="auto internal xref">11</a>. <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
-            <p id="section-toc.1-1.12.1"><a href="#section-12" class="auto internal xref">12</a>. <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+            <p id="section-toc.1-1.12.1"><a href="#section-12" class="auto internal xref">12</a>. <a href="#name-references" class="internal xref">References</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.1">
+                <p id="section-toc.1-1.12.2.1.1"><a href="#section-12.1" class="auto internal xref">12.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.2">
+                <p id="section-toc.1-1.12.2.2.1"><a href="#section-12.2" class="auto internal xref">12.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13">
             <p id="section-toc.1-1.13.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
@@ -1612,49 +1627,77 @@ following track-level fields:<a href="#section-4.3.1-1" class="pilcrow">¶</a></
             <li class="normal" id="section-4.3.1-2.3">
               <p id="section-4.3.1-2.3.1">keyId <a href="#keyid" class="auto internal xref">Section 5.1.40</a> - identifies the key material for decryption<a href="#section-4.3.1-2.3.1" class="pilcrow">¶</a></p>
 </li>
+            <li class="normal" id="section-4.3.1-2.4">
+              <p id="section-4.3.1-2.4.1">trackBaseKey <a href="#trackbasekey" class="auto internal xref">Section 5.1.41</a> - the base key material for this track<a href="#section-4.3.1-2.4.1" class="pilcrow">¶</a></p>
+</li>
           </ul>
 <p id="section-4.3.1-3">When the encryptionScheme field is present in a track definition, subscribers
 <span class="bcp14">MUST</span> decrypt the object payload using the specified scheme before processing.<a href="#section-4.3.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="default-encryption-scheme">
+<div id="key-management">
 <section id="section-4.3.2">
-          <h4 id="name-default-encryption-scheme">
-<a href="#section-4.3.2" class="section-number selfRef">4.3.2. </a><a href="#name-default-encryption-scheme" class="section-name selfRef">Default encryption scheme</a>
+          <h4 id="name-key-management">
+<a href="#section-4.3.2" class="section-number selfRef">4.3.2. </a><a href="#name-key-management" class="section-name selfRef">Key management</a>
           </h4>
-<p id="section-4.3.2-1">The default and <span class="bcp14">RECOMMENDED</span> encryption scheme for MSF is "moq-secure-objects".
-Implementations supporting content encryption <span class="bcp14">MUST</span> implement the
-"moq-secure-objects" scheme as defined in <span>[<a href="#SecureObjects" class="cite xref">SecureObjects</a>]</span>.<a href="#section-4.3.2-1" class="pilcrow">¶</a></p>
-<p id="section-4.3.2-2">When using the "moq-secure-objects" scheme:<a href="#section-4.3.2-2" class="pilcrow">¶</a></p>
+<p id="section-4.3.2-1">The keyId and trackBaseKey values are obtained from an external key management
+system and the mechanism for obtaining these values is out of scope for this
+specification. Examples of key management systems include MLS-based key
+distribution <span>[<a href="#E2EE-MLS" class="cite xref">E2EE-MLS</a>]</span> or other out-of-band key exchange mechanisms.<a href="#section-4.3.2-1" class="pilcrow">¶</a></p>
+<p id="section-4.3.2-2">Depending on the key management mechanism in use, a keyId <span class="bcp14">MAY</span> be scoped to:<a href="#section-4.3.2-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4.3.2-3.1">
-              <p id="section-4.3.2-3.1.1">The cipherSuite field <span class="bcp14">MUST</span> be present and set to a supported cipher suite value<a href="#section-4.3.2-3.1.1" class="pilcrow">¶</a></p>
+              <p id="section-4.3.2-3.1.1">A single track<a href="#section-4.3.2-3.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-4.3.2-3.2">
-              <p id="section-4.3.2-3.2.1">The keyId field <span class="bcp14">SHOULD</span> be present to identify the key material<a href="#section-4.3.2-3.2.1" class="pilcrow">¶</a></p>
+              <p id="section-4.3.2-3.2.1">A single MSF session<a href="#section-4.3.2-3.2.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-4.3.2-3.3">
-              <p id="section-4.3.2-3.3.1">Key distribution and management are out of scope for this specification<a href="#section-4.3.2-3.3.1" class="pilcrow">¶</a></p>
+              <p id="section-4.3.2-3.3.1">Multiple tracks across one or more MSF sessions<a href="#section-4.3.2-3.3.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+<p id="section-4.3.2-4">Publishers and subscribers <span class="bcp14">MUST</span> use the same key management system and agree
+on the keyId scope semantics for interoperable operation.<a href="#section-4.3.2-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="default-encryption-scheme">
+<section id="section-4.3.3">
+          <h4 id="name-default-encryption-scheme">
+<a href="#section-4.3.3" class="section-number selfRef">4.3.3. </a><a href="#name-default-encryption-scheme" class="section-name selfRef">Default encryption scheme</a>
+          </h4>
+<p id="section-4.3.3-1">The default and <span class="bcp14">RECOMMENDED</span> encryption scheme for MSF is "moq-secure-objects".
+Implementations supporting content encryption <span class="bcp14">MUST</span> implement the
+"moq-secure-objects" scheme as defined in <span>[<a href="#SecureObjects" class="cite xref">SecureObjects</a>]</span>.<a href="#section-4.3.3-1" class="pilcrow">¶</a></p>
+<p id="section-4.3.3-2">When using the "moq-secure-objects" scheme:<a href="#section-4.3.3-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-4.3.3-3.1">
+              <p id="section-4.3.3-3.1.1">The cipherSuite field <span class="bcp14">MUST</span> be present and set to a supported cipher suite value<a href="#section-4.3.3-3.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-4.3.3-3.2">
+              <p id="section-4.3.3-3.2.1">The keyId field <span class="bcp14">SHOULD</span> be present to identify the key material<a href="#section-4.3.3-3.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-4.3.3-3.3">
+              <p id="section-4.3.3-3.3.1">The trackBaseKey field <span class="bcp14">SHOULD</span> be present to provide the base key material<a href="#section-4.3.3-3.3.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 </section>
 </div>
 <div id="encrypted-object-structure">
-<section id="section-4.3.3">
+<section id="section-4.3.4">
           <h4 id="name-encrypted-object-structure">
-<a href="#section-4.3.3" class="section-number selfRef">4.3.3. </a><a href="#name-encrypted-object-structure" class="section-name selfRef">Encrypted object structure</a>
+<a href="#section-4.3.4" class="section-number selfRef">4.3.4. </a><a href="#name-encrypted-object-structure" class="section-name selfRef">Encrypted object structure</a>
           </h4>
-<p id="section-4.3.3-1">For LOC-packaged tracks with encryption enabled:<a href="#section-4.3.3-1" class="pilcrow">¶</a></p>
+<p id="section-4.3.4-1">For LOC-packaged tracks with encryption enabled:<a href="#section-4.3.4-1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-4.3.3-2.1">
-              <p id="section-4.3.3-2.1.1">The immutable header extensions (including Group ID and Object ID) remain
-in plaintext and are authenticated<a href="#section-4.3.3-2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-4.3.4-2.1">
+              <p id="section-4.3.4-2.1.1">The immutable header extensions (including Group ID and Object ID) remain
+in plaintext and are authenticated<a href="#section-4.3.4-2.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-4.3.3-2.2">
-              <p id="section-4.3.3-2.2.1">The object payload is encrypted and authenticated using the specified cipher<a href="#section-4.3.3-2.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-4.3.4-2.2">
+              <p id="section-4.3.4-2.2.1">The object payload is encrypted and authenticated using the specified cipher<a href="#section-4.3.4-2.2.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-4.3.3-2.3">
-              <p id="section-4.3.3-2.3.1">Private header extensions (type 0xA) are encrypted alongside the payload<a href="#section-4.3.3-2.3.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-4.3.4-2.3">
+              <p id="section-4.3.4-2.3.1">Private header extensions (type 0xA) are encrypted alongside the payload<a href="#section-4.3.4-2.3.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 </section>
@@ -1974,6 +2017,13 @@ of field names within the JSON document is not important.<a href="#section-5.1-1
               <td class="text-left" rowspan="1" colspan="1">keyId</td>
               <td class="text-left" rowspan="1" colspan="1">
                 <a href="#keyid" class="auto internal xref">Section 5.1.40</a>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Track Base Key</td>
+              <td class="text-left" rowspan="1" colspan="1">trackBaseKey</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <a href="#trackbasekey" class="auto internal xref">Section 5.1.41</a>
 </td>
             </tr>
           </tbody>
@@ -2558,12 +2608,34 @@ authentication tags.<a href="#section-5.1.39-5" class="pilcrow">¶</a></p>
           </h4>
 <p id="section-5.1.40-1">Location: T    Required: Optional   JSON Type: String<a href="#section-5.1.40-1" class="pilcrow">¶</a></p>
 <p id="section-5.1.40-2">A string identifying the key material used for encryption. This value is
-transmitted in the Secure Object KID extension header (type 0x2) of each
-encrypted object. The format and semantics of the Key ID are determined by
-the key management system in use and are out of scope for this specification.<a href="#section-5.1.40-2" class="pilcrow">¶</a></p>
-<p id="section-5.1.40-3">When multiple tracks share the same Key ID, they <span class="bcp14">MAY</span> share the same base
-key material, though per-track keys are derived using the track name as
-defined in <span>[<a href="#SecureObjects" class="cite xref">SecureObjects</a>]</span>.<a href="#section-5.1.40-3" class="pilcrow">¶</a></p>
+transmitted in the Secure Object KID extension header as defined in
+(<span>[<a href="#SecureObjects" class="cite xref">SecureObjects</a>], <a href="https://datatracker.ietf.org/doc/html/draft-jennings-moq-secure-objects-04#section-4.2" class="relref">Section 4.2</a></span>) of each encrypted object.<a href="#section-5.1.40-2" class="pilcrow">¶</a></p>
+<p id="section-5.1.40-3">The keyId and associated trackBaseKey are obtained from an external key
+management system. The mechanism for obtaining these values is out of scope
+for this specification. Examples include MLS-based key distribution
+<span>[<a href="#E2EE-MLS" class="cite xref">E2EE-MLS</a>]</span> or other out-of-band key exchange mechanisms.<a href="#section-5.1.40-3" class="pilcrow">¶</a></p>
+<p id="section-5.1.40-4">The scope of a keyId is determined by the key management system in use. A
+keyId <span class="bcp14">MAY</span> be scoped to a single track, a single MSF session, or multiple
+tracks and sessions. When multiple tracks share the same Key ID, they <span class="bcp14">MAY</span>
+share the same base key material, though per-track keys are derived using
+the track name as defined in (<span>[<a href="#SecureObjects" class="cite xref">SecureObjects</a>], <a href="https://datatracker.ietf.org/doc/html/draft-jennings-moq-secure-objects-04#section-5" class="relref">Section 5</a></span>).<a href="#section-5.1.40-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="trackbasekey">
+<section id="section-5.1.41">
+          <h4 id="name-track-base-key">
+<a href="#section-5.1.41" class="section-number selfRef">5.1.41. </a><a href="#name-track-base-key" class="section-name selfRef">Track Base Key</a>
+          </h4>
+<p id="section-5.1.41-1">Location: T    Required: Optional   JSON Type: String<a href="#section-5.1.41-1" class="pilcrow">¶</a></p>
+<p id="section-5.1.41-2">A base64-encoded <span>[<a href="#BASE64" class="cite xref">BASE64</a>]</span> string containing the base key material for this
+track, as defined in (<span>[<a href="#SecureObjects" class="cite xref">SecureObjects</a>], <a href="https://datatracker.ietf.org/doc/html/draft-jennings-moq-secure-objects-04#section-5" class="relref">Section 5</a></span>). This field works in
+conjunction with keyId to provide the cryptographic material needed for
+decryption. The trackBaseKey is obtained from the same key management system
+that provides the keyId.<a href="#section-5.1.41-2" class="pilcrow">¶</a></p>
+<p id="section-5.1.41-3">When present, this field contains the raw key material that, together with
+the track name and other parameters defined in (<span>[<a href="#SecureObjects" class="cite xref">SecureObjects</a>], <a href="https://datatracker.ietf.org/doc/html/draft-jennings-moq-secure-objects-04#section-5" class="relref">Section 5</a></span>),
+is used to derive the actual encryption keys. Publishers and subscribers <span class="bcp14">MUST</span>
+use matching trackBaseKey values for successful decryption.<a href="#section-5.1.41-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -3035,7 +3107,8 @@ tracks using MoQ Secure Objects with AES-128-GCM.<a href="#section-5.3.8-1" clas
       "bitrate": 1500000,
       "encryptionScheme": "moq-secure-objects",
       "cipherSuite": "aes-128-gcm-sha256",
-      "keyId": "key-2024-q1-premium"
+      "keyId": "key-2024-q1-premium",
+      "trackBaseKey": "dGhpc2lzYXNhbXBsZWJhc2VrZXk="
     },
     {
       "name": "audio",
@@ -3051,7 +3124,8 @@ tracks using MoQ Secure Objects with AES-128-GCM.<a href="#section-5.3.8-1" clas
       "bitrate": 32000,
       "encryptionScheme": "moq-secure-objects",
       "cipherSuite": "aes-128-gcm-sha256",
-      "keyId": "key-2024-q1-premium"
+      "keyId": "key-2024-q1-premium",
+      "trackBaseKey": "dGhpc2lzYXNhbXBsZWJhc2VrZXk="
     }
   ]
 }
@@ -3453,73 +3527,93 @@ TRUE and which contains an empty Tracks <a href="#tracks" class="auto internal x
 "MOQT Streaming Format" and the RFC is XXX.<a href="#section-11-1" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="sec-normative-references">
+<div id="sec-combined-references">
 <section id="section-12">
-      <h2 id="name-normative-references">
-<a href="#section-12" class="section-number selfRef">12. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+      <h2 id="name-references">
+<a href="#section-12" class="section-number selfRef">12. </a><a href="#name-references" class="section-name selfRef">References</a>
       </h2>
+<div id="sec-normative-references">
+<section id="section-12.1">
+        <h3 id="name-normative-references">
+<a href="#section-12.1" class="section-number selfRef">12.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+        </h3>
 <dl class="references">
 <dt id="BASE64">[BASE64]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Josefsson, S.</span>, <span class="refTitle">"The Base16, Base32, and Base64 Data Encodings"</span>, <span class="seriesInfo">RFC 4648</span>, <span class="seriesInfo">DOI 10.17487/RFC4648</span>, <time datetime="2006-10" class="refDate">October 2006</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc4648">https://www.rfc-editor.org/rfc/rfc4648</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="GZIP">[GZIP]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Deutsch, P.</span>, <span class="refTitle">"GZIP file format specification version 4.3"</span>, <span class="seriesInfo">RFC 1952</span>, <span class="seriesInfo">DOI 10.17487/RFC1952</span>, <time datetime="1996-05" class="refDate">May 1996</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc1952">https://www.rfc-editor.org/rfc/rfc1952</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="IMSC1">[IMSC1]</dt>
-      <dd>
+        <dd>
 <span class="refTitle">"W3C, TTML Profiles for Internet Media Subtitles and Captions 1.0 (IMSC1)"</span>, <time datetime="2016-04" class="refDate">April 2016</time>, <span>&lt;<a href="https://www.w3.org/TR/ttml-imsc1/">https://www.w3.org/TR/ttml-imsc1/</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="JSON">[JSON]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Bray, T., Ed.</span>, <span class="refTitle">"The JavaScript Object Notation (JSON) Data Interchange Format"</span>, <span class="seriesInfo">STD 90</span>, <span class="seriesInfo">RFC 8259</span>, <span class="seriesInfo">DOI 10.17487/RFC8259</span>, <time datetime="2017-12" class="refDate">December 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8259">https://www.rfc-editor.org/rfc/rfc8259</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="LANG">[LANG]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Phillips, A., Ed.</span> and <span class="refAuthor">M. Davis, Ed.</span>, <span class="refTitle">"Tags for Identifying Languages"</span>, <span class="seriesInfo">BCP 47</span>, <span class="seriesInfo">RFC 5646</span>, <span class="seriesInfo">DOI 10.17487/RFC5646</span>, <time datetime="2009-09" class="refDate">September 2009</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc5646">https://www.rfc-editor.org/rfc/rfc5646</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="LOC">[LOC]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Zanaty, M.</span>, <span class="refAuthor">Nandakumar, S.</span>, and <span class="refAuthor">P. Thatcher</span>, <span class="refTitle">"Low Overhead Media Container"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-mzanaty-moq-loc-05</span>, <time datetime="2025-03-03" class="refDate">3 March 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-mzanaty-moq-loc-05">https://datatracker.ietf.org/doc/html/draft-mzanaty-moq-loc-05</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="MIME">[MIME]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Freed, N.</span>, <span class="refAuthor">Klensin, J.</span>, and <span class="refAuthor">T. Hansen</span>, <span class="refTitle">"Media Type Specifications and Registration Procedures"</span>, <span class="seriesInfo">BCP 13</span>, <span class="seriesInfo">RFC 6838</span>, <span class="seriesInfo">DOI 10.17487/RFC6838</span>, <time datetime="2013-01" class="refDate">January 2013</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6838">https://www.rfc-editor.org/rfc/rfc6838</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="MoQTransport">[MoQTransport]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Nandakumar, S.</span>, <span class="refAuthor">Vasiliev, V.</span>, <span class="refAuthor">Swett, I.</span>, and <span class="refAuthor">A. Frindell</span>, <span class="refTitle">"Media over QUIC Transport"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-moq-transport-11</span>, <time datetime="2025-04-28" class="refDate">28 April 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-11">https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-11</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC2119">[RFC2119]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC4180">[RFC4180]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Shafranovich, Y.</span>, <span class="refTitle">"Common Format and MIME Type for Comma-Separated Values (CSV) Files"</span>, <span class="seriesInfo">RFC 4180</span>, <span class="seriesInfo">DOI 10.17487/RFC4180</span>, <time datetime="2005-10" class="refDate">October 2005</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc4180">https://www.rfc-editor.org/rfc/rfc4180</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8174">[RFC8174]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8174">https://www.rfc-editor.org/rfc/rfc8174</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC9000">[RFC9000]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Iyengar, J., Ed.</span> and <span class="refAuthor">M. Thomson, Ed.</span>, <span class="refTitle">"QUIC: A UDP-Based Multiplexed and Secure Transport"</span>, <span class="seriesInfo">RFC 9000</span>, <span class="seriesInfo">DOI 10.17487/RFC9000</span>, <time datetime="2021-05" class="refDate">May 2021</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9000">https://www.rfc-editor.org/rfc/rfc9000</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="SecureObjects">[SecureObjects]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Jennings, C. F.</span>, <span class="refAuthor">Nandakumar, S.</span>, and <span class="refAuthor">R. Barnes</span>, <span class="refTitle">"End-to-End Secure Objects for Media over QUIC Transport"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-jennings-moq-secure-objects-04</span>, <time datetime="2026-02-08" class="refDate">8 February 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-jennings-moq-secure-objects-04">https://datatracker.ietf.org/doc/html/draft-jennings-moq-secure-objects-04</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="WEBCODECS-CODEC-REGISTRY">[WEBCODECS-CODEC-REGISTRY]</dt>
-      <dd>
+        <dd>
 <span class="refTitle">"WebCodecs Codec Registry"</span>, <time datetime="2024-09" class="refDate">September 2024</time>, <span>&lt;<a href="https://www.w3.org/TR/webcodecs-codec-registry/">https://www.w3.org/TR/webcodecs-codec-registry/</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="WEBVTT">[WEBVTT]</dt>
-    <dd>
+      <dd>
 <span class="refTitle">"World Wide Web Consortium (W3C), WebVTT: The Web Video Text Tracks Format"</span>, <time datetime="2019-04" class="refDate">April 2019</time>, <span>&lt;<a href="https://www.w3.org/TR/webvtt1/">https://www.w3.org/TR/webvtt1/</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
+</section>
+</div>
+<div id="sec-informative-references">
+<section id="section-12.2">
+        <h3 id="name-informative-references">
+<a href="#section-12.2" class="section-number selfRef">12.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+        </h3>
+<dl class="references">
+<dt id="E2EE-MLS">[E2EE-MLS]</dt>
+      <dd>
+<span class="refAuthor">Jennings, C. F.</span>, <span class="refAuthor">Nandakumar, S.</span>, and <span class="refAuthor">R. Barnes</span>, <span class="refTitle">"End-to-end Security for Media over QUIC"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-jennings-moq-e2ee-mls-03</span>, <time datetime="2025-06-30" class="refDate">30 June 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-jennings-moq-e2ee-mls-03">https://datatracker.ietf.org/doc/html/draft-jennings-moq-e2ee-mls-03</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+</div>
 </section>
 </div>
 <div id="acknowledgments">
