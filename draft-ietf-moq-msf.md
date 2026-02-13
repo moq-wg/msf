@@ -1282,6 +1282,91 @@ This example shows drone GPS coordinates synched with the start of each Group.
 
 ~~~
 
+# Log track {#logtrack}
+
+TODO: The log payload format defined in this section needs to be revisited
+and coordinated with {{MOQLOG}}.
+
+Log tracks provide a mechanism for subscribers to publish diagnostic and
+operational log data back to the delivery system. This enables QoE monitoring,
+debugging, and analytics collection. Log tracks are defined in the catalog's
+publishTracks array with a packaging value of "moq-log".
+
+## Log track payload {#logpayload}
+
+A log track payload is a JSON {{JSON}} document. This document MAY be compressed
+using GZIP {{GZIP}}. The document contains an array of log records. Each record
+consists of a JSON Object containing the following fields:
+
+* "ts" (required): The timestamp of the log entry, expressed as the number of
+  milliseconds that have elapsed since January 1, 1970 (midnight UTC/GMT).
+* "level" (required): A number from 0 to 7 indicating the severity level,
+  following the verbosity definitions in {{verbosity}}.
+* "msg" (required): A string containing the human-readable log message.
+* "ctx" (optional): A JSON Object containing additional structured context
+  data relevant to the log entry. The structure of this object is
+  application-defined.
+
+An example log payload is shown below:
+
+~~~json
+[
+  {
+    "ts": 1759924158381,
+    "level": 3,
+    "msg": "Failed to decode video frame",
+    "ctx": {
+      "track": "video-hd",
+      "groupId": 1042,
+      "objectId": 7,
+      "codec": "av01",
+      "error": "corrupted_bitstream"
+    }
+  },
+  {
+    "ts": 1759924158395,
+    "level": 4,
+    "msg": "Buffer underrun detected",
+    "ctx": {
+      "track": "video-hd",
+      "bufferMs": 0,
+      "targetLatency": 2000
+    }
+  },
+  {
+    "ts": 1759924160512,
+    "level": 6,
+    "msg": "Track switch completed",
+    "ctx": {
+      "fromTrack": "video-hd",
+      "toTrack": "video-sd",
+      "reason": "bandwidth"
+    }
+  }
+]
+~~~
+
+## Log track catalog requirements
+
+A log track MUST be declared in the publishTracks array of the catalog with:
+
+* a {{packaging}} attribute with a value of "moq-log".
+* a {{trackrole}} attribute with a value of "log".
+
+A log track MAY include:
+
+* a {{verbosity}} attribute indicating the maximum severity level to publish.
+* a {{connectionuri}} attribute if logs should be published to a different endpoint.
+* a {{token}} attribute for publish authorization.
+
+## Log track publishing
+
+The publisher SHOULD batch multiple log entries into a single MOQT Object to
+reduce overhead. Each MOQT Object MUST contain a complete, valid JSON array.
+Log entries within an Object SHOULD be ordered by timestamp. Publishers MUST
+NOT publish log entries with a severity level numerically greater than the
+verbosity specified in the catalog.
+
 # Workflow
 
 ## Initiating a broadcast
