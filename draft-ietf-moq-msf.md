@@ -200,8 +200,8 @@ Implementations supporting content encryption MUST implement the
 When using the "moq-secure-objects" scheme:
 
 * The cipherSuite field MUST be present and set to a supported cipher suite value
-* The keyId field SHOULD be present to identify the key material
-* The trackBaseKey field SHOULD be present to provide the base key material
+* The keyId field MUST be present to identify the key material
+* The trackBaseKey field MUST be present to provide the base key material
 
 ### Encrypted object structure
 
