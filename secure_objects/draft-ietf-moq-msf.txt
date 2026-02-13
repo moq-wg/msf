@@ -342,9 +342,9 @@ Table of Contents
    *  The cipherSuite field MUST be present and set to a supported
       cipher suite value
 
-   *  The keyId field SHOULD be present to identify the key material
+   *  The keyId field MUST be present to identify the key material
 
-   *  The trackBaseKey field SHOULD be present to provide the base key
+   *  The trackBaseKey field MUST be present to provide the base key
       material
 
 4.3.4.  Encrypted object structure
