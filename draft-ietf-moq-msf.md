@@ -557,7 +557,7 @@ The following rules are to be followed in constructing and processing delta upda
   which MUST NOT be modified after being declared. To modify any attribute, a new
   track with a different Namespace|Name tuple is created by Adding or Cloning and then
   the old track is removed.
-* Producers that publish frequent delta updates SHOULD periodically publish a new independent catalog in a new MOQT Group (i.e., an aggregated full catalog), in order to bound the amount of delta processing required for joining subscribers.
+* Producers that publish frequent delta updates SHOULD periodically publish a new independent catalog in a new MOQT Group in order to bound the amount of delta processing required for joining subscribers.
 
 
 ## Catalog Examples
