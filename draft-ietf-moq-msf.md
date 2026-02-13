@@ -32,6 +32,8 @@ author:
 normative:
   MoQTransport: I-D.draft-ietf-moq-transport-11
   LOC: I-D.draft-mzanaty-moq-loc-05
+  PrivacyPassAuth: I-D.draft-ietf-moq-privacy-pass-auth
+  CATAuth: I-D.draft-ietf-moq-c4m
   BASE64: RFC4648
   JSON: RFC8259
   LANG: RFC5646
@@ -227,6 +229,8 @@ Table 1 provides an overview of all fields defined by this document.
 | Language                | lang                   | {{language}}              |
 | Parent name             | parentName             | {{parentname}}            |
 | Track duration          | trackDuration          | {{trackduration}}         |
+| Authorization Schemes   | authSchemes            | {{authschemes}}           |
+| Authorization Info      | authInfo               | {{authinfo}}              |
 
 Table 2 defines the allowed locations for these fields within the document
 
@@ -234,7 +238,6 @@ Table 2 defines the allowed locations for these fields within the document
 |:=========|:==============================================================|
 | R        | The Root of the JSON object                                   |
 | T        | Track object                                                  |
-
 
 ### MSF version {#msfversion}
 Location: R    Required: Yes    JSON Type: Number
@@ -516,6 +519,54 @@ Location: T    Required: Optional   JSON Type: Number
 
 The duration of the track expressed in integer milliseconds. This field MUST NOT
 be included if the isLive {{islive}} field value is true.
+
+### Authorization Schemes {#authschemes}
+Location: R    Required: Optional    JSON Type: Array
+
+An array of strings indicating the authorization mechanisms supported by the
+publisher for accessing tracks in this catalog. Subscribers MUST authenticate
+using one of the advertised schemes before accessing protected tracks.
+
+Table 4: Registered Authorization Schemes
+
+| Scheme           | Value          | Reference                              |
+|:================|:===============|:======================================|
+| Privacy Pass     | privacy-pass   | {{PrivacyPassAuth}}                    |
+| CAT              | cat            | {{CATAuth}}                            |
+
+Both original publishers and end subscribers MAY support multiple authorization
+schemes simultaneously. When multiple schemes are listed in the catalog, they
+are presented in order of publisher preference. An end subscriber SHOULD use
+the first scheme it supports from the list.
+
+Custom authorization schemes MAY be used. Custom scheme names MUST use a
+unique naming convention, such as Reverse Domain Name Notation
+(e.g., "com.example.custom-auth"), to avoid naming collisions.
+
+### Authorization Info {#authinfo}
+Location: T    Required: Optional    JSON Type: Object
+
+An object containing scheme-specific authorization metadata for the track.
+
+The keys of this object are authorization scheme identifiers matching those
+defined in authSchemes {{authschemes}}. The values are scheme-specific
+configuration objects.
+
+For Privacy Pass authentication (scheme "privacy-pass"), the object MAY contain:
+
+| Field           | Type    | Description                                    |
+|:===============|:========|:==============================================|
+| tokenTypes      | Array   | Supported Privacy Pass token type codes        |
+| issuerUrl       | String  | URL of the token issuer                        |
+| scope           | String  | Required scope pattern for token validation    |
+
+For CAT authentication (scheme "cat"), the object MAY contain:
+
+| Field           | Type    | Description                                    |
+|:===============|:========|:==============================================|
+| actions         | Array   | Required MOQT action codes (0-8)               |
+| revalInterval   | Number  | Token revalidation interval in seconds         |
+| dpopRequired    | Boolean | Whether DPoP proof binding is required         |
 
 ## Delta updates {#deltaupdates}
 A catalog update might contain incremental changes. This is a useful property if
@@ -991,6 +1042,76 @@ live broadcast containing a video and an audio track.
 
 ~~~
 
+### Time-aligned Audio/Video Tracks with Authorization
+
+This example shows a catalog for a media producer requiring CAT authorization
+for premium content and Privacy Pass for standard content.
+
+~~~json
+{
+  "version": 1,
+  "generatedAt": 1746104606044,
+  "authSchemes": ["cat", "privacy-pass"],
+  "tracks": [
+    {
+      "name": "premium-4k-video",
+      "namespace": "streaming.example.com/live/sports",
+      "packaging": "loc",
+      "isLive": true,
+      "targetLatency": 2000,
+      "role": "video",
+      "renderGroup": 1,
+      "codec": "av01.0.12M.10.0.110.09",
+      "width": 3840,
+      "height": 2160,
+      "framerate": 60,
+      "bitrate": 15000000,
+      "authInfo": {
+        "cat": {
+          "actions": [4, 7],
+          "revalInterval": 3600,
+          "dpopRequired": true
+        }
+      }
+    },
+    {
+      "name": "standard-720p-video",
+      "namespace": "streaming.example.com/live/sports",
+      "packaging": "loc",
+      "isLive": true,
+      "targetLatency": 2000,
+      "role": "video",
+      "renderGroup": 2,
+      "codec": "av01.0.05M.10.0.110.09",
+      "width": 1280,
+      "height": 720,
+      "framerate": 30,
+      "bitrate": 2500000,
+      "authInfo": {
+        "privacy-pass": {
+          "tokenTypes": [2, 1],
+          "issuerUrl": "https://issuer.example.com",
+          "scope": "subscribe:streaming.example.com/live/*"
+        }
+      }
+    },
+    {
+      "name": "audio",
+      "namespace": "streaming.example.com/live/sports",
+      "packaging": "loc",
+      "isLive": true,
+      "targetLatency": 2000,
+      "role": "audio",
+      "renderGroup": 1,
+      "codec": "opus",
+      "samplerate": 48000,
+      "channelConfig": "2",
+      "bitrate": 128000
+    }
+  ]
+}
+~~~
+
 
 # Media transmission
 The MOQT Groups and MOQT Objects need to be mapped to MOQT Streams. Irrespective
@@ -1173,6 +1294,148 @@ is complete by taking the following steps:
 * If the live stream is being terminated permanently without conversion to VOD, then
   publish an independent catalog update which signals isComplete {{iscomplete}} as
   TRUE and which contains an empty Tracks {{tracks}} field.
+
+## Authorization {#authorization}
+
+MSF supports token-based authorization through pluggable authentication schemes.
+Both original publishers and end subscribers can independently acquire authorization
+tokens and present them to relays. Relays use these tokens to authorize whether
+an end subscriber is permitted to receive content and whether an original publisher
+is permitted to send content.
+
+### Discovering Authorization Requirements
+
+End subscribers discover authorization requirements by parsing the catalog:
+
+1. Check if `authSchemes` is present at the catalog root level
+2. For each track of interest, examine `authInfo` for scheme-specific details
+3. Select a supported scheme from `authSchemes` and obtain appropriate credentials
+
+Original publishers and end subscribers may obtain authorization tokens from
+multiple sources, including the catalog's `authInfo` field or as a parameter
+in the connection URI. These tokens can be presented either in the connection
+setup message (CLIENT_SETUP) or in control messages (SUBSCRIBE, FETCH, PUBLISH,
+PUBLISH_NAMESPACE) as described in {{presentingauthorization}}.
+
+### Token Acquisition
+
+Token acquisition is out of scope for this specification. Both original publishers
+and end subscribers independently obtain tokens through mechanisms such as:
+
+* Direct authentication with a distribution service
+* OAuth 2.0 or OpenID Connect flows
+* Out-of-band provisioning
+
+The token acquisition endpoint and flow depend on the authorization scheme
+and deployment configuration. Original publishers and end subscribers MAY
+use the same or different authorization services depending on the deployment.
+
+### Presenting Authorization {#presentingauthorization}
+
+Once tokens are obtained, both original publishers and end subscribers present
+them to relays according to the scheme specification. Tokens MAY be presented
+at two points during the connection lifecycle:
+
+* **Connection establishment**: Tokens may be included in the SETUP message
+  (CLIENT_SETUP or SERVER_SETUP) using the AUTHORIZATION TOKEN setup parameter.
+  This authorizes the connection itself or pre-authorizes subsequent operations.
+
+* **Per-operation**: Tokens may be included in individual control messages
+  using the AUTHORIZATION TOKEN message parameter. For end subscribers, this
+  applies to SUBSCRIBE, SUBSCRIBE_NAMESPACE, FETCH, and REQUEST_UPDATE messages. For original
+  publishers, this applies to PUBLISH and PUBLISH_NAMESPACE messages. When a track's catalog entry includes an
+  `authInfo` field, valid authorization credentials MUST be included in the
+  control messages used to access that track.
+
+Original publishers and end subscribers independently choose when and how to
+present their tokens based on their authorization requirements.
+
+### Authorization in SETUP Messages
+
+Both original publishers and end subscribers MAY include authorization tokens
+in their respective SETUP messages to establish session-wide authorization:
+
+* **End subscribers** include an AUTHORIZATION TOKEN parameter in CLIENT_SETUP
+  when connecting to a relay. This token MAY pre-authorize the subscriber
+  for subsequent SUBSCRIBE, SUBSCRIBE_NAMESPACE, FETCH, and REQUEST_UPDATE
+  operations on tracks or namespaces covered by the token's scope.
+
+* **Original publishers** include an AUTHORIZATION TOKEN parameter in CLIENT_SETUP
+  when connecting to a relay. This token MAY pre-authorize the publisher
+  for subsequent PUBLISH and PUBLISH_NAMESPACE operations on namespaces
+  covered by the token's scope.
+
+The SETUP token establishes a default authorization context for the session.
+If a relay requires authorization and no token is provided in SETUP, the
+endpoint MUST provide valid authorization in each individual control message
+that requires it.
+
+### Token Override in Control Messages
+
+When an endpoint includes an AUTHORIZATION TOKEN parameter in an individual
+control message, that token overrides any token previously established in the
+SETUP message for that specific operation. This override mechanism enables
+several use cases:
+
+* **Scope refinement**: A SETUP token may authorize a broad namespace while
+  a per-message token authorizes access to a specific track with elevated
+  privileges.
+
+* **Token refresh**: When a SETUP token approaches expiration, endpoints can
+  include fresh tokens in subsequent control messages without re-establishing
+  the session.
+
+* **Mixed authorization**: Different tracks within a session may require
+  different authorization schemes or token issuers.
+
+The following MOQT control messages accept the AUTHORIZATION TOKEN parameter:
+
+| Message               | Direction           | Use Case                              |
+|:===================== |:=================== |:===================================== |
+| SUBSCRIBE             | Subscriber to Relay | Authorize track subscription          |
+| SUBSCRIBE_NAMESPACE   | Subscriber to Relay | Authorize namespace subscription      |
+| FETCH                 | Subscriber to Relay | Authorize object fetch                |
+| REQUEST_UPDATE        | Subscriber to Relay | Authorize update request              |
+| PUBLISH               | Publisher to Relay  | Authorize content publication         |
+| PUBLISH_NAMESPACE     | Publisher to Relay  | Authorize namespace publication       |
+
+When a control message includes an AUTHORIZATION TOKEN, the relay MUST use
+that token for authorization decisions related to that message, regardless
+of any token provided in the SETUP exchange. The SETUP token remains in
+effect for subsequent operations that do not include their own token.
+
+The specific token format and placement depends on the authorization scheme:
+
+* **Privacy Pass**: Tokens are included in MOQT control messages
+  (SUBSCRIBE, FETCH, PUBLISH, PUBLISH_NAMESPACE) via the AUTHORIZATION TOKEN
+  parameter with auth_scheme 0x01. Connection-level tokens may be included in
+  the SETUP message. See {{PrivacyPassAuth}} for details.
+
+* **CAT**: Tokens are supplied via MOQT's AUTHORIZATION TOKEN parameter.
+  When DPoP is required, each operation includes a fresh DPoP proof JWT
+  bound to the endpoint's public key. See {{CATAuth}} for details.
+
+### Relay Authorization Enforcement
+
+Relays enforce authorization for both content consumption and content publishing.
+
+For end subscribers requesting content via SUBSCRIBE or FETCH, relays MUST:
+
+1. Verify the subscriber has presented valid credentials
+2. Validate the token cryptographically
+3. Check that the token scope authorizes the requested operation
+4. Check that the token scope covers the requested namespace and track
+5. For CAT with revalidation, enforce the moqt-reval interval
+6. Reject requests that fail any validation step
+
+For original publishers sending content via PUBLISH or PUBLISH_NAMESPACE, relays MUST:
+
+1. Verify the publisher has presented valid credentials
+2. Validate the token cryptographically
+3. Check that the token scope authorizes publishing to the namespace or track
+4. Reject announcements or publications that fail any validation step
+
+Relays SHOULD return an appropriate error if authorization fails.
 
 # Security Considerations
 
