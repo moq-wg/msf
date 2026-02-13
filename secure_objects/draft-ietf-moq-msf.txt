@@ -75,7 +75,7 @@ Table of Contents
      4.3.  Content protection and encryption
        4.3.1.  Encryption scheme signaling
        4.3.2.  Key management
-       4.3.3.  Default encryption scheme
+       4.3.3.  Recommended encryption scheme
        4.3.4.  Encrypted object structure
    5.  Catalog
      5.1.  Catalog Fields
@@ -323,19 +323,18 @@ Table of Contents
 
    *  A single track
 
-   *  A single MSF session
+   *  A single MoQ Session
 
-   *  Multiple tracks across one or more MSF sessions
+   *  Multiple tracks across one or more MoQ sessions
 
    Publishers and subscribers MUST use the same key management system
    and agree on the keyId scope semantics for interoperable operation.
 
-4.3.3.  Default encryption scheme
+4.3.3.  Recommended encryption scheme
 
-   The default and RECOMMENDED encryption scheme for MSF is "moq-secure-
-   objects".  Implementations supporting content encryption MUST
-   implement the "moq-secure-objects" scheme as defined in
-   [SecureObjects].
+   The RECOMMENDED encryption scheme for MSF is "moq-secure-objects".
+   Implementations supporting content encryption MUST implement the
+   "moq-secure-objects" scheme as defined in [SecureObjects].
 
    When using the "moq-secure-objects" scheme:
 
