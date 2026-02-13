@@ -304,7 +304,7 @@ Location: T    Required: Optional    JSON Type: String
 The name space under which the track name is defined. See section 2.3 of
 {{MoQTransport}}. The track namespace is optional. If it is not declared within
 a track, then each track MUST inherit the namespace of the catalog track. A
-namespace declared in a track object overwrites any inherited name space.
+namespace declared in a track object overrides any inherited name space.
 
 ### Track name {#trackname}
 Location: T    Required: Yes   JSON Type: String
@@ -366,10 +366,11 @@ Custom roles MAY be used as long as they do not collide with the specified roles
 Location: T    Required: Yes  JSON Type: Boolean
 
 True if new Objects will be added to the track.
-False if no new Objects will be added to the track. This is sent under two
+False if no new Objects will be added to the track. A False value is sent under two
 possible conditions:
 * the publisher of a previously live track has ended the track.
 * the track is Video-On-Demand (VOD) and was never live.
+A True value MUST never follow a False value.
 
 ### Target latency {#targetlatency}
 Location: T    Required: Optional  JSON Type: Number
@@ -451,7 +452,7 @@ A string defining the mime type {{MIME}} of the track.
 Location: T    Required: Optional   JSON Type: Number
 
 A number defining the video framerate of the track, expressed as frames per
-second.
+second. This property SHOULD only accompany video codecs.
 
 ### Timescale {#timescale}
 Location: T    Required: Optional   JSON Type: Number
@@ -541,7 +542,7 @@ The following rules are to be followed in constructing and processing delta upda
   Evaluation continues until all operations are successfully applied.
 * A Cloned track inherits all the attributes of the track defined by the Parent Name
   {{parentname}}, except the Track Name which MUST be new. Attributes redefined
-  in the cloning Object overwrite inherited values.
+  in the cloning Object override inherited values.
 * The tuple of Track Namespace and Track Name defines a fixed set of Track attributes
   which MUST NOT be modified after being declared. To modify any attribute, a new
   track with a different Namespace|Name tuple is created by Adding or Cloning and then
@@ -600,7 +601,7 @@ packaged, time-aligned audio and video tracks.
 
 ### Simulcast video tracks - 3 alternate qualities along with audio
 
-This example shows catalog for a media producer capable of sending 3
+This example shows a catalog for a media producer capable of sending 3
 time-aligned video tracks for high definition, low definition and medium
 definition video qualities, along with an audio track. In this example the
 namespace is absent, which infers that each track must inherit the namespace
@@ -673,7 +674,7 @@ of the catalog.
 ### SVC video tracks with 2 spatial and 2 temporal qualities
 
 
-This example shows catalog for a media producer capable
+This example shows a catalog for a media producer capable
 of sending scalable video codec with 2 spatial and 2 temporal
 layers with a dependency relation as shown below:
 
@@ -832,7 +833,7 @@ from an established video conference.
 
 ### Time-aligned Audio/Video Tracks with custom field values
 
-This example shows catalog for a media producer capable of sending LOC packaged,
+This example shows a catalog for a media producer capable of sending LOC packaged,
 time-aligned audio and video tracks along with custom fields in each track
 description.
 
@@ -877,7 +878,7 @@ description.
 
 ### Time-aligned VOD Audio/Video Tracks
 
-This example shows catalog for a media producer offering VOD (video on-demand)
+This example shows a catalog for a media producer offering VOD (video on-demand)
 non-live content. The content is LOC packaged, and includes time-aligned audio
 and video tracks.
 
@@ -977,7 +978,7 @@ synchronized data.
 
 ### Terminating a live broadcast
 
-This example shows catalog for a media producer terminating a previously
+This example shows a catalog for a media producer terminating a previously
 live broadcast containing a video and an audio track.
 
 ~~~json
@@ -1004,7 +1005,7 @@ group, represented as the number of milliseconds since the Unix epoch, rounded t
 the nearest millisecond. This ensures that republishing the same track in the
 future, such as after a loss of connectivity or an encoder restart, will not result
 in smaller or duplicate Group IDs for the same track name. Note that this method
-does not prevent duplication if more than 1000 groups are published per second.
+does not prevent duplication if more than 1000 Groups are published per second.
 
 Each subsequent Group ID MUST increase by 1.
 
@@ -1012,7 +1013,7 @@ If a publisher is able to maintain state across a republish, it MUST signal the 
 in Group IDs using the MOQT Prior Group ID Gap Extension header.
 
 # Media Timeline track {#mediatimelinetrack}
-The media timeline track provides data about the previously published groups and their
+The media timeline track provides data about the previously published Groups and their
 relationship to wallclock time and media time. Media timeline tracks allow players to
 seek to precise points behind the live head in a live broadcast, or for random access
 in a VOD asset. Media timeline tracks are optional. Multiple media timeline tracks
