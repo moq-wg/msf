@@ -32,12 +32,15 @@ author:
 normative:
   MoQTransport: I-D.draft-ietf-moq-transport-11
   LOC: I-D.draft-mzanaty-moq-loc-05
+  C4M: I-D.draft-ietf-moq-c4m
   BASE64: RFC4648
   JSON: RFC8259
   LANG: RFC5646
   MIME: RFC6838
   RFC9000: RFC9000
   RFC4180: RFC4180
+  RFC5234: RFC5234
+  RFC3986: RFC3986
   GZIP: RFC1952
   WEBCODECS-CODEC-REGISTRY:
     title: "WebCodecs Codec Registry"
@@ -1155,6 +1158,136 @@ This example shows drone GPS coordinates synched with the start of each Group.
 ~~~
 
 # Workflow
+
+## URL construction and interpretation
+
+An MSF URL identifies a MOQT session and an optional sub-resource within that session.
+It follows the generic URI syntax:
+
+scheme : // authority / path ? query # fragment
+
+Component Definitions:
+* Scheme: Defines the underlying transport.
+    * moqt: Indicates a raw QUIC connection.
+    * https: Indicates a WebTransport connection.
+* Authority: Required. Contains the host and optional port (defaulting to 443).
+  This information is used by the client to establish the transport session.
+* Path: Optional. If present, it provides server-specific configuration or routing
+  information used during connection initialization.
+* Query: Optional. Contains key-value pairs separated by &. If the query is absent,
+  the ? separator MUST be omitted. Query arguments are visible to both the server and
+  the client and may carry information applicable to either application. Certain
+  query-args are reserved to have special meaning within MSF - see {{reservedqueryargs}}
+* Fragment: Optional. Identifies a specific Track or Catalog. If present, it MUST be
+  formatted as an MSF namespace-name string (see {{namespacenameencoding}}. The client
+  uses this identifier to initiate a SUBSCRIBE or FETCH command once the transport
+  session is established.
+
+A formal ABNF definition of this URL is provided in section {{abnf}}.
+
+### Reserved query arguments {#reservedqueryargs}
+
+Table 5 defines reserved key names for the query portion of the URL. Keynames are
+case-sensitive.
+
+| Name            |                Description                       |
+|:================|:=================================================|
+| wallclock-range | A subclip defined by a wallclock time range      |
+| mediatime-range | A subclip defined by a media time range          |
+| location-range  | A subclip defined by a MOQT Location range       |
+| c4m             | A base64 encoded C4M token                       |
+
+* wallclock-range - a range defined by start and end wallclock times, each expressed
+  as milliseconds since Unix Epoch and separated by a "-" dash. The dash and end
+  time MAY be omitted to indicate an open range.
+* mediatime-range - a range defined by start and end media times, each expressed
+  as milliseconds and separated by a "-" dash. The dash and end time MAY be omitted
+  to indicate an open range.
+* location-range - a range defined by start and end media MOQT Location tuples and
+  expressed as Start Group ID, Start Object ID, End Group ID, End Object ID, each
+  separated by a "-" dash. The End Group ID and End Object ID MAY be omitted to
+  indicate an open range in which the first two values are interpreted as
+  StartGroupID-StartObjectID.
+* c4m - a base64 encoded token, as defined by {{C4M}}.
+
+Example query args:
+
+* wallclock-range=1761759637565-1761759836189
+* wallclock-range=1761751753894
+* mediatime-range=0-13421
+* mediatime-range=982
+* location-range=34-0-2145-16
+* location-range=16-24
+* c4m=gqhkYWxnIGVzaGFyqGR0eXBNhdZ9hdWQAY3VybGZlbWlzcwZleWV2aW5u
+  ZWlhdGVwQWNyZW5lYnJmcmVqMTIzNDU2NzgwMHZpc3VlZF9hdD0xNzMwNDM
+
+
+### MSF Namespace-Name String Encoding {#namespacenameencoding}
+To represent MoQ Tuples (which are sequences of byte strings) within the URL
+fragment, MSF uses a specific encoding convention:
+
+* Hierarchy: Each element of the Namespace tuple is rendered in order, separated by
+  a single hyphen (-).
+* Delimiter: The Track Name is appended to the end, separated from the namespace by
+  a double hyphen (--).
+* Character Escaping:
+    * Unreserved characters (a-z, A-Z, 0-9, _) are represented literally.
+    * All other byte values (including hyphens and periods used as data) MUST be
+    * percent-encoded using a period (.) followed by two lowercase hexadecimal digits
+      (e.g., a literal hyphen in a name becomes .2d).
+
+Note: This encoding ensures that the structural delimiters (- and --) remain unambiguous.
+
+### Formal ABNF {#abnf}
+The following ABNF defines the MSF URL structure, importing core rules from {{RFC5234}} and
+{{RFC3986}}.
+
+~~~ abnf
+msf-url         = msf-scheme "://" authority path-abempty [ "?" query ] [ "#" msf-fragment ]
+
+msf-scheme      = "moqt" / "https"
+
+msf-fragment    = msf-namespace "--" msf-track-name
+msf-namespace   = msf-encoded-string *( "-" msf-encoded-string )
+msf-track-name  = msf-encoded-string
+
+msf-encoded-string = *( unreserved / "." 2HEXDIG )
+unreserved      = ALPHA / DIGIT / "_"
+
+msf-query-arg   = wallclock-arg / mediatime-arg /
+                  location-arg / token-arg / other-arg
+wallclock-arg   = "wallclock-range=" 1*DIGIT [ "-" 1*DIGIT ]
+mediatime-arg   = "mediatime-range=" 1*DIGIT [ "-" 1*DIGIT ]
+location-arg    = "location-range=" start-loc [ "-" end-loc ]
+start-loc       = group-id "-" object-id
+end-loc         = group-id "-" object-id
+group-id        = 1*DIGIT
+object-id       = 1*DIGIT
+token-arg       = "c4m=" 1*( ALPHA / DIGIT / "-" / "_" ) [ "=" / "==" ]
+~~~
+
+### Example MSF URLs
+
+* URl with a Webtransport connection pointing at a catalog track
+  https://example.com/server/config?a=1&b=2#customer-livestream-123--catalog
+    * Session: https://example.com/server/config?a=1&b=2
+    * Namespace: ('customer', 'livestream', '123')
+    * Track Name: 'catalog'
+
+* URL with a raw QUIC connection pointing at a catalog
+  moqt://example.com/relay-app/relayID#customerID-broadcastID--catalog
+
+* URL pointing at a non-catalog track
+  https://example.com/relay-app/relayID#customerID-broadcastID--video
+
+* URL pointing at a subclip of a catalog
+  https://example.com/relay-app/relayID?location-range=34-0-64
+  -16#customerID-broadcastID--catalog
+
+* URL pointing at a catalog and supplying a token
+  moqt://example.com/relay-app/relayID?c4m=gqhkYWxnIGVzaGFyqGR0eXBNhdZ9hdWQAY3VybGZ
+  lbWlzcwZleWV2aW5uZWlhdGVwQWNyZW5lYnJmcmVqMTIzNDU2NzgwMHZpc3VlZF9hdD0xNzMwNDM#cust
+  omerID-broadcastID--catalog
 
 ## Initiating a broadcast
 An MSF publisher MUST publish a catalog track object before publishing any media
