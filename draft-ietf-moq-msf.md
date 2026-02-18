@@ -1284,8 +1284,7 @@ This example shows drone GPS coordinates synched with the start of each Group.
 
 # Log track {#logtrack}
 
-TODO: The log payload format defined in this section needs to be revisited
-and coordinated with {{MOQLOG}}.
+TODO: The log payload format defined in this section needs to be revisited.
 
 Log tracks provide a mechanism for subscribers to publish diagnostic and
 operational log data back to the delivery system. This enables QoE monitoring,
