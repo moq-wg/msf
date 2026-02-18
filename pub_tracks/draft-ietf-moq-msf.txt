@@ -4,8 +4,8 @@
 
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
-Intended status: Informational                          13 February 2026
-Expires: 17 August 2026
+Intended status: Informational                          18 February 2026
+Expires: 22 August 2026
 
 
                          MOQT Streaming Format
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 17 August 2026.
+   This Internet-Draft will expire on 22 August 2026.
 
 Copyright Notice
 
@@ -114,8 +114,7 @@ Table of Contents
        5.1.37. Track duration
        5.1.38. Publish tracks
        5.1.39. Connection URI
-       5.1.40. Verbosity
-       5.1.41. Token
+       5.1.40. Token
      5.2.  Delta updates
      5.3.  Catalog Examples
        5.3.1.  Time-aligned Audio/Video Tracks with single quality
@@ -144,14 +143,22 @@ Table of Contents
      8.4.  Event timeline track examples
        8.4.1.  Event timeline track with wallclock time indexing
        8.4.2.  Event timeline track with MOQT Location indexing
-   9.  Workflow
-     9.1.  Initiating a broadcast
-     9.2.  Ending a live broadcast
-   10. Security Considerations
-   11. IANA Considerations
-   12. References
-     12.1.  Normative References
-     12.2.  Informative References
+   9.  Log track
+     9.1.  Log track payload
+     9.2.  Log track namespace and name
+     9.3.  Log track Group ID and Object ID
+     9.4.  Log track catalog requirements
+   10. Metrics track
+     10.1.  Metrics track payload
+     10.2.  Metrics track namespace and name
+     10.3.  Metrics track Group ID and Object ID
+     10.4.  Metrics track catalog requirements
+   11. Workflow
+     11.1.  Initiating a broadcast
+     11.2.  Ending a live broadcast
+   12. Security Considerations
+   13. IANA Considerations
+   14. Normative References
    Acknowledgments
    Contributors
    Author's Address
@@ -398,9 +405,7 @@ Table of Contents
         +-----------------------+---------------+----------------+
         | Connection URI        | connectionUri | Section 5.1.39 |
         +-----------------------+---------------+----------------+
-        | Verbosity             | verbosity     | Section 5.1.40 |
-        +-----------------------+---------------+----------------+
-        | Token                 | token         | Section 5.1.41 |
+        | Token                 | token         | Section 5.1.40 |
         +-----------------------+---------------+----------------+
 
                                  Table 1
@@ -529,9 +534,9 @@ Table of Contents
            +----------------+---------------+------------------+
            | Event Timeline | eventtimeline | See Section 8    |
            +----------------+---------------+------------------+
-           | MoQ Log        | moq-log       | See [MOQLOG]     |
+           | MoQ Log        | moqlog        | See [MOQLOG]     |
            +----------------+---------------+------------------+
-           | MoQ Metrics    | moq-metrics   | See [MOQMETRICS] |
+           | MoQ Metrics    | moqmetrics    | See [MOQMETRICS] |
            +----------------+---------------+------------------+
 
                                   Table 3
@@ -807,37 +812,10 @@ Table of Contents
    that was used to receive the catalog.
 
    The URI MUST be a valid MOQT endpoint URI.  Examples include
-   "moqt://logs.example.com:4443" or "moqt://metrics.example.com:8443".
+   "moqt://logs.example.com:4443", "moqt://metrics.example.com:8443", or
+   "https://logs.example.com/moqt".
 
-5.1.40.  Verbosity
-
-   Location: T Required: Optional JSON Type: Number
-
-   A number from 0 to 7 indicating the verbosity or priority level for
-   log and metrics tracks.  The levels follow the severity definitions
-   in [MOQLOG] and [MOQMETRICS]:
-
-   *  0 - Emergency: System is unusable
-
-   *  1 - Alert: Action must be taken immediately
-
-   *  2 - Critical: Critical conditions
-
-   *  3 - Error: Error conditions
-
-   *  4 - Warning: Warning conditions
-
-   *  5 - Notice: Normal but significant conditions
-
-   *  6 - Informational: Informational messages
-
-   *  7 - Debug: Debug-level messages
-
-   Lower numbers indicate higher priority.  Subscribers SHOULD publish
-   data at or below the specified verbosity level.  This field is
-   applicable when the packaging value is "moq-log" or "moq-metrics".
-
-5.1.41.  Token
+5.1.40.  Token
 
    Location: T Required: Optional JSON Type: String
 
@@ -1300,7 +1278,8 @@ Table of Contents
    This example shows a catalog that includes publish tracks for client-
    side logging and metrics collection.  The subscriber can publish QoE
    data and logs back to the delivery system using these track
-   definitions.
+   definitions.  The namespace and track name formats follow the
+   conventions defined in [MOQLOG] and [MOQMETRICS].
 
    {
      "version": 1,
@@ -1336,19 +1315,17 @@ Table of Contents
      ],
      "publishTracks": [
        {
-         "name": "client-metrics-%clientId%",
-         "namespace": "metrics.example.com/qoe/stream1",
-         "packaging": "moq-metrics",
+         "namespace": "moq://metrics.moq.arpa/v1/%resourceId%",
+         "name": "4",
+         "packaging": "moqmetrics",
          "role": "metrics",
-         "verbosity": 4,
          "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
        },
        {
-         "name": "client-logs-%clientId%",
-         "namespace": "logs.example.com/player/stream1",
-         "packaging": "moq-log",
+         "namespace": "moq://moq-syslog.arpa/logs-v1/%resourceId%",
+         "name": "6",
+         "packaging": "moqlog",
          "role": "log",
-         "verbosity": 6,
          "connectionUri": "moqt://logs.example.com:4443",
          "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
        }
@@ -1357,19 +1334,21 @@ Table of Contents
 
    In this example:
 
-   *  The "client-metrics" track uses the existing MOQT connection (no
-      connectionUri specified) and publishes metrics at Warning level
-      (4) or higher priority.
+   *  The metrics track uses the namespace format defined in
+      [MOQMETRICS] with %resourceId% as a placeholder for the
+      subscriber's unique resource identifier.  The track name "4"
+      indicates Warning level granularity.
 
-   *  The "client-logs" track establishes a separate connection to
-      logs.example.com and publishes logs at Informational level (6) or
-      higher priority.
-
-   *  The %clientId% variable in track names allows unique
-      identification of each subscriber's published data.
+   *  The log track uses the namespace format defined in [MOQLOG] with
+      %resourceId% as a placeholder.  The track name "6" indicates
+      Informational level priority.  This track establishes a separate
+      connection to logs.example.com.
 
    *  Both tracks include authentication tokens for publishing
       authorization.
+
+   *  The subscriber MUST replace %resourceId% with their actual
+      resource identifier as defined in the respective specifications.
 
 6.  Media transmission
 
@@ -1561,14 +1540,145 @@ Table of Contents
        }
    ]
 
-9.  Workflow
+9.  Log track
 
-9.1.  Initiating a broadcast
+   Log tracks provide a mechanism for subscribers to publish diagnostic
+   and operational log data back to the delivery system.  This enables
+   QoE monitoring, debugging, and analytics collection.  Log tracks are
+   defined in the catalog's publishTracks array with a packaging value
+   of "moqlog".
+
+9.1.  Log track payload
+
+   The log track payload format is defined in [MOQLOG].  Each MOQT
+   Object contains a single JSON-formatted log entry.  The log entry
+   structure includes optional fields such as severity, timestamp,
+   hostname, application name, process ID, message ID, and the log
+   message itself.  Additional structured data fields support
+   distributed tracing integration with TraceID, SpanID, and
+   InstrumentationScope aligned with OpenTelemetry specifications.
+   Implementations MUST follow the object payload format specified in
+   Section 4 of [MOQLOG].
+
+9.2.  Log track namespace and name
+
+   TODO: Finalize on track naming
+
+   Log tracks MUST use the namespace and track name format defined in
+   Section 3 of [MOQLOG].  The Track Namespace consists of the tuples:
+   (moq://moq-syslog.arpa/logs-v1/),(resourceID) where resourceID is a
+   unique identifier for the publishing resource.
+
+   The Track Name is a single byte containing the log priority level in
+   binary.  Priority levels range from 0 (Emergency) to 7 (Debug),
+   following syslog severity conventions.
+
+9.3.  Log track Group ID and Object ID
+
+   The Group ID represents the timestamp at which the log entry was
+   captured, truncated to a 62-bit binary integer representing
+   microseconds since the Unix epoch.  This allows log entries to be
+   naturally ordered by time within the MOQT object model.
+
+   The Object ID is set to zero for a log entry unless multiple log
+   messages occur within the same microsecond, in which case the Object
+   ID increments to distinguish between messages captured at the same
+   timestamp.
+
+9.4.  Log track catalog requirements
+
+   A log track MUST be declared in the publishTracks array of the
+   catalog with:
+
+   *  a Section 5.1.12 attribute with a value of "moqlog".
+
+   *  a Section 5.1.14 attribute with a value of "log".
+
+   A log track MAY include:
+
+   *  a Section 5.1.39 attribute if logs should be published to a
+      different endpoint.
+
+   *  a Section 5.1.40 attribute for publish authorization.
+
+10.  Metrics track
+
+   Metrics tracks provide a mechanism for subscribers to publish
+   quantitative measurements back to the delivery system.  This enables
+   QoE analytics, performance monitoring, and operational dashboards.
+   Metrics tracks are defined in the catalog's publishTracks array with
+   a packaging value of "moqmetrics".
+
+10.1.  Metrics track payload
+
+   The metrics track payload format is defined in [MOQMETRICS].  The
+   data model consists of Resources (systems generating metrics
+   identified by ResourceID), optional Attributes (dimensional key-value
+   pairs), and Metrics (named measurements with timeseries values).
+
+   [MOQMETRICS] defines two metric value types - Gauge and Counter.
+   Both value types support either 64-bit floating point or integer
+   representation.  Implementations MUST follow the object payload
+   format specified in Section 3 of [MOQMETRICS].
+
+10.2.  Metrics track namespace and name
+
+   TODO: Finalize the track naming.
+
+   Metrics tracks MUST use the namespace and track name format defined
+   in Section 3 of [MOQMETRICS].  The Track Namespace consists of the
+   tuples: (moq://metrics.moq.arpa/v1/),(resourceID) where resourceID is
+   a unique identifier for the publishing resource.
+
+   The Track Name identifies the granularity level for the metrics being
+   published, specified as a single tuple (<granularity-level>) where
+   granularity-level is a value from 0 (Emergency) to 7 (Debug).  Higher
+   priority levels (lower numbers) indicate more critical metrics that
+   should always be reported.
+
+10.3.  Metrics track Group ID and Object ID
+
+   The Group ID represents the capture time as the number of
+   milliseconds since January 1, 1970 (Unix epoch).  This allows metrics
+   to be naturally grouped and ordered by their capture timestamp within
+   the MOQT object model.
+
+   Within each Group, Object IDs are assigned as follows:
+
+   *  *Object ID 0*: Contains the capture timestamp as Unix epoch time
+      in nanoseconds, along with any optional attributes for the metrics
+      in this group.
+
+   *  *Object ID 1 and above*: Each subsequent Object contains an
+      individual metric as a name-value pair.
+
+   This structure allows a single capture event to include multiple
+   metrics while maintaining efficient MOQT caching and distribution.
+
+10.4.  Metrics track catalog requirements
+
+   A metrics track MUST be declared in the publishTracks array of the
+   catalog with:
+
+   *  a Section 5.1.12 attribute with a value of "moqmetrics".
+
+   *  a Section 5.1.14 attribute with a value of "metrics".
+
+   A metrics track MAY include:
+
+   *  a Section 5.1.39 attribute if metrics should be published to a
+      different endpoint.
+
+   *  a Section 5.1.40 attribute for publish authorization.
+
+11.  Workflow
+
+11.1.  Initiating a broadcast
 
    An MSF publisher MUST publish a catalog track object before
    publishing any media track objects.
 
-9.2.  Ending a live broadcast
+11.2.  Ending a live broadcast
 
    After publishing a catalog and defining tracks carrying live content,
    an original publisher can deliver a deterministic signal to all
@@ -1588,19 +1698,17 @@ Table of Contents
       which signals isComplete Section 5.1.7 as TRUE and which contains
       an empty Tracks Section 5.1.8 field.
 
-10.  Security Considerations
+12.  Security Considerations
 
    ToDo
 
-11.  IANA Considerations
+13.  IANA Considerations
 
    This document creates a new entry in the "MoQ Streaming Format"
    Registry (see [MoQTransport] Sect 8).  The type value is 0x001, the
    name is "MOQT Streaming Format" and the RFC is XXX.
 
-12.  References
-
-12.1.  Normative References
+14.  Normative References
 
    [BASE64]   Josefsson, S., "The Base16, Base32, and Base64 Data
               Encodings", RFC 4648, DOI 10.17487/RFC4648, October 2006,
@@ -1633,6 +1741,19 @@ Table of Contents
               Specifications and Registration Procedures", BCP 13,
               RFC 6838, DOI 10.17487/RFC6838, January 2013,
               <https://www.rfc-editor.org/rfc/rfc6838>.
+
+   [MOQLOG]   Jennings, C. F. and S. Nandakumar, "Logging over Media
+              over QUIC Transport", Work in Progress, Internet-Draft,
+              draft-jennings-moq-log-03, 20 October 2025,
+              <https://datatracker.ietf.org/doc/html/draft-jennings-moq-
+              log-03>.
+
+   [MOQMETRICS]
+              Jennings, C. F. and S. Nandakumar, "Metrics over MOQT",
+              Work in Progress, Internet-Draft, draft-jennings-moq-
+              metrics-02, 20 October 2025,
+              <https://datatracker.ietf.org/doc/html/draft-jennings-moq-
+              metrics-02>.
 
    [MoQTransport]
               Nandakumar, S., Vasiliev, V., Swett, I., and A. Frindell,
@@ -1667,21 +1788,6 @@ Table of Contents
    [WEBVTT]   "World Wide Web Consortium (W3C), WebVTT: The Web Video
               Text Tracks Format", April 2019,
               <https://www.w3.org/TR/webvtt1/>.
-
-12.2.  Informative References
-
-   [MOQLOG]   Jennings, C. F. and S. Nandakumar, "Logging over Media
-              over QUIC Transport", Work in Progress, Internet-Draft,
-              draft-jennings-moq-log-03, 20 October 2025,
-              <https://datatracker.ietf.org/doc/html/draft-jennings-moq-
-              log-03>.
-
-   [MOQMETRICS]
-              Jennings, C. F. and S. Nandakumar, "Metrics over MOQT",
-              Work in Progress, Internet-Draft, draft-jennings-moq-
-              metrics-02, 20 October 2025,
-              <https://datatracker.ietf.org/doc/html/draft-jennings-moq-
-              metrics-02>.
 
 Acknowledgments
 
