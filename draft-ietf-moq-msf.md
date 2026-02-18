@@ -39,6 +39,8 @@ normative:
   RFC9000: RFC9000
   RFC4180: RFC4180
   GZIP: RFC1952
+  MOQLOG: I-D.draft-jennings-moq-log
+  MOQMETRICS: I-D.draft-jennings-moq-metrics
   WEBCODECS-CODEC-REGISTRY:
     title: "WebCodecs Codec Registry"
     date: September 2024
@@ -53,7 +55,6 @@ normative:
     target: https://www.w3.org/TR/ttml-imsc1/
 
 informative:
-
 
 --- abstract
 
@@ -123,7 +124,7 @@ that end, the following features are within scope:
   conditions of throughput variability.
 * Capable of delivering interstitial advertising.
 * Logs and analytics management - support for the reporting of client-side QoE
-   and relay delivery actions.
+   and relay delivery actions via publish tracks using {{MOQLOG}} and {{MOQMETRICS}}.
 
 Initial versions of MSF will prioritize basic features necessary to exercise
 interoperability across delivery systems. Later versions will add commercially
@@ -227,6 +228,9 @@ Table 1 provides an overview of all fields defined by this document.
 | Language                | lang                   | {{language}}              |
 | Parent name             | parentName             | {{parentname}}            |
 | Track duration          | trackDuration          | {{trackduration}}         |
+| Publish tracks          | publishTracks          | {{publishtracks}}         |
+| Connection URI          | connectionUri          | {{connectionuri}}         |
+| Token                   | token                  | {{token}}                 |
 
 Table 2 defines the allowed locations for these fields within the document
 
@@ -325,6 +329,8 @@ Table 3: Allowed packaging values
 | LOC             | loc            | See RFC XXXX               |
 | Media Timeline  | mediatimeline  | See {{mediatimelinetrack}} |
 | Event Timeline  | eventtimeline  | See {{eventtimelinetrack}} |
+| MoQ Log         | moqlog         | See {{MOQLOG}}             |
+| MoQ Metrics     | moqmetrics     | See {{MOQMETRICS}}         |
 
 
 ### Event timeline type {#eventtype}
@@ -358,6 +364,8 @@ Table 4: Reserved track roles
 | caption          | A textual representation of the audio track                |
 | subtitle         | A transcription of the spoken dialogue                     |
 | signlanguage     | A visual track for hearing impaired users.                 |
+| log              | A log publishing track per {{MOQLOG}}.                     |
+| metrics          | A metrics publishing track per {{MOQMETRICS}}.             |
 |------------------|------------------------------------------------------------|
 
 Custom roles MAY be used as long as they do not collide with the specified roles.
@@ -516,6 +524,34 @@ Location: T    Required: Optional   JSON Type: Number
 
 The duration of the track expressed in integer milliseconds. This field MUST NOT
 be included if the isLive {{islive}} field value is true.
+
+### Publish tracks {#publishtracks}
+Location: R    Required: Optional    JSON Type: Array
+
+An array of publish track objects. Publish tracks define tracks to which the
+subscriber can publish data, such as logs, metrics, or other QoE data. This enables
+bi-directional communication where the subscriber acts as a publisher for specific
+tracks. Each publish track object follows the same structure as a regular track
+object {{trackobject}} but is used for the reverse direction of data flow.
+
+### Connection URI {#connectionuri}
+Location: T    Required: Optional   JSON Type: String
+
+A string containing the MOQT connection endpoint URI for the publish track. When
+specified, the subscriber MUST establish a new MOQT connection to this URI for
+publishing the track data. If this field is absent, the subscriber SHOULD reuse
+the existing MOQT connection that was used to receive the catalog.
+
+The URI MUST be a valid MOQT endpoint URI. Examples include
+"moqt://logs.example.com:4443", "moqt://metrics.example.com:8443", or
+"https://logs.example.com/moqt".
+
+### Token {#token}
+Location: T    Required: Optional   JSON Type: String
+
+A string containing an authentication token or credential for the track. For
+publish tracks, this token authorizes the subscriber to publish data to the
+specified track. The format and validation of the token is application-specific.
 
 ## Delta updates {#deltaupdates}
 A catalog update might contain incremental changes. This is a useful property if
@@ -992,6 +1028,80 @@ live broadcast containing a video and an audio track.
 ~~~
 
 
+### Publish tracks for logs and metrics
+
+This example shows a catalog that includes publish tracks for client-side
+logging and metrics collection. The subscriber can publish QoE data and logs
+back to the delivery system using these track definitions. The namespace and
+track name formats follow the conventions defined in {{MOQLOG}} and {{MOQMETRICS}}.
+
+~~~json
+{
+  "version": 1,
+  "generatedAt": 1746104606044,
+  "tracks": [
+    {
+      "name": "video",
+      "namespace": "broadcast.example.com/live/stream1",
+      "packaging": "loc",
+      "isLive": true,
+      "targetLatency": 2000,
+      "role": "video",
+      "renderGroup": 1,
+      "codec": "av01.0.08M.10.0.110.09",
+      "width": 1920,
+      "height": 1080,
+      "framerate": 30,
+      "bitrate": 1500000
+    },
+    {
+      "name": "audio",
+      "namespace": "broadcast.example.com/live/stream1",
+      "packaging": "loc",
+      "isLive": true,
+      "targetLatency": 2000,
+      "role": "audio",
+      "renderGroup": 1,
+      "codec": "opus",
+      "samplerate": 48000,
+      "channelConfig": "2",
+      "bitrate": 32000
+    }
+  ],
+  "publishTracks": [
+    {
+      "namespace": "moq://metrics.moq.arpa/v1/%resourceId%",
+      "name": "4",
+      "packaging": "moqmetrics",
+      "role": "metrics",
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+    },
+    {
+      "namespace": "moq://moq-syslog.arpa/logs-v1/%resourceId%",
+      "name": "6",
+      "packaging": "moqlog",
+      "role": "log",
+      "connectionUri": "moqt://logs.example.com:4443",
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+    }
+  ]
+}
+
+~~~
+
+In this example:
+
+* The metrics track uses the namespace format defined in {{MOQMETRICS}} with
+  %resourceId% as a placeholder for the subscriber's unique resource identifier.
+  The track name "4" indicates Warning level granularity.
+* The log track uses the namespace format defined in {{MOQLOG}} with %resourceId%
+  as a placeholder. The track name "6" indicates Informational level priority.
+  This track establishes a separate connection to logs.example.com.
+* Both tracks include authentication tokens for publishing authorization.
+* The subscriber MUST replace %resourceId% with their actual resource identifier
+  as defined in the respective specifications.
+
+
 # Media transmission
 The MOQT Groups and MOQT Objects need to be mapped to MOQT Streams. Irrespective
 of the {{mediapackaging}} in place, each MOQT Object MUST be mapped to a new
@@ -1153,6 +1263,120 @@ This example shows drone GPS coordinates synched with the start of each Group.
 ]
 
 ~~~
+
+# Log track {#logtrack}
+
+Log tracks provide a mechanism for subscribers to publish diagnostic and
+operational log data back to the delivery system. This enables QoE monitoring,
+debugging, and analytics collection. Log tracks are defined in the catalog's
+publishTracks array with a packaging value of "moqlog".
+
+## Log track payload {#logpayload}
+
+The log track payload format is defined in {{MOQLOG}}. Each MOQT Object contains
+a single JSON-formatted log entry. The log entry structure includes optional fields
+such as severity, timestamp, hostname, application name, process ID, message ID,
+and the log message itself. Additional structured data fields support distributed
+tracing integration with TraceID, SpanID, and InstrumentationScope aligned with
+OpenTelemetry specifications. Implementations MUST follow the object payload
+format specified in Section 4 of {{MOQLOG}}.
+
+## Log track namespace and name {#logtrackname}
+
+TODO: Finalize on track naming
+
+Log tracks MUST use the namespace and track name format defined in Section 3
+of {{MOQLOG}}. The Track Namespace consists of the tuples:
+`(moq://moq-syslog.arpa/logs-v1/),(resourceID)` where resourceID is a unique
+identifier for the publishing resource.
+
+The Track Name is a single byte containing the log priority level in binary.
+Priority levels range from 0 (Emergency) to 7 (Debug), following syslog severity
+conventions.
+
+## Log track Group ID and Object ID {#loggroupobject}
+
+The Group ID represents the timestamp at which the log entry was captured,
+truncated to a 62-bit binary integer representing microseconds since the Unix epoch.
+This allows log entries to be naturally ordered by time within the MOQT object model.
+
+The Object ID is set to zero for a log entry unless multiple log messages occur
+within the same microsecond, in which case the Object ID increments to distinguish
+between messages captured at the same timestamp.
+
+## Log track catalog requirements
+
+A log track MUST be declared in the publishTracks array of the catalog with:
+
+* a {{packaging}} attribute with a value of "moqlog".
+* a {{trackrole}} attribute with a value of "log".
+
+A log track MAY include:
+
+* a {{connectionuri}} attribute if logs should be published to a different endpoint.
+* a {{token}} attribute for publish authorization.
+
+
+# Metrics track {#metricstrack}
+
+Metrics tracks provide a mechanism for subscribers to publish quantitative
+measurements back to the delivery system. This enables QoE analytics, performance
+monitoring, and operational dashboards. Metrics tracks are defined in the catalog's
+publishTracks array with a packaging value of "moqmetrics".
+
+## Metrics track payload {#metricspayload}
+
+The metrics track payload format is defined in {{MOQMETRICS}}. The data model
+consists of Resources (systems generating metrics identified by ResourceID),
+optional Attributes (dimensional key-value pairs), and Metrics (named measurements
+with timeseries values).
+
+{{MOQMETRICS}} defines two metric value types - Gauge and Counter.
+Both value types support either 64-bit floating point or integer representation.
+Implementations MUST follow the object payload format specified in Section 3
+of {{MOQMETRICS}}.
+
+## Metrics track namespace and name {#metricstrackname}
+
+TODO: Finalize the track naming.
+
+Metrics tracks MUST use the namespace and track name format defined in Section 3
+ of {{MOQMETRICS}}. The Track Namespace consists of the tuples:
+`(moq://metrics.moq.arpa/v1/),(resourceID)` where resourceID is a unique identifier
+for the publishing resource.
+
+The Track Name identifies the granularity level for the metrics being published,
+specified as a single tuple `(<granularity-level>)` where granularity-level is a
+value from 0 (Emergency) to 7 (Debug). Higher priority levels (lower numbers)
+indicate more critical metrics that should always be reported.
+
+## Metrics track Group ID and Object ID {#metricsgroupobject}
+
+The Group ID represents the capture time as the number of milliseconds since
+January 1, 1970 (Unix epoch). This allows metrics to be naturally grouped and
+ordered by their capture timestamp within the MOQT object model.
+
+Within each Group, Object IDs are assigned as follows:
+
+* **Object ID 0**: Contains the capture timestamp as Unix epoch time in nanoseconds,
+  along with any optional attributes for the metrics in this group.
+* **Object ID 1 and above**: Each subsequent Object contains an individual metric
+  as a name-value pair.
+
+This structure allows a single capture event to include multiple metrics while
+maintaining efficient MOQT caching and distribution.
+
+## Metrics track catalog requirements
+
+A metrics track MUST be declared in the publishTracks array of the catalog with:
+
+* a {{packaging}} attribute with a value of "moqmetrics".
+* a {{trackrole}} attribute with a value of "metrics".
+
+A metrics track MAY include:
+
+* a {{connectionuri}} attribute if metrics should be published to a different endpoint.
+* a {{token}} attribute for publish authorization.
 
 # Workflow
 
