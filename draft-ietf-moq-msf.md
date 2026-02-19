@@ -227,6 +227,13 @@ Table 1 provides an overview of all fields defined by this document.
 | Language                | lang                   | {{language}}              |
 | Parent name             | parentName             | {{parentname}}            |
 | Track duration          | trackDuration          | {{trackduration}}         |
+| Start media time        | startMediaTime         | {{startmediatime}}        |
+| Delta media time        | deltaMediaTime         | {{deltamediatime}}        |
+| Start location          | startLocation          | {{startlocation}}         |
+| Delta location          | deltaLocation          | {{deltalocation}}         |
+| Start wallclock         | startWallclock         | {{startwallclock}}        |
+| Delta wallclock         | deltaWallclock         | {{deltawallclock}}        |
+| Entry count             | count                  | {{entrycount}}            |
 
 Table 2 defines the allowed locations for these fields within the document
 
@@ -516,6 +523,57 @@ Location: T    Required: Optional   JSON Type: Number
 
 The duration of the track expressed in integer milliseconds. This field MUST NOT
 be included if the isLive {{islive}} field value is true.
+
+### Start media time {#startmediatime}
+Location: T    Required: Optional   JSON Type: Number
+
+The media presentation timestamp of the first entry in a templated media timeline,
+expressed in milliseconds. This field MUST only appear within a template object
+in a media timeline track payload.
+
+### Delta media time {#deltamediatime}
+Location: T    Required: Optional   JSON Type: Number
+
+The constant interval between media presentation timestamps in a templated media
+timeline, expressed in milliseconds. This field MUST only appear within a template
+object in a media timeline track payload.
+
+### Start location {#startlocation}
+Location: T    Required: Optional   JSON Type: Array
+
+The MOQT Location of the first entry in a templated media timeline, expressed as
+a JSON Array of two Numbers where the first is the Group ID and the second is the
+Object ID. This field MUST only appear within a template object in a media timeline
+track payload.
+
+### Delta location {#deltalocation}
+Location: T    Required: Optional   JSON Type: Array
+
+The constant interval between MOQT Locations in a templated media timeline,
+expressed as a JSON Array of two Numbers where the first is the Group ID delta
+and the second is the Object ID delta. This field MUST only appear within a
+template object in a media timeline track payload.
+
+### Start wallclock {#startwallclock}
+Location: T    Required: Optional   JSON Type: Number
+
+The wallclock time of the first entry in a templated media timeline, expressed
+as the number of milliseconds since January 1, 1970 (midnight UTC/GMT). This
+field MUST only appear within a template object in a media timeline track payload.
+
+### Delta wallclock {#deltawallclock}
+Location: T    Required: Optional   JSON Type: Number
+
+The constant interval between wallclock times in a templated media timeline,
+expressed in milliseconds. This field MUST only appear within a template object
+in a media timeline track payload.
+
+### Entry count {#entrycount}
+Location: T    Required: Optional   JSON Type: Number
+
+The number of entries represented by a template in a templated media timeline.
+This field MUST only appear within a template object in a media timeline track
+payload.
 
 ## Delta updates {#deltaupdates}
 A catalog update might contain incremental changes. This is a useful property if
@@ -976,6 +1034,30 @@ synchronized data.
 
 ~~~
 
+### Media timeline with template format
+
+This example shows a media timeline track payload using a template-based
+format for constant duration GOPs. This format significantly reduces payload
+size compared to explicit entries.
+
+~~~json
+{
+  "template": {
+    "startMediaTime": 0,
+    "deltaMediaTime": 2002,
+    "startLocation": [0, 0],
+    "deltaLocation": [1, 0],
+    "startWallclock": 1759924158381,
+    "deltaWallclock": 2002,
+    "count": 1800
+  }
+}
+~~~
+
+This single template object represents 1 hour of content with 2-second GOPs
+(1800 entries), replacing what would otherwise be an array of 1800 explicit
+entries.
+
 ### Terminating a live broadcast
 
 This example shows a catalog for a media producer terminating a previously
@@ -1021,7 +1103,11 @@ can exist inside a catalog.
 
 ## Media Timeline track payload {#mediatimelinepayload}
 A media timeline track is a JSON {{JSON}} document. This document MAY be compressed
-using GZIP {{GZIP}}. The document contains an array of records. Each record consists of
+using GZIP {{GZIP}}. The document supports two formats: an explicit entry format
+and a template format. Publishers MAY combine both formats in a single document.
+
+### Explicit entry format {#explicitentryformat}
+The explicit format contains an array of records. Each record consists of
 an array of three required items, whose ordinal position defines their type:
 
 * The first item holds the media presentation timestamp, expressed as a JSON Number.
@@ -1030,12 +1116,12 @@ an array of three required items, whose ordinal position defines their type:
 * The second item holds the MOQT Location of the entry, defined as a tuple of the MOQT
   Group ID and MOQT Object ID, and expressed as a JSON Array of Numbers, where the
   first number is the Group ID and the second number is the Object ID.
-* The third time holds the wallclock time at which the media was encoded, defined as
+* The third item holds the wallclock time at which the media was encoded, defined as
   the number of milliseconds that have elapsed since January 1, 1970
   (midnight UTC/GMT) and expressed as a JSON Number. For VOD assets, or if the
   wallclock time is not known, the value SHOULD be 0.
 
-An example media timeline is shown below:
+An example media timeline using explicit entries is shown below:
 
 ~~~json
 [
@@ -1046,6 +1132,66 @@ An example media timeline is shown below:
   [8008, [4,0], 1759924166389]
 ]
 ~~~
+
+### Template format {#templateformat}
+For media tracks with constant duration GOPs, publishers MAY use a template format
+to reduce payload size. The template format uses a JSON Object containing a "template"
+field. The template defines start values and deltas that allow any entry to be
+calculated without explicitly listing each item.
+
+Entry values are calculated as follows, where n is the zero-based entry index:
+
+~~~
+mediaTime[n] = startMediaTime + (n * deltaMediaTime)
+location[n] = [startLocation[0] + (n * deltaLocation[0]),
+               startLocation[1] + (n * deltaLocation[1])]
+wallclock[n] = startWallclock + (n * deltaWallclock)
+~~~
+
+An example media timeline using the template format is shown below:
+
+~~~json
+{
+  "template": {
+    "startMediaTime": 0,
+    "deltaMediaTime": 2002,
+    "startLocation": [0, 0],
+    "deltaLocation": [1, 0],
+    "startWallclock": 1759924158381,
+    "deltaWallclock": 2002,
+    "count": 5
+  }
+}
+~~~
+
+This template represents the same timeline as the explicit entry example above.
+
+### Hybrid format {#hybridformat}
+Publishers MAY combine templates with explicit entries. When both are present,
+the explicit entries in the "entries" array represent additional records that
+extend beyond the template range. Explicit entries are appended after the
+template-generated entries.
+
+~~~json
+{
+  "template": {
+    "startMediaTime": 0,
+    "deltaMediaTime": 2002,
+    "startLocation": [0, 0],
+    "deltaLocation": [1, 0],
+    "startWallclock": 1759924158381,
+    "deltaWallclock": 2002,
+    "count": 100
+  },
+  "entries": [
+    [200200, [100, 0], 1759924358381],
+    [203000, [101, 0], 1759924361181]
+  ]
+}
+~~~
+
+In this example, entries 0-99 are calculated from the template, and entries
+100-101 are provided explicitly with non-constant intervals.
 
 ## Media Timeline Catalog requirements
 A media timeline track MUST carry a 'type' identifier in the Catalog with a value
