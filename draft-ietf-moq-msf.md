@@ -227,6 +227,7 @@ Table 1 provides an overview of all fields defined by this document.
 | Language                | lang                   | {{language}}              |
 | Parent name             | parentName             | {{parentname}}            |
 | Track duration          | trackDuration          | {{trackduration}}         |
+| Track spacing           | trackSpacing           | {{trackspacing}}          |
 
 Table 2 defines the allowed locations for these fields within the document
 
@@ -516,6 +517,16 @@ Location: T    Required: Optional   JSON Type: Number
 
 The duration of the track expressed in integer milliseconds. This field MUST NOT
 be included if the isLive {{islive}} field value is true.
+
+### Track spacing {#trackspacing}
+Location: T    Required: Optional   JSON Type: Number
+
+A number defining the keyframe spacing interval for the track, expressed as the
+number of objects per keyframe interval.
+
+This field is used by subscribers to calculate valid switch points when
+performing adaptive bitrate switching between tracks with different keyframe
+intervals. See {{zapping}} for details on how to use this field.
 
 ## Delta updates {#deltaupdates}
 A catalog update might contain incremental changes. This is a useful property if
@@ -1011,6 +1022,72 @@ Each subsequent Group ID MUST increase by 1.
 
 If a publisher is able to maintain state across a republish, it MUST signal the gap
 in Group IDs using the MOQT Prior Group ID Gap Extension header.
+
+## Zapping and Track Switching {#zapping}
+
+Zapping refers to the act of quickly switching between media streams, such as
+changing channels in a live broadcast. When a viewer switches to a new track,
+playback cannot begin until the decoder receives a keyframe (an independently
+decodable frame, also known as an I-frame). Tracks with longer intervals between
+keyframes (longer GOPs) offer better compression efficiency but increase the
+delay before playback can start after a switch.
+
+When multiple tracks in an alternate group have different keyframe intervals,
+subscribers need to determine valid switch points - moments when a switch will
+land on a keyframe in the target track. The trackSpacing {{trackspacing}} field
+enables subscribers to calculate these valid switch points.
+
+### Calculating Valid Switch Points
+
+When switching from track A (with spacing N) to track B (with spacing M), a
+subscriber can switch at group ID_A in track A if ((ID_A - 1) * N / M) + 1 yields
+an integer result. The resulting integer is the target group ID in track B.
+
+All tracks within the same alternate group that specify a trackSpacing value
+MUST be time-aligned at object boundaries, not only at group boundaries.
+
+### Example: Switching Between Tracks with Different GOP Sizes
+
+Consider two video tracks in an alternate group:
+
+* Track A (HD): trackSpacing = 1
+* Track B (SD): trackSpacing = 2 ( twice the number of objects )
+
+The following diagram shows the group structure and valid switch points:
+
+~~~ascii-figure
+Track A (spacing=1):
+  Group:    1     2     3     4     5     6     7     8     9
+            |     |     |     |     |     |     |     |     |
+           [K]   [P]   [K]   [P]   [K]   [P]   [K]   [P]   [K]
+            ^           ^           ^           ^           ^
+            |           |           |           |           |
+         keyframe    keyframe   keyframe   keyframe   keyframe
+
+
+Track B (spacing=2):
+  Group:    1     2     3     4     5     6     7     8     9
+            |     |     |     |     |     |     |     |     |
+           [K]   [P]   [P]   [P]   [K]   [P]   [P]   [P]   [K]
+            ^                       ^                       ^
+            |                       |                       |
+         keyframe               keyframe               keyframe
+
+
+Valid switch points (A -> B):
+  - Group 1 in A -> Group 1 in B  ((1-1)*2/4)+1 = 1    (valid)
+  - Group 3 in A -> Group 2 in B  ((3-1)*2/4)+1 = 2    (invalid, B[2] is P-frame)
+  - Group 5 in A -> Group 3 in B  ((5-1)*2/4)+1 = 3    (invalid, B[3] is P-frame)
+  - Group 9 in A -> Group 5 in B  ((9-1)*2/4)+1 = 5    (valid)
+
+  K = Keyframe (independently decodable)
+  P = Predicted frame (depends on previous keyframe)
+~~~
+
+In this example, a subscriber watching Track A can only switch to Track B at
+groups 1, 5, 9, etc. - points where the target group in Track B contains a
+keyframe. Attempting to switch at other points would result in playback delay
+while waiting for the next keyframe in Track B.
 
 # Media Timeline track {#mediatimelinetrack}
 The media timeline track provides data about the previously published Groups and their
