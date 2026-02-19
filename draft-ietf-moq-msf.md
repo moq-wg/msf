@@ -333,7 +333,8 @@ Location: T    Required: Optional   JSON Type: String
 A String defining the type & structure of the data contained within the data
 field of the Event timeline track. Types are defined by the application provider
 and are not centrally registered. Implementers are encouraged to use a unique
-naming scheme, such as Reverse Domain Name Notation, to avoid naming collisions.
+naming scheme, such as Reverse Domain Name Notation where domain name components
+are listed in reverse order (e.g., "com.example.myeventtype"), to avoid naming collisions.
 This field is required if the {{packaging}} value is "eventtimeline".
 This field MUST NOT be used if the packaging value is not "eventtimeline".
 
