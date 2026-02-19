@@ -1033,6 +1033,30 @@ synchronized data.
 
 ~~~
 
+### Media timeline with template format
+
+This example shows a media timeline track payload using a template-based
+format for constant duration GOPs. This format significantly reduces payload
+size compared to explicit entries.
+
+~~~json
+{
+  "template": {
+    "startMediaTime": 0,
+    "deltaMediaTime": 2002,
+    "startLocation": [0, 0],
+    "deltaLocation": [1, 0],
+    "startWallclock": 1759924158381,
+    "deltaWallclock": 2002,
+    "count": 1800
+  }
+}
+~~~
+
+This single template object represents 1 hour of content with 2-second GOPs
+(1800 entries), replacing what would otherwise be an array of 1800 explicit
+entries.
+
 ### Terminating a live broadcast
 
 This example shows catalog for a media producer terminating a previously
