@@ -545,6 +545,10 @@ scheme to use and then obtain tokens through out-of-band mechanisms.
 The specific token format, acquisition process, and presentation method
 are defined by the authorization scheme specification.
 
+TODO: Consider adding a mechanism to indicate which token should be applied
+during connection establishment vs. per-track operations. Revisit once MOQT
+variable parameters support is finalized.
+
 ## Delta updates {#deltaupdates}
 A catalog update might contain incremental changes. This is a useful property if
 many tracks may be initially declared but then there are small changes to a
@@ -1344,9 +1348,10 @@ in their respective SETUP messages to establish session-wide authorization:
   covered by the token's scope.
 
 The SETUP token establishes a default authorization context for the session.
-If a relay requires authorization and no token is provided in SETUP, the
-endpoint MUST provide valid authorization in each individual control message
-that requires it.
+When a track's catalog entry includes an `authInfo` field, valid authorization
+tokens MUST be included in ALL control messages associated with that track,
+regardless of whether a token was provided in SETUP. This ensures that relays
+can independently verify authorization for each operation.
 
 ### Handling Authorization Failures
 
