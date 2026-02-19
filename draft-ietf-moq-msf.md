@@ -1055,9 +1055,12 @@ The mime-type of a media timeline track MUST be specified as "application/json".
 
 ## Media Timeline track updating
 The publisher MUST publish an independent media timeline in the first MOQT Object
-of each MOQT Group of a media timeline track. The publisher MAY publish incremental
-updates in the second and subsequent Objects within each Group. Incremental updates
-only contain media timeline records since the last media timeline Object.
+of each MOQT Group of a media timeline track. An independent media timeline object
+MUST contain all media timeline records accumulated up to that point, allowing a
+subscriber joining at any group boundary to receive the complete timeline history.
+The publisher MAY publish incremental updates in the second and subsequent Objects
+within each Group. Incremental updates contain only new media timeline records since
+the previous media timeline Object in that Group.
 
 # Event Timeline track {#eventtimelinetrack}
 The event timeline track provides a mechanism to associate ad-hoc event metadata with
@@ -1099,9 +1102,12 @@ An event timeline track MUST carry:
 
 ## Event Timeline track updating
 The publisher MUST publish an independent event timeline in the first MOQT Object
-of each MOQT Group of an event timeline track. The publisher MAY publish incremental
-updates in the second and subsequent Objects within each Group. Incremental updates
-only contain event timeline records since the last event timeline Object.
+of each MOQT Group of an event timeline track. An independent event timeline object
+MUST contain all event timeline records accumulated up to that point, allowing a
+subscriber joining at any group boundary to receive the complete event history.
+The publisher MAY publish incremental updates in the second and subsequent Objects
+within each Group. Incremental updates contain only new event timeline records since
+the previous event timeline Object in that Group.
 
 ## Event timeline track examples
 
