@@ -227,6 +227,7 @@ Table 1 provides an overview of all fields defined by this document.
 | Language                | lang                   | {{language}}              |
 | Parent name             | parentName             | {{parentname}}            |
 | Track duration          | trackDuration          | {{trackduration}}         |
+| Variables               | variables              | {{variables}}             |
 
 Table 2 defines the allowed locations for these fields within the document
 
@@ -546,6 +547,42 @@ The following rules are to be followed in constructing and processing delta upda
   which MUST NOT be modified after being declared. To modify any attribute, a new
   track with a different Namespace|Name tuple is created by Adding or Cloning and then
   the old track is removed.
+
+## Variable Substitution {#variablesubstitution}
+
+Catalog field values MAY contain variables that are substituted at delivery time.
+This mechanism enables a single cached catalog to be customized for each viewer,
+supporting use cases such as personalized advertising, A/B watermarking, QoE
+reporting endpoints, and logging identifiers.
+
+### Variable Syntax {#variablesyntax}
+
+Variables are denoted by enclosing the variable name in percent characters (`%`).
+Variable names MUST consist of alphanumeric characters, hyphens, and underscores.
+Variable names are case-sensitive.
+
+The percent character (`%`) MUST NOT appear in catalog field values except as
+part of a variable reference. Literal percent characters are not permitted.
+
+### Variable Resolution {#variableresolution}
+
+Variables are resolved from the URI used to access the catalog. The URI
+components used for variable resolution are:
+
+* Query parameters - the name and value pairs following the `?` character
+* Fragment identifier - the portion following the `#` character
+
+When a subscriber requests a catalog using a URI containing query parameters,
+each parameter name becomes available as a variable. The variable is replaced
+with the corresponding parameter value.
+
+### Variables {#variables}
+Location: R    Required: Optional    JSON Type: Array
+
+An array of strings declaring the variable names used within this catalog.
+Publishers SHOULD include this field to enable validation and to document
+the expected variables. Each string in the array is a variable name without
+the enclosing percent characters.
 
 
 ## Catalog Examples
@@ -988,6 +1025,64 @@ live broadcast containing a video and an audio track.
   "tracks": []
 }
 
+~~~
+
+### Variable Substitution for personalized delivery
+
+This example shows a catalog using variable substitution to enable
+personalized advertising and reporting while maintaining cacheability.
+Given a catalog request URI of:
+
+    https://example.com/relay-app/relayID?token=1234&id=bob&event=xyz
+
+The following catalog template:
+
+~~~json
+{
+  "version": 1,
+  "variables": ["id", "token", "event"],
+  "tracks": [
+    {
+      "name": "video",
+      "packaging": "loc",
+      "isLive": true,
+      "role": "video",
+      "renderGroup": 1
+    },
+    {
+      "name": "cmcdv2-%id%",
+      "namespace": "advertising-decisions/live-sports/%event%",
+      "packaging": "eventtimeline",
+      "eventType": "com.example.iab.vast",
+      "c4m": "%token%"
+    }
+  ]
+}
+~~~
+
+Would be resolved by the subscriber as:
+
+~~~json
+{
+  "version": 1,
+  "variables": ["id", "token", "event"],
+  "tracks": [
+    {
+      "name": "video",
+      "packaging": "loc",
+      "isLive": true,
+      "role": "video",
+      "renderGroup": 1
+    },
+    {
+      "name": "cmcdv2-bob",
+      "namespace": "advertising-decisions/live-sports/xyz",
+      "packaging": "eventtimeline",
+      "eventType": "com.example.iab.vast",
+      "c4m": "1234"
+    }
+  ]
+}
 ~~~
 
 
