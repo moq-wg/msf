@@ -521,7 +521,7 @@ be included if the isLive {{islive}} field value is true.
 Location: T    Required: Optional   JSON Type: Number
 
 A number defining the keyframe spacing interval for the track, expressed as the
-number of objects per keyframe interval. 
+number of objects per keyframe interval.
 
 This field is used by subscribers to calculate valid switch points when
 performing adaptive bitrate switching between tracks with different keyframe
@@ -1049,7 +1049,7 @@ MUST be time-aligned at object boundaries, not only at group boundaries.
 
 Consider two video tracks in an alternate group:
 
-* Track A (HD): trackSpacing = 1 
+* Track A (HD): trackSpacing = 1
 * Track B (SD): trackSpacing = 2 ( twice the number of objects )
 
 The following diagram shows the group structure and valid switch points:
