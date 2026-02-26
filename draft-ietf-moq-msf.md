@@ -497,7 +497,7 @@ Audio schemas.
 Location: T    Required: Optional   JSON Type: Number
 
 A number expressing the intended display width of the track content in pixels.
-This property SHOULD only accompany video or visual media codecs.
+This property SHOULD only accompany tracks which have a visual representation. 
 
 ### Display height {#displayheight}
 Location: T    Required: Optional   JSON Type: Number
