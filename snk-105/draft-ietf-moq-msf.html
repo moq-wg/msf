@@ -1051,7 +1051,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Law</td>
-<td class="center">Expires 23 August 2026</td>
+<td class="center">Expires 30 August 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1064,12 +1064,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-moq-msf-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-02-19" class="published">19 February 2026</time>
+<time datetime="2026-02-26" class="published">26 February 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-08-23">23 August 2026</time></dd>
+<dd class="expires"><time datetime="2026-08-30">30 August 2026</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1119,7 +1119,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 23 August 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 30 August 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1342,7 +1342,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
                     <p id="section-toc.1-1.5.2.3.2.8.1"><a href="#section-5.3.8" class="auto internal xref">5.3.8</a>.  <a href="#name-media-timeline-and-event-ti" class="internal xref">Media timeline and Event timeline</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.3.2.9">
-                    <p id="section-toc.1-1.5.2.3.2.9.1"><a href="#section-5.3.9" class="auto internal xref">5.3.9</a>.  <a href="#name-media-timeline-with-templat" class="internal xref">Media timeline with template format</a></p>
+                    <p id="section-toc.1-1.5.2.3.2.9.1"><a href="#section-5.3.9" class="auto internal xref">5.3.9</a>.  <a href="#name-media-timeline-template" class="internal xref">Media timeline template</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.3.2.10">
                     <p id="section-toc.1-1.5.2.3.2.10.1"><a href="#section-5.3.10" class="auto internal xref">5.3.10</a>. <a href="#name-terminating-a-live-broadcas" class="internal xref">Terminating a live broadcast</a></p>
@@ -1381,6 +1381,20 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.3">
                 <p id="section-toc.1-1.7.2.3.1"><a href="#section-7.3" class="auto internal xref">7.3</a>.  <a href="#name-media-timeline-track-updati" class="internal xref">Media Timeline track updating</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.4">
+                <p id="section-toc.1-1.7.2.4.1"><a href="#section-7.4" class="auto internal xref">7.4</a>.  <a href="#name-media-timeline-template-2" class="internal xref">Media Timeline Template</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.4.2.1">
+                    <p id="section-toc.1-1.7.2.4.2.1.1"><a href="#section-7.4.1" class="auto internal xref">7.4.1</a>.  <a href="#name-media-timeline-template-pay" class="internal xref">Media Timeline Template payload</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.4.2.2">
+                    <p id="section-toc.1-1.7.2.4.2.2.1"><a href="#section-7.4.2" class="auto internal xref">7.4.2</a>.  <a href="#name-media-timeline-template-cat" class="internal xref">Media Timeline Template Catalog requirements</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.4.2.3">
+                    <p id="section-toc.1-1.7.2.4.2.3.1"><a href="#section-7.4.3" class="auto internal xref">7.4.3</a>.  <a href="#name-media-timeline-template-tra" class="internal xref">Media Timeline Template track updating</a></p>
+</li>
+                </ul>
 </li>
             </ul>
 </li>
@@ -2120,6 +2134,12 @@ as defined in Table 3.<a href="#section-5.1.12-2" class="pilcrow">¶</a></p>
                 <td class="text-left" rowspan="1" colspan="1">Media Timeline</td>
                 <td class="text-left" rowspan="1" colspan="1">mediatimeline</td>
                 <td class="text-left" rowspan="1" colspan="1">See <a href="#mediatimelinetrack" class="auto internal xref">Section 7</a>
+</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">Media Timeline Template</td>
+                <td class="text-left" rowspan="1" colspan="1">mediatimelinetemplate</td>
+                <td class="text-left" rowspan="1" colspan="1">See <a href="#mediatimelinetemplate" class="auto internal xref">Section 7.4</a>
 </td>
               </tr>
               <tr>
@@ -3034,32 +3054,60 @@ synchronized data.<a href="#section-5.3.8-1" class="pilcrow">¶</a></p>
 </div>
 </section>
 </div>
-<div id="media-timeline-with-template-format">
+<div id="media-timeline-template">
 <section id="section-5.3.9">
-          <h4 id="name-media-timeline-with-templat">
-<a href="#section-5.3.9" class="section-number selfRef">5.3.9. </a><a href="#name-media-timeline-with-templat" class="section-name selfRef">Media timeline with template format</a>
+          <h4 id="name-media-timeline-template">
+<a href="#section-5.3.9" class="section-number selfRef">5.3.9. </a><a href="#name-media-timeline-template" class="section-name selfRef">Media timeline template</a>
           </h4>
-<p id="section-5.3.9-1">This example shows a media timeline track payload using a template-based
-format for constant duration GOPs. This format significantly reduces payload
-size compared to explicit entries.<a href="#section-5.3.9-1" class="pilcrow">¶</a></p>
+<p id="section-5.3.9-1">This example shows a catalog using a media timeline template instead of an
+explicit media timeline track. The template track payload
+(<a href="#mediatimelinetemplatepayload" class="auto internal xref">Section 7.4.1</a>) defines a regular pattern where each segment
+is 2002ms long. Clients can compute any entry using the template parameters.<a href="#section-5.3.9-1" class="pilcrow">¶</a></p>
 <div class="lang-json sourcecode" id="section-5.3.9-2">
 <pre>
 {
-  "template": {
-    "startMediaTime": 0,
-    "deltaMediaTime": 2002,
-    "startLocation": [0, 0],
-    "deltaLocation": [1, 0],
-    "startWallclock": 1759924158381,
-    "deltaWallclock": 2002,
-    "count": 1800
-  }
+  "version": 1,
+  "generatedAt": 1746104606044,
+  "tracks": [
+    {
+      "name": "history",
+      "namespace": "conference.example.com/conference123/alice",
+      "packaging": "mediatimelinetemplate",
+      "mimeType": "application/json",
+      "depends": ["1080p-video","audio"]
+    },
+    {
+      "name": "1080p-video",
+      "namespace": "conference.example.com/conference123/alice",
+      "packaging": "loc",
+      "isLive": true,
+      "targetLatency": 2000,
+      "role": "video",
+      "renderGroup": 1,
+      "codec":"av01.0.08M.10.0.110.09",
+      "width":1920,
+      "height":1080,
+      "framerate":30,
+      "bitrate":1500000
+    },
+    {
+      "name": "audio",
+      "namespace": "conference.example.com/conference123/alice",
+      "packaging": "loc",
+      "isLive": true,
+      "targetLatency": 2000,
+      "role": "audio",
+      "renderGroup": 1,
+      "codec":"opus",
+      "samplerate":48000,
+      "channelConfig":"2",
+      "bitrate":32000
+    }
+   ]
 }
+
 </pre><a href="#section-5.3.9-2" class="pilcrow">¶</a>
 </div>
-<p id="section-5.3.9-3">This single template object represents 1 hour of content with 2-second GOPs
-(1800 entries), replacing what would otherwise be an array of 1800 explicit
-entries.<a href="#section-5.3.9-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="terminating-a-live-broadcast">
@@ -3262,6 +3310,113 @@ The mime-type of a media timeline track <span class="bcp14">MUST</span> be speci
 of each MOQT Group of a media timeline track. The publisher <span class="bcp14">MAY</span> publish incremental
 updates in the second and subsequent Objects within each Group. Incremental updates
 only contain media timeline records since the last media timeline Object.<a href="#section-7.3-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="mediatimelinetemplate">
+<section id="section-7.4">
+        <h3 id="name-media-timeline-template-2">
+<a href="#section-7.4" class="section-number selfRef">7.4. </a><a href="#name-media-timeline-template-2" class="section-name selfRef">Media Timeline Template</a>
+        </h3>
+<p id="section-7.4-1">When the relationship between media time, MOQT Location and wallclock time follows
+a regular, predictable pattern, a media timeline template <span class="bcp14">MAY</span> be used instead of an
+explicit media timeline track. The template approach is best suited for content with
+fixed-duration segments, such as VOD assets or live broadcasts with constant segment
+durations. For content with variable segment durations, the explicit media timeline
+track (<a href="#mediatimelinepayload" class="auto internal xref">Section 7.1</a>) <span class="bcp14">SHOULD</span> be used instead.<a href="#section-7.4-1" class="pilcrow">¶</a></p>
+<div id="mediatimelinetemplatepayload">
+<section id="section-7.4.1">
+          <h4 id="name-media-timeline-template-pay">
+<a href="#section-7.4.1" class="section-number selfRef">7.4.1. </a><a href="#name-media-timeline-template-pay" class="section-name selfRef">Media Timeline Template payload</a>
+          </h4>
+<p id="section-7.4.1-1">A media timeline template track is a JSON <span>[<a href="#JSON" class="cite xref">JSON</a>]</span> document. This document <span class="bcp14">MAY</span> be
+compressed using GZIP <span>[<a href="#GZIP" class="cite xref">GZIP</a>]</span>. The document contains a JSON Object with the
+following required fields:<a href="#section-7.4.1-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-7.4.1-2.1">
+              <p id="section-7.4.1-2.1.1">startMediaTime - The media presentation timestamp of the first entry, expressed
+as a JSON Number in milliseconds.<a href="#section-7.4.1-2.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-7.4.1-2.2">
+              <p id="section-7.4.1-2.2.1">deltaMediaTime - The constant interval between media presentation timestamps,
+expressed as a JSON Number in milliseconds.<a href="#section-7.4.1-2.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-7.4.1-2.3">
+              <p id="section-7.4.1-2.3.1">startLocation - The MOQT Location of the first entry, expressed as a JSON Array
+of two Numbers where the first number is the Group ID and the second number is
+the Object ID.<a href="#section-7.4.1-2.3.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-7.4.1-2.4">
+              <p id="section-7.4.1-2.4.1">deltaLocation - The constant interval between MOQT Locations, expressed as a
+JSON Array of two Numbers where the first number is the Group ID delta and the
+second number is the Object ID delta.<a href="#section-7.4.1-2.4.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-7.4.1-2.5">
+              <p id="section-7.4.1-2.5.1">startWallclock - The wallclock time of the first entry, expressed as the number
+of milliseconds that have elapsed since January 1, 1970 (midnight UTC/GMT). For
+VOD assets, or if the wallclock time is not known, the value <span class="bcp14">SHOULD</span> be 0.<a href="#section-7.4.1-2.5.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-7.4.1-2.6">
+              <p id="section-7.4.1-2.6.1">deltaWallclock - The constant interval between wallclock times, expressed as a
+JSON Number in milliseconds. For VOD assets, or if the wallclock time is not
+known, the value <span class="bcp14">SHOULD</span> be 0.<a href="#section-7.4.1-2.6.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+<p id="section-7.4.1-3">Clients compute entry values using the following formulas, where n is the
+zero-based entry index:<a href="#section-7.4.1-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-7.4.1-4">
+<pre>
+mediaTime[n] = startMediaTime + (n * deltaMediaTime)
+location[n] = [startLocation[0] + (n * deltaLocation[0]),
+               startLocation[1] + (n * deltaLocation[1])]
+wallclock[n] = startWallclock + (n * deltaWallclock)
+</pre><a href="#section-7.4.1-4" class="pilcrow">¶</a>
+</div>
+<p id="section-7.4.1-5">An example media timeline template payload is shown below:<a href="#section-7.4.1-5" class="pilcrow">¶</a></p>
+<div class="lang-json sourcecode" id="section-7.4.1-6">
+<pre>
+{
+  "startMediaTime": 0,
+  "deltaMediaTime": 2002,
+  "startLocation": [0, 0],
+  "deltaLocation": [1, 0],
+  "startWallclock": 1759924158381,
+  "deltaWallclock": 2002
+}
+</pre><a href="#section-7.4.1-6" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="media-timeline-template-catalog-requirements">
+<section id="section-7.4.2">
+          <h4 id="name-media-timeline-template-cat">
+<a href="#section-7.4.2" class="section-number selfRef">7.4.2. </a><a href="#name-media-timeline-template-cat" class="section-name selfRef">Media Timeline Template Catalog requirements</a>
+          </h4>
+<p id="section-7.4.2-1">A media timeline template track <span class="bcp14">MUST</span> carry:<a href="#section-7.4.2-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-7.4.2-2.1">
+              <p id="section-7.4.2-2.1.1">a <a href="#packaging" class="auto internal xref">Section 5.1.12</a> attribute with a value of "mediatimelinetemplate".<a href="#section-7.4.2-2.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-7.4.2-2.2">
+              <p id="section-7.4.2-2.2.1">a <a href="#dependencies" class="auto internal xref">Section 5.1.21</a> attribute which contains an array of all track names to which
+the media timeline template applies.<a href="#section-7.4.2-2.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-7.4.2-2.3">
+              <p id="section-7.4.2-2.3.1">a <a href="#mimetype" class="auto internal xref">Section 5.1.25</a> attribute with a value of "application/json".<a href="#section-7.4.2-2.3.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+</section>
+</div>
+<div id="media-timeline-template-track-updating">
+<section id="section-7.4.3">
+          <h4 id="name-media-timeline-template-tra">
+<a href="#section-7.4.3" class="section-number selfRef">7.4.3. </a><a href="#name-media-timeline-template-tra" class="section-name selfRef">Media Timeline Template track updating</a>
+          </h4>
+<p id="section-7.4.3-1">Unlike the explicit media timeline track, the media timeline template is intended
+to be immutable and need only be transmitted once. The publisher <span class="bcp14">SHOULD</span> publish the
+template in the first MOQT Object of the first MOQT Group of a media timeline
+template track.<a href="#section-7.4.3-1" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 </section>
