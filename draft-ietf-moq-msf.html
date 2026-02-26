@@ -1919,7 +1919,8 @@ catalog if it is false.<a href="#section-5.1.2-2" class="pilcrow">¶</a></p>
           </h4>
 <p id="section-5.1.3-1">Location: R    Required: Optional    JSON Type: Array<a href="#section-5.1.3-1" class="pilcrow">¶</a></p>
 <p id="section-5.1.3-2">Indicates a delta processing instruction to add new tracks. The value of this
-field is an Array of track objects <a href="#trackobject" class="auto internal xref">Section 5.1.9</a>.<a href="#section-5.1.3-2" class="pilcrow">¶</a></p>
+field is an Array of track objects <a href="#trackobject" class="auto internal xref">Section 5.1.9</a>. This field <span class="bcp14">MUST NOT</span> be
+present when the deltaUpdate field is absent or false.<a href="#section-5.1.3-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="removetracks">
@@ -1931,7 +1932,8 @@ field is an Array of track objects <a href="#trackobject" class="auto internal x
 <p id="section-5.1.4-2">Indicates a delta processing instruction to remove new tracks. The value of this
 field is an Array of track objects <a href="#trackobject" class="auto internal xref">Section 5.1.9</a>. Each track object <span class="bcp14">MUST</span> include
 a Track Name <a href="#trackname" class="auto internal xref">Section 5.1.11</a> field, <span class="bcp14">MAY</span> include a Track Namespace <a href="#tracknamespace" class="auto internal xref">Section 5.1.10</a>
-field and <span class="bcp14">MUST NOT</span> hold any other fields.<a href="#section-5.1.4-2" class="pilcrow">¶</a></p>
+field and <span class="bcp14">MUST NOT</span> hold any other fields. This field <span class="bcp14">MUST NOT</span> be present when
+the deltaUpdate field is absent or false.<a href="#section-5.1.4-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="clonetracks">
@@ -1942,7 +1944,8 @@ field and <span class="bcp14">MUST NOT</span> hold any other fields.<a href="#se
 <p id="section-5.1.5-1">Location: R    Required: Optional    JSON Type: Array<a href="#section-5.1.5-1" class="pilcrow">¶</a></p>
 <p id="section-5.1.5-2">Indicates a delta processing instruction to clone new tracks from previously declared
 tracks. The value of this field is an Array of track objects <a href="#trackobject" class="auto internal xref">Section 5.1.9</a>. Each
-track object <span class="bcp14">MUST</span> include a Parent Name <a href="#parentname" class="auto internal xref">Section 5.1.36</a> field.<a href="#section-5.1.5-2" class="pilcrow">¶</a></p>
+track object <span class="bcp14">MUST</span> include a Parent Name <a href="#parentname" class="auto internal xref">Section 5.1.36</a> field. This field <span class="bcp14">MUST NOT</span>
+be present when the deltaUpdate field is absent or false.<a href="#section-5.1.5-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="generatedat">
