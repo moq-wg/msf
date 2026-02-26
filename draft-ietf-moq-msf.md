@@ -1180,6 +1180,81 @@ This example shows drone GPS coordinates synched with the start of each Group.
 
 ~~~
 
+## Well-known event timeline types {#wellknowneventtypes}
+
+This section defines well-known event timeline types for common broadcast
+metadata. Publishers SHOULD use these standardized types when applicable
+to ensure interoperability.
+
+### SCTE-35 markers {#scte35}
+
+Event Type: `urn:scte:scte35:2013:bin` or `urn:scte:scte35:2013:xml`
+
+SCTE-35 markers signal ad insertion points, program boundaries, and other
+broadcast events. When using the binary format, the 'data' field contains
+a Base64 {{BASE64}} encoded SCTE-35 splice_info_section. When using the
+XML format, the 'data' field contains the SCTE-35 XML representation as
+a string.
+
+Publishers SHOULD include a 'duration' field (in milliseconds) when the
+SCTE-35 message indicates a splice duration.
+
+Example SCTE-35 event timeline:
+
+~~~json
+[
+    {
+        "m": 120000,
+        "data": {
+            "type": "splice_insert",
+            "eventId": 12345,
+            "outOfNetwork": true,
+            "duration": 30000,
+            "bin": "/DA0AAAA..."
+        }
+    },
+    {
+        "m": 150000,
+        "data": {
+            "type": "splice_insert",
+            "eventId": 12345,
+            "outOfNetwork": false
+        }
+    }
+]
+~~~
+
+### Out-of-band captions {#oobcaptions}
+
+Event Type: `urn:msf:captions:webvtt` or `urn:msf:captions:imsc1`
+
+For captions delivered as separate event timeline tracks rather than
+embedded in video, publishers use these event types. The 'data' field
+contains the caption cue information.
+
+Example WebVTT caption event timeline:
+
+~~~json
+[
+    {
+        "m": 0,
+        "data": {
+            "start": 0,
+            "end": 2500,
+            "text": "Welcome to the show."
+        }
+    },
+    {
+        "m": 2500,
+        "data": {
+            "start": 2500,
+            "end": 5000,
+            "text": "Today we will be discussing..."
+        }
+    }
+]
+~~~
+
 # Workflow
 
 ## Initiating a broadcast
