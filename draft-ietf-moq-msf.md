@@ -256,7 +256,8 @@ catalog if it is false.
 Location: R    Required: Optional    JSON Type: Array
 
 Indicates a delta processing instruction to add new tracks. The value of this
-field is an Array of track objects {{trackobject}}.
+field is an Array of track objects {{trackobject}}. This field MUST NOT be
+present when the deltaUpdate field is absent or false.
 
 ### Remove tracks {#removetracks}
 Location: R    Required: Optional    JSON Type: Array
@@ -264,14 +265,16 @@ Location: R    Required: Optional    JSON Type: Array
 Indicates a delta processing instruction to remove new tracks. The value of this
 field is an Array of track objects {{trackobject}}. Each track object MUST include
 a Track Name {{trackname}} field, MAY include a Track Namespace {{tracknamespace}}
-field and MUST NOT hold any other fields.
+field and MUST NOT hold any other fields. This field MUST NOT be present when
+the deltaUpdate field is absent or false.
 
 ### Clone tracks {#clonetracks}
 Location: R    Required: Optional    JSON Type: Array
 
 Indicates a delta processing instruction to clone new tracks from previously declared
 tracks. The value of this field is an Array of track objects {{trackobject}}. Each
-track object MUST include a Parent Name {{parentname}} field.
+track object MUST include a Parent Name {{parentname}} field. This field MUST NOT
+be present when the deltaUpdate field is absent or false.
 
 ### Generated at {#generatedat}
 Location: R    Required: Optional    JSON Type: Number
