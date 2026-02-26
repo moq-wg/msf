@@ -125,18 +125,13 @@ Table of Contents
                values
        5.3.7.  Time-aligned VOD Audio/Video Tracks
        5.3.8.  Media timeline and Event timeline
-       5.3.9.  Media timeline template
-       5.3.10. Terminating a live broadcast
+       5.3.9.  Terminating a live broadcast
    6.  Media transmission
      6.1.  Group numbering
    7.  Media Timeline track
      7.1.  Media Timeline track payload
      7.2.  Media Timeline Catalog requirements
      7.3.  Media Timeline track updating
-     7.4.  Media Timeline Template
-       7.4.1.  Media Timeline Template payload
-       7.4.2.  Media Timeline Template Catalog requirements
-       7.4.3.  Media Timeline Template track updating
    8.  Event Timeline track
      8.1.  Event Timeline data format
      8.2.  Event Timeline Catalog requirements
@@ -509,20 +504,17 @@ Table of Contents
 
    Table 3: Allowed packaging values
 
-   +=========================+=======================+=================+
-   | Name                    | Value                 | Reference       |
-   +=========================+=======================+=================+
-   | LOC                     | loc                   | See RFC XXXX    |
-   +-------------------------+-----------------------+-----------------+
-   | Media Timeline          | mediatimeline         | See Section 7   |
-   +-------------------------+-----------------------+-----------------+
-   | Media Timeline Template | mediatimelinetemplate | See             |
-   |                         |                       | Section 7.4     |
-   +-------------------------+-----------------------+-----------------+
-   | Event Timeline          | eventtimeline         | See Section 8   |
-   +-------------------------+-----------------------+-----------------+
+            +================+===============+===============+
+            | Name           | Value         | Reference     |
+            +================+===============+===============+
+            | LOC            | loc           | See RFC XXXX  |
+            +----------------+---------------+---------------+
+            | Media Timeline | mediatimeline | See Section 7 |
+            +----------------+---------------+---------------+
+            | Event Timeline | eventtimeline | See Section 8 |
+            +----------------+---------------+---------------+
 
-                                  Table 3
+                                 Table 3
 
 5.1.13.  Event timeline type
 
@@ -1211,56 +1203,7 @@ Table of Contents
       ]
    }
 
-5.3.9.  Media timeline template
-
-   This example shows a catalog using a media timeline template instead
-   of an explicit media timeline track.  The template track payload
-   (Section 7.4.1) defines a regular pattern where each segment is
-   2002ms long.  Clients can compute any entry using the template
-   parameters.
-
-   {
-     "version": 1,
-     "generatedAt": 1746104606044,
-     "tracks": [
-       {
-         "name": "history",
-         "namespace": "conference.example.com/conference123/alice",
-         "packaging": "mediatimelinetemplate",
-         "mimeType": "application/json",
-         "depends": ["1080p-video","audio"]
-       },
-       {
-         "name": "1080p-video",
-         "namespace": "conference.example.com/conference123/alice",
-         "packaging": "loc",
-         "isLive": true,
-         "targetLatency": 2000,
-         "role": "video",
-         "renderGroup": 1,
-         "codec":"av01.0.08M.10.0.110.09",
-         "width":1920,
-         "height":1080,
-         "framerate":30,
-         "bitrate":1500000
-       },
-       {
-         "name": "audio",
-         "namespace": "conference.example.com/conference123/alice",
-         "packaging": "loc",
-         "isLive": true,
-         "targetLatency": 2000,
-         "role": "audio",
-         "renderGroup": 1,
-         "codec":"opus",
-         "samplerate":48000,
-         "channelConfig":"2",
-         "bitrate":32000
-       }
-      ]
-   }
-
-5.3.10.  Terminating a live broadcast
+5.3.9.  Terminating a live broadcast
 
    This example shows a catalog for a media producer terminating a
    previously live broadcast containing a video and an audio track.
@@ -1354,83 +1297,6 @@ Table of Contents
    publisher MAY publish incremental updates in the second and
    subsequent Objects within each Group.  Incremental updates only
    contain media timeline records since the last media timeline Object.
-
-7.4.  Media Timeline Template
-
-   When the relationship between media time, MOQT Location and wallclock
-   time follows a regular, predictable pattern, a media timeline
-   template MAY be used instead of an explicit media timeline track.
-   The template approach is best suited for content with fixed-duration
-   segments, such as VOD assets or live broadcasts with constant segment
-   durations.  For content with variable segment durations, the explicit
-   media timeline track (Section 7.1) SHOULD be used instead.
-
-7.4.1.  Media Timeline Template payload
-
-   A media timeline template track is a JSON [JSON] document.  This
-   document MAY be compressed using GZIP [GZIP].  The document contains
-   a JSON Object with the following required fields:
-
-   *  startMediaTime - The media presentation timestamp of the first
-      entry, expressed as a JSON Number in milliseconds.
-
-   *  deltaMediaTime - The constant interval between media presentation
-      timestamps, expressed as a JSON Number in milliseconds.
-
-   *  startLocation - The MOQT Location of the first entry, expressed as
-      a JSON Array of two Numbers where the first number is the Group ID
-      and the second number is the Object ID.
-
-   *  deltaLocation - The constant interval between MOQT Locations,
-      expressed as a JSON Array of two Numbers where the first number is
-      the Group ID delta and the second number is the Object ID delta.
-
-   *  startWallclock - The wallclock time of the first entry, expressed
-      as the number of milliseconds that have elapsed since January 1,
-      1970 (midnight UTC/GMT).  For VOD assets, or if the wallclock time
-      is not known, the value SHOULD be 0.
-
-   *  deltaWallclock - The constant interval between wallclock times,
-      expressed as a JSON Number in milliseconds.  For VOD assets, or if
-      the wallclock time is not known, the value SHOULD be 0.
-
-   Clients compute entry values using the following formulas, where n is
-   the zero-based entry index:
-
-   mediaTime[n] = startMediaTime + (n * deltaMediaTime)
-   location[n] = [startLocation[0] + (n * deltaLocation[0]),
-                  startLocation[1] + (n * deltaLocation[1])]
-   wallclock[n] = startWallclock + (n * deltaWallclock)
-
-   An example media timeline template payload is shown below:
-
-   {
-     "startMediaTime": 0,
-     "deltaMediaTime": 2002,
-     "startLocation": [0, 0],
-     "deltaLocation": [1, 0],
-     "startWallclock": 1759924158381,
-     "deltaWallclock": 2002
-   }
-
-7.4.2.  Media Timeline Template Catalog requirements
-
-   A media timeline template track MUST carry:
-
-   *  a Section 5.1.12 attribute with a value of
-      "mediatimelinetemplate".
-
-   *  a Section 5.1.21 attribute which contains an array of all track
-      names to which the media timeline template applies.
-
-   *  a Section 5.1.25 attribute with a value of "application/json".
-
-7.4.3.  Media Timeline Template track updating
-
-   Unlike the explicit media timeline track, the media timeline template
-   is intended to be immutable and need only be transmitted once.  The
-   publisher SHOULD publish the template in the first MOQT Object of the
-   first MOQT Group of a media timeline template track.
 
 8.  Event Timeline track
 
