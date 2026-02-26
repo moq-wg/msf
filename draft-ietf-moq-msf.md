@@ -379,11 +379,11 @@ The target latency in milliseconds. Target latency is defined as the offset in
 wallclock time between when content was encoded and when it is displayed to the
 end user. For example, if a frame of video is encoded at 10:08:32.638 UTC and the
 target latency is 5000, then that frame should be rendered to the end-user at
-10:08:37.638 UTC. This field MUST NOT be included if isLive is FALSE. All tracks
+10:08:37.638 UTC. If isLive is FALSE, this field MUST be ignored. All tracks
 belonging to the same render group MUST have identical target latencies. All tracks
 belonging to the same alternate group MUST have identical target latencies. If this
-field is absent from the track definition, then the player MAY choose the latency
-with which it renders the content.
+field is absent from the track definition, or if isLive is FALSE, then the player
+MAY choose the latency with which it renders the content.
 
 ### Track label {#tracklabel}
 Location: T    Required: Optional   JSON Type: String
