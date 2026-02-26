@@ -476,7 +476,7 @@ This property SHOULD only accompany tracks which have a visual representation.
 Location: T    Required: Optional   JSON Type: Number
 
 A number expressing the encoded height of the video frames in pixels.
-This property SHOULD only accompany video or visual media codecs.
+This property SHOULD only accompany tracks which have a visual representation. 
 
 ### Audio sample rate {#audiosamplerate}
 Location: T    Required: Optional   JSON Type: Number
