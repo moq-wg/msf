@@ -4,8 +4,8 @@
 
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
-Intended status: Informational                          19 February 2026
-Expires: 23 August 2026
+Intended status: Informational                          26 February 2026
+Expires: 30 August 2026
 
 
                          MOQT Streaming Format
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 23 August 2026.
+   This Internet-Draft will expire on 30 August 2026.
 
 Copyright Notice
 
@@ -524,7 +524,7 @@ Table of Contents
    the data field of the Event timeline track.  Types are defined by the
    application provider and are not centrally registered.  Implementers
    are encouraged to use a unique naming scheme, such as Reverse Domain
-   Name Notation where domain name components are listed in reverse
+   Name Notation, where domain name components are listed in reverse
    order (e.g., "com.example.myeventtype"), to avoid naming collisions.
    This field is required if the Section 5.1.12 value is
    "eventtimeline".  This field MUST NOT be used if the packaging value
