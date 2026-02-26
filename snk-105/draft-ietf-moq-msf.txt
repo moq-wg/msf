@@ -112,13 +112,6 @@ Table of Contents
        5.1.35. Language
        5.1.36. Parent name
        5.1.37. Track duration
-       5.1.38. Start media time
-       5.1.39. Delta media time
-       5.1.40. Start location
-       5.1.41. Delta location
-       5.1.42. Start wallclock
-       5.1.43. Delta wallclock
-       5.1.44. Entry count
      5.2.  Delta updates
      5.3.  Catalog Examples
        5.3.1.  Time-aligned Audio/Video Tracks with single quality
@@ -139,8 +132,6 @@ Table of Contents
    7.  Media Timeline track
      7.1.  Media Timeline track payload
        7.1.1.  Explicit entry format
-       7.1.2.  Template format
-       7.1.3.  Hybrid format
      7.2.  Media Timeline Catalog requirements
      7.3.  Media Timeline track updating
      7.4.  Media Timeline Template
@@ -326,97 +317,83 @@ Table of Contents
 
    Table 1 provides an overview of all fields defined by this document.
 
-        +=======================+================+================+
-        | Field                 | Name           | Definition     |
-        +=======================+================+================+
-        | MSF version           | version        | Section 5.1.1  |
-        +-----------------------+----------------+----------------+
-        | Delta update          | deltaUpdate    | Section 5.1.2  |
-        +-----------------------+----------------+----------------+
-        | Add tracks            | addTracks      | Section 5.1.3  |
-        +-----------------------+----------------+----------------+
-        | Remove tracks         | removeTracks   | Section 5.1.4  |
-        +-----------------------+----------------+----------------+
-        | Clone tracks          | cloneTracks    | Section 5.1.5  |
-        +-----------------------+----------------+----------------+
-        | Generated at          | generatedAt    | Section 5.1.6  |
-        +-----------------------+----------------+----------------+
-        | Is Complete           | isComplete     | Section 5.1.7  |
-        +-----------------------+----------------+----------------+
-        | Tracks                | tracks         | Section 5.1.8  |
-        +-----------------------+----------------+----------------+
-        | Track namespace       | namespace      | Section 5.1.10 |
-        +-----------------------+----------------+----------------+
-        | Track name            | name           | Section 5.1.11 |
-        +-----------------------+----------------+----------------+
-        | Packaging             | packaging      | Section 5.1.12 |
-        +-----------------------+----------------+----------------+
-        | Event timeline type   | eventType      | Section 5.1.13 |
-        +-----------------------+----------------+----------------+
-        | Is Live               | isLive         | Section 5.1.15 |
-        +-----------------------+----------------+----------------+
-        | Target latency        | targetLatency  | Section 5.1.16 |
-        +-----------------------+----------------+----------------+
-        | Track role            | role           | Section 5.1.14 |
-        +-----------------------+----------------+----------------+
-        | Track label           | label          | Section 5.1.17 |
-        +-----------------------+----------------+----------------+
-        | Render group          | renderGroup    | Section 5.1.18 |
-        +-----------------------+----------------+----------------+
-        | Alternate group       | altGroup       | Section 5.1.19 |
-        +-----------------------+----------------+----------------+
-        | Initialization data   | initData       | Section 5.1.20 |
-        +-----------------------+----------------+----------------+
-        | Dependencies          | depends        | Section 5.1.21 |
-        +-----------------------+----------------+----------------+
-        | Temporal ID           | temporalId     | Section 5.1.22 |
-        +-----------------------+----------------+----------------+
-        | Spatial ID            | spatialId      | Section 5.1.23 |
-        +-----------------------+----------------+----------------+
-        | Codec                 | codec          | Section 5.1.24 |
-        +-----------------------+----------------+----------------+
-        | Mime type             | mimeType       | Section 5.1.25 |
-        +-----------------------+----------------+----------------+
-        | Framerate             | framerate      | Section 5.1.26 |
-        +-----------------------+----------------+----------------+
-        | Timescale             | timescale      | Section 5.1.27 |
-        +-----------------------+----------------+----------------+
-        | Bitrate               | bitrate        | Section 5.1.28 |
-        +-----------------------+----------------+----------------+
-        | Width                 | width          | Section 5.1.29 |
-        +-----------------------+----------------+----------------+
-        | Height                | height         | Section 5.1.30 |
-        +-----------------------+----------------+----------------+
-        | Audio sample rate     | samplerate     | Section 5.1.31 |
-        +-----------------------+----------------+----------------+
-        | Channel configuration | channelConfig  | Section 5.1.32 |
-        +-----------------------+----------------+----------------+
-        | Display width         | displayWidth   | Section 5.1.33 |
-        +-----------------------+----------------+----------------+
-        | Display height        | displayHeight  | Section 5.1.34 |
-        +-----------------------+----------------+----------------+
-        | Language              | lang           | Section 5.1.35 |
-        +-----------------------+----------------+----------------+
-        | Parent name           | parentName     | Section 5.1.36 |
-        +-----------------------+----------------+----------------+
-        | Track duration        | trackDuration  | Section 5.1.37 |
-        +-----------------------+----------------+----------------+
-        | Start media time      | startMediaTime | Section 5.1.38 |
-        +-----------------------+----------------+----------------+
-        | Delta media time      | deltaMediaTime | Section 5.1.39 |
-        +-----------------------+----------------+----------------+
-        | Start location        | startLocation  | Section 5.1.40 |
-        +-----------------------+----------------+----------------+
-        | Delta location        | deltaLocation  | Section 5.1.41 |
-        +-----------------------+----------------+----------------+
-        | Start wallclock       | startWallclock | Section 5.1.42 |
-        +-----------------------+----------------+----------------+
-        | Delta wallclock       | deltaWallclock | Section 5.1.43 |
-        +-----------------------+----------------+----------------+
-        | Entry count           | count          | Section 5.1.44 |
-        +-----------------------+----------------+----------------+
+        +=======================+===============+================+
+        | Field                 | Name          | Definition     |
+        +=======================+===============+================+
+        | MSF version           | version       | Section 5.1.1  |
+        +-----------------------+---------------+----------------+
+        | Delta update          | deltaUpdate   | Section 5.1.2  |
+        +-----------------------+---------------+----------------+
+        | Add tracks            | addTracks     | Section 5.1.3  |
+        +-----------------------+---------------+----------------+
+        | Remove tracks         | removeTracks  | Section 5.1.4  |
+        +-----------------------+---------------+----------------+
+        | Clone tracks          | cloneTracks   | Section 5.1.5  |
+        +-----------------------+---------------+----------------+
+        | Generated at          | generatedAt   | Section 5.1.6  |
+        +-----------------------+---------------+----------------+
+        | Is Complete           | isComplete    | Section 5.1.7  |
+        +-----------------------+---------------+----------------+
+        | Tracks                | tracks        | Section 5.1.8  |
+        +-----------------------+---------------+----------------+
+        | Track namespace       | namespace     | Section 5.1.10 |
+        +-----------------------+---------------+----------------+
+        | Track name            | name          | Section 5.1.11 |
+        +-----------------------+---------------+----------------+
+        | Packaging             | packaging     | Section 5.1.12 |
+        +-----------------------+---------------+----------------+
+        | Event timeline type   | eventType     | Section 5.1.13 |
+        +-----------------------+---------------+----------------+
+        | Is Live               | isLive        | Section 5.1.15 |
+        +-----------------------+---------------+----------------+
+        | Target latency        | targetLatency | Section 5.1.16 |
+        +-----------------------+---------------+----------------+
+        | Track role            | role          | Section 5.1.14 |
+        +-----------------------+---------------+----------------+
+        | Track label           | label         | Section 5.1.17 |
+        +-----------------------+---------------+----------------+
+        | Render group          | renderGroup   | Section 5.1.18 |
+        +-----------------------+---------------+----------------+
+        | Alternate group       | altGroup      | Section 5.1.19 |
+        +-----------------------+---------------+----------------+
+        | Initialization data   | initData      | Section 5.1.20 |
+        +-----------------------+---------------+----------------+
+        | Dependencies          | depends       | Section 5.1.21 |
+        +-----------------------+---------------+----------------+
+        | Temporal ID           | temporalId    | Section 5.1.22 |
+        +-----------------------+---------------+----------------+
+        | Spatial ID            | spatialId     | Section 5.1.23 |
+        +-----------------------+---------------+----------------+
+        | Codec                 | codec         | Section 5.1.24 |
+        +-----------------------+---------------+----------------+
+        | Mime type             | mimeType      | Section 5.1.25 |
+        +-----------------------+---------------+----------------+
+        | Framerate             | framerate     | Section 5.1.26 |
+        +-----------------------+---------------+----------------+
+        | Timescale             | timescale     | Section 5.1.27 |
+        +-----------------------+---------------+----------------+
+        | Bitrate               | bitrate       | Section 5.1.28 |
+        +-----------------------+---------------+----------------+
+        | Width                 | width         | Section 5.1.29 |
+        +-----------------------+---------------+----------------+
+        | Height                | height        | Section 5.1.30 |
+        +-----------------------+---------------+----------------+
+        | Audio sample rate     | samplerate    | Section 5.1.31 |
+        +-----------------------+---------------+----------------+
+        | Channel configuration | channelConfig | Section 5.1.32 |
+        +-----------------------+---------------+----------------+
+        | Display width         | displayWidth  | Section 5.1.33 |
+        +-----------------------+---------------+----------------+
+        | Display height        | displayHeight | Section 5.1.34 |
+        +-----------------------+---------------+----------------+
+        | Language              | lang          | Section 5.1.35 |
+        +-----------------------+---------------+----------------+
+        | Parent name           | parentName    | Section 5.1.36 |
+        +-----------------------+---------------+----------------+
+        | Track duration        | trackDuration | Section 5.1.37 |
+        +-----------------------+---------------+----------------+
 
-                                  Table 1
+                                 Table 1
 
    Table 2 defines the allowed locations for these fields within the
    document
@@ -790,67 +767,6 @@ Table of Contents
    The duration of the track expressed in integer milliseconds.  This
    field MUST NOT be included if the isLive Section 5.1.15 field value
    is true.
-
-5.1.38.  Start media time
-
-   Location: T Required: Optional JSON Type: Number
-
-   The media presentation timestamp of the first entry in a templated
-   media timeline, expressed in milliseconds.  This field MUST only
-   appear within a template object in a media timeline track payload.
-
-5.1.39.  Delta media time
-
-   Location: T Required: Optional JSON Type: Number
-
-   The constant interval between media presentation timestamps in a
-   templated media timeline, expressed in milliseconds.  This field MUST
-   only appear within a template object in a media timeline track
-   payload.
-
-5.1.40.  Start location
-
-   Location: T Required: Optional JSON Type: Array
-
-   The MOQT Location of the first entry in a templated media timeline,
-   expressed as a JSON Array of two Numbers where the first is the Group
-   ID and the second is the Object ID.  This field MUST only appear
-   within a template object in a media timeline track payload.
-
-5.1.41.  Delta location
-
-   Location: T Required: Optional JSON Type: Array
-
-   The constant interval between MOQT Locations in a templated media
-   timeline, expressed as a JSON Array of two Numbers where the first is
-   the Group ID delta and the second is the Object ID delta.  This field
-   MUST only appear within a template object in a media timeline track
-   payload.
-
-5.1.42.  Start wallclock
-
-   Location: T Required: Optional JSON Type: Number
-
-   The wallclock time of the first entry in a templated media timeline,
-   expressed as the number of milliseconds since January 1, 1970
-   (midnight UTC/GMT).  This field MUST only appear within a template
-   object in a media timeline track payload.
-
-5.1.43.  Delta wallclock
-
-   Location: T Required: Optional JSON Type: Number
-
-   The constant interval between wallclock times in a templated media
-   timeline, expressed in milliseconds.  This field MUST only appear
-   within a template object in a media timeline track payload.
-
-5.1.44.  Entry count
-
-   Location: T Required: Optional JSON Type: Number
-
-   The number of entries represented by a template in a templated media
-   timeline.  This field MUST only appear within a template object in a
-   media timeline track payload.
 
 5.2.  Delta updates
 
@@ -1422,65 +1338,6 @@ Table of Contents
      [6006, [3,0], 1759924164387],
      [8008, [4,0], 1759924166389]
    ]
-
-7.1.2.  Template format
-
-   For media tracks with constant duration GOPs, publishers MAY use a
-   template format to reduce payload size.  The template format uses a
-   JSON Object containing a "template" field.  The template defines
-   start values and deltas that allow any entry to be calculated without
-   explicitly listing each item.
-
-   Entry values are calculated as follows, where n is the zero-based
-   entry index:
-
-   mediaTime[n] = startMediaTime + (n * deltaMediaTime)
-   location[n] = [startLocation[0] + (n * deltaLocation[0]),
-                  startLocation[1] + (n * deltaLocation[1])]
-   wallclock[n] = startWallclock + (n * deltaWallclock)
-
-   An example media timeline using the template format is shown below:
-
-   {
-     "template": {
-       "startMediaTime": 0,
-       "deltaMediaTime": 2002,
-       "startLocation": [0, 0],
-       "deltaLocation": [1, 0],
-       "startWallclock": 1759924158381,
-       "deltaWallclock": 2002,
-       "count": 5
-     }
-   }
-
-   This template represents the same timeline as the explicit entry
-   example above.
-
-7.1.3.  Hybrid format
-
-   Publishers MAY combine templates with explicit entries.  When both
-   are present, the explicit entries in the "entries" array represent
-   additional records that extend beyond the template range.  Explicit
-   entries are appended after the template-generated entries.
-
-   {
-     "template": {
-       "startMediaTime": 0,
-       "deltaMediaTime": 2002,
-       "startLocation": [0, 0],
-       "deltaLocation": [1, 0],
-       "startWallclock": 1759924158381,
-       "deltaWallclock": 2002,
-       "count": 100
-     },
-     "entries": [
-       [200200, [100, 0], 1759924358381],
-       [203000, [101, 0], 1759924361181]
-     ]
-   }
-
-   In this example, entries 0-99 are calculated from the template, and
-   entries 100-101 are provided explicitly with non-constant intervals.
 
 7.2.  Media Timeline Catalog requirements
 
