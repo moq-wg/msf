@@ -227,6 +227,7 @@ Table 1 provides an overview of all fields defined by this document.
 | Language                | lang                   | {{language}}              |
 | Parent name             | parentName             | {{parentname}}            |
 | Track duration          | trackDuration          | {{trackduration}}         |
+| Accessibility           | accessibility          | {{accessibility}}         |
 
 Table 2 defines the allowed locations for these fields within the document
 
@@ -516,6 +517,31 @@ Location: T    Required: Optional   JSON Type: Number
 
 The duration of the track expressed in integer milliseconds. This field MUST NOT
 be included if the isLive {{islive}} field value is true.
+
+### Accessibility {#accessibility}
+Location: T    Required: Optional   JSON Type: Array
+
+An array of accessibility descriptors indicating accessibility features
+embedded within the track. Each descriptor is a JSON Object containing:
+
+* A required 'scheme' field (String) identifying the accessibility scheme.
+* A required 'value' field (String) specifying the accessibility channels
+  or features available.
+
+Table 5: Registered accessibility schemes
+
+| Scheme                             | Description                          |
+|:===================================|:=====================================|
+| urn:scte:dash:cc:cea-608:2015      | CEA-608 closed captions              |
+| urn:scte:dash:cc:cea-708:2015      | CEA-708 closed captions              |
+
+The 'value' field for CEA-608/708 schemes uses the format defined by
+SCTE 214-1, where caption service channels are specified as
+semicolon-separated pairs of channel identifier and language code
+(e.g., "CC1=eng;CC3=spa").
+
+A subscriber MAY use this information to determine caption availability
+and configure an appropriate caption decoder.
 
 ## Delta updates {#deltaupdates}
 A catalog update might contain incremental changes. This is a useful property if
