@@ -4,8 +4,8 @@
 
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
-Intended status: Informational                          13 February 2026
-Expires: 17 August 2026
+Intended status: Informational                          26 February 2026
+Expires: 30 August 2026
 
 
                          MOQT Streaming Format
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 17 August 2026.
+   This Internet-Draft will expire on 30 August 2026.
 
 Copyright Notice
 
@@ -679,8 +679,9 @@ Table of Contents
 
    Location: T Required: Optional JSON Type: Number
 
-   A number defining the video framerate of the track, expressed as
-   frames per second.  This property SHOULD only accompany video codecs.
+   A number defining the framerate of the track, expressed as frames per
+   second.  This property SHOULD only accompany video or other time-
+   varying visual media codecs.
 
 5.1.27.  Timescale
 
@@ -692,19 +693,22 @@ Table of Contents
 
    Location: T Required: Optional JSON Type: Number
 
-   A number defining the bitrate of track, expressed in bits per second.
+   A number defining the bitrate of the track, expressed in bits per
+   second.  This property MAY accompany any media track.
 
 5.1.29.  Width
 
    Location: T Required: Optional JSON Type: Number
 
    A number expressing the encoded width of the video frames in pixels.
+   This property SHOULD only accompany video or visual media codecs.
 
 5.1.30.  Height
 
    Location: T Required: Optional JSON Type: Number
 
    A number expressing the encoded height of the video frames in pixels.
+   This property SHOULD only accompany video or visual media codecs.
 
 5.1.31.  Audio sample rate
 
@@ -727,14 +731,16 @@ Table of Contents
    Location: T Required: Optional JSON Type: Number
 
    A number expressing the intended display width of the track content
-   in pixels.
+   in pixels.  This property SHOULD only accompany video or visual media
+   codecs.
 
 5.1.34.  Display height
 
    Location: T Required: Optional JSON Type: Number
 
    A number expressing the intended display height of the track content
-   in pixels.
+   in pixels.  This property SHOULD only accompany video or visual media
+   codecs.
 
 5.1.35.  Language
 
