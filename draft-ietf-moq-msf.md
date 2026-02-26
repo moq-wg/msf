@@ -503,7 +503,7 @@ This property SHOULD only accompany tracks which have a visual representation.
 Location: T    Required: Optional   JSON Type: Number
 
 A number expressing the intended display height of the track content in pixels.
-This property SHOULD only accompany video or visual media codecs.
+This property SHOULD only accompany tracks which have a visual representation. 
 
 ### Language {#language}
 Location: T    Required: Optional   JSON Type: String
