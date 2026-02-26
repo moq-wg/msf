@@ -382,7 +382,7 @@ target latency is 5000, then that frame should be rendered to the end-user at
 10:08:37.638 UTC. If isLive is FALSE, this field MUST be ignored. All tracks
 belonging to the same render group MUST have identical target latencies. All tracks
 belonging to the same alternate group MUST have identical target latencies. If this
-field is absent from the track definition, or if isLive is FALSE, then the player
+field is absent from the track definition, and isLive is TRUE, then the player
 MAY choose the latency with which it renders the content.
 
 ### Track label {#tracklabel}
