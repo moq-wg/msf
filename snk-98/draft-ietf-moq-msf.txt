@@ -595,8 +595,8 @@ Table of Contents
    the same render group MUST have identical target latencies.  All
    tracks belonging to the same alternate group MUST have identical
    target latencies.  If this field is absent from the track definition,
-   or if isLive is FALSE, then the player MAY choose the latency with
-   which it renders the content.
+   and isLive is TRUE, then the player MAY choose the latency with which
+   it renders the content.
 
 5.1.17.  Track label
 

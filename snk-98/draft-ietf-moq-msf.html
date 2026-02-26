@@ -2148,7 +2148,7 @@ target latency is 5000, then that frame should be rendered to the end-user at
 10:08:37.638 UTC. If isLive is FALSE, this field <span class="bcp14">MUST</span> be ignored. All tracks
 belonging to the same render group <span class="bcp14">MUST</span> have identical target latencies. All tracks
 belonging to the same alternate group <span class="bcp14">MUST</span> have identical target latencies. If this
-field is absent from the track definition, or if isLive is FALSE, then the player
+field is absent from the track definition, and isLive is TRUE, then the player
 <span class="bcp14">MAY</span> choose the latency with which it renders the content.<a href="#section-5.1.16-2" class="pilcrow">¶</a></p>
 </section>
 </div>
