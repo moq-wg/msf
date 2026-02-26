@@ -1002,6 +1002,60 @@ synchronized data.
 
 ~~~
 
+### Video track with embedded captions and SCTE-35 events
+
+This example shows a live broadcast with CEA-608 closed captions embedded
+in the video track and a separate SCTE-35 event timeline for ad insertion.
+
+~~~json
+{
+  "version": 1,
+  "generatedAt": 1746104606044,
+  "tracks": [
+    {
+      "name": "video",
+      "packaging": "loc",
+      "isLive": true,
+      "targetLatency": 4000,
+      "role": "video",
+      "renderGroup": 1,
+      "codec": "avc1.4d401f",
+      "width": 1920,
+      "height": 1080,
+      "framerate": 30,
+      "bitrate": 5000000,
+      "accessibility": [
+        {
+          "scheme": "urn:scte:dash:cc:cea-608:2015",
+          "value": "CC1=eng;CC3=spa"
+        }
+      ]
+    },
+    {
+      "name": "audio",
+      "packaging": "loc",
+      "isLive": true,
+      "targetLatency": 4000,
+      "role": "audio",
+      "renderGroup": 1,
+      "codec": "opus",
+      "samplerate": 48000,
+      "channelConfig": "2",
+      "bitrate": 128000
+    },
+    {
+      "name": "scte35",
+      "packaging": "eventtimeline",
+      "eventType": "urn:scte:scte35:2013:bin",
+      "mimeType": "application/json",
+      "isLive": true,
+      "role": "eventtimeline",
+      "depends": ["video"]
+    }
+  ]
+}
+~~~
+
 ### Terminating a live broadcast
 
 This example shows a catalog for a media producer terminating a previously
