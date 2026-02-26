@@ -470,7 +470,7 @@ This property MAY accompany any media track.
 Location: T    Required: Optional   JSON Type: Number
 
 A number expressing the encoded width of the video frames in pixels.
-This property SHOULD only accompany video or visual media codecs.
+This property SHOULD only accompany tracks which have a visual representation. 
 
 ### Height {#height}
 Location: T    Required: Optional   JSON Type: Number
