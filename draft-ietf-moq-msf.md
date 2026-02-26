@@ -327,11 +327,12 @@ as defined in Table 3.
 
 Table 3: Allowed packaging values
 
-| Name            |   Value        |      Reference             |
-|:================|:===============|:===========================|
-| LOC             | loc            | See RFC XXXX               |
-| Media Timeline  | mediatimeline  | See {{mediatimelinetrack}} |
-| Event Timeline  | eventtimeline  | See {{eventtimelinetrack}} |
+| Name                    |   Value                |      Reference             |
+|:========================|:=======================|:===========================|
+| LOC                     | loc                    | See RFC XXXX               |
+| Media Timeline          | mediatimeline          | See {{mediatimelinetrack}} |
+| Media Timeline Template | mediatimelinetemplate  | See {{mediatimelinetemplate}} |
+| Event Timeline          | eventtimeline          | See {{eventtimelinetrack}} |
 
 
 ### Event timeline type {#eventtype}
@@ -1033,29 +1034,57 @@ synchronized data.
 
 ~~~
 
-### Media timeline with template format
+### Media timeline template
 
-This example shows a media timeline track payload using a template-based
-format for constant duration GOPs. This format significantly reduces payload
-size compared to explicit entries.
+This example shows a catalog using a media timeline template instead of an
+explicit media timeline track. The template track payload
+({{mediatimelinetemplatepayload}}) defines a regular pattern where each segment
+is 2002ms long. Clients can compute any entry using the template parameters.
 
 ~~~json
 {
-  "template": {
-    "startMediaTime": 0,
-    "deltaMediaTime": 2002,
-    "startLocation": [0, 0],
-    "deltaLocation": [1, 0],
-    "startWallclock": 1759924158381,
-    "deltaWallclock": 2002,
-    "count": 1800
-  }
+  "version": 1,
+  "generatedAt": 1746104606044,
+  "tracks": [
+    {
+      "name": "history",
+      "namespace": "conference.example.com/conference123/alice",
+      "packaging": "mediatimelinetemplate",
+      "mimeType": "application/json",
+      "depends": ["1080p-video","audio"]
+    },
+    {
+      "name": "1080p-video",
+      "namespace": "conference.example.com/conference123/alice",
+      "packaging": "loc",
+      "isLive": true,
+      "targetLatency": 2000,
+      "role": "video",
+      "renderGroup": 1,
+      "codec":"av01.0.08M.10.0.110.09",
+      "width":1920,
+      "height":1080,
+      "framerate":30,
+      "bitrate":1500000
+    },
+    {
+      "name": "audio",
+      "namespace": "conference.example.com/conference123/alice",
+      "packaging": "loc",
+      "isLive": true,
+      "targetLatency": 2000,
+      "role": "audio",
+      "renderGroup": 1,
+      "codec":"opus",
+      "samplerate":48000,
+      "channelConfig":"2",
+      "bitrate":32000
+    }
+   ]
 }
+
 ~~~
 
-This single template object represents 1 hour of content with 2-second GOPs
-(1800 entries), replacing what would otherwise be an array of 1800 explicit
-entries.
 
 ### Terminating a live broadcast
 
@@ -1203,6 +1232,73 @@ The publisher MUST publish an independent media timeline in the first MOQT Objec
 of each MOQT Group of a media timeline track. The publisher MAY publish incremental
 updates in the second and subsequent Objects within each Group. Incremental updates
 only contain media timeline records since the last media timeline Object.
+
+## Media Timeline Template {#mediatimelinetemplate}
+When the relationship between media time, MOQT Location and wallclock time follows
+a regular, predictable pattern, a media timeline template MAY be used instead of an
+explicit media timeline track. The template approach is best suited for content with
+fixed-duration segments, such as VOD assets or live broadcasts with constant segment
+durations. For content with variable segment durations, the explicit media timeline
+track ({{mediatimelinepayload}}) SHOULD be used instead.
+
+### Media Timeline Template payload {#mediatimelinetemplatepayload}
+A media timeline template track is a JSON {{JSON}} document. This document MAY be
+compressed using GZIP {{GZIP}}. The document contains a JSON Object with the
+following required fields:
+
+* startMediaTime - The media presentation timestamp of the first entry, expressed
+  as a JSON Number in milliseconds.
+* deltaMediaTime - The constant interval between media presentation timestamps,
+  expressed as a JSON Number in milliseconds.
+* startLocation - The MOQT Location of the first entry, expressed as a JSON Array
+  of two Numbers where the first number is the Group ID and the second number is
+  the Object ID.
+* deltaLocation - The constant interval between MOQT Locations, expressed as a
+  JSON Array of two Numbers where the first number is the Group ID delta and the
+  second number is the Object ID delta.
+* startWallclock - The wallclock time of the first entry, expressed as the number
+  of milliseconds that have elapsed since January 1, 1970 (midnight UTC/GMT). For
+  VOD assets, or if the wallclock time is not known, the value SHOULD be 0.
+* deltaWallclock - The constant interval between wallclock times, expressed as a
+  JSON Number in milliseconds. For VOD assets, or if the wallclock time is not
+  known, the value SHOULD be 0.
+
+Clients compute entry values using the following formulas, where n is the
+zero-based entry index:
+
+~~~
+mediaTime[n] = startMediaTime + (n * deltaMediaTime)
+location[n] = [startLocation[0] + (n * deltaLocation[0]),
+               startLocation[1] + (n * deltaLocation[1])]
+wallclock[n] = startWallclock + (n * deltaWallclock)
+~~~
+
+An example media timeline template payload is shown below:
+
+~~~json
+{
+  "startMediaTime": 0,
+  "deltaMediaTime": 2002,
+  "startLocation": [0, 0],
+  "deltaLocation": [1, 0],
+  "startWallclock": 1759924158381,
+  "deltaWallclock": 2002
+}
+~~~
+
+### Media Timeline Template Catalog requirements
+A media timeline template track MUST carry:
+
+* a {{packaging}} attribute with a value of "mediatimelinetemplate".
+* a {{dependencies}} attribute which contains an array of all track names to which
+  the media timeline template applies.
+* a {{mimetype}} attribute with a value of "application/json".
+
+### Media Timeline Template track updating
+Unlike the explicit media timeline track, the media timeline template is intended
+to be immutable and need only be transmitted once. The publisher SHOULD publish the
+template in the first MOQT Object of the first MOQT Group of a media timeline
+template track.
 
 # Event Timeline track {#eventtimelinetrack}
 The event timeline track provides a mechanism to associate ad-hoc event metadata with
