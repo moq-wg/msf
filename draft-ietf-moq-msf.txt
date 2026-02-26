@@ -679,9 +679,8 @@ Table of Contents
 
    Location: T Required: Optional JSON Type: Number
 
-   A number defining the framerate of the track, expressed as frames per
-   second.  This property SHOULD only accompany video or other time-
-   varying visual media codecs.
+   A number defining the video framerate of the track, expressed as
+   frames per second.  This property SHOULD only accompany video codecs.
 
 5.1.27.  Timescale
 
@@ -693,22 +692,19 @@ Table of Contents
 
    Location: T Required: Optional JSON Type: Number
 
-   A number defining the bitrate of the track, expressed in bits per
-   second.  This property MAY accompany any media track.
+   A number defining the bitrate of track, expressed in bits per second.
 
 5.1.29.  Width
 
    Location: T Required: Optional JSON Type: Number
 
    A number expressing the encoded width of the video frames in pixels.
-   This property SHOULD only accompany video or visual media codecs.
 
 5.1.30.  Height
 
    Location: T Required: Optional JSON Type: Number
 
    A number expressing the encoded height of the video frames in pixels.
-   This property SHOULD only accompany video or visual media codecs.
 
 5.1.31.  Audio sample rate
 
@@ -731,16 +727,14 @@ Table of Contents
    Location: T Required: Optional JSON Type: Number
 
    A number expressing the intended display width of the track content
-   in pixels.  This property SHOULD only accompany video or visual media
-   codecs.
+   in pixels.
 
 5.1.34.  Display height
 
    Location: T Required: Optional JSON Type: Number
 
    A number expressing the intended display height of the track content
-   in pixels.  This property SHOULD only accompany video or visual media
-   codecs.
+   in pixels.
 
 5.1.35.  Language
 
