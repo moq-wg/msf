@@ -451,8 +451,9 @@ A string defining the mime type {{MIME}} of the track.
 ### Framerate {#framerate}
 Location: T    Required: Optional   JSON Type: Number
 
-A number defining the video framerate of the track, expressed as frames per
-second. This property SHOULD only accompany video codecs.
+A number defining the framerate of the track, expressed as frames per second.
+This property SHOULD only accompany video or other time-varying visual media
+codecs.
 
 ### Timescale {#timescale}
 Location: T    Required: Optional   JSON Type: Number
@@ -462,17 +463,20 @@ The number of time units that pass per second.
 ### Bitrate {#bitrate}
 Location: T    Required: Optional   JSON Type: Number
 
-A number defining the bitrate of track, expressed in bits per second.
+A number defining the bitrate of the track, expressed in bits per second.
+This property MAY accompany any media track.
 
 ### Width {#width}
 Location: T    Required: Optional   JSON Type: Number
 
 A number expressing the encoded width of the video frames in pixels.
+This property SHOULD only accompany video or visual media codecs.
 
 ### Height {#height}
 Location: T    Required: Optional   JSON Type: Number
 
 A number expressing the encoded height of the video frames in pixels.
+This property SHOULD only accompany video or visual media codecs.
 
 ### Audio sample rate {#audiosamplerate}
 Location: T    Required: Optional   JSON Type: Number
@@ -493,11 +497,13 @@ Audio schemas.
 Location: T    Required: Optional   JSON Type: Number
 
 A number expressing the intended display width of the track content in pixels.
+This property SHOULD only accompany video or visual media codecs.
 
 ### Display height {#displayheight}
 Location: T    Required: Optional   JSON Type: Number
 
 A number expressing the intended display height of the track content in pixels.
+This property SHOULD only accompany video or visual media codecs.
 
 ### Language {#language}
 Location: T    Required: Optional   JSON Type: String
