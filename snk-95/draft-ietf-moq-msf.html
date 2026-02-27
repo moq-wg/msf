@@ -1409,7 +1409,15 @@ svg :is([fill="white"], [fill^="#fff"]) {
             <p id="section-toc.1-1.11.1"><a href="#section-11" class="auto internal xref">11</a>. <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
-            <p id="section-toc.1-1.12.1"><a href="#section-12" class="auto internal xref">12</a>. <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+            <p id="section-toc.1-1.12.1"><a href="#section-12" class="auto internal xref">12</a>. <a href="#name-references" class="internal xref">References</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.1">
+                <p id="section-toc.1-1.12.2.1.1"><a href="#section-12.1" class="auto internal xref">12.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.2">
+                <p id="section-toc.1-1.12.2.2.1"><a href="#section-12.2" class="auto internal xref">12.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13">
             <p id="section-toc.1-1.13.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
@@ -2429,7 +2437,7 @@ or features available.<a href="#section-5.1.38-3.2.1" class="pilcrow">¶</a></p>
             </tbody>
           </table>
 <p id="section-5.1.38-6">The 'value' field for CEA-608/708 schemes uses the format defined by
-SCTE 214-1, where caption service channels are specified as
+<span>[<a href="#SCTE214-1" class="cite xref">SCTE214-1</a>]</span>, where caption service channels are specified as
 semicolon-separated pairs of channel identifier and language code
 (e.g., "CC1=eng;CC3=spa").<a href="#section-5.1.38-6" class="pilcrow">¶</a></p>
 <p id="section-5.1.38-7">A subscriber <span class="bcp14">MAY</span> use this information to determine caption availability
@@ -3282,7 +3290,7 @@ to ensure interoperability.<a href="#section-8.5-1" class="pilcrow">¶</a></p>
 <a href="#section-8.5.1" class="section-number selfRef">8.5.1. </a><a href="#name-scte-35-markers" class="section-name selfRef">SCTE-35 markers</a>
           </h4>
 <p id="section-8.5.1-1">Event Type: <code>urn:scte:scte35:2013:bin</code> or <code>urn:scte:scte35:2013:xml</code><a href="#section-8.5.1-1" class="pilcrow">¶</a></p>
-<p id="section-8.5.1-2">SCTE-35 markers signal ad insertion points, program boundaries, and other
+<p id="section-8.5.1-2"><span>[<a href="#SCTE35" class="cite xref">SCTE35</a>]</span> markers signal ad insertion points, program boundaries, and other
 broadcast events. When using the binary format, the 'data' field contains
 a Base64 <span>[<a href="#BASE64" class="cite xref">BASE64</a>]</span> encoded SCTE-35 splice_info_section. When using the
 XML format, the 'data' field contains the SCTE-35 XML representation as
@@ -3414,69 +3422,93 @@ TRUE and which contains an empty Tracks <a href="#tracks" class="auto internal x
 "MOQT Streaming Format" and the RFC is XXX.<a href="#section-11-1" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="sec-normative-references">
+<div id="sec-combined-references">
 <section id="section-12">
-      <h2 id="name-normative-references">
-<a href="#section-12" class="section-number selfRef">12. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+      <h2 id="name-references">
+<a href="#section-12" class="section-number selfRef">12. </a><a href="#name-references" class="section-name selfRef">References</a>
       </h2>
+<div id="sec-normative-references">
+<section id="section-12.1">
+        <h3 id="name-normative-references">
+<a href="#section-12.1" class="section-number selfRef">12.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+        </h3>
 <dl class="references">
 <dt id="BASE64">[BASE64]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Josefsson, S.</span>, <span class="refTitle">"The Base16, Base32, and Base64 Data Encodings"</span>, <span class="seriesInfo">RFC 4648</span>, <span class="seriesInfo">DOI 10.17487/RFC4648</span>, <time datetime="2006-10" class="refDate">October 2006</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc4648">https://www.rfc-editor.org/rfc/rfc4648</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="GZIP">[GZIP]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Deutsch, P.</span>, <span class="refTitle">"GZIP file format specification version 4.3"</span>, <span class="seriesInfo">RFC 1952</span>, <span class="seriesInfo">DOI 10.17487/RFC1952</span>, <time datetime="1996-05" class="refDate">May 1996</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc1952">https://www.rfc-editor.org/rfc/rfc1952</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="IMSC1">[IMSC1]</dt>
-      <dd>
+        <dd>
 <span class="refTitle">"W3C, TTML Profiles for Internet Media Subtitles and Captions 1.0 (IMSC1)"</span>, <time datetime="2016-04" class="refDate">April 2016</time>, <span>&lt;<a href="https://www.w3.org/TR/ttml-imsc1/">https://www.w3.org/TR/ttml-imsc1/</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="JSON">[JSON]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Bray, T., Ed.</span>, <span class="refTitle">"The JavaScript Object Notation (JSON) Data Interchange Format"</span>, <span class="seriesInfo">STD 90</span>, <span class="seriesInfo">RFC 8259</span>, <span class="seriesInfo">DOI 10.17487/RFC8259</span>, <time datetime="2017-12" class="refDate">December 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8259">https://www.rfc-editor.org/rfc/rfc8259</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="LANG">[LANG]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Phillips, A., Ed.</span> and <span class="refAuthor">M. Davis, Ed.</span>, <span class="refTitle">"Tags for Identifying Languages"</span>, <span class="seriesInfo">BCP 47</span>, <span class="seriesInfo">RFC 5646</span>, <span class="seriesInfo">DOI 10.17487/RFC5646</span>, <time datetime="2009-09" class="refDate">September 2009</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc5646">https://www.rfc-editor.org/rfc/rfc5646</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="LOC">[LOC]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Zanaty, M.</span>, <span class="refAuthor">Nandakumar, S.</span>, and <span class="refAuthor">P. Thatcher</span>, <span class="refTitle">"Low Overhead Media Container"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-mzanaty-moq-loc-05</span>, <time datetime="2025-03-03" class="refDate">3 March 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-mzanaty-moq-loc-05">https://datatracker.ietf.org/doc/html/draft-mzanaty-moq-loc-05</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="MIME">[MIME]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Freed, N.</span>, <span class="refAuthor">Klensin, J.</span>, and <span class="refAuthor">T. Hansen</span>, <span class="refTitle">"Media Type Specifications and Registration Procedures"</span>, <span class="seriesInfo">BCP 13</span>, <span class="seriesInfo">RFC 6838</span>, <span class="seriesInfo">DOI 10.17487/RFC6838</span>, <time datetime="2013-01" class="refDate">January 2013</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6838">https://www.rfc-editor.org/rfc/rfc6838</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="MoQTransport">[MoQTransport]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Nandakumar, S.</span>, <span class="refAuthor">Vasiliev, V.</span>, <span class="refAuthor">Swett, I.</span>, and <span class="refAuthor">A. Frindell</span>, <span class="refTitle">"Media over QUIC Transport"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-moq-transport-11</span>, <time datetime="2025-04-28" class="refDate">28 April 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-11">https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-11</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC2119">[RFC2119]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC4180">[RFC4180]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Shafranovich, Y.</span>, <span class="refTitle">"Common Format and MIME Type for Comma-Separated Values (CSV) Files"</span>, <span class="seriesInfo">RFC 4180</span>, <span class="seriesInfo">DOI 10.17487/RFC4180</span>, <time datetime="2005-10" class="refDate">October 2005</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc4180">https://www.rfc-editor.org/rfc/rfc4180</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8174">[RFC8174]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8174">https://www.rfc-editor.org/rfc/rfc8174</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC9000">[RFC9000]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Iyengar, J., Ed.</span> and <span class="refAuthor">M. Thomson, Ed.</span>, <span class="refTitle">"QUIC: A UDP-Based Multiplexed and Secure Transport"</span>, <span class="seriesInfo">RFC 9000</span>, <span class="seriesInfo">DOI 10.17487/RFC9000</span>, <time datetime="2021-05" class="refDate">May 2021</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9000">https://www.rfc-editor.org/rfc/rfc9000</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="WEBCODECS-CODEC-REGISTRY">[WEBCODECS-CODEC-REGISTRY]</dt>
-      <dd>
+        <dd>
 <span class="refTitle">"WebCodecs Codec Registry"</span>, <time datetime="2024-09" class="refDate">September 2024</time>, <span>&lt;<a href="https://www.w3.org/TR/webcodecs-codec-registry/">https://www.w3.org/TR/webcodecs-codec-registry/</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="WEBVTT">[WEBVTT]</dt>
-    <dd>
+      <dd>
 <span class="refTitle">"World Wide Web Consortium (W3C), WebVTT: The Web Video Text Tracks Format"</span>, <time datetime="2019-04" class="refDate">April 2019</time>, <span>&lt;<a href="https://www.w3.org/TR/webvtt1/">https://www.w3.org/TR/webvtt1/</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
+</section>
+</div>
+<div id="sec-informative-references">
+<section id="section-12.2">
+        <h3 id="name-informative-references">
+<a href="#section-12.2" class="section-number selfRef">12.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+        </h3>
+<dl class="references">
+<dt id="SCTE214-1">[SCTE214-1]</dt>
+        <dd>
+<span class="refTitle">"SCTE 214-1: MPEG DASH for IP-Based Cable Services Part 1 - MPD Constraints and Extensions"</span>, <time datetime="2022" class="refDate">2022</time>, <span>&lt;<a href="https://www.scte.org/standards/library/catalog/scte-214-1-mpeg-dash-for-ip-based-cable-services-part-1-mpd-constraints-and-extensions/">https://www.scte.org/standards/library/catalog/scte-214-1-mpeg-dash-for-ip-based-cable-services-part-1-mpd-constraints-and-extensions/</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="SCTE35">[SCTE35]</dt>
+      <dd>
+<span class="refTitle">"SCTE 35: Digital Program Insertion Cueing Message"</span>, <time datetime="2022" class="refDate">2022</time>, <span>&lt;<a href="https://www.scte.org/standards/library/catalog/scte-35-digital-program-insertion-cueing-message/">https://www.scte.org/standards/library/catalog/scte-35-digital-program-insertion-cueing-message/</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+</div>
 </section>
 </div>
 <div id="acknowledgments">

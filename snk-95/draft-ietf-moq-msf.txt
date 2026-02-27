@@ -149,7 +149,9 @@ Table of Contents
      9.2.  Ending a live broadcast
    10. Security Considerations
    11. IANA Considerations
-   12. Normative References
+   12. References
+     12.1.  Normative References
+     12.2.  Informative References
    Acknowledgments
    Contributors
    Author's Address
@@ -794,7 +796,7 @@ Table of Contents
                                   Table 5
 
    The 'value' field for CEA-608/708 schemes uses the format defined by
-   SCTE 214-1, where caption service channels are specified as
+   [SCTE214-1], where caption service channels are specified as
    semicolon-separated pairs of channel identifier and language code
    (e.g., "CC1=eng;CC3=spa").
 
@@ -1503,7 +1505,7 @@ Table of Contents
 
    Event Type: urn:scte:scte35:2013:bin or urn:scte:scte35:2013:xml
 
-   SCTE-35 markers signal ad insertion points, program boundaries, and
+   [SCTE35] markers signal ad insertion points, program boundaries, and
    other broadcast events.  When using the binary format, the 'data'
    field contains a Base64 [BASE64] encoded SCTE-35 splice_info_section.
    When using the XML format, the 'data' field contains the SCTE-35 XML
@@ -1601,7 +1603,9 @@ Table of Contents
    Registry (see [MoQTransport] Sect 8).  The type value is 0x001, the
    name is "MOQT Streaming Format" and the RFC is XXX.
 
-12.  Normative References
+12.  References
+
+12.1.  Normative References
 
    [BASE64]   Josefsson, S., "The Base16, Base32, and Base64 Data
               Encodings", RFC 4648, DOI 10.17487/RFC4648, October 2006,
@@ -1668,6 +1672,19 @@ Table of Contents
    [WEBVTT]   "World Wide Web Consortium (W3C), WebVTT: The Web Video
               Text Tracks Format", April 2019,
               <https://www.w3.org/TR/webvtt1/>.
+
+12.2.  Informative References
+
+   [SCTE214-1]
+              "SCTE 214-1: MPEG DASH for IP-Based Cable Services Part 1
+              - MPD Constraints and Extensions", 2022,
+              <https://www.scte.org/standards/library/catalog/scte-
+              214-1-mpeg-dash-for-ip-based-cable-services-part-1-mpd-
+              constraints-and-extensions/>.
+
+   [SCTE35]   "SCTE 35: Digital Program Insertion Cueing Message", 2022,
+              <https://www.scte.org/standards/library/catalog/scte-35-
+              digital-program-insertion-cueing-message/>.
 
 Acknowledgments
 
