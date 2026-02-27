@@ -586,11 +586,6 @@ Table of Contents
    live track has ended the track. * the track is Video-On-Demand (VOD)
    and was never live.  A True value MUST never follow a False value.
 
-   Note that isLive operates at the track level, whereas isComplete
-   Section 5.1.7 operates at the catalog level.  A catalog with all
-   tracks having isLive set to FALSE may still have new tracks added
-   until isComplete is set to TRUE.
-
 5.1.16.  Target latency
 
    Location: T Required: Optional JSON Type: Number
