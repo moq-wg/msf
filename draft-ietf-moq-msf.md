@@ -1218,11 +1218,11 @@ case-sensitive.
 * mediatime-range - a range defined by start and end media times, each expressed
   as milliseconds and separated by a "-" dash. The dash and end time MAY be omitted
   to indicate an open range.
-* location-range - a range defined by start and end media MOQT Location tuples and
-  expressed as Start Group ID, Start Object ID, End Group ID, End Object ID, each
-  separated by a "-" dash. The End Group ID and End Object ID MAY be omitted to
-  indicate an open range in which the first two values are interpreted as
-  StartGroupID-StartObjectID.
+* location-range - a range defined by start and end media MOQT Location
+  separated by a "-" dash. MOQT Location is expressed as Group ID and Object ID
+  separated by a "." dot. End Location may be omitted to indicate an open range.
+  End Object ID may be ommited, indicating the whole end group is included in
+  the range. The "." dot and "-" dash separators MUST be omitted when the second value is ommited. 
 * c4m - a base64 encoded token, as defined by {{C4M}}.
 
 Example query args:
