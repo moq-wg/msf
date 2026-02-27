@@ -4,8 +4,8 @@
 
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
-Intended status: Informational                          26 February 2026
-Expires: 30 August 2026
+Intended status: Informational                          27 February 2026
+Expires: 31 August 2026
 
 
                          MOQT Streaming Format
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 30 August 2026.
+   This Internet-Draft will expire on 31 August 2026.
 
 Copyright Notice
 
@@ -464,11 +464,14 @@ Table of Contents
 
    Location: R Required: Optional JSON Type: Boolean
 
-   Issued once a previously live broadcast is complete.  This is a
+   A catalog-level indication that the broadcast is complete.  This is a
    commitment that all tracks are complete, no new tracks will be added
-   and no new content will be published.  This field MUST NOT be
-   included if it is FALSE.  This field MUST NOT be removed from a
-   catalog once it has been added.
+   to the catalog, and no new content will be published on any track.
+   Note that even if all individual tracks have isLive Section 5.1.15
+   set to FALSE, new tracks could still be added to the catalog until
+   isComplete is set to TRUE.  This field MUST NOT be included if it is
+   FALSE.  This field MUST NOT be removed from a catalog once it has
+   been added.
 
 5.1.8.  Tracks
 
@@ -582,11 +585,12 @@ Table of Contents
 
    Location: T Required: Yes JSON Type: Boolean
 
-   True if new Objects will be added to the track.  False if no new
-   Objects will be added to the track.  A False value is sent under two
-   possible conditions: * the publisher of a previously live track has
-   ended the track. * the track is Video-On-Demand (VOD) and was never
-   live.  A True value MUST never follow a False value.
+   A track-level indication of whether new Objects will be added to this
+   specific track.  True if new Objects will be added to the track.
+   False if no new Objects will be added to the track.  A False value is
+   sent under two possible conditions: * the publisher of a previously
+   live track has ended the track. * the track is Video-On-Demand (VOD)
+   and was never live.  A True value MUST never follow a False value.
 
 5.1.16.  Target latency
 
