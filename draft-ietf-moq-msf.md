@@ -464,7 +464,6 @@ The number of time units that pass per second.
 Location: T    Required: Optional   JSON Type: Number
 
 A number defining the bitrate of the track, expressed in bits per second.
-This property MAY accompany any media track.
 
 ### Width {#width}
 Location: T    Required: Optional   JSON Type: Number
