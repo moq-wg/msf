@@ -1231,8 +1231,8 @@ Example query args:
 * wallclock-range=1761751753894
 * mediatime-range=0-13421
 * mediatime-range=982
-* location-range=34-0-2145-16
-* location-range=16-24
+* location-range=34.0-2145.16
+* location-range=16.24
 * c4m=gqhkYWxnIGVzaGFyqGR0eXBNhdZ9hdWQAY3VybGZlbWlzcwZleWV2aW5u
   ZWlhdGVwQWNyZW5lYnJmcmVqMTIzNDU2NzgwMHZpc3VlZF9hdD0xNzMwNDM
 
