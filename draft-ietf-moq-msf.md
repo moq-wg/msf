@@ -469,13 +469,13 @@ A number defining the bitrate of the track, expressed in bits per second.
 Location: T    Required: Optional   JSON Type: Number
 
 A number expressing the encoded width of the video frames in pixels.
-This property SHOULD only accompany tracks which have a visual representation. 
+This property SHOULD only accompany tracks which have a visual representation.
 
 ### Height {#height}
 Location: T    Required: Optional   JSON Type: Number
 
 A number expressing the encoded height of the video frames in pixels.
-This property SHOULD only accompany tracks which have a visual representation. 
+This property SHOULD only accompany tracks which have a visual representation.
 
 ### Audio sample rate {#audiosamplerate}
 Location: T    Required: Optional   JSON Type: Number
@@ -496,13 +496,13 @@ Audio schemas.
 Location: T    Required: Optional   JSON Type: Number
 
 A number expressing the intended display width of the track content in pixels.
-This property SHOULD only accompany tracks which have a visual representation. 
+This property SHOULD only accompany tracks which have a visual representation.
 
 ### Display height {#displayheight}
 Location: T    Required: Optional   JSON Type: Number
 
 A number expressing the intended display height of the track content in pixels.
-This property SHOULD only accompany tracks which have a visual representation. 
+This property SHOULD only accompany tracks which have a visual representation.
 
 ### Language {#language}
 Location: T    Required: Optional   JSON Type: String
