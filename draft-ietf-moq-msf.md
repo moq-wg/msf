@@ -53,6 +53,14 @@ normative:
     target: https://www.w3.org/TR/ttml-imsc1/
 
 informative:
+  SCTE35:
+    title: "SCTE 35: Digital Program Insertion Cueing Message"
+    date: 2022
+    target: https://www.scte.org/standards/library/catalog/scte-35-digital-program-insertion-cueing-message/
+  SCTE214-1:
+    title: "SCTE 214-1: MPEG DASH for IP-Based Cable Services Part 1 - MPD Constraints and Extensions"
+    date: 2022
+    target: https://www.scte.org/standards/library/catalog/scte-214-1-mpeg-dash-for-ip-based-cable-services-part-1-mpd-constraints-and-extensions/
 
 
 --- abstract
@@ -227,6 +235,7 @@ Table 1 provides an overview of all fields defined by this document.
 | Language                | lang                   | {{language}}              |
 | Parent name             | parentName             | {{parentname}}            |
 | Track duration          | trackDuration          | {{trackduration}}         |
+| Accessibility           | accessibility          | {{accessibility}}         |
 
 Table 2 defines the allowed locations for these fields within the document
 
@@ -519,6 +528,31 @@ Location: T    Required: Optional   JSON Type: Number
 
 The duration of the track expressed in integer milliseconds. This field MUST NOT
 be included if the isLive {{islive}} field value is true.
+
+### Accessibility {#accessibility}
+Location: T    Required: Optional   JSON Type: Array
+
+An array of accessibility descriptors indicating accessibility features
+embedded within the track. Each descriptor is a JSON Object containing:
+
+* A required 'scheme' field (String) identifying the accessibility scheme.
+* A required 'value' field (String) specifying the accessibility channels
+  or features available.
+
+Table 5: Registered accessibility schemes
+
+| Scheme                             | Description                          |
+|:===================================|:=====================================|
+| urn:scte:dash:cc:cea-608:2015      | CEA-608 closed captions              |
+| urn:scte:dash:cc:cea-708:2015      | CEA-708 closed captions              |
+
+The 'value' field for CEA-608/708 schemes uses the format defined by
+{{SCTE214-1}}, where caption service channels are specified as
+semicolon-separated pairs of channel identifier and language code
+(e.g., "CC1=eng;CC3=spa").
+
+A subscriber MAY use this information to determine caption availability
+and configure an appropriate caption decoder.
 
 ## Delta updates {#deltaupdates}
 A catalog update might contain incremental changes. This is a useful property if
@@ -979,6 +1013,60 @@ synchronized data.
 
 ~~~
 
+### Video track with embedded captions and SCTE-35 events
+
+This example shows a live broadcast with CEA-608 closed captions embedded
+in the video track and a separate SCTE-35 event timeline for ad insertion.
+
+~~~json
+{
+  "version": 1,
+  "generatedAt": 1746104606044,
+  "tracks": [
+    {
+      "name": "video",
+      "packaging": "loc",
+      "isLive": true,
+      "targetLatency": 4000,
+      "role": "video",
+      "renderGroup": 1,
+      "codec": "avc1.4d401f",
+      "width": 1920,
+      "height": 1080,
+      "framerate": 30,
+      "bitrate": 5000000,
+      "accessibility": [
+        {
+          "scheme": "urn:scte:dash:cc:cea-608:2015",
+          "value": "CC1=eng;CC3=spa"
+        }
+      ]
+    },
+    {
+      "name": "audio",
+      "packaging": "loc",
+      "isLive": true,
+      "targetLatency": 4000,
+      "role": "audio",
+      "renderGroup": 1,
+      "codec": "opus",
+      "samplerate": 48000,
+      "channelConfig": "2",
+      "bitrate": 128000
+    },
+    {
+      "name": "scte35",
+      "packaging": "eventtimeline",
+      "eventType": "urn:scte:scte35:2013:bin",
+      "mimeType": "application/json",
+      "isLive": true,
+      "role": "eventtimeline",
+      "depends": ["video"]
+    }
+  ]
+}
+~~~
+
 ### Terminating a live broadcast
 
 This example shows a catalog for a media producer terminating a previously
@@ -1155,6 +1243,81 @@ This example shows drone GPS coordinates synched with the start of each Group.
     }
 ]
 
+~~~
+
+## Well-known event timeline types {#wellknowneventtypes}
+
+This section defines well-known event timeline types for common broadcast
+metadata. Publishers SHOULD use these standardized types when applicable
+to ensure interoperability.
+
+### SCTE-35 markers {#scte35}
+
+Event Type: `urn:scte:scte35:2013:bin` or `urn:scte:scte35:2013:xml`
+
+{{SCTE35}} markers signal ad insertion points, program boundaries, and other
+broadcast events. When using the binary format, the 'data' field contains
+a Base64 {{BASE64}} encoded SCTE-35 splice_info_section. When using the
+XML format, the 'data' field contains the SCTE-35 XML representation as
+a string.
+
+Publishers SHOULD include a 'duration' field (in milliseconds) when the
+SCTE-35 message indicates a splice duration.
+
+Example SCTE-35 event timeline:
+
+~~~json
+[
+    {
+        "m": 120000,
+        "data": {
+            "type": "splice_insert",
+            "eventId": 12345,
+            "outOfNetwork": true,
+            "duration": 30000,
+            "bin": "/DA0AAAA..."
+        }
+    },
+    {
+        "m": 150000,
+        "data": {
+            "type": "splice_insert",
+            "eventId": 12345,
+            "outOfNetwork": false
+        }
+    }
+]
+~~~
+
+### Out-of-band captions {#oobcaptions}
+
+Event Type: `urn:msf:captions:webvtt` or `urn:msf:captions:imsc1`
+
+For captions delivered as separate event timeline tracks rather than
+embedded in video, publishers use these event types. The 'data' field
+contains the caption cue information.
+
+Example WebVTT caption event timeline:
+
+~~~json
+[
+    {
+        "m": 0,
+        "data": {
+            "start": 0,
+            "end": 2500,
+            "text": "Welcome to the show."
+        }
+    },
+    {
+        "m": 2500,
+        "data": {
+            "start": 2500,
+            "end": 5000,
+            "text": "Today we will be discussing..."
+        }
+    }
+]
 ~~~
 
 # Workflow
