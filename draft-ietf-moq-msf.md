@@ -1274,8 +1274,8 @@ msf-query-arg   = wallclock-arg / mediatime-arg /
 wallclock-arg   = "wallclock-range=" 1*DIGIT [ "-" 1*DIGIT ]
 mediatime-arg   = "mediatime-range=" 1*DIGIT [ "-" 1*DIGIT ]
 location-arg    = "location-range=" start-loc [ "-" end-loc ]
-start-loc       = group-id "-" object-id
-end-loc         = group-id "-" object-id
+start-loc       = group-id "." object-id
+end-loc         = group-id [ "." object-id ] 
 group-id        = 1*DIGIT
 object-id       = 1*DIGIT
 token-arg       = "c4m=" 1*( ALPHA / DIGIT / "-" / "_" ) [ "=" / "==" ]
