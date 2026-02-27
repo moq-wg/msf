@@ -53,6 +53,14 @@ normative:
     target: https://www.w3.org/TR/ttml-imsc1/
 
 informative:
+  SCTE35:
+    title: "SCTE 35: Digital Program Insertion Cueing Message"
+    date: 2022
+    target: https://www.scte.org/standards/library/catalog/scte-35-digital-program-insertion-cueing-message/
+  SCTE214-1:
+    title: "SCTE 214-1: MPEG DASH for IP-Based Cable Services Part 1 - MPD Constraints and Extensions"
+    date: 2022
+    target: https://www.scte.org/standards/library/catalog/scte-214-1-mpeg-dash-for-ip-based-cable-services-part-1-mpd-constraints-and-extensions/
 
 
 --- abstract
@@ -536,7 +544,7 @@ Table 5: Registered accessibility schemes
 | urn:scte:dash:cc:cea-708:2015      | CEA-708 closed captions              |
 
 The 'value' field for CEA-608/708 schemes uses the format defined by
-SCTE 214-1, where caption service channels are specified as
+{{SCTE214-1}}, where caption service channels are specified as
 semicolon-separated pairs of channel identifier and language code
 (e.g., "CC1=eng;CC3=spa").
 
@@ -1244,7 +1252,7 @@ to ensure interoperability.
 
 Event Type: `urn:scte:scte35:2013:bin` or `urn:scte:scte35:2013:xml`
 
-SCTE-35 markers signal ad insertion points, program boundaries, and other
+{{SCTE35}} markers signal ad insertion points, program boundaries, and other
 broadcast events. When using the binary format, the 'data' field contains
 a Base64 {{BASE64}} encoded SCTE-35 splice_info_section. When using the
 XML format, the 'data' field contains the SCTE-35 XML representation as
