@@ -286,10 +286,12 @@ This field SHOULD NOT be included if the isLive field is false.
 ### Is Complete {#iscomplete}
 Location: R    Required: Optional    JSON Type: Boolean
 
-Issued once a previously live broadcast is complete. This is a commitment that all
-tracks are complete, no new tracks will be added and no new content will be
-published. This field MUST NOT be included if it is FALSE. This field MUST NOT be
-removed from a catalog once it has been added.
+A catalog-level indication that the broadcast is complete. This is a commitment that
+all tracks are complete, no new tracks will be added to the catalog, and no new
+content will be published on any track. Note that even if all individual tracks have
+isLive {{islive}} set to FALSE, new tracks could still be added to the catalog until
+isComplete is set to TRUE. This field MUST NOT be included if it is FALSE. This field
+MUST NOT be removed from a catalog once it has been added.
 
 ### Tracks {#tracks}
 Location: R    Required: Yes    JSON Type: Array
@@ -368,6 +370,7 @@ Custom roles MAY be used as long as they do not collide with the specified roles
 ### Is Live {#islive}
 Location: T    Required: Yes  JSON Type: Boolean
 
+A track-level indication of whether new Objects will be added to this specific track.
 True if new Objects will be added to the track.
 False if no new Objects will be added to the track. A False value is sent under two
 possible conditions:
