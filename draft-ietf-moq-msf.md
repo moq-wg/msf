@@ -424,18 +424,9 @@ Location: T    Required: Optional   JSON Type: String
 
 A string specifying the name of a track that holds the initialization data
 for this track. The referenced track MUST exist in the same catalog and share
-the same namespace as the referencing track. The initialization track publishes
-raw (non-Base64 encoded) initialization segment data as its payload.
-
-Using a separate initialization track instead of inline initData {{initdata}}
-enables:
-
-* Independent updates to initialization data without modifying the catalog
-* Deduplication when multiple tracks share identical initialization segments
-* HTTP-addressable initialization segments for compatibility with HLS/DASH
-  delivery
-
-A track MUST NOT specify both initTrack and initData.
+the same namespace as the referencing track. A track MUST NOT specify both
+initTrack and initData. See {{initializationtrack}} for initialization track
+requirements and payload format.
 
 ### Dependencies {#dependencies}
 Location: T    Required: Optional   JSON Type: Array
@@ -1102,7 +1093,7 @@ The MOQT Groups and MOQT Objects need to be mapped to MOQT Streams. Irrespective
 of the {{mediapackaging}} in place, each MOQT Object MUST be mapped to a new
 MOQT Stream.
 
-## Group numbering
+## Group numbering {#group-numbering}
 The Group ID of the first Group published in a track at application startup MUST be
 a unique integer that will not repeat in the future. One approach to achieve this
 is to set the initial Group ID to the creation time of the first Object in the
@@ -1135,9 +1126,8 @@ The initialization track payload contains raw (non-Base64 encoded) codec
 initialization data. The format of this data depends on the media packaging
 {{mediapackaging}} and codec in use:
 
-* For LOC packaging with ISOBMFF-based codecs (H.264, H.265, AV1, AAC), the payload
-  contains the concatenation of the ftyp and moov boxes that form the initialization
-  segment.
+* For LOC packaging, the payload contains codec-specific initialization data as
+  defined in {{LOC}}.
 * For other container formats, the payload contains the codec-specific initialization
   data as defined by that format.
 
@@ -1154,16 +1144,18 @@ or resolution switch that requires new decoder configuration), the publisher MUS
 publish a new Group with an incremented Group ID containing the updated
 initialization data.
 
-Subscribers SHOULD fetch the latest Group from the initialization track before
-beginning media playback. If a subscriber detects that the initialization track
-has published a new Group during playback, it SHOULD fetch the new initialization
-data and reinitialize its decoder accordingly.
+Subscribers can either fetch or subscribe to the initialization track. When
+joining a session, subscribers SHOULD fetch the latest Group from the
+initialization track before beginning media playback. Alternatively, subscribers
+MAY subscribe to the initialization track to receive live updates when the
+initialization data changes. Upon receiving a new Group, the subscriber SHOULD
+reinitialize its decoder with the updated initialization data.
 
 ## Initialization track catalog requirements
 
 An initialization track MUST be declared in the catalog with the following properties:
 
-* The role field {{role}} MUST be set to "init"
+* The role field {{trackrole}} MUST be set to "init"
 * The packaging field {{packaging}} MUST match the packaging of the tracks that
   reference it
 * The namespace MUST match the namespace of all tracks that reference it via
@@ -1175,7 +1167,8 @@ The referenced initialization track MUST exist in the same catalog.
 ## Initialization track updating
 
 For live streams, the publisher SHOULD publish the initialization data in
-Group 0, Object 0 at the start of the broadcast. If the initialization data
+Object 0 of the first Group at the start of the broadcast. The first Group ID
+MUST follow the requirements in {{group-numbering}}. If the initialization data
 needs to change during the broadcast (such as a mid-stream resolution change),
 the publisher increments the Group ID and publishes the new initialization data.
 
