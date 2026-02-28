@@ -1117,6 +1117,71 @@ Each subsequent Group ID MUST increase by 1.
 If a publisher is able to maintain state across a republish, it MUST signal the gap
 in Group IDs using the MOQT Prior Group ID Gap Extension header.
 
+# Initialization track {#initializationtrack}
+
+An initialization track provides codec initialization data for one or more media
+tracks. Instead of embedding initialization data directly in the catalog using the
+initData field {{initdata}}, publishers can reference a separate initialization track
+using the initTrack field {{inittrack}}. This approach offers several advantages:
+
+* Independent updates to initialization data without modifying the catalog
+* Deduplication when multiple tracks share identical initialization segments
+* HTTP-addressable initialization segments for compatibility with HLS/DASH delivery
+* Reduced catalog size for codecs with large initialization data
+
+## Initialization track payload {#inittrackpayload}
+
+The initialization track payload contains raw (non-Base64 encoded) codec
+initialization data. The format of this data depends on the media packaging
+{{mediapackaging}} and codec in use:
+
+* For LOC packaging with ISOBMFF-based codecs (H.264, H.265, AV1, AAC), the payload
+  contains the concatenation of the ftyp and moov boxes that form the initialization
+  segment.
+* For other container formats, the payload contains the codec-specific initialization
+  data as defined by that format.
+
+The initialization data MUST be sufficient to initialize a decoder for all tracks
+that reference this initialization track.
+
+## Initialization track group and object structure
+
+An initialization track publishes its payload as a single MOQT Object within a
+MOQT Group. The Object ID MUST be 0.
+
+When the initialization data changes (for example, due to a codec parameter change
+or resolution switch that requires new decoder configuration), the publisher MUST
+publish a new Group with an incremented Group ID containing the updated
+initialization data.
+
+Subscribers SHOULD fetch the latest Group from the initialization track before
+beginning media playback. If a subscriber detects that the initialization track
+has published a new Group during playback, it SHOULD fetch the new initialization
+data and reinitialize its decoder accordingly.
+
+## Initialization track catalog requirements
+
+An initialization track MUST be declared in the catalog with the following properties:
+
+* The role field {{role}} MUST be set to "init"
+* The packaging field {{packaging}} MUST match the packaging of the tracks that
+  reference it
+* The namespace MUST match the namespace of all tracks that reference it via
+  initTrack
+
+A track that specifies an initTrack field MUST NOT also specify an initData field.
+The referenced initialization track MUST exist in the same catalog.
+
+## Initialization track updating
+
+For live streams, the publisher SHOULD publish the initialization data in
+Group 0, Object 0 at the start of the broadcast. If the initialization data
+needs to change during the broadcast (such as a mid-stream resolution change),
+the publisher increments the Group ID and publishes the new initialization data.
+
+For VOD assets, the initialization track typically contains a single Group with
+the initialization data that applies to the entire asset.
+
 # Media Timeline track {#mediatimelinetrack}
 The media timeline track provides data about the previously published Groups and their
 relationship to wallclock time and media time. Media timeline tracks allow players to
