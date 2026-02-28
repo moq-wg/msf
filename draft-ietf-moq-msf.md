@@ -210,6 +210,7 @@ Table 1 provides an overview of all fields defined by this document.
 | Render group            | renderGroup            | {{rendergroup}}           |
 | Alternate group         | altGroup               | {{altgroup}}              |
 | Initialization data     | initData               | {{initdata}}              |
+| Initialization track    | initTrack              | {{inittrack}}             |
 | Dependencies            | depends                | {{dependencies}}          |
 | Temporal ID             | temporalId             | {{temporalid}}            |
 | Spatial ID              | spatialId              | {{spatialid}}             |
@@ -353,6 +354,7 @@ Table 4: Reserved track roles
 | audiodescription | An audio description for visually impaired users           |
 | video            | Visual content                                             |
 | audio            | Audio content                                              |
+| init             | Initialization data for other tracks (see {{inittrack}})   |
 | mediatimeline    | An MSF media timeline {{mediatimelinetrack}}               |
 | eventtimeline    | An MSF event timeline {{eventtimelinetrack}}               |
 | caption          | A textual representation of the audio track                |
@@ -414,6 +416,26 @@ a set video tracks of the same content offered in alternate bitrates.
 Location: T    Required: Optional   JSON Type: String
 
 A string holding Base64 {{BASE64}} encoded initialization data for the track.
+
+A track MUST NOT specify both initData and initTrack {{inittrack}}.
+
+### Initialization track {#inittrack}
+Location: T    Required: Optional   JSON Type: String
+
+A string specifying the name of a track that holds the initialization data
+for this track. The referenced track MUST exist in the same catalog and share
+the same namespace as the referencing track. The initialization track publishes
+raw (non-Base64 encoded) initialization segment data as its payload.
+
+Using a separate initialization track instead of inline initData {{initdata}}
+enables:
+
+* Independent updates to initialization data without modifying the catalog
+* Deduplication when multiple tracks share identical initialization segments
+* HTTP-addressable initialization segments for compatibility with HLS/DASH
+  delivery
+
+A track MUST NOT specify both initTrack and initData.
 
 ### Dependencies {#dependencies}
 Location: T    Required: Optional   JSON Type: Array
@@ -665,6 +687,89 @@ of the catalog.
       "samplerate":48000,
       "channelConfig":"2",
       "bitrate":32000
+    }
+   ]
+}
+~~~
+
+
+### ABR video tracks with shared initialization track
+
+This example shows a catalog using a shared initialization track for
+multiple ABR video renditions. All three video qualities reference the
+same init track, enabling deduplication and independent init segment updates.
+
+~~~json
+{
+  "version": 1,
+  "generatedAt": 1746104606044,
+  "tracks":[
+    {
+      "name": "video-init",
+      "namespace": "streaming.example.com/live/channel1",
+      "packaging": "loc",
+      "role": "init"
+    },
+    {
+      "name": "hd",
+      "namespace": "streaming.example.com/live/channel1",
+      "renderGroup": 1,
+      "packaging": "loc",
+      "isLive": true,
+      "targetLatency": 1500,
+      "role": "video",
+      "codec":"avc1.640028",
+      "width":1920,
+      "height":1080,
+      "bitrate":5000000,
+      "framerate":30,
+      "altGroup":1,
+      "initTrack": "video-init"
+    },
+    {
+      "name": "md",
+      "namespace": "streaming.example.com/live/channel1",
+      "renderGroup": 1,
+      "packaging": "loc",
+      "isLive": true,
+      "targetLatency": 1500,
+      "role": "video",
+      "codec":"avc1.640028",
+      "width":1280,
+      "height":720,
+      "bitrate":3000000,
+      "framerate":30,
+      "altGroup":1,
+      "initTrack": "video-init"
+    },
+    {
+      "name": "sd",
+      "namespace": "streaming.example.com/live/channel1",
+      "renderGroup": 1,
+      "packaging": "loc",
+      "isLive": true,
+      "targetLatency": 1500,
+      "role": "video",
+      "codec":"avc1.640028",
+      "width":640,
+      "height":360,
+      "bitrate":1000000,
+      "framerate":30,
+      "altGroup":1,
+      "initTrack": "video-init"
+    },
+    {
+      "name": "audio",
+      "namespace": "streaming.example.com/live/channel1",
+      "renderGroup": 1,
+      "packaging": "loc",
+      "isLive": true,
+      "targetLatency": 1500,
+      "role": "audio",
+      "codec":"mp4a.40.2",
+      "samplerate":48000,
+      "channelConfig":"2",
+      "bitrate":128000
     }
    ]
 }
