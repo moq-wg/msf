@@ -177,8 +177,6 @@ published only when the availability of tracks changes.
 Each catalog update MUST be mapped to an MOQT Object.
 
 
-## Catalog Fields
-
 A catalog is a JSON {{JSON}} document, comprised of a series of mandatory and
 optional fields. At a minimum, a catalog MUST provide all mandatory fields. A
 producer MAY add additional fields to the ones described in this draft. Custom
@@ -187,18 +185,91 @@ of field names within the JSON document is not important.
 
 A parser MUST ignore fields it does not understand.
 
-Table 1 provides an overview of all fields defined by this document.
+## Root Catalog Fields
+
+Table 1 lists the fields defined at the root of the catalog JSON object.
 
 | Field                   |  Name                  |           Definition      |
 |:========================|:=======================|:==========================|
 | MSF version             | version                | {{msfversion}}            |
+| Generated at            | generatedAt            | {{generatedat}}           |
+| Is Complete             | isComplete             | {{iscomplete}}            |
+| Tracks                  | tracks                 | {{tracks}}                |
+
+### MSF version {#msfversion}
+Required: Yes    JSON Type: Number    Location: Root Catalog (Table 1)
+
+Specifies the version of MSF referenced by this catalog. There is no guarantee
+that future catalog versions are backwards compatible and field definitions and
+interpretation may change between versions. A subscriber MUST NOT attempt to
+parse a catalog version which it does not understand.
+
+### Generated at {#generatedat}
+Required: Optional    JSON Type: Number    Location: Root Catalog (Table 1)
+
+The wallclock time at which this catalog instance was generated, expressed as the
+number of milliseconds that have elapsed since January 1, 1970 (midnight UTC/GMT).
+This field SHOULD NOT be included if the isLive field is false.
+
+### Is Complete {#iscomplete}
+Required: Optional    JSON Type: Boolean    Location: Root Catalog (Table 1)
+
+Issued once a previously live broadcast is complete. This is a commitment that all
+tracks are complete, no new tracks will be added and no new content will be
+published. This field MUST NOT be included if it is FALSE. This field MUST NOT be
+removed from a catalog once it has been added.
+
+### Tracks {#tracks}
+Required: Yes    JSON Type: Array    Location: Root Catalog (Table 1)
+
+An array of track objects {{trackobject}}.
+
+## Delta Update Catalog Fields
+
+Table 2 lists the fields used for delta update operations at the root level.
+
+| Field                   |  Name                  |           Definition      |
+|:========================|:=======================|:==========================|
 | Delta update            | deltaUpdate            | {{deltaupdate}}           |
 | Add tracks              | addTracks              | {{addtracks}}             |
 | Remove tracks           | removeTracks           | {{removetracks}}          |
 | Clone tracks            | cloneTracks            | {{clonetracks}}           |
-| Generated at            | generatedAt            | {{generatedat}}           |
-| Is Complete             | isComplete             | {{iscomplete}}            |
-| Tracks                  | tracks                 | {{tracks}}                |
+
+### Delta update {#deltaupdate}
+Required: Optional    JSON Type: Boolean    Location: Delta Update (Table 2)
+
+A Boolean that if true indicates that this catalog object represents a delta
+(or partial) update. A delta update has a restricted set of fields and special
+processing rules - see {{deltaupdates}}. This value SHOULD NOT be added to a
+catalog if it is false.
+
+### Add tracks {#addtracks}
+Required: Optional    JSON Type: Array    Location: Delta Update (Table 2)
+
+Indicates a delta processing instruction to add new tracks. The value of this
+field is an Array of track objects {{trackobject}}.
+
+### Remove tracks {#removetracks}
+Required: Optional    JSON Type: Array    Location: Delta Update (Table 2)
+
+Indicates a delta processing instruction to remove new tracks. The value of this
+field is an Array of track objects {{trackobject}}. Each track object MUST include
+a Track Name {{trackname}} field, MAY include a Track Namespace {{tracknamespace}}
+field and MUST NOT hold any other fields.
+
+### Clone tracks {#clonetracks}
+Required: Optional    JSON Type: Array    Location: Delta Update (Table 2)
+
+Indicates a delta processing instruction to clone new tracks from previously declared
+tracks. The value of this field is an Array of track objects {{trackobject}}. Each
+track object MUST include a Parent Name {{parentname}} field.
+
+## Track Object Fields
+
+Table 3 lists the fields defined within each track object.
+
+| Field                   |  Name                  |           Definition      |
+|:========================|:=======================|:==========================|
 | Track namespace         | namespace              | {{tracknamespace}}        |
 | Track name              | name                   | {{trackname}}             |
 | Packaging               | packaging              | {{packaging}}             |
@@ -228,78 +299,13 @@ Table 1 provides an overview of all fields defined by this document.
 | Parent name             | parentName             | {{parentname}}            |
 | Track duration          | trackDuration          | {{trackduration}}         |
 
-Table 2 defines the allowed locations for these fields within the document
-
-| Location |                Allowed locations for the field                |
-|:=========|:==============================================================|
-| R        | The Root of the JSON object                                   |
-| T        | Track object                                                  |
-
-
-### MSF version {#msfversion}
-Location: R    Required: Yes    JSON Type: Number
-
-Specifies the version of MSF referenced by this catalog. There is no guarantee
-that future catalog versions are backwards compatible and field definitions and
-interpretation may change between versions. A subscriber MUST NOT attempt to
-parse a catalog version which it does not understand.
-
-### Delta update {#deltaupdate}
-Location: R    Required: Optional    JSON Type: Boolean
-
-A Boolean that if true indicates that this catalog object represents a delta
-(or partial) update. A delta update has a restricted set of fields and special
-processing rules - see {{deltaupdates}}. This value SHOULD NOT be added to a
-catalog if it is false.
-
-### Add tracks {#addtracks}
-Location: R    Required: Optional    JSON Type: Array
-
-Indicates a delta processing instruction to add new tracks. The value of this
-field is an Array of track objects {{trackobject}}.
-
-### Remove tracks {#removetracks}
-Location: R    Required: Optional    JSON Type: Array
-
-Indicates a delta processing instruction to remove new tracks. The value of this
-field is an Array of track objects {{trackobject}}. Each track object MUST include
-a Track Name {{trackname}} field, MAY include a Track Namespace {{tracknamespace}}
-field and MUST NOT hold any other fields.
-
-### Clone tracks {#clonetracks}
-Location: R    Required: Optional    JSON Type: Array
-
-Indicates a delta processing instruction to clone new tracks from previously declared
-tracks. The value of this field is an Array of track objects {{trackobject}}. Each
-track object MUST include a Parent Name {{parentname}} field.
-
-### Generated at {#generatedat}
-Location: R    Required: Optional    JSON Type: Number
-
-The wallclock time at which this catalog instance was generated, expressed as the
-number of milliseconds that have elapsed since January 1, 1970 (midnight UTC/GMT).
-This field SHOULD NOT be included if the isLive field is false.
-
-### Is Complete {#iscomplete}
-Location: R    Required: Optional    JSON Type: Boolean
-
-Issued once a previously live broadcast is complete. This is a commitment that all
-tracks are complete, no new tracks will be added and no new content will be
-published. This field MUST NOT be included if it is FALSE. This field MUST NOT be
-removed from a catalog once it has been added.
-
-### Tracks {#tracks}
-Location: R    Required: Yes    JSON Type: Array
-
-An array of track objects {{trackobject}}.
-
 ### Tracks object {#trackobject}
 
-A track object is JSON Object containing a collection of fields whose location
-is specified 'T' in Table 2.
+A track object is a JSON Object containing a collection of fields whose location
+is specified in Table 3.
 
 ### Track namespace {#tracknamespace}
-Location: T    Required: Optional    JSON Type: String
+Required: Optional    JSON Type: String    Location: Track Object (Table 3)
 
 The name space under which the track name is defined. See section 2.3 of
 {{MoQTransport}}. The track namespace is optional. If it is not declared within
@@ -307,18 +313,18 @@ a track, then each track MUST inherit the namespace of the catalog track. A
 namespace declared in a track object overrides any inherited name space.
 
 ### Track name {#trackname}
-Location: T    Required: Yes   JSON Type: String
+Required: Yes    JSON Type: String    Location: Track Object (Table 3)
 
 A string defining the name of the track. See section 2.3 of {{MoQTransport}}.
 Within the catalog, track names MUST be unique per namespace.
 
 ### Packaging {#packaging}
-Location: T    Required: Yes   JSON Type: String
+Required: Yes    JSON Type: String    Location: Track Object (Table 3)
 
 A string defining the type of payload encapsulation. Allowed values are strings
-as defined in Table 3.
+as defined in Table 4.
 
-Table 3: Allowed packaging values
+Table 4: Allowed packaging values
 
 | Name            |   Value        |      Reference             |
 |:================|:===============|:===========================|
@@ -326,9 +332,8 @@ Table 3: Allowed packaging values
 | Media Timeline  | mediatimeline  | See {{mediatimelinetrack}} |
 | Event Timeline  | eventtimeline  | See {{eventtimelinetrack}} |
 
-
 ### Event timeline type {#eventtype}
-Location: T    Required: Optional   JSON Type: String
+Required: Optional    JSON Type: String    Location: Track Object (Table 3)
 
 A String defining the type & structure of the data contained within the data
 field of the Event timeline track. Types are defined by the application provider
@@ -338,15 +343,15 @@ This field is required if the {{packaging}} value is "eventtimeline".
 This field MUST NOT be used if the packaging value is not "eventtimeline".
 
 ### Track role {#trackrole}
-Location: T    Required: Optional   JSON Type: String
+Required: Optional    JSON Type: String    Location: Track Object (Table 3)
 
 A string defining the role of content carried by the track. Specified roles
-are described in Table 4. These role values are case-sensitive.
+are described in Table 5. These role values are case-sensitive.
 
 This role field MAY be used in conjunction with the Mimetype {{mimetype}} to
 fully describe the content of the track.
 
-Table 4: Reserved track roles
+Table 5: Reserved track roles
 
 | Role             |   Description                                              |
 |:=================|:===========================================================|
@@ -363,7 +368,7 @@ Table 4: Reserved track roles
 Custom roles MAY be used as long as they do not collide with the specified roles.
 
 ### Is Live {#islive}
-Location: T    Required: Yes  JSON Type: Boolean
+Required: Yes    JSON Type: Boolean    Location: Track Object (Table 3)
 
 True if new Objects will be added to the track.
 False if no new Objects will be added to the track. A False value is sent under two
@@ -373,7 +378,7 @@ possible conditions:
 A True value MUST never follow a False value.
 
 ### Target latency {#targetlatency}
-Location: T    Required: Optional  JSON Type: Number
+Required: Optional    JSON Type: Number    Location: Track Object (Table 3)
 
 The target latency in milliseconds. Target latency is defined as the offset in
 wallclock time between when content was encoded and when it is displayed to the
@@ -386,14 +391,14 @@ field is absent from the track definition, then the player MAY choose the latenc
 with which it renders the content.
 
 ### Track label {#tracklabel}
-Location: T    Required: Optional   JSON Type: String
+Required: Optional    JSON Type: String    Location: Track Object (Table 3)
 
 A string defining a human-readable label for the track. Examples might be
 "Overhead camera view" or "Deutscher Kommentar". Note that the {{JSON}} spec
 requires UTF-8 support by decoders.
 
 ### Render group {#rendergroup}
-Location: T    Required: Optional   JSON Type: Number
+Required: Optional    JSON Type: Number    Location: Track Object (Table 3)
 
 An integer specifying a group of tracks which are designed to be rendered
 together. Tracks with the same group number SHOULD be rendered simultaneously,
@@ -401,7 +406,7 @@ are time-aligned and are designed to accompany one another. A common
 example would be tying together audio and video tracks.
 
 ### Alternate group {#altgroup}
-Location: T    Required: Optional   JSON Type: Number
+Required: Optional    JSON Type: Number    Location: Track Object (Table 3)
 
 An integer specifying a group of tracks which are alternate versions of
 one-another. Alternate tracks represent the same media content, but differ in
@@ -411,12 +416,12 @@ tracks specifying the same alternate group number. A common example would be
 a set video tracks of the same content offered in alternate bitrates.
 
 ### Initialization data {#initdata}
-Location: T    Required: Optional   JSON Type: String
+Required: Optional    JSON Type: String    Location: Track Object (Table 3)
 
 A string holding Base64 {{BASE64}} encoded initialization data for the track.
 
 ### Dependencies {#dependencies}
-Location: T    Required: Optional   JSON Type: Array
+Required: Optional    JSON Type: Array    Location: Track Object (Table 3)
 
 Certain tracks may depend on other tracks for decoding. Dependencies holds an
 array of track names {{trackname}} on which the current track is dependent.
@@ -424,95 +429,94 @@ Since only the track name is signaled, the namespace of the dependencies is
 assumed to match that of the track declaring the dependencies.
 
 ### Temporal ID {#temporalid}
-Location: T    Required: Optional   JSON Type: Number
+Required: Optional    JSON Type: Number    Location: Track Object (Table 3)
 
 A number identifying the temporal layer/sub-layer encoding of the track,
 starting with 0 for the base layer, and increasing by 1 for the next higher
 temporal fidelity.
 
 ### Spatial ID {#spatialid}
-Location: T    Required: Optional   JSON Type: Number
+Required: Optional    JSON Type: Number    Location: Track Object (Table 3)
 
 A number identifying the spatial layer encoding of the track, starting with 0
 for the base layer, and increasing by 1 for the next higher fidelity.
 
 ### Codec {#codec}
-Location: T    Required: Optional   JSON Type: String
+Required: Optional    JSON Type: String    Location: Track Object (Table 3)
 
 A string defining the codec used to encode the track.
 For LOC packaged content, the string codec registrations are defined in Sect 3
 and Section 4 of {{WEBCODECS-CODEC-REGISTRY}}.
 
 ### Mimetype {#mimetype}
-Location: T    Required: Optional   JSON Type: String
+Required: Optional    JSON Type: String    Location: Track Object (Table 3)
 
 A string defining the mime type {{MIME}} of the track.
 
 ### Framerate {#framerate}
-Location: T    Required: Optional   JSON Type: Number
+Required: Optional    JSON Type: Number    Location: Track Object (Table 3)
 
 A number defining the video framerate of the track, expressed as frames per
 second. This property SHOULD only accompany video codecs.
 
 ### Timescale {#timescale}
-Location: T    Required: Optional   JSON Type: Number
+Required: Optional    JSON Type: Number    Location: Track Object (Table 3)
 
 The number of time units that pass per second.
 
 ### Bitrate {#bitrate}
-Location: T    Required: Optional   JSON Type: Number
+Required: Optional    JSON Type: Number    Location: Track Object (Table 3)
 
 A number defining the bitrate of track, expressed in bits per second.
 
 ### Width {#width}
-Location: T    Required: Optional   JSON Type: Number
+Required: Optional    JSON Type: Number    Location: Track Object (Table 3)
 
 A number expressing the encoded width of the video frames in pixels.
 
 ### Height {#height}
-Location: T    Required: Optional   JSON Type: Number
+Required: Optional    JSON Type: Number    Location: Track Object (Table 3)
 
 A number expressing the encoded height of the video frames in pixels.
 
 ### Audio sample rate {#audiosamplerate}
-Location: T    Required: Optional   JSON Type: Number
+Required: Optional    JSON Type: Number    Location: Track Object (Table 3)
 
 The number of audio frame samples per second. This property SHOULD only
 accompany audio codecs.
 
 ### Channel configuration {#channelconfiguration}
-Location: T    Required: Optional   JSON Type: String
+Required: Optional    JSON Type: String    Location: Track Object (Table 3)
 
 A string specifying the audio channel configuration. This property SHOULD only
 accompany audio codecs. A string is used in order to provide the flexibility to
 describe complex channel configurations for multi-channel and Next Generation
 Audio schemas.
 
-
 ### Display width {#displaywidth}
-Location: T    Required: Optional   JSON Type: Number
+Required: Optional    JSON Type: Number    Location: Track Object (Table 3)
 
 A number expressing the intended display width of the track content in pixels.
 
 ### Display height {#displayheight}
-Location: T    Required: Optional   JSON Type: Number
+Required: Optional    JSON Type: Number    Location: Track Object (Table 3)
 
 A number expressing the intended display height of the track content in pixels.
 
 ### Language {#language}
-Location: T    Required: Optional   JSON Type: String
+Required: Optional    JSON Type: String    Location: Track Object (Table 3)
 
 A string defining the dominant language of the track. The string MUST be one of
 the standard Tags for Identifying Languages as defined by {{LANG}}.
 
 ### Parent name {#parentname}
-Location: T    Required: Optional   JSON Type: String
+Required: Optional    JSON Type: String    Location: Track Object (Table 3)
 
 A string defining the parent track name {{trackname}} to be cloned. This field
 MUST only be included inside a Clone tracks {{clonetracks}} object.
 
 ### Track duration {#trackduration}
-Location: T    Required: Optional   JSON Type: Number
+Required: Optional    JSON Type: Number    Location: Track Object (Table 3)
 
 The duration of the track expressed in integer milliseconds. This field MUST NOT
 be included if the isLive {{islive}} field value is true.
