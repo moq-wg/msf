@@ -381,7 +381,7 @@ Table 3 lists the fields defined within each track object.
 | Parent name             | parentName             | {{parentname}}            |
 | Track duration          | trackDuration          | {{trackduration}}         |
 | Authorization Info      | authInfo               | {{authinfo}}              |
-| Track spacing           | trackSpacing           | {{trackspacing}}          |
+| Keyframe spacing        | keyframeSpacing        | {{keyframespacing}}       |
 
 ### Tracks object {#trackobject}
 
@@ -762,11 +762,16 @@ A catalog with:
 Would be resolved by the subscriber to include `"cat": "XYZ789"`, which is
 then presented in control messages as specified by the authorization scheme.
 
-### Track spacing {#trackspacing}
+### Keyframe spacing {#keyframespacing}
 Location: T    Required: Optional   JSON Type: Number
 
-A number defining the keyframe spacing interval for the track, expressed as the
-number of objects per keyframe interval.
+A number defining the keyframe interval for the track, expressed as the number
+of groups between keyframes. A value of 1 means every group starts with a
+keyframe, a value of 2 means every second group starts with a keyframe, etc.
+
+All tracks within the same alternate group that specify a keyframeSpacing value
+MUST include this field consistently. Publishers MUST ensure that group
+boundaries align with keyframe positions.
 
 This field is used by subscribers to calculate valid switch points when
 performing adaptive bitrate switching between tracks with different keyframe
@@ -1600,38 +1605,44 @@ in Group IDs using the MOQT Prior Group ID Gap Extension header.
 
 ## Zapping and Track Switching {#zapping}
 
-Zapping refers to the act of quickly switching between media streams, such as
-changing channels in a live broadcast. When a viewer switches to a new track,
-playback cannot begin until the decoder receives a keyframe (an independently
-decodable frame, also known as an I-frame). Tracks with longer intervals between
-keyframes (longer GOPs) offer better compression efficiency but increase the
-delay before playback can start after a switch.
+Zapping refers to the act of quickly joining a track or switching between
+tracks, such as changing channels in a live broadcast. When a viewer joins or
+switches to a new track, playback cannot begin until the decoder receives a
+keyframe (an independently decodable frame, also known as an I-frame). Tracks
+with longer intervals between keyframes (longer GOPs) offer better compression
+efficiency but increase the delay before playback can start after a switch.
 
 When multiple tracks in an alternate group have different keyframe intervals,
 subscribers need to determine valid switch points - moments when a switch will
-land on a keyframe in the target track. The trackSpacing {{trackspacing}} field
-enables subscribers to calculate these valid switch points.
+land on a keyframe in the target track. The keyframeSpacing {{keyframespacing}}
+field enables subscribers to calculate these valid switch points.
 
 ### Calculating Valid Switch Points
 
-When switching from track A (with spacing N) to track B (with spacing M), a
-subscriber can switch at group ID_A in track A if ((ID_A - 1) * N / M) + 1 yields
-an integer result. The resulting integer is the target group ID in track B.
+A valid switch point is a group ID that contains a keyframe in both the source
+and target tracks. For a track with keyframeSpacing value S, keyframes occur at
+group IDs where (groupID - 1) is divisible by S. That is, keyframes are at
+groups 1, 1+S, 1+2S, 1+3S, etc.
 
-All tracks within the same alternate group that specify a trackSpacing value
+When switching between track A (with keyframeSpacing N) and track B (with
+keyframeSpacing M), valid switch points occur at group IDs where (groupID - 1)
+is divisible by both N and M. This means valid switch points are at groups:
+1, 1+LCM(N,M), 1+2*LCM(N,M), etc., where LCM is the least common multiple.
+
+All tracks within the same alternate group that specify a keyframeSpacing value
 MUST be time-aligned at object boundaries, not only at group boundaries.
 
 ### Example: Switching Between Tracks with Different GOP Sizes
 
 Consider two video tracks in an alternate group:
 
-* Track A (HD): trackSpacing = 1
-* Track B (SD): trackSpacing = 2 ( twice the number of objects )
+* Track A (HD): keyframeSpacing = 2 (keyframe every 2 groups)
+* Track B (SD): keyframeSpacing = 4 (keyframe every 4 groups)
 
 The following diagram shows the group structure and valid switch points:
 
 ~~~ascii-figure
-Track A (spacing=1):
+Track A (keyframeSpacing=2):
   Group:    1     2     3     4     5     6     7     8     9
             |     |     |     |     |     |     |     |     |
            [K]   [P]   [K]   [P]   [K]   [P]   [K]   [P]   [K]
@@ -1640,7 +1651,7 @@ Track A (spacing=1):
          keyframe    keyframe   keyframe   keyframe   keyframe
 
 
-Track B (spacing=2):
+Track B (keyframeSpacing=4):
   Group:    1     2     3     4     5     6     7     8     9
             |     |     |     |     |     |     |     |     |
            [K]   [P]   [P]   [P]   [K]   [P]   [P]   [P]   [K]
@@ -1649,20 +1660,32 @@ Track B (spacing=2):
          keyframe               keyframe               keyframe
 
 
-Valid switch points (A -> B):
-  - Group 1 in A -> Group 1 in B  ((1-1)*2/4)+1 = 1    (valid)
-  - Group 3 in A -> Group 2 in B  ((3-1)*2/4)+1 = 2    (invalid, B[2] is P-frame)
-  - Group 5 in A -> Group 3 in B  ((5-1)*2/4)+1 = 3    (invalid, B[3] is P-frame)
-  - Group 9 in A -> Group 5 in B  ((9-1)*2/4)+1 = 5    (valid)
+Valid switch points (A <-> B):
+  LCM(2, 4) = 4, so valid switch points are at groups 1, 5, 9, 13, ...
+
+  - Group 1: keyframe in both A and B (valid switch point)
+  - Group 3: keyframe in A, but P-frame in B (NOT a valid switch point)
+  - Group 5: keyframe in both A and B (valid switch point)
+  - Group 7: keyframe in A, but P-frame in B (NOT a valid switch point)
+  - Group 9: keyframe in both A and B (valid switch point)
 
   K = Keyframe (independently decodable)
   P = Predicted frame (depends on previous keyframe)
 ~~~
 
-In this example, a subscriber watching Track A can only switch to Track B at
-groups 1, 5, 9, etc. - points where the target group in Track B contains a
-keyframe. Attempting to switch at other points would result in playback delay
-while waiting for the next keyframe in Track B.
+In this example, a subscriber can switch between Track A and Track B at groups
+1, 5, 9, etc. - points where both tracks contain a keyframe. These switch points
+work in both directions (A to B and B to A). Attempting to switch at other
+points would result in playback delay while waiting for the next keyframe in the
+target track.
+
+### Packaging Considerations
+
+When packaging content with multiple tracks that have dissimilar keyframe
+intervals, publishers MUST ensure that group boundaries align with keyframe
+positions in each track. This alignment is essential for the switching formula
+to function correctly. Each track's groups should start at keyframe boundaries
+according to that track's keyframeSpacing value.
 
 # Media Timeline track {#mediatimelinetrack}
 The media timeline track provides data about the previously published Groups and their
