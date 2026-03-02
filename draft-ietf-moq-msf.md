@@ -227,7 +227,6 @@ Table 1 provides an overview of all fields defined by this document.
 | Language                | lang                   | {{language}}              |
 | Parent name             | parentName             | {{parentname}}            |
 | Track duration          | trackDuration          | {{trackduration}}         |
-| Variables               | variables              | {{variables}}             |
 
 Table 2 defines the allowed locations for these fields within the document
 
@@ -564,26 +563,26 @@ Variable names are case-sensitive.
 The percent character (`%`) MUST NOT appear in catalog field values except as
 part of a variable reference. Literal percent characters are not permitted.
 
+Variable values MUST consist only of alphanumeric characters, hyphens, underscores,
+and the at sign (`@`). Special characters including commas, semicolons, quotes,
+ampersands, and other punctuation MUST NOT appear in variable values. This
+restriction prevents injection attacks and ensures safe substitution into
+catalog field values.
+
 ### Variable Resolution {#variableresolution}
 
-Variables are resolved from the URI used to access the catalog. The URI
-components used for variable resolution are:
+Variables are resolved from the fragment identifier of the URI used to access
+the catalog. The fragment identifier is the portion following the `#` character
+and is processed entirely client-side, making it suitable for per-viewer
+customization without affecting server-side caching.
 
-* Query parameters - the name and value pairs following the `?` character
-* Fragment identifier - the portion following the `#` character
+Query parameters (following the `?` character) are reserved for server-side
+processing and MUST NOT be used for variable substitution.
 
-When a subscriber requests a catalog using a URI containing query parameters,
-each parameter name becomes available as a variable. The variable is replaced
-with the corresponding parameter value.
-
-### Variables {#variables}
-Location: R    Required: Optional    JSON Type: Array
-
-An array of strings declaring the variable names used within this catalog.
-Publishers SHOULD include this field to enable validation and to document
-the expected variables. Each string in the array is a variable name without
-the enclosing percent characters.
-
+When a subscriber requests a catalog using a URI containing a fragment identifier,
+the fragment is parsed as key-value pairs (using `&` as delimiter and `=` as
+separator). Each key becomes available as a variable name, and the variable
+is replaced with the corresponding value.
 
 ## Catalog Examples
 
@@ -1033,14 +1032,14 @@ This example shows a catalog using variable substitution to enable
 personalized advertising and reporting while maintaining cacheability.
 Given a catalog request URI of:
 
-    https://example.com/relay-app/relayID?token=1234&id=bob&event=xyz
+    moqt://relay.example.com/live-sports/catalog#token=1234&id=bob&event=xyz
 
-The following catalog template:
+The fragment parameters (`token`, `id`, `event`) are available for variable
+substitution. The following catalog template:
 
 ~~~json
 {
   "version": 1,
-  "variables": ["id", "token", "event"],
   "tracks": [
     {
       "name": "video",
@@ -1065,7 +1064,6 @@ Would be resolved by the subscriber as:
 ~~~json
 {
   "version": 1,
-  "variables": ["id", "token", "event"],
   "tracks": [
     {
       "name": "video",
