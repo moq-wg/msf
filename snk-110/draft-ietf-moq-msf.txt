@@ -4,8 +4,8 @@
 
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
-Intended status: Informational                          19 February 2026
-Expires: 23 August 2026
+Intended status: Informational                              2 March 2026
+Expires: 3 September 2026
 
 
                          MOQT Streaming Format
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 23 August 2026.
+   This Internet-Draft will expire on 3 September 2026.
 
 Copyright Notice
 
@@ -112,7 +112,7 @@ Table of Contents
        5.1.35. Language
        5.1.36. Parent name
        5.1.37. Track duration
-       5.1.38. Track spacing
+       5.1.38. Keyframe spacing
      5.2.  Delta updates
      5.3.  Catalog Examples
        5.3.1.  Time-aligned Audio/Video Tracks with single quality
@@ -133,6 +133,7 @@ Table of Contents
        6.2.1.  Calculating Valid Switch Points
        6.2.2.  Example: Switching Between Tracks with Different GOP
                Sizes
+       6.2.3.  Packaging Considerations
    7.  Media Timeline track
      7.1.  Media Timeline track payload
      7.2.  Media Timeline Catalog requirements
@@ -316,83 +317,83 @@ Table of Contents
 
    Table 1 provides an overview of all fields defined by this document.
 
-        +=======================+===============+================+
-        | Field                 | Name          | Definition     |
-        +=======================+===============+================+
-        | MSF version           | version       | Section 5.1.1  |
-        +-----------------------+---------------+----------------+
-        | Delta update          | deltaUpdate   | Section 5.1.2  |
-        +-----------------------+---------------+----------------+
-        | Add tracks            | addTracks     | Section 5.1.3  |
-        +-----------------------+---------------+----------------+
-        | Remove tracks         | removeTracks  | Section 5.1.4  |
-        +-----------------------+---------------+----------------+
-        | Clone tracks          | cloneTracks   | Section 5.1.5  |
-        +-----------------------+---------------+----------------+
-        | Generated at          | generatedAt   | Section 5.1.6  |
-        +-----------------------+---------------+----------------+
-        | Is Complete           | isComplete    | Section 5.1.7  |
-        +-----------------------+---------------+----------------+
-        | Tracks                | tracks        | Section 5.1.8  |
-        +-----------------------+---------------+----------------+
-        | Track namespace       | namespace     | Section 5.1.10 |
-        +-----------------------+---------------+----------------+
-        | Track name            | name          | Section 5.1.11 |
-        +-----------------------+---------------+----------------+
-        | Packaging             | packaging     | Section 5.1.12 |
-        +-----------------------+---------------+----------------+
-        | Event timeline type   | eventType     | Section 5.1.13 |
-        +-----------------------+---------------+----------------+
-        | Is Live               | isLive        | Section 5.1.15 |
-        +-----------------------+---------------+----------------+
-        | Target latency        | targetLatency | Section 5.1.16 |
-        +-----------------------+---------------+----------------+
-        | Track role            | role          | Section 5.1.14 |
-        +-----------------------+---------------+----------------+
-        | Track label           | label         | Section 5.1.17 |
-        +-----------------------+---------------+----------------+
-        | Render group          | renderGroup   | Section 5.1.18 |
-        +-----------------------+---------------+----------------+
-        | Alternate group       | altGroup      | Section 5.1.19 |
-        +-----------------------+---------------+----------------+
-        | Initialization data   | initData      | Section 5.1.20 |
-        +-----------------------+---------------+----------------+
-        | Dependencies          | depends       | Section 5.1.21 |
-        +-----------------------+---------------+----------------+
-        | Temporal ID           | temporalId    | Section 5.1.22 |
-        +-----------------------+---------------+----------------+
-        | Spatial ID            | spatialId     | Section 5.1.23 |
-        +-----------------------+---------------+----------------+
-        | Codec                 | codec         | Section 5.1.24 |
-        +-----------------------+---------------+----------------+
-        | Mime type             | mimeType      | Section 5.1.25 |
-        +-----------------------+---------------+----------------+
-        | Framerate             | framerate     | Section 5.1.26 |
-        +-----------------------+---------------+----------------+
-        | Timescale             | timescale     | Section 5.1.27 |
-        +-----------------------+---------------+----------------+
-        | Bitrate               | bitrate       | Section 5.1.28 |
-        +-----------------------+---------------+----------------+
-        | Width                 | width         | Section 5.1.29 |
-        +-----------------------+---------------+----------------+
-        | Height                | height        | Section 5.1.30 |
-        +-----------------------+---------------+----------------+
-        | Audio sample rate     | samplerate    | Section 5.1.31 |
-        +-----------------------+---------------+----------------+
-        | Channel configuration | channelConfig | Section 5.1.32 |
-        +-----------------------+---------------+----------------+
-        | Display width         | displayWidth  | Section 5.1.33 |
-        +-----------------------+---------------+----------------+
-        | Display height        | displayHeight | Section 5.1.34 |
-        +-----------------------+---------------+----------------+
-        | Language              | lang          | Section 5.1.35 |
-        +-----------------------+---------------+----------------+
-        | Parent name           | parentName    | Section 5.1.36 |
-        +-----------------------+---------------+----------------+
-        | Track duration        | trackDuration | Section 5.1.37 |
-        +-----------------------+---------------+----------------+
-        | Track spacing         | trackSpacing  | Section 5.1.38 |
-        +-----------------------+---------------+----------------+
+       +=======================+=================+================+
+       | Field                 | Name            | Definition     |
+       +=======================+=================+================+
+       | MSF version           | version         | Section 5.1.1  |
+       +-----------------------+-----------------+----------------+
+       | Delta update          | deltaUpdate     | Section 5.1.2  |
+       +-----------------------+-----------------+----------------+
+       | Add tracks            | addTracks       | Section 5.1.3  |
+       +-----------------------+-----------------+----------------+
+       | Remove tracks         | removeTracks    | Section 5.1.4  |
+       +-----------------------+-----------------+----------------+
+       | Clone tracks          | cloneTracks     | Section 5.1.5  |
+       +-----------------------+-----------------+----------------+
+       | Generated at          | generatedAt     | Section 5.1.6  |
+       +-----------------------+-----------------+----------------+
+       | Is Complete           | isComplete      | Section 5.1.7  |
+       +-----------------------+-----------------+----------------+
+       | Tracks                | tracks          | Section 5.1.8  |
+       +-----------------------+-----------------+----------------+
+       | Track namespace       | namespace       | Section 5.1.10 |
+       +-----------------------+-----------------+----------------+
+       | Track name            | name            | Section 5.1.11 |
+       +-----------------------+-----------------+----------------+
+       | Packaging             | packaging       | Section 5.1.12 |
+       +-----------------------+-----------------+----------------+
+       | Event timeline type   | eventType       | Section 5.1.13 |
+       +-----------------------+-----------------+----------------+
+       | Is Live               | isLive          | Section 5.1.15 |
+       +-----------------------+-----------------+----------------+
+       | Target latency        | targetLatency   | Section 5.1.16 |
+       +-----------------------+-----------------+----------------+
+       | Track role            | role            | Section 5.1.14 |
+       +-----------------------+-----------------+----------------+
+       | Track label           | label           | Section 5.1.17 |
+       +-----------------------+-----------------+----------------+
+       | Render group          | renderGroup     | Section 5.1.18 |
+       +-----------------------+-----------------+----------------+
+       | Alternate group       | altGroup        | Section 5.1.19 |
+       +-----------------------+-----------------+----------------+
+       | Initialization data   | initData        | Section 5.1.20 |
+       +-----------------------+-----------------+----------------+
+       | Dependencies          | depends         | Section 5.1.21 |
+       +-----------------------+-----------------+----------------+
+       | Temporal ID           | temporalId      | Section 5.1.22 |
+       +-----------------------+-----------------+----------------+
+       | Spatial ID            | spatialId       | Section 5.1.23 |
+       +-----------------------+-----------------+----------------+
+       | Codec                 | codec           | Section 5.1.24 |
+       +-----------------------+-----------------+----------------+
+       | Mime type             | mimeType        | Section 5.1.25 |
+       +-----------------------+-----------------+----------------+
+       | Framerate             | framerate       | Section 5.1.26 |
+       +-----------------------+-----------------+----------------+
+       | Timescale             | timescale       | Section 5.1.27 |
+       +-----------------------+-----------------+----------------+
+       | Bitrate               | bitrate         | Section 5.1.28 |
+       +-----------------------+-----------------+----------------+
+       | Width                 | width           | Section 5.1.29 |
+       +-----------------------+-----------------+----------------+
+       | Height                | height          | Section 5.1.30 |
+       +-----------------------+-----------------+----------------+
+       | Audio sample rate     | samplerate      | Section 5.1.31 |
+       +-----------------------+-----------------+----------------+
+       | Channel configuration | channelConfig   | Section 5.1.32 |
+       +-----------------------+-----------------+----------------+
+       | Display width         | displayWidth    | Section 5.1.33 |
+       +-----------------------+-----------------+----------------+
+       | Display height        | displayHeight   | Section 5.1.34 |
+       +-----------------------+-----------------+----------------+
+       | Language              | lang            | Section 5.1.35 |
+       +-----------------------+-----------------+----------------+
+       | Parent name           | parentName      | Section 5.1.36 |
+       +-----------------------+-----------------+----------------+
+       | Track duration        | trackDuration   | Section 5.1.37 |
+       +-----------------------+-----------------+----------------+
+       | Keyframe spacing      | keyframeSpacing | Section 5.1.38 |
+       +-----------------------+-----------------+----------------+
 
                                  Table 1
 
@@ -766,12 +767,19 @@ Table of Contents
    field MUST NOT be included if the isLive Section 5.1.15 field value
    is true.
 
-5.1.38.  Track spacing
+5.1.38.  Keyframe spacing
 
    Location: T Required: Optional JSON Type: Number
 
-   A number defining the keyframe spacing interval for the track,
-   expressed as the number of objects per keyframe interval.
+   A number defining the keyframe interval for the track, expressed as
+   the number of groups between keyframes.  A value of 1 means every
+   group starts with a keyframe, a value of 2 means every second group
+   starts with a keyframe, etc.
+
+   All tracks within the same alternate group that specify a
+   keyframeSpacing value MUST include this field consistently.
+   Publishers MUST ensure that group boundaries align with keyframe
+   positions.
 
    This field is used by subscribers to calculate valid switch points
    when performing adaptive bitrate switching between tracks with
@@ -1254,43 +1262,49 @@ Table of Contents
 
 6.2.  Zapping and Track Switching
 
-   Zapping refers to the act of quickly switching between media streams,
-   such as changing channels in a live broadcast.  When a viewer
-   switches to a new track, playback cannot begin until the decoder
-   receives a keyframe (an independently decodable frame, also known as
-   an I-frame).  Tracks with longer intervals between keyframes (longer
-   GOPs) offer better compression efficiency but increase the delay
-   before playback can start after a switch.
+   Zapping refers to the act of quickly joining a track or switching
+   between tracks, such as changing channels in a live broadcast.  When
+   a viewer joins or switches to a new track, playback cannot begin
+   until the decoder receives a keyframe (an independently decodable
+   frame, also known as an I-frame).  Tracks with longer intervals
+   between keyframes (longer GOPs) offer better compression efficiency
+   but increase the delay before playback can start after a switch.
 
    When multiple tracks in an alternate group have different keyframe
    intervals, subscribers need to determine valid switch points -
    moments when a switch will land on a keyframe in the target track.
-   The trackSpacing Section 5.1.38 field enables subscribers to
+   The keyframeSpacing Section 5.1.38 field enables subscribers to
    calculate these valid switch points.
 
 6.2.1.  Calculating Valid Switch Points
 
-   When switching from track A (with spacing N) to track B (with spacing
-   M), a subscriber can switch at group ID_A in track A if ((ID_A - 1) *
-   N / M) + 1 yields an integer result.  The resulting integer is the
-   target group ID in track B.
+   A valid switch point is a group ID that contains a keyframe in both
+   the source and target tracks.  For a track with keyframeSpacing value
+   S, keyframes occur at group IDs where (groupID - 1) is divisible by
+   S.  That is, keyframes are at groups 1, 1+S, 1+2S, 1+3S, etc.
+
+   When switching between track A (with keyframeSpacing N) and track B
+   (with keyframeSpacing M), valid switch points occur at group IDs
+   where (groupID - 1) is divisible by both N and M.  This means valid
+   switch points are at groups: 1, 1+LCM(N,M), 1+2*LCM(N,M), etc., where
+   LCM is the least common multiple.
 
    All tracks within the same alternate group that specify a
-   trackSpacing value MUST be time-aligned at object boundaries, not
+   keyframeSpacing value MUST be time-aligned at object boundaries, not
    only at group boundaries.
 
 6.2.2.  Example: Switching Between Tracks with Different GOP Sizes
 
    Consider two video tracks in an alternate group:
 
-   *  Track A (HD): trackSpacing = 1
+   *  Track A (HD): keyframeSpacing = 2 (keyframe every 2 groups)
 
-   *  Track B (SD): trackSpacing = 2 ( twice the number of objects )
+   *  Track B (SD): keyframeSpacing = 4 (keyframe every 4 groups)
 
    The following diagram shows the group structure and valid switch
    points:
 
-   Track A (spacing=1):
+   Track A (keyframeSpacing=2):
      Group:    1     2     3     4     5     6     7     8     9
                |     |     |     |     |     |     |     |     |
               [K]   [P]   [K]   [P]   [K]   [P]   [K]   [P]   [K]
@@ -1299,7 +1313,7 @@ Table of Contents
             keyframe    keyframe   keyframe   keyframe   keyframe
 
 
-   Track B (spacing=2):
+   Track B (keyframeSpacing=4):
      Group:    1     2     3     4     5     6     7     8     9
                |     |     |     |     |     |     |     |     |
               [K]   [P]   [P]   [P]   [K]   [P]   [P]   [P]   [K]
@@ -1308,20 +1322,32 @@ Table of Contents
             keyframe               keyframe               keyframe
 
 
-   Valid switch points (A -> B):
-     - Group 1 in A -> Group 1 in B  ((1-1)*2/4)+1 = 1    (valid)
-     - Group 3 in A -> Group 2 in B  ((3-1)*2/4)+1 = 2    (invalid, B[2] is P-frame)
-     - Group 5 in A -> Group 3 in B  ((5-1)*2/4)+1 = 3    (invalid, B[3] is P-frame)
-     - Group 9 in A -> Group 5 in B  ((9-1)*2/4)+1 = 5    (valid)
+   Valid switch points (A <-> B):
+     LCM(2, 4) = 4, so valid switch points are at groups 1, 5, 9, 13, ...
+
+     - Group 1: keyframe in both A and B (valid switch point)
+     - Group 3: keyframe in A, but P-frame in B (NOT a valid switch point)
+     - Group 5: keyframe in both A and B (valid switch point)
+     - Group 7: keyframe in A, but P-frame in B (NOT a valid switch point)
+     - Group 9: keyframe in both A and B (valid switch point)
 
      K = Keyframe (independently decodable)
      P = Predicted frame (depends on previous keyframe)
 
-   In this example, a subscriber watching Track A can only switch to
-   Track B at groups 1, 5, 9, etc. - points where the target group in
-   Track B contains a keyframe.  Attempting to switch at other points
-   would result in playback delay while waiting for the next keyframe in
-   Track B.
+   In this example, a subscriber can switch between Track A and Track B
+   at groups 1, 5, 9, etc. - points where both tracks contain a
+   keyframe.  These switch points work in both directions (A to B and B
+   to A).  Attempting to switch at other points would result in playback
+   delay while waiting for the next keyframe in the target track.
+
+6.2.3.  Packaging Considerations
+
+   When packaging content with multiple tracks that have dissimilar
+   keyframe intervals, publishers MUST ensure that group boundaries
+   align with keyframe positions in each track.  This alignment is
+   essential for the switching formula to function correctly.  Each
+   track's groups should start at keyframe boundaries according to that
+   track's keyframeSpacing value.
 
 7.  Media Timeline track
 

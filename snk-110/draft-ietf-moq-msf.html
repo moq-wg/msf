@@ -1047,11 +1047,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">MOQT Streaming Format</td>
-<td class="right">February 2026</td>
+<td class="right">March 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Law</td>
-<td class="center">Expires 23 August 2026</td>
+<td class="center">Expires 3 September 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1064,12 +1064,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-moq-msf-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-02-19" class="published">19 February 2026</time>
+<time datetime="2026-03-02" class="published">2 March 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-08-23">23 August 2026</time></dd>
+<dd class="expires"><time datetime="2026-09-03">3 September 2026</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1119,7 +1119,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 23 August 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 3 September 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1289,7 +1289,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
                     <p id="section-toc.1-1.5.2.1.2.37.1"><a href="#section-5.1.37" class="auto internal xref">5.1.37</a>. <a href="#name-track-duration" class="internal xref">Track duration</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.38">
-                    <p id="section-toc.1-1.5.2.1.2.38.1"><a href="#section-5.1.38" class="auto internal xref">5.1.38</a>. <a href="#name-track-spacing" class="internal xref">Track spacing</a></p>
+                    <p id="section-toc.1-1.5.2.1.2.38.1"><a href="#section-5.1.38" class="auto internal xref">5.1.38</a>. <a href="#name-keyframe-spacing" class="internal xref">Keyframe spacing</a></p>
 </li>
                 </ul>
 </li>
@@ -1344,6 +1344,9 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.2.2.2">
                     <p id="section-toc.1-1.6.2.2.2.2.1"><a href="#section-6.2.2" class="auto internal xref">6.2.2</a>.  <a href="#name-example-switching-between-t" class="internal xref">Example: Switching Between Tracks with Different GOP Sizes</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.2.2.3">
+                    <p id="section-toc.1-1.6.2.2.2.3.1"><a href="#section-6.2.3" class="auto internal xref">6.2.3</a>.  <a href="#name-packaging-considerations" class="internal xref">Packaging Considerations</a></p>
 </li>
                 </ul>
 </li>
@@ -1881,10 +1884,10 @@ of field names within the JSON document is not important.<a href="#section-5.1-1
 </td>
             </tr>
             <tr>
-              <td class="text-left" rowspan="1" colspan="1">Track spacing</td>
-              <td class="text-left" rowspan="1" colspan="1">trackSpacing</td>
+              <td class="text-left" rowspan="1" colspan="1">Keyframe spacing</td>
+              <td class="text-left" rowspan="1" colspan="1">keyframeSpacing</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <a href="#trackspacing" class="auto internal xref">Section 5.1.38</a>
+                <a href="#keyframespacing" class="auto internal xref">Section 5.1.38</a>
 </td>
             </tr>
           </tbody>
@@ -2387,17 +2390,21 @@ the standard Tags for Identifying Languages as defined by <span>[<a href="#LANG"
 be included if the isLive <a href="#islive" class="auto internal xref">Section 5.1.15</a> field value is true.<a href="#section-5.1.37-2" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="trackspacing">
+<div id="keyframespacing">
 <section id="section-5.1.38">
-          <h4 id="name-track-spacing">
-<a href="#section-5.1.38" class="section-number selfRef">5.1.38. </a><a href="#name-track-spacing" class="section-name selfRef">Track spacing</a>
+          <h4 id="name-keyframe-spacing">
+<a href="#section-5.1.38" class="section-number selfRef">5.1.38. </a><a href="#name-keyframe-spacing" class="section-name selfRef">Keyframe spacing</a>
           </h4>
 <p id="section-5.1.38-1">Location: T    Required: Optional   JSON Type: Number<a href="#section-5.1.38-1" class="pilcrow">¶</a></p>
-<p id="section-5.1.38-2">A number defining the keyframe spacing interval for the track, expressed as the
-number of objects per keyframe interval.<a href="#section-5.1.38-2" class="pilcrow">¶</a></p>
-<p id="section-5.1.38-3">This field is used by subscribers to calculate valid switch points when
+<p id="section-5.1.38-2">A number defining the keyframe interval for the track, expressed as the number
+of groups between keyframes. A value of 1 means every group starts with a
+keyframe, a value of 2 means every second group starts with a keyframe, etc.<a href="#section-5.1.38-2" class="pilcrow">¶</a></p>
+<p id="section-5.1.38-3">All tracks within the same alternate group that specify a keyframeSpacing value
+<span class="bcp14">MUST</span> include this field consistently. Publishers <span class="bcp14">MUST</span> ensure that group
+boundaries align with keyframe positions.<a href="#section-5.1.38-3" class="pilcrow">¶</a></p>
+<p id="section-5.1.38-4">This field is used by subscribers to calculate valid switch points when
 performing adaptive bitrate switching between tracks with different keyframe
-intervals. See <a href="#zapping" class="auto internal xref">Section 6.2</a> for details on how to use this field.<a href="#section-5.1.38-3" class="pilcrow">¶</a></p>
+intervals. See <a href="#zapping" class="auto internal xref">Section 6.2</a> for details on how to use this field.<a href="#section-5.1.38-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2960,26 +2967,31 @@ in Group IDs using the MOQT Prior Group ID Gap Extension header.<a href="#sectio
         <h3 id="name-zapping-and-track-switching">
 <a href="#section-6.2" class="section-number selfRef">6.2. </a><a href="#name-zapping-and-track-switching" class="section-name selfRef">Zapping and Track Switching</a>
         </h3>
-<p id="section-6.2-1">Zapping refers to the act of quickly switching between media streams, such as
-changing channels in a live broadcast. When a viewer switches to a new track,
-playback cannot begin until the decoder receives a keyframe (an independently
-decodable frame, also known as an I-frame). Tracks with longer intervals between
-keyframes (longer GOPs) offer better compression efficiency but increase the
-delay before playback can start after a switch.<a href="#section-6.2-1" class="pilcrow">¶</a></p>
+<p id="section-6.2-1">Zapping refers to the act of quickly joining a track or switching between
+tracks, such as changing channels in a live broadcast. When a viewer joins or
+switches to a new track, playback cannot begin until the decoder receives a
+keyframe (an independently decodable frame, also known as an I-frame). Tracks
+with longer intervals between keyframes (longer GOPs) offer better compression
+efficiency but increase the delay before playback can start after a switch.<a href="#section-6.2-1" class="pilcrow">¶</a></p>
 <p id="section-6.2-2">When multiple tracks in an alternate group have different keyframe intervals,
 subscribers need to determine valid switch points - moments when a switch will
-land on a keyframe in the target track. The trackSpacing <a href="#trackspacing" class="auto internal xref">Section 5.1.38</a> field
-enables subscribers to calculate these valid switch points.<a href="#section-6.2-2" class="pilcrow">¶</a></p>
+land on a keyframe in the target track. The keyframeSpacing <a href="#keyframespacing" class="auto internal xref">Section 5.1.38</a>
+field enables subscribers to calculate these valid switch points.<a href="#section-6.2-2" class="pilcrow">¶</a></p>
 <div id="calculating-valid-switch-points">
 <section id="section-6.2.1">
           <h4 id="name-calculating-valid-switch-po">
 <a href="#section-6.2.1" class="section-number selfRef">6.2.1. </a><a href="#name-calculating-valid-switch-po" class="section-name selfRef">Calculating Valid Switch Points</a>
           </h4>
-<p id="section-6.2.1-1">When switching from track A (with spacing N) to track B (with spacing M), a
-subscriber can switch at group ID_A in track A if ((ID_A - 1) * N / M) + 1 yields
-an integer result. The resulting integer is the target group ID in track B.<a href="#section-6.2.1-1" class="pilcrow">¶</a></p>
-<p id="section-6.2.1-2">All tracks within the same alternate group that specify a trackSpacing value
-<span class="bcp14">MUST</span> be time-aligned at object boundaries, not only at group boundaries.<a href="#section-6.2.1-2" class="pilcrow">¶</a></p>
+<p id="section-6.2.1-1">A valid switch point is a group ID that contains a keyframe in both the source
+and target tracks. For a track with keyframeSpacing value S, keyframes occur at
+group IDs where (groupID - 1) is divisible by S. That is, keyframes are at
+groups 1, 1+S, 1+2S, 1+3S, etc.<a href="#section-6.2.1-1" class="pilcrow">¶</a></p>
+<p id="section-6.2.1-2">When switching between track A (with keyframeSpacing N) and track B (with
+keyframeSpacing M), valid switch points occur at group IDs where (groupID - 1)
+is divisible by both N and M. This means valid switch points are at groups:
+1, 1+LCM(N,M), 1+2*LCM(N,M), etc., where LCM is the least common multiple.<a href="#section-6.2.1-2" class="pilcrow">¶</a></p>
+<p id="section-6.2.1-3">All tracks within the same alternate group that specify a keyframeSpacing value
+<span class="bcp14">MUST</span> be time-aligned at object boundaries, not only at group boundaries.<a href="#section-6.2.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="example-switching-between-tracks-with-different-gop-sizes">
@@ -2990,16 +3002,16 @@ an integer result. The resulting integer is the target group ID in track B.<a hr
 <p id="section-6.2.2-1">Consider two video tracks in an alternate group:<a href="#section-6.2.2-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-6.2.2-2.1">
-              <p id="section-6.2.2-2.1.1">Track A (HD): trackSpacing = 1<a href="#section-6.2.2-2.1.1" class="pilcrow">¶</a></p>
+              <p id="section-6.2.2-2.1.1">Track A (HD): keyframeSpacing = 2 (keyframe every 2 groups)<a href="#section-6.2.2-2.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-6.2.2-2.2">
-              <p id="section-6.2.2-2.2.1">Track B (SD): trackSpacing = 2 ( twice the number of objects )<a href="#section-6.2.2-2.2.1" class="pilcrow">¶</a></p>
+              <p id="section-6.2.2-2.2.1">Track B (SD): keyframeSpacing = 4 (keyframe every 4 groups)<a href="#section-6.2.2-2.2.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 <p id="section-6.2.2-3">The following diagram shows the group structure and valid switch points:<a href="#section-6.2.2-3" class="pilcrow">¶</a></p>
 <div class="lang-ascii-figure sourcecode" id="section-6.2.2-4">
 <pre>
-Track A (spacing=1):
+Track A (keyframeSpacing=2):
   Group:    1     2     3     4     5     6     7     8     9
             |     |     |     |     |     |     |     |     |
            [K]   [P]   [K]   [P]   [K]   [P]   [K]   [P]   [K]
@@ -3008,7 +3020,7 @@ Track A (spacing=1):
          keyframe    keyframe   keyframe   keyframe   keyframe
 
 
-Track B (spacing=2):
+Track B (keyframeSpacing=4):
   Group:    1     2     3     4     5     6     7     8     9
             |     |     |     |     |     |     |     |     |
            [K]   [P]   [P]   [P]   [K]   [P]   [P]   [P]   [K]
@@ -3017,20 +3029,36 @@ Track B (spacing=2):
          keyframe               keyframe               keyframe
 
 
-Valid switch points (A -&gt; B):
-  - Group 1 in A -&gt; Group 1 in B  ((1-1)*2/4)+1 = 1    (valid)
-  - Group 3 in A -&gt; Group 2 in B  ((3-1)*2/4)+1 = 2    (invalid, B[2] is P-frame)
-  - Group 5 in A -&gt; Group 3 in B  ((5-1)*2/4)+1 = 3    (invalid, B[3] is P-frame)
-  - Group 9 in A -&gt; Group 5 in B  ((9-1)*2/4)+1 = 5    (valid)
+Valid switch points (A &lt;-&gt; B):
+  LCM(2, 4) = 4, so valid switch points are at groups 1, 5, 9, 13, ...
+
+  - Group 1: keyframe in both A and B (valid switch point)
+  - Group 3: keyframe in A, but P-frame in B (NOT a valid switch point)
+  - Group 5: keyframe in both A and B (valid switch point)
+  - Group 7: keyframe in A, but P-frame in B (NOT a valid switch point)
+  - Group 9: keyframe in both A and B (valid switch point)
 
   K = Keyframe (independently decodable)
   P = Predicted frame (depends on previous keyframe)
 </pre><a href="#section-6.2.2-4" class="pilcrow">¶</a>
 </div>
-<p id="section-6.2.2-5">In this example, a subscriber watching Track A can only switch to Track B at
-groups 1, 5, 9, etc. - points where the target group in Track B contains a
-keyframe. Attempting to switch at other points would result in playback delay
-while waiting for the next keyframe in Track B.<a href="#section-6.2.2-5" class="pilcrow">¶</a></p>
+<p id="section-6.2.2-5">In this example, a subscriber can switch between Track A and Track B at groups
+1, 5, 9, etc. - points where both tracks contain a keyframe. These switch points
+work in both directions (A to B and B to A). Attempting to switch at other
+points would result in playback delay while waiting for the next keyframe in the
+target track.<a href="#section-6.2.2-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="packaging-considerations">
+<section id="section-6.2.3">
+          <h4 id="name-packaging-considerations">
+<a href="#section-6.2.3" class="section-number selfRef">6.2.3. </a><a href="#name-packaging-considerations" class="section-name selfRef">Packaging Considerations</a>
+          </h4>
+<p id="section-6.2.3-1">When packaging content with multiple tracks that have dissimilar keyframe
+intervals, publishers <span class="bcp14">MUST</span> ensure that group boundaries align with keyframe
+positions in each track. This alignment is essential for the switching formula
+to function correctly. Each track's groups should start at keyframe boundaries
+according to that track's keyframeSpacing value.<a href="#section-6.2.3-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
