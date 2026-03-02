@@ -1179,14 +1179,14 @@ This example shows drone GPS coordinates synched with the start of each Group.
 An MSF URL identifies a MOQT session and an optional sub-resource within that session.
 It inherits the MOQT URI scheme defined by MOQT {{MoQTransport}} and extends it to
 add a fragment definition, which encodes the namespace and name of the track along
-with optional key-value attributes. 
+with optional key-value attributes.
 
 "moqt" [ "+q" / "+wt" ] "://" authority path-abempty [ "?" query ] [ "#" msf-fragment ]
 
 The MOQT specification carries the normative definition of these components,
 along with processing instructions. They are repeated here for clarity:
 
-* Scheme: This case-insensitive scheme defines the underlying transport. 
+* Scheme: This case-insensitive scheme defines the underlying transport.
     * moqt: the client may use either a WebTransport or native QUIC connection.
     * moqt-q: the client MUST use a native QUIC connection.
     * moqt+wt: the client MUST use a WebTransport connection.
@@ -1202,13 +1202,13 @@ The msf-fragment element is defined by the following ABNF:
 
 ~~~ abnf
 msf-fragment      = track-identifier [ "&" parameter-list ]
-track-identifier  = 1*( pchar-no-amp / "/" / "?" ) 
+track-identifier  = 1*( pchar-no-amp / "/" / "?" )
                     ; MSF namespace-name string; MUST NOT contain '&'
 parameter-list    = parameter *( "&" parameter )
 parameter         = param-name "=" param-value
 param-name        = 1*( pchar-no-amp / "/" / "?" )
 param-value       = *( pchar-no-amp / "/" / "?" )
-pchar-no-amp      = unreserved / pct-encoded / "!" / "$" / "'" / "(" / ")" 
+pchar-no-amp      = unreserved / pct-encoded / "!" / "$" / "'" / "(" / ")"
                     / "*" / "+" / "," / ";" / "=" / ":" / "@"
 ~~~
 
@@ -1244,8 +1244,11 @@ case-sensitive.
   and Object ID separated by a "." dot. End Location may be omitted to indicate an
   open range. End Object ID may be ommited, indicating the whole end group is included in
   the range. The "." dot and "-" dash separators MUST be omitted when the second
-  value is ommited. 
+  value is ommited.
 * c4m - a base64 encoded token, as defined by {{C4M}}.
+
+If multiple ranges are specified within the same URL, the client shall process
+the union of those ranges.
 
 Example fragment parameters:
 
