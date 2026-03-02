@@ -1298,15 +1298,17 @@ Note: This encoding ensures that the structural delimiters (- and --) remain una
   moqt://example.com/relay-app/relayID#customerID-broadcastID--catalog&location-range=34-64
 
 * URL pointing at a catalog and supplying a token for the client:
-  moqt://example.com/relay-app/relayID#customerID-broadcastID--catalog&c4m=gqh
-  kYWxnIGVzaGFyqGR0eXBNhdZ9hdWQAY3VybGZlbWlzcwZleWV2aW5uZWlhdGVwQWNyZW5lYnJmcmV
-  qMTIzNDU2NzgwMHZpc3VlZF9hdD0xNzMwNDM
+  moqt://example.com/relay-app/relayID#customerID-broadcastID--
+  catalog&c4m=gqhkYWxnIGVzaGFyqGR0eXBNhdZ9hdWQAY3VybGZlbWlzcwZl
+  eWV2aW5uZWlhdGVwQWNyZW5lYnJmcmVqMTIzNDU2NzgwMHZpc3VlZF9hdD0xN
+  zMwNDM
 
 * URL pointing at a catalog and supplying a token for the client along with a separate token
   for the server:
-  moqt://example.com/relay-app/relayID?token=HTRCII74GHFT@JHBCVSW56HKKneH2Dbyq6NHB
-  I2#customerID-broadcastID--catalog&c4m=gqhkYWxnIGVzaGFyqGR0eXBNhdZ9hdWQAY3VybGZl
-  bWlzcwZleWV2aW5uZWlhdGVwQWNyZW5lYnJmcmVqMTIzNDU2NzgwMHZpc3VlZF9hdD0xNzMwNDM
+  moqt://example.com/relay-app/relayID?token=HTRCII74GHFT@JHBCV
+  SW56HKKneH2Dbyq6NHBI2#customerID-broadcastID--catalog&c4m=gqh
+  kYWxnIGVzaGFyqGR0eXBNhdZ9hdWQAY3VybGZlbWlzcwZleWV2aW5uZWlhdGV
+  wQWNyZW5lYnJmcmVqMTIzNDU2NzgwMHZpc3VlZF9hdD0xNzMwNDM
 
 ## Initiating a broadcast
 An MSF publisher MUST publish a catalog track object before publishing any media
