@@ -1047,11 +1047,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">MOQT Streaming Format</td>
-<td class="right">February 2026</td>
+<td class="right">March 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Law</td>
-<td class="center">Expires 31 August 2026</td>
+<td class="center">Expires 3 September 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1064,12 +1064,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-moq-msf-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-02-27" class="published">27 February 2026</time>
+<time datetime="2026-03-02" class="published">2 March 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-08-31">31 August 2026</time></dd>
+<dd class="expires"><time datetime="2026-09-03">3 September 2026</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1119,7 +1119,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 31 August 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 3 September 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1589,9 +1589,14 @@ that consumers may use for selection and any relevant initialization data.<a hre
 <p id="section-5-2">The catalog track <span class="bcp14">MUST</span> have a case-sensitive Track Name of "catalog".<a href="#section-5-2" class="pilcrow">¶</a></p>
 <p id="section-5-3">A catalog object <span class="bcp14">MAY</span> be independent of other catalog objects or it <span class="bcp14">MAY</span> represent
 a delta update of a prior catalog object. The first catalog object published
-within a new group <span class="bcp14">MUST</span> be independent.  A catalog object <span class="bcp14">SHOULD</span> be
-published only when the availability of tracks changes.<a href="#section-5-3" class="pilcrow">¶</a></p>
-<p id="section-5-4">Each catalog update <span class="bcp14">MUST</span> be mapped to an MOQT Object.<a href="#section-5-4" class="pilcrow">¶</a></p>
+within a new group <span class="bcp14">MUST</span> be independent and <span class="bcp14">MUST</span> provide a complete catalog that does not require any prior catalog object for interpretation. Any catalog objects that precede the first object of the latest group <span class="bcp14">MUST</span> be
+ignored.<a href="#section-5-3" class="pilcrow">¶</a></p>
+<p id="section-5-4">A catalog object <span class="bcp14">SHOULD</span> be
+published only when the availability of tracks changes.<a href="#section-5-4" class="pilcrow">¶</a></p>
+<p id="section-5-5">Each catalog update <span class="bcp14">MUST</span> be mapped to an MOQT Object.<a href="#section-5-5" class="pilcrow">¶</a></p>
+<p id="section-5-6">Subscribers accessing the catalog <span class="bcp14">MUST</span> use SUBSCRIBE with a Joining FETCH
+(offset = 0) in order to obtain the latest complete catalog along with all subsequent catalog objects, including
+delta updates, that follow.<a href="#section-5-6" class="pilcrow">¶</a></p>
 <div id="catalog-fields">
 <section id="section-5.1">
         <h3 id="name-catalog-fields">
@@ -2416,6 +2421,9 @@ in the cloning Object override inherited values.<a href="#section-5.2-4.4.1" cla
 which <span class="bcp14">MUST NOT</span> be modified after being declared. To modify any attribute, a new
 track with a different Namespace|Name tuple is created by Adding or Cloning and then
 the old track is removed.<a href="#section-5.2-4.5.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.2-4.6">
+            <p id="section-5.2-4.6.1">Producers that publish frequent delta updates <span class="bcp14">SHOULD</span> periodically publish a new independent catalog in a new MOQT Group in order to bound the amount of delta processing required for joining subscribers.<a href="#section-5.2-4.6.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
