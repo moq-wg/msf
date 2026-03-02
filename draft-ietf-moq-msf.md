@@ -171,10 +171,7 @@ The catalog track MUST have a case-sensitive Track Name of "catalog".
 
 A catalog object MAY be independent of other catalog objects or it MAY represent
 a delta update of a prior catalog object. The first catalog object published
-within a new group MUST be independent and MUST provide a complete catalog that
-does not require any prior catalog object for interpretation. This object MAY
-aggregate the effects of prior delta updates and MAY start a new catalog
-instance. Any catalog objects that precede the first object of the latest group MUST be
+within a new group MUST be independent and MUST provide a complete catalog that does not require any prior catalog object for interpretation. Any catalog objects that precede the first object of the latest group MUST be
 ignored.
 
 A catalog object SHOULD be
