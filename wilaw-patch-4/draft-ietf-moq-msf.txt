@@ -1588,15 +1588,16 @@ Table of Contents
 
    *  URL pointing at a catalog and supplying a token for the client:
       moqt://example.com/relay-app/relayID#customerID-broadcastID--
-      catalog&c4m=gqh kYWxnIGVzaGFyqGR0eXBNhdZ9hdWQAY3VybGZlbWlzcwZleWV2
-      aW5uZWlhdGVwQWNyZW5lYnJmcmV qMTIzNDU2NzgwMHZpc3VlZF9hdD0xNzMwNDM
+      catalog&c4m=gqhkYWxnIGVzaGFyqGR0eXBNhdZ9hdWQAY3VybGZlbWlzcwZl
+      eWV2aW5uZWlhdGVwQWNyZW5lYnJmcmVqMTIzNDU2NzgwMHZpc3VlZF9hdD0xN
+      zMwNDM
 
    *  URL pointing at a catalog and supplying a token for the client
       along with a separate token for the server: moqt://example.com/
-      relay-app/relayID?token=HTRCII74GHFT@JHBCVSW56HKKneH2Dbyq6NHB
-      I2#customerID-broadcastID--
-      catalog&c4m=gqhkYWxnIGVzaGFyqGR0eXBNhdZ9hdWQAY3VybGZl bWlzcwZleWV2
-      aW5uZWlhdGVwQWNyZW5lYnJmcmVqMTIzNDU2NzgwMHZpc3VlZF9hdD0xNzMwNDM
+      relay-app/relayID?token=HTRCII74GHFT@JHBCV
+      SW56HKKneH2Dbyq6NHBI2#customerID-broadcastID--catalog&c4m=gqh
+      kYWxnIGVzaGFyqGR0eXBNhdZ9hdWQAY3VybGZlbWlzcwZleWV2aW5uZWlhdGV
+      wQWNyZW5lYnJmcmVqMTIzNDU2NzgwMHZpc3VlZF9hdD0xNzMwNDM
 
 9.2.  Initiating a broadcast
 
