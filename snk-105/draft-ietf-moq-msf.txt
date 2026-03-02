@@ -4,8 +4,8 @@
 
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
-Intended status: Informational                          27 February 2026
-Expires: 31 August 2026
+Intended status: Informational                              2 March 2026
+Expires: 3 September 2026
 
 
                          MOQT Streaming Format
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 31 August 2026.
+   This Internet-Draft will expire on 3 September 2026.
 
 Copyright Notice
 
@@ -1339,7 +1339,7 @@ Table of Contents
       Number.  For VOD assets, or if the wallclock time is not known,
       the value SHOULD be 0.
 
-   An example media timeline using explicit entries is shown below:
+   An example media timeline is shown below:
 
    [
      [0, [0,0], 1759924158381],
