@@ -4,8 +4,8 @@
 
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
-Intended status: Informational                          19 February 2026
-Expires: 23 August 2026
+Intended status: Informational                              2 March 2026
+Expires: 3 September 2026
 
 
                          MOQT Streaming Format
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 23 August 2026.
+   This Internet-Draft will expire on 3 September 2026.
 
 Copyright Notice
 
@@ -116,7 +116,6 @@ Table of Contents
      5.3.  Variable Substitution
        5.3.1.  Variable Syntax
        5.3.2.  Variable Resolution
-       5.3.3.  Variables
      5.4.  Catalog Examples
        5.4.1.  Time-aligned Audio/Video Tracks with single quality
        5.4.2.  Simulcast video tracks - 3 alternate qualities along
@@ -390,8 +389,6 @@ Table of Contents
         | Parent name           | parentName    | Section 5.1.36 |
         +-----------------------+---------------+----------------+
         | Track duration        | trackDuration | Section 5.1.37 |
-        +-----------------------+---------------+----------------+
-        | Variables             | variables     | Section 5.3.3  |
         +-----------------------+---------------+----------------+
 
                                  Table 1
@@ -828,28 +825,29 @@ Table of Contents
    except as part of a variable reference.  Literal percent characters
    are not permitted.
 
+   Variable values MUST consist only of alphanumeric characters,
+   hyphens, underscores, and the at sign (@).  Special characters
+   including commas, semicolons, quotes, ampersands, and other
+   punctuation MUST NOT appear in variable values.  This restriction
+   prevents injection attacks and ensures safe substitution into catalog
+   field values.
+
 5.3.2.  Variable Resolution
 
-   Variables are resolved from the URI used to access the catalog.  The
-   URI components used for variable resolution are:
+   Variables are resolved from the fragment identifier of the URI used
+   to access the catalog.  The fragment identifier is the portion
+   following the # character and is processed entirely client-side,
+   making it suitable for per-viewer customization without affecting
+   server-side caching.
 
-   *  Query parameters - the name and value pairs following the ?
-      character
+   Query parameters (following the ? character) are reserved for server-
+   side processing and MUST NOT be used for variable substitution.
 
-   *  Fragment identifier - the portion following the # character
-
-   When a subscriber requests a catalog using a URI containing query
-   parameters, each parameter name becomes available as a variable.  The
-   variable is replaced with the corresponding parameter value.
-
-5.3.3.  Variables
-
-   Location: R Required: Optional JSON Type: Array
-
-   An array of strings declaring the variable names used within this
-   catalog.  Publishers SHOULD include this field to enable validation
-   and to document the expected variables.  Each string in the array is
-   a variable name without the enclosing percent characters.
+   When a subscriber requests a catalog using a URI containing a
+   fragment identifier, the fragment is parsed as key-value pairs (using
+   & as delimiter and = as separator).  Each key becomes available as a
+   variable name, and the variable is replaced with the corresponding
+   value.
 
 5.4.  Catalog Examples
 
@@ -1263,13 +1261,13 @@ Table of Contents
    personalized advertising and reporting while maintaining
    cacheability.  Given a catalog request URI of:
 
-   https://example.com/relay-app/relayID?token=1234&id=bob&event=xyz
+moqt://relay.example.com/live-sports/catalog#token=1234&id=bob&event=xyz
 
-   The following catalog template:
+   The fragment parameters (token, id, event) are available for variable
+   substitution.  The following catalog template:
 
    {
      "version": 1,
-     "variables": ["id", "token", "event"],
      "tracks": [
        {
          "name": "video",
@@ -1292,7 +1290,6 @@ Table of Contents
 
    {
      "version": 1,
-     "variables": ["id", "token", "event"],
      "tracks": [
        {
          "name": "video",
