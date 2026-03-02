@@ -1100,7 +1100,7 @@ an array of three required items, whose ordinal position defines their type:
   (midnight UTC/GMT) and expressed as a JSON Number. For VOD assets, or if the
   wallclock time is not known, the value SHOULD be 0.
 
-An example media timeline using explicit entries is shown below:
+An example media timeline is shown below:
 
 ~~~json
 [
