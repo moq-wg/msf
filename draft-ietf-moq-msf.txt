@@ -272,8 +272,8 @@ Table of Contents
    MSF Tracks MAY be time-aligned.  Those that are, are subject to the
    following requirements:
 
-   *  Tracks advertised in the catalog as belonging to a common render
-      group MUST be time-aligned.
+   *  Tracks advertised in the catalog as belonging to a common
+      alternate group MUST be time-aligned.
 
    *  The render duration of the first media object of each equally
       numbered MOQT Group, after decoding, MUST have overlapping
@@ -643,9 +643,8 @@ Table of Contents
 
    An integer specifying a group of tracks which are designed to be
    rendered together.  Tracks with the same group number SHOULD be
-   rendered simultaneously, are time-aligned and are designed to
-   accompany one another.  A common example would be tying together
-   audio and video tracks.
+   rendered simultaneously and are designed to accompany one another.  A
+   common example would be tying together audio and video tracks.
 
 5.1.19.  Alternate group
 
