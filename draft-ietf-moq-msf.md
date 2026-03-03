@@ -1130,7 +1130,7 @@ a regular, predictable pattern, a media timeline template MAY be used instead of
 explicit media timeline track. The template approach is best suited for content with
 fixed-duration segments, such as VOD assets or live broadcasts with constant segment
 durations. For content with variable segment durations, the explicit media timeline
-track ({{mediatimelinepayload}}) SHOULD be used instead.
+track ({{mediatimelinepayload}}) MUST be used instead.
 
 ### Template Format
 A media timeline template is expressed as an inline track attribute using the
