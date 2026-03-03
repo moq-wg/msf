@@ -4,8 +4,8 @@
 
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
-Intended status: Informational                              1 March 2026
-Expires: 2 September 2026
+Intended status: Informational                              3 March 2026
+Expires: 4 September 2026
 
 
                          MOQT Streaming Format
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 2 September 2026.
+   This Internet-Draft will expire on 4 September 2026.
 
 Copyright Notice
 
@@ -330,7 +330,7 @@ Table of Contents
 
 5.1.1.  MSF version
 
-   Required: Yes JSON Type: Number Location: Root Catalog (Table 1)
+   Required: Yes JSON Type: Number Location: Root Catalog
 
    Specifies the version of MSF referenced by this catalog.  There is no
    guarantee that future catalog versions are backwards compatible and
@@ -340,7 +340,7 @@ Table of Contents
 
 5.1.2.  Generated at
 
-   Required: Optional JSON Type: Number Location: Root Catalog (Table 1)
+   Required: Optional JSON Type: Number Location: Root Catalog
 
    The wallclock time at which this catalog instance was generated,
    expressed as the number of milliseconds that have elapsed since
@@ -350,7 +350,6 @@ Table of Contents
 5.1.3.  Is Complete
 
    Required: Optional JSON Type: Boolean Location: Root Catalog
-   (Table 1)
 
    Issued once a previously live broadcast is complete.  This is a
    commitment that all tracks are complete, no new tracks will be added
@@ -360,7 +359,7 @@ Table of Contents
 
 5.1.4.  Tracks
 
-   Required: Yes JSON Type: Array Location: Root Catalog (Table 1)
+   Required: Yes JSON Type: Array Location: Root Catalog
 
    An array of track objects Section 5.3.1.
 
@@ -386,7 +385,6 @@ Table of Contents
 5.2.1.  Delta update
 
    Required: Optional JSON Type: Boolean Location: Delta Update
-   (Table 2)
 
    A Boolean that if true indicates that this catalog object represents
    a delta (or partial) update.  A delta update has a restricted set of
@@ -395,14 +393,14 @@ Table of Contents
 
 5.2.2.  Add tracks
 
-   Required: Optional JSON Type: Array Location: Delta Update (Table 2)
+   Required: Optional JSON Type: Array Location: Delta Update
 
    Indicates a delta processing instruction to add new tracks.  The
    value of this field is an Array of track objects Section 5.3.1.
 
 5.2.3.  Remove tracks
 
-   Required: Optional JSON Type: Array Location: Delta Update (Table 2)
+   Required: Optional JSON Type: Array Location: Delta Update
 
    Indicates a delta processing instruction to remove new tracks.  The
    value of this field is an Array of track objects Section 5.3.1.  Each
@@ -412,7 +410,7 @@ Table of Contents
 
 5.2.4.  Clone tracks
 
-   Required: Optional JSON Type: Array Location: Delta Update (Table 2)
+   Required: Optional JSON Type: Array Location: Delta Update
 
    Indicates a delta processing instruction to clone new tracks from
    previously declared tracks.  The value of this field is an Array of
@@ -492,7 +490,7 @@ Table of Contents
 
 5.3.2.  Track namespace
 
-   Required: Optional JSON Type: String Location: Track Object (Table 3)
+   Required: Optional JSON Type: String Location: Track Object
 
    The name space under which the track name is defined.  See section
    2.3 of [MoQTransport].  The track namespace is optional.  If it is
@@ -502,7 +500,7 @@ Table of Contents
 
 5.3.3.  Track name
 
-   Required: Yes JSON Type: String Location: Track Object (Table 3)
+   Required: Yes JSON Type: String Location: Track Object
 
    A string defining the name of the track.  See section 2.3 of
    [MoQTransport].  Within the catalog, track names MUST be unique per
@@ -510,7 +508,7 @@ Table of Contents
 
 5.3.4.  Packaging
 
-   Required: Yes JSON Type: String Location: Track Object (Table 3)
+   Required: Yes JSON Type: String Location: Track Object
 
    A string defining the type of payload encapsulation.  Allowed values
    are strings as defined in Table 4.
@@ -531,7 +529,7 @@ Table of Contents
 
 5.3.5.  Event timeline type
 
-   Required: Optional JSON Type: String Location: Track Object (Table 3)
+   Required: Optional JSON Type: String Location: Track Object
 
    A String defining the type & structure of the data contained within
    the data field of the Event timeline track.  Types are defined by the
@@ -543,7 +541,7 @@ Table of Contents
 
 5.3.6.  Track role
 
-   Required: Optional JSON Type: String Location: Track Object (Table 3)
+   Required: Optional JSON Type: String Location: Track Object
 
    A string defining the role of content carried by the track.
    Specified roles are described in Table 5.  These role values are
@@ -587,7 +585,7 @@ Table of Contents
 
 5.3.7.  Is Live
 
-   Required: Yes JSON Type: Boolean Location: Track Object (Table 3)
+   Required: Yes JSON Type: Boolean Location: Track Object
 
    True if new Objects will be added to the track.  False if no new
    Objects will be added to the track.  A False value is sent under two
@@ -597,7 +595,7 @@ Table of Contents
 
 5.3.8.  Target latency
 
-   Required: Optional JSON Type: Number Location: Track Object (Table 3)
+   Required: Optional JSON Type: Number Location: Track Object
 
    The target latency in milliseconds.  Target latency is defined as the
    offset in wallclock time between when content was encoded and when it
@@ -613,7 +611,7 @@ Table of Contents
 
 5.3.9.  Track label
 
-   Required: Optional JSON Type: String Location: Track Object (Table 3)
+   Required: Optional JSON Type: String Location: Track Object
 
    A string defining a human-readable label for the track.  Examples
    might be "Overhead camera view" or "Deutscher Kommentar".  Note that
@@ -621,7 +619,7 @@ Table of Contents
 
 5.3.10.  Render group
 
-   Required: Optional JSON Type: Number Location: Track Object (Table 3)
+   Required: Optional JSON Type: Number Location: Track Object
 
    An integer specifying a group of tracks which are designed to be
    rendered together.  Tracks with the same group number SHOULD be
@@ -631,7 +629,7 @@ Table of Contents
 
 5.3.11.  Alternate group
 
-   Required: Optional JSON Type: Number Location: Track Object (Table 3)
+   Required: Optional JSON Type: Number Location: Track Object
 
    An integer specifying a group of tracks which are alternate versions
    of one-another.  Alternate tracks represent the same media content,
@@ -643,14 +641,14 @@ Table of Contents
 
 5.3.12.  Initialization data
 
-   Required: Optional JSON Type: String Location: Track Object (Table 3)
+   Required: Optional JSON Type: String Location: Track Object
 
    A string holding Base64 [BASE64] encoded initialization data for the
    track.
 
 5.3.13.  Dependencies
 
-   Required: Optional JSON Type: Array Location: Track Object (Table 3)
+   Required: Optional JSON Type: Array Location: Track Object
 
    Certain tracks may depend on other tracks for decoding.  Dependencies
    holds an array of track names Section 5.3.3 on which the current
@@ -660,7 +658,7 @@ Table of Contents
 
 5.3.14.  Temporal ID
 
-   Required: Optional JSON Type: Number Location: Track Object (Table 3)
+   Required: Optional JSON Type: Number Location: Track Object
 
    A number identifying the temporal layer/sub-layer encoding of the
    track, starting with 0 for the base layer, and increasing by 1 for
@@ -668,7 +666,7 @@ Table of Contents
 
 5.3.15.  Spatial ID
 
-   Required: Optional JSON Type: Number Location: Track Object (Table 3)
+   Required: Optional JSON Type: Number Location: Track Object
 
    A number identifying the spatial layer encoding of the track,
    starting with 0 for the base layer, and increasing by 1 for the next
@@ -676,7 +674,7 @@ Table of Contents
 
 5.3.16.  Codec
 
-   Required: Optional JSON Type: String Location: Track Object (Table 3)
+   Required: Optional JSON Type: String Location: Track Object
 
    A string defining the codec used to encode the track.  For LOC
    packaged content, the string codec registrations are defined in Sect
@@ -684,51 +682,51 @@ Table of Contents
 
 5.3.17.  Mimetype
 
-   Required: Optional JSON Type: String Location: Track Object (Table 3)
+   Required: Optional JSON Type: String Location: Track Object
 
    A string defining the mime type [MIME] of the track.
 
 5.3.18.  Framerate
 
-   Required: Optional JSON Type: Number Location: Track Object (Table 3)
+   Required: Optional JSON Type: Number Location: Track Object
 
    A number defining the video framerate of the track, expressed as
    frames per second.  This property SHOULD only accompany video codecs.
 
 5.3.19.  Timescale
 
-   Required: Optional JSON Type: Number Location: Track Object (Table 3)
+   Required: Optional JSON Type: Number Location: Track Object
 
    The number of time units that pass per second.
 
 5.3.20.  Bitrate
 
-   Required: Optional JSON Type: Number Location: Track Object (Table 3)
+   Required: Optional JSON Type: Number Location: Track Object
 
    A number defining the bitrate of track, expressed in bits per second.
 
 5.3.21.  Width
 
-   Required: Optional JSON Type: Number Location: Track Object (Table 3)
+   Required: Optional JSON Type: Number Location: Track Object
 
    A number expressing the encoded width of the video frames in pixels.
 
 5.3.22.  Height
 
-   Required: Optional JSON Type: Number Location: Track Object (Table 3)
+   Required: Optional JSON Type: Number Location: Track Object
 
    A number expressing the encoded height of the video frames in pixels.
 
 5.3.23.  Audio sample rate
 
-   Required: Optional JSON Type: Number Location: Track Object (Table 3)
+   Required: Optional JSON Type: Number Location: Track Object
 
    The number of audio frame samples per second.  This property SHOULD
    only accompany audio codecs.
 
 5.3.24.  Channel configuration
 
-   Required: Optional JSON Type: String Location: Track Object (Table 3)
+   Required: Optional JSON Type: String Location: Track Object
 
    A string specifying the audio channel configuration.  This property
    SHOULD only accompany audio codecs.  A string is used in order to
@@ -737,21 +735,21 @@ Table of Contents
 
 5.3.25.  Display width
 
-   Required: Optional JSON Type: Number Location: Track Object (Table 3)
+   Required: Optional JSON Type: Number Location: Track Object
 
    A number expressing the intended display width of the track content
    in pixels.
 
 5.3.26.  Display height
 
-   Required: Optional JSON Type: Number Location: Track Object (Table 3)
+   Required: Optional JSON Type: Number Location: Track Object
 
    A number expressing the intended display height of the track content
    in pixels.
 
 5.3.27.  Language
 
-   Required: Optional JSON Type: String Location: Track Object (Table 3)
+   Required: Optional JSON Type: String Location: Track Object
 
    A string defining the dominant language of the track.  The string
    MUST be one of the standard Tags for Identifying Languages as defined
@@ -759,7 +757,7 @@ Table of Contents
 
 5.3.28.  Parent name
 
-   Required: Optional JSON Type: String Location: Track Object (Table 3)
+   Required: Optional JSON Type: String Location: Track Object
 
    A string defining the parent track name Section 5.3.3 to be cloned.
    This field MUST only be included inside a Clone tracks Section 5.2.4
@@ -767,7 +765,7 @@ Table of Contents
 
 5.3.29.  Track duration
 
-   Required: Optional JSON Type: Number Location: Track Object (Table 3)
+   Required: Optional JSON Type: Number Location: Track Object
 
    The duration of the track expressed in integer milliseconds.  This
    field MUST NOT be included if the isLive Section 5.3.7 field value is

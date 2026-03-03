@@ -1051,7 +1051,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Law</td>
-<td class="center">Expires 2 September 2026</td>
+<td class="center">Expires 4 September 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1064,12 +1064,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-moq-msf-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-03-01" class="published">1 March 2026</time>
+<time datetime="2026-03-03" class="published">3 March 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-09-02">2 September 2026</time></dd>
+<dd class="expires"><time datetime="2026-09-04">4 September 2026</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1119,7 +1119,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 2 September 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 4 September 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1659,7 +1659,7 @@ of field names within the JSON document is not important.<a href="#section-5-5" 
           <h4 id="name-msf-version">
 <a href="#section-5.1.1" class="section-number selfRef">5.1.1. </a><a href="#name-msf-version" class="section-name selfRef">MSF version</a>
           </h4>
-<p id="section-5.1.1-1">Required: Yes    JSON Type: Number    Location: Root Catalog (Table 1)<a href="#section-5.1.1-1" class="pilcrow">¶</a></p>
+<p id="section-5.1.1-1">Required: Yes    JSON Type: Number    Location: Root Catalog<a href="#section-5.1.1-1" class="pilcrow">¶</a></p>
 <p id="section-5.1.1-2">Specifies the version of MSF referenced by this catalog. There is no guarantee
 that future catalog versions are backwards compatible and field definitions and
 interpretation may change between versions. A subscriber <span class="bcp14">MUST NOT</span> attempt to
@@ -1671,7 +1671,7 @@ parse a catalog version which it does not understand.<a href="#section-5.1.1-2" 
           <h4 id="name-generated-at">
 <a href="#section-5.1.2" class="section-number selfRef">5.1.2. </a><a href="#name-generated-at" class="section-name selfRef">Generated at</a>
           </h4>
-<p id="section-5.1.2-1">Required: Optional    JSON Type: Number    Location: Root Catalog (Table 1)<a href="#section-5.1.2-1" class="pilcrow">¶</a></p>
+<p id="section-5.1.2-1">Required: Optional    JSON Type: Number    Location: Root Catalog<a href="#section-5.1.2-1" class="pilcrow">¶</a></p>
 <p id="section-5.1.2-2">The wallclock time at which this catalog instance was generated, expressed as the
 number of milliseconds that have elapsed since January 1, 1970 (midnight UTC/GMT).
 This field <span class="bcp14">SHOULD NOT</span> be included if the isLive field is false.<a href="#section-5.1.2-2" class="pilcrow">¶</a></p>
@@ -1682,7 +1682,7 @@ This field <span class="bcp14">SHOULD NOT</span> be included if the isLive field
           <h4 id="name-is-complete">
 <a href="#section-5.1.3" class="section-number selfRef">5.1.3. </a><a href="#name-is-complete" class="section-name selfRef">Is Complete</a>
           </h4>
-<p id="section-5.1.3-1">Required: Optional    JSON Type: Boolean    Location: Root Catalog (Table 1)<a href="#section-5.1.3-1" class="pilcrow">¶</a></p>
+<p id="section-5.1.3-1">Required: Optional    JSON Type: Boolean    Location: Root Catalog<a href="#section-5.1.3-1" class="pilcrow">¶</a></p>
 <p id="section-5.1.3-2">Issued once a previously live broadcast is complete. This is a commitment that all
 tracks are complete, no new tracks will be added and no new content will be
 published. This field <span class="bcp14">MUST NOT</span> be included if it is FALSE. This field <span class="bcp14">MUST NOT</span> be
@@ -1694,7 +1694,7 @@ removed from a catalog once it has been added.<a href="#section-5.1.3-2" class="
           <h4 id="name-tracks">
 <a href="#section-5.1.4" class="section-number selfRef">5.1.4. </a><a href="#name-tracks" class="section-name selfRef">Tracks</a>
           </h4>
-<p id="section-5.1.4-1">Required: Yes    JSON Type: Array    Location: Root Catalog (Table 1)<a href="#section-5.1.4-1" class="pilcrow">¶</a></p>
+<p id="section-5.1.4-1">Required: Yes    JSON Type: Array    Location: Root Catalog<a href="#section-5.1.4-1" class="pilcrow">¶</a></p>
 <p id="section-5.1.4-2">An array of track objects <a href="#trackobject" class="auto internal xref">Section 5.3.1</a>.<a href="#section-5.1.4-2" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1751,7 +1751,7 @@ removed from a catalog once it has been added.<a href="#section-5.1.3-2" class="
           <h4 id="name-delta-update">
 <a href="#section-5.2.1" class="section-number selfRef">5.2.1. </a><a href="#name-delta-update" class="section-name selfRef">Delta update</a>
           </h4>
-<p id="section-5.2.1-1">Required: Optional    JSON Type: Boolean    Location: Delta Update (Table 2)<a href="#section-5.2.1-1" class="pilcrow">¶</a></p>
+<p id="section-5.2.1-1">Required: Optional    JSON Type: Boolean    Location: Delta Update<a href="#section-5.2.1-1" class="pilcrow">¶</a></p>
 <p id="section-5.2.1-2">A Boolean that if true indicates that this catalog object represents a delta
 (or partial) update. A delta update has a restricted set of fields and special
 processing rules - see <a href="#deltaupdates" class="auto internal xref">Section 5.4</a>. This value <span class="bcp14">SHOULD NOT</span> be added to a
@@ -1763,7 +1763,7 @@ catalog if it is false.<a href="#section-5.2.1-2" class="pilcrow">¶</a></p>
           <h4 id="name-add-tracks">
 <a href="#section-5.2.2" class="section-number selfRef">5.2.2. </a><a href="#name-add-tracks" class="section-name selfRef">Add tracks</a>
           </h4>
-<p id="section-5.2.2-1">Required: Optional    JSON Type: Array    Location: Delta Update (Table 2)<a href="#section-5.2.2-1" class="pilcrow">¶</a></p>
+<p id="section-5.2.2-1">Required: Optional    JSON Type: Array    Location: Delta Update<a href="#section-5.2.2-1" class="pilcrow">¶</a></p>
 <p id="section-5.2.2-2">Indicates a delta processing instruction to add new tracks. The value of this
 field is an Array of track objects <a href="#trackobject" class="auto internal xref">Section 5.3.1</a>.<a href="#section-5.2.2-2" class="pilcrow">¶</a></p>
 </section>
@@ -1773,7 +1773,7 @@ field is an Array of track objects <a href="#trackobject" class="auto internal x
           <h4 id="name-remove-tracks">
 <a href="#section-5.2.3" class="section-number selfRef">5.2.3. </a><a href="#name-remove-tracks" class="section-name selfRef">Remove tracks</a>
           </h4>
-<p id="section-5.2.3-1">Required: Optional    JSON Type: Array    Location: Delta Update (Table 2)<a href="#section-5.2.3-1" class="pilcrow">¶</a></p>
+<p id="section-5.2.3-1">Required: Optional    JSON Type: Array    Location: Delta Update<a href="#section-5.2.3-1" class="pilcrow">¶</a></p>
 <p id="section-5.2.3-2">Indicates a delta processing instruction to remove new tracks. The value of this
 field is an Array of track objects <a href="#trackobject" class="auto internal xref">Section 5.3.1</a>. Each track object <span class="bcp14">MUST</span> include
 a Track Name <a href="#trackname" class="auto internal xref">Section 5.3.3</a> field, <span class="bcp14">MAY</span> include a Track Namespace <a href="#tracknamespace" class="auto internal xref">Section 5.3.2</a>
@@ -1785,7 +1785,7 @@ field and <span class="bcp14">MUST NOT</span> hold any other fields.<a href="#se
           <h4 id="name-clone-tracks">
 <a href="#section-5.2.4" class="section-number selfRef">5.2.4. </a><a href="#name-clone-tracks" class="section-name selfRef">Clone tracks</a>
           </h4>
-<p id="section-5.2.4-1">Required: Optional    JSON Type: Array    Location: Delta Update (Table 2)<a href="#section-5.2.4-1" class="pilcrow">¶</a></p>
+<p id="section-5.2.4-1">Required: Optional    JSON Type: Array    Location: Delta Update<a href="#section-5.2.4-1" class="pilcrow">¶</a></p>
 <p id="section-5.2.4-2">Indicates a delta processing instruction to clone new tracks from previously declared
 tracks. The value of this field is an Array of track objects <a href="#trackobject" class="auto internal xref">Section 5.3.1</a>. Each
 track object <span class="bcp14">MUST</span> include a Parent Name <a href="#parentname" class="auto internal xref">Section 5.3.28</a> field.<a href="#section-5.2.4-2" class="pilcrow">¶</a></p>
@@ -2021,7 +2021,7 @@ is specified in Table 3.<a href="#section-5.3.1-1" class="pilcrow">¶</a></p>
           <h4 id="name-track-namespace">
 <a href="#section-5.3.2" class="section-number selfRef">5.3.2. </a><a href="#name-track-namespace" class="section-name selfRef">Track namespace</a>
           </h4>
-<p id="section-5.3.2-1">Required: Optional    JSON Type: String    Location: Track Object (Table 3)<a href="#section-5.3.2-1" class="pilcrow">¶</a></p>
+<p id="section-5.3.2-1">Required: Optional    JSON Type: String    Location: Track Object<a href="#section-5.3.2-1" class="pilcrow">¶</a></p>
 <p id="section-5.3.2-2">The name space under which the track name is defined. See section 2.3 of
 <span>[<a href="#MoQTransport" class="cite xref">MoQTransport</a>]</span>. The track namespace is optional. If it is not declared within
 a track, then each track <span class="bcp14">MUST</span> inherit the namespace of the catalog track. A
@@ -2033,7 +2033,7 @@ namespace declared in a track object overrides any inherited name space.<a href=
           <h4 id="name-track-name">
 <a href="#section-5.3.3" class="section-number selfRef">5.3.3. </a><a href="#name-track-name" class="section-name selfRef">Track name</a>
           </h4>
-<p id="section-5.3.3-1">Required: Yes    JSON Type: String    Location: Track Object (Table 3)<a href="#section-5.3.3-1" class="pilcrow">¶</a></p>
+<p id="section-5.3.3-1">Required: Yes    JSON Type: String    Location: Track Object<a href="#section-5.3.3-1" class="pilcrow">¶</a></p>
 <p id="section-5.3.3-2">A string defining the name of the track. See section 2.3 of <span>[<a href="#MoQTransport" class="cite xref">MoQTransport</a>]</span>.
 Within the catalog, track names <span class="bcp14">MUST</span> be unique per namespace.<a href="#section-5.3.3-2" class="pilcrow">¶</a></p>
 </section>
@@ -2043,7 +2043,7 @@ Within the catalog, track names <span class="bcp14">MUST</span> be unique per na
           <h4 id="name-packaging">
 <a href="#section-5.3.4" class="section-number selfRef">5.3.4. </a><a href="#name-packaging" class="section-name selfRef">Packaging</a>
           </h4>
-<p id="section-5.3.4-1">Required: Yes    JSON Type: String    Location: Track Object (Table 3)<a href="#section-5.3.4-1" class="pilcrow">¶</a></p>
+<p id="section-5.3.4-1">Required: Yes    JSON Type: String    Location: Track Object<a href="#section-5.3.4-1" class="pilcrow">¶</a></p>
 <p id="section-5.3.4-2">A string defining the type of payload encapsulation. Allowed values are strings
 as defined in Table 4.<a href="#section-5.3.4-2" class="pilcrow">¶</a></p>
 <p id="section-5.3.4-3">Table 4: Allowed packaging values<a href="#section-5.3.4-3" class="pilcrow">¶</a></p>
@@ -2083,7 +2083,7 @@ as defined in Table 4.<a href="#section-5.3.4-2" class="pilcrow">¶</a></p>
           <h4 id="name-event-timeline-type">
 <a href="#section-5.3.5" class="section-number selfRef">5.3.5. </a><a href="#name-event-timeline-type" class="section-name selfRef">Event timeline type</a>
           </h4>
-<p id="section-5.3.5-1">Required: Optional    JSON Type: String    Location: Track Object (Table 3)<a href="#section-5.3.5-1" class="pilcrow">¶</a></p>
+<p id="section-5.3.5-1">Required: Optional    JSON Type: String    Location: Track Object<a href="#section-5.3.5-1" class="pilcrow">¶</a></p>
 <p id="section-5.3.5-2">A String defining the type &amp; structure of the data contained within the data
 field of the Event timeline track. Types are defined by the application provider
 and are not centrally registered. Implementers are encouraged to use a unique
@@ -2097,7 +2097,7 @@ This field <span class="bcp14">MUST NOT</span> be used if the packaging value is
           <h4 id="name-track-role">
 <a href="#section-5.3.6" class="section-number selfRef">5.3.6. </a><a href="#name-track-role" class="section-name selfRef">Track role</a>
           </h4>
-<p id="section-5.3.6-1">Required: Optional    JSON Type: String    Location: Track Object (Table 3)<a href="#section-5.3.6-1" class="pilcrow">¶</a></p>
+<p id="section-5.3.6-1">Required: Optional    JSON Type: String    Location: Track Object<a href="#section-5.3.6-1" class="pilcrow">¶</a></p>
 <p id="section-5.3.6-2">A string defining the role of content carried by the track. Specified roles
 are described in Table 5. These role values are case-sensitive.<a href="#section-5.3.6-2" class="pilcrow">¶</a></p>
 <p id="section-5.3.6-3">This role field <span class="bcp14">MAY</span> be used in conjunction with the Mimetype <a href="#mimetype" class="auto internal xref">Section 5.3.17</a> to
@@ -2156,7 +2156,7 @@ fully describe the content of the track.<a href="#section-5.3.6-3" class="pilcro
           <h4 id="name-is-live">
 <a href="#section-5.3.7" class="section-number selfRef">5.3.7. </a><a href="#name-is-live" class="section-name selfRef">Is Live</a>
           </h4>
-<p id="section-5.3.7-1">Required: Yes    JSON Type: Boolean    Location: Track Object (Table 3)<a href="#section-5.3.7-1" class="pilcrow">¶</a></p>
+<p id="section-5.3.7-1">Required: Yes    JSON Type: Boolean    Location: Track Object<a href="#section-5.3.7-1" class="pilcrow">¶</a></p>
 <p id="section-5.3.7-2">True if new Objects will be added to the track.
 False if no new Objects will be added to the track. A False value is sent under two
 possible conditions:
@@ -2170,7 +2170,7 @@ A True value <span class="bcp14">MUST</span> never follow a False value.<a href=
           <h4 id="name-target-latency">
 <a href="#section-5.3.8" class="section-number selfRef">5.3.8. </a><a href="#name-target-latency" class="section-name selfRef">Target latency</a>
           </h4>
-<p id="section-5.3.8-1">Required: Optional    JSON Type: Number    Location: Track Object (Table 3)<a href="#section-5.3.8-1" class="pilcrow">¶</a></p>
+<p id="section-5.3.8-1">Required: Optional    JSON Type: Number    Location: Track Object<a href="#section-5.3.8-1" class="pilcrow">¶</a></p>
 <p id="section-5.3.8-2">The target latency in milliseconds. Target latency is defined as the offset in
 wallclock time between when content was encoded and when it is displayed to the
 end user. For example, if a frame of video is encoded at 10:08:32.638 UTC and the
@@ -2187,7 +2187,7 @@ with which it renders the content.<a href="#section-5.3.8-2" class="pilcrow">¶<
           <h4 id="name-track-label">
 <a href="#section-5.3.9" class="section-number selfRef">5.3.9. </a><a href="#name-track-label" class="section-name selfRef">Track label</a>
           </h4>
-<p id="section-5.3.9-1">Required: Optional    JSON Type: String    Location: Track Object (Table 3)<a href="#section-5.3.9-1" class="pilcrow">¶</a></p>
+<p id="section-5.3.9-1">Required: Optional    JSON Type: String    Location: Track Object<a href="#section-5.3.9-1" class="pilcrow">¶</a></p>
 <p id="section-5.3.9-2">A string defining a human-readable label for the track. Examples might be
 "Overhead camera view" or "Deutscher Kommentar". Note that the <span>[<a href="#JSON" class="cite xref">JSON</a>]</span> spec
 requires UTF-8 support by decoders.<a href="#section-5.3.9-2" class="pilcrow">¶</a></p>
@@ -2198,7 +2198,7 @@ requires UTF-8 support by decoders.<a href="#section-5.3.9-2" class="pilcrow">¶
           <h4 id="name-render-group">
 <a href="#section-5.3.10" class="section-number selfRef">5.3.10. </a><a href="#name-render-group" class="section-name selfRef">Render group</a>
           </h4>
-<p id="section-5.3.10-1">Required: Optional    JSON Type: Number    Location: Track Object (Table 3)<a href="#section-5.3.10-1" class="pilcrow">¶</a></p>
+<p id="section-5.3.10-1">Required: Optional    JSON Type: Number    Location: Track Object<a href="#section-5.3.10-1" class="pilcrow">¶</a></p>
 <p id="section-5.3.10-2">An integer specifying a group of tracks which are designed to be rendered
 together. Tracks with the same group number <span class="bcp14">SHOULD</span> be rendered simultaneously,
 are time-aligned and are designed to accompany one another. A common
@@ -2210,7 +2210,7 @@ example would be tying together audio and video tracks.<a href="#section-5.3.10-
           <h4 id="name-alternate-group">
 <a href="#section-5.3.11" class="section-number selfRef">5.3.11. </a><a href="#name-alternate-group" class="section-name selfRef">Alternate group</a>
           </h4>
-<p id="section-5.3.11-1">Required: Optional    JSON Type: Number    Location: Track Object (Table 3)<a href="#section-5.3.11-1" class="pilcrow">¶</a></p>
+<p id="section-5.3.11-1">Required: Optional    JSON Type: Number    Location: Track Object<a href="#section-5.3.11-1" class="pilcrow">¶</a></p>
 <p id="section-5.3.11-2">An integer specifying a group of tracks which are alternate versions of
 one-another. Alternate tracks represent the same media content, but differ in
 their selection properties. Alternate tracks <span class="bcp14">MUST</span> have matching media time
@@ -2224,7 +2224,7 @@ a set video tracks of the same content offered in alternate bitrates.<a href="#s
           <h4 id="name-initialization-data">
 <a href="#section-5.3.12" class="section-number selfRef">5.3.12. </a><a href="#name-initialization-data" class="section-name selfRef">Initialization data</a>
           </h4>
-<p id="section-5.3.12-1">Required: Optional    JSON Type: String    Location: Track Object (Table 3)<a href="#section-5.3.12-1" class="pilcrow">¶</a></p>
+<p id="section-5.3.12-1">Required: Optional    JSON Type: String    Location: Track Object<a href="#section-5.3.12-1" class="pilcrow">¶</a></p>
 <p id="section-5.3.12-2">A string holding Base64 <span>[<a href="#BASE64" class="cite xref">BASE64</a>]</span> encoded initialization data for the track.<a href="#section-5.3.12-2" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -2233,7 +2233,7 @@ a set video tracks of the same content offered in alternate bitrates.<a href="#s
           <h4 id="name-dependencies">
 <a href="#section-5.3.13" class="section-number selfRef">5.3.13. </a><a href="#name-dependencies" class="section-name selfRef">Dependencies</a>
           </h4>
-<p id="section-5.3.13-1">Required: Optional    JSON Type: Array    Location: Track Object (Table 3)<a href="#section-5.3.13-1" class="pilcrow">¶</a></p>
+<p id="section-5.3.13-1">Required: Optional    JSON Type: Array    Location: Track Object<a href="#section-5.3.13-1" class="pilcrow">¶</a></p>
 <p id="section-5.3.13-2">Certain tracks may depend on other tracks for decoding. Dependencies holds an
 array of track names <a href="#trackname" class="auto internal xref">Section 5.3.3</a> on which the current track is dependent.
 Since only the track name is signaled, the namespace of the dependencies is
@@ -2245,7 +2245,7 @@ assumed to match that of the track declaring the dependencies.<a href="#section-
           <h4 id="name-temporal-id">
 <a href="#section-5.3.14" class="section-number selfRef">5.3.14. </a><a href="#name-temporal-id" class="section-name selfRef">Temporal ID</a>
           </h4>
-<p id="section-5.3.14-1">Required: Optional    JSON Type: Number    Location: Track Object (Table 3)<a href="#section-5.3.14-1" class="pilcrow">¶</a></p>
+<p id="section-5.3.14-1">Required: Optional    JSON Type: Number    Location: Track Object<a href="#section-5.3.14-1" class="pilcrow">¶</a></p>
 <p id="section-5.3.14-2">A number identifying the temporal layer/sub-layer encoding of the track,
 starting with 0 for the base layer, and increasing by 1 for the next higher
 temporal fidelity.<a href="#section-5.3.14-2" class="pilcrow">¶</a></p>
@@ -2256,7 +2256,7 @@ temporal fidelity.<a href="#section-5.3.14-2" class="pilcrow">¶</a></p>
           <h4 id="name-spatial-id">
 <a href="#section-5.3.15" class="section-number selfRef">5.3.15. </a><a href="#name-spatial-id" class="section-name selfRef">Spatial ID</a>
           </h4>
-<p id="section-5.3.15-1">Required: Optional    JSON Type: Number    Location: Track Object (Table 3)<a href="#section-5.3.15-1" class="pilcrow">¶</a></p>
+<p id="section-5.3.15-1">Required: Optional    JSON Type: Number    Location: Track Object<a href="#section-5.3.15-1" class="pilcrow">¶</a></p>
 <p id="section-5.3.15-2">A number identifying the spatial layer encoding of the track, starting with 0
 for the base layer, and increasing by 1 for the next higher fidelity.<a href="#section-5.3.15-2" class="pilcrow">¶</a></p>
 </section>
@@ -2266,7 +2266,7 @@ for the base layer, and increasing by 1 for the next higher fidelity.<a href="#s
           <h4 id="name-codec">
 <a href="#section-5.3.16" class="section-number selfRef">5.3.16. </a><a href="#name-codec" class="section-name selfRef">Codec</a>
           </h4>
-<p id="section-5.3.16-1">Required: Optional    JSON Type: String    Location: Track Object (Table 3)<a href="#section-5.3.16-1" class="pilcrow">¶</a></p>
+<p id="section-5.3.16-1">Required: Optional    JSON Type: String    Location: Track Object<a href="#section-5.3.16-1" class="pilcrow">¶</a></p>
 <p id="section-5.3.16-2">A string defining the codec used to encode the track.
 For LOC packaged content, the string codec registrations are defined in Sect 3
 and Section 4 of <span>[<a href="#WEBCODECS-CODEC-REGISTRY" class="cite xref">WEBCODECS-CODEC-REGISTRY</a>]</span>.<a href="#section-5.3.16-2" class="pilcrow">¶</a></p>
@@ -2277,7 +2277,7 @@ and Section 4 of <span>[<a href="#WEBCODECS-CODEC-REGISTRY" class="cite xref">WE
           <h4 id="name-mimetype">
 <a href="#section-5.3.17" class="section-number selfRef">5.3.17. </a><a href="#name-mimetype" class="section-name selfRef">Mimetype</a>
           </h4>
-<p id="section-5.3.17-1">Required: Optional    JSON Type: String    Location: Track Object (Table 3)<a href="#section-5.3.17-1" class="pilcrow">¶</a></p>
+<p id="section-5.3.17-1">Required: Optional    JSON Type: String    Location: Track Object<a href="#section-5.3.17-1" class="pilcrow">¶</a></p>
 <p id="section-5.3.17-2">A string defining the mime type <span>[<a href="#MIME" class="cite xref">MIME</a>]</span> of the track.<a href="#section-5.3.17-2" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -2286,7 +2286,7 @@ and Section 4 of <span>[<a href="#WEBCODECS-CODEC-REGISTRY" class="cite xref">WE
           <h4 id="name-framerate">
 <a href="#section-5.3.18" class="section-number selfRef">5.3.18. </a><a href="#name-framerate" class="section-name selfRef">Framerate</a>
           </h4>
-<p id="section-5.3.18-1">Required: Optional    JSON Type: Number    Location: Track Object (Table 3)<a href="#section-5.3.18-1" class="pilcrow">¶</a></p>
+<p id="section-5.3.18-1">Required: Optional    JSON Type: Number    Location: Track Object<a href="#section-5.3.18-1" class="pilcrow">¶</a></p>
 <p id="section-5.3.18-2">A number defining the video framerate of the track, expressed as frames per
 second. This property <span class="bcp14">SHOULD</span> only accompany video codecs.<a href="#section-5.3.18-2" class="pilcrow">¶</a></p>
 </section>
@@ -2296,7 +2296,7 @@ second. This property <span class="bcp14">SHOULD</span> only accompany video cod
           <h4 id="name-timescale">
 <a href="#section-5.3.19" class="section-number selfRef">5.3.19. </a><a href="#name-timescale" class="section-name selfRef">Timescale</a>
           </h4>
-<p id="section-5.3.19-1">Required: Optional    JSON Type: Number    Location: Track Object (Table 3)<a href="#section-5.3.19-1" class="pilcrow">¶</a></p>
+<p id="section-5.3.19-1">Required: Optional    JSON Type: Number    Location: Track Object<a href="#section-5.3.19-1" class="pilcrow">¶</a></p>
 <p id="section-5.3.19-2">The number of time units that pass per second.<a href="#section-5.3.19-2" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -2305,7 +2305,7 @@ second. This property <span class="bcp14">SHOULD</span> only accompany video cod
           <h4 id="name-bitrate">
 <a href="#section-5.3.20" class="section-number selfRef">5.3.20. </a><a href="#name-bitrate" class="section-name selfRef">Bitrate</a>
           </h4>
-<p id="section-5.3.20-1">Required: Optional    JSON Type: Number    Location: Track Object (Table 3)<a href="#section-5.3.20-1" class="pilcrow">¶</a></p>
+<p id="section-5.3.20-1">Required: Optional    JSON Type: Number    Location: Track Object<a href="#section-5.3.20-1" class="pilcrow">¶</a></p>
 <p id="section-5.3.20-2">A number defining the bitrate of track, expressed in bits per second.<a href="#section-5.3.20-2" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -2314,7 +2314,7 @@ second. This property <span class="bcp14">SHOULD</span> only accompany video cod
           <h4 id="name-width">
 <a href="#section-5.3.21" class="section-number selfRef">5.3.21. </a><a href="#name-width" class="section-name selfRef">Width</a>
           </h4>
-<p id="section-5.3.21-1">Required: Optional    JSON Type: Number    Location: Track Object (Table 3)<a href="#section-5.3.21-1" class="pilcrow">¶</a></p>
+<p id="section-5.3.21-1">Required: Optional    JSON Type: Number    Location: Track Object<a href="#section-5.3.21-1" class="pilcrow">¶</a></p>
 <p id="section-5.3.21-2">A number expressing the encoded width of the video frames in pixels.<a href="#section-5.3.21-2" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -2323,7 +2323,7 @@ second. This property <span class="bcp14">SHOULD</span> only accompany video cod
           <h4 id="name-height">
 <a href="#section-5.3.22" class="section-number selfRef">5.3.22. </a><a href="#name-height" class="section-name selfRef">Height</a>
           </h4>
-<p id="section-5.3.22-1">Required: Optional    JSON Type: Number    Location: Track Object (Table 3)<a href="#section-5.3.22-1" class="pilcrow">¶</a></p>
+<p id="section-5.3.22-1">Required: Optional    JSON Type: Number    Location: Track Object<a href="#section-5.3.22-1" class="pilcrow">¶</a></p>
 <p id="section-5.3.22-2">A number expressing the encoded height of the video frames in pixels.<a href="#section-5.3.22-2" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -2332,7 +2332,7 @@ second. This property <span class="bcp14">SHOULD</span> only accompany video cod
           <h4 id="name-audio-sample-rate">
 <a href="#section-5.3.23" class="section-number selfRef">5.3.23. </a><a href="#name-audio-sample-rate" class="section-name selfRef">Audio sample rate</a>
           </h4>
-<p id="section-5.3.23-1">Required: Optional    JSON Type: Number    Location: Track Object (Table 3)<a href="#section-5.3.23-1" class="pilcrow">¶</a></p>
+<p id="section-5.3.23-1">Required: Optional    JSON Type: Number    Location: Track Object<a href="#section-5.3.23-1" class="pilcrow">¶</a></p>
 <p id="section-5.3.23-2">The number of audio frame samples per second. This property <span class="bcp14">SHOULD</span> only
 accompany audio codecs.<a href="#section-5.3.23-2" class="pilcrow">¶</a></p>
 </section>
@@ -2342,7 +2342,7 @@ accompany audio codecs.<a href="#section-5.3.23-2" class="pilcrow">¶</a></p>
           <h4 id="name-channel-configuration">
 <a href="#section-5.3.24" class="section-number selfRef">5.3.24. </a><a href="#name-channel-configuration" class="section-name selfRef">Channel configuration</a>
           </h4>
-<p id="section-5.3.24-1">Required: Optional    JSON Type: String    Location: Track Object (Table 3)<a href="#section-5.3.24-1" class="pilcrow">¶</a></p>
+<p id="section-5.3.24-1">Required: Optional    JSON Type: String    Location: Track Object<a href="#section-5.3.24-1" class="pilcrow">¶</a></p>
 <p id="section-5.3.24-2">A string specifying the audio channel configuration. This property <span class="bcp14">SHOULD</span> only
 accompany audio codecs. A string is used in order to provide the flexibility to
 describe complex channel configurations for multi-channel and Next Generation
@@ -2354,7 +2354,7 @@ Audio schemas.<a href="#section-5.3.24-2" class="pilcrow">¶</a></p>
           <h4 id="name-display-width">
 <a href="#section-5.3.25" class="section-number selfRef">5.3.25. </a><a href="#name-display-width" class="section-name selfRef">Display width</a>
           </h4>
-<p id="section-5.3.25-1">Required: Optional    JSON Type: Number    Location: Track Object (Table 3)<a href="#section-5.3.25-1" class="pilcrow">¶</a></p>
+<p id="section-5.3.25-1">Required: Optional    JSON Type: Number    Location: Track Object<a href="#section-5.3.25-1" class="pilcrow">¶</a></p>
 <p id="section-5.3.25-2">A number expressing the intended display width of the track content in pixels.<a href="#section-5.3.25-2" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -2363,7 +2363,7 @@ Audio schemas.<a href="#section-5.3.24-2" class="pilcrow">¶</a></p>
           <h4 id="name-display-height">
 <a href="#section-5.3.26" class="section-number selfRef">5.3.26. </a><a href="#name-display-height" class="section-name selfRef">Display height</a>
           </h4>
-<p id="section-5.3.26-1">Required: Optional    JSON Type: Number    Location: Track Object (Table 3)<a href="#section-5.3.26-1" class="pilcrow">¶</a></p>
+<p id="section-5.3.26-1">Required: Optional    JSON Type: Number    Location: Track Object<a href="#section-5.3.26-1" class="pilcrow">¶</a></p>
 <p id="section-5.3.26-2">A number expressing the intended display height of the track content in pixels.<a href="#section-5.3.26-2" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -2372,7 +2372,7 @@ Audio schemas.<a href="#section-5.3.24-2" class="pilcrow">¶</a></p>
           <h4 id="name-language">
 <a href="#section-5.3.27" class="section-number selfRef">5.3.27. </a><a href="#name-language" class="section-name selfRef">Language</a>
           </h4>
-<p id="section-5.3.27-1">Required: Optional    JSON Type: String    Location: Track Object (Table 3)<a href="#section-5.3.27-1" class="pilcrow">¶</a></p>
+<p id="section-5.3.27-1">Required: Optional    JSON Type: String    Location: Track Object<a href="#section-5.3.27-1" class="pilcrow">¶</a></p>
 <p id="section-5.3.27-2">A string defining the dominant language of the track. The string <span class="bcp14">MUST</span> be one of
 the standard Tags for Identifying Languages as defined by <span>[<a href="#LANG" class="cite xref">LANG</a>]</span>.<a href="#section-5.3.27-2" class="pilcrow">¶</a></p>
 </section>
@@ -2382,7 +2382,7 @@ the standard Tags for Identifying Languages as defined by <span>[<a href="#LANG"
           <h4 id="name-parent-name">
 <a href="#section-5.3.28" class="section-number selfRef">5.3.28. </a><a href="#name-parent-name" class="section-name selfRef">Parent name</a>
           </h4>
-<p id="section-5.3.28-1">Required: Optional    JSON Type: String    Location: Track Object (Table 3)<a href="#section-5.3.28-1" class="pilcrow">¶</a></p>
+<p id="section-5.3.28-1">Required: Optional    JSON Type: String    Location: Track Object<a href="#section-5.3.28-1" class="pilcrow">¶</a></p>
 <p id="section-5.3.28-2">A string defining the parent track name <a href="#trackname" class="auto internal xref">Section 5.3.3</a> to be cloned. This field
 <span class="bcp14">MUST</span> only be included inside a Clone tracks <a href="#clonetracks" class="auto internal xref">Section 5.2.4</a> object.<a href="#section-5.3.28-2" class="pilcrow">¶</a></p>
 </section>
@@ -2392,7 +2392,7 @@ the standard Tags for Identifying Languages as defined by <span>[<a href="#LANG"
           <h4 id="name-track-duration">
 <a href="#section-5.3.29" class="section-number selfRef">5.3.29. </a><a href="#name-track-duration" class="section-name selfRef">Track duration</a>
           </h4>
-<p id="section-5.3.29-1">Required: Optional    JSON Type: Number    Location: Track Object (Table 3)<a href="#section-5.3.29-1" class="pilcrow">¶</a></p>
+<p id="section-5.3.29-1">Required: Optional    JSON Type: Number    Location: Track Object<a href="#section-5.3.29-1" class="pilcrow">¶</a></p>
 <p id="section-5.3.29-2">The duration of the track expressed in integer milliseconds. This field <span class="bcp14">MUST NOT</span>
 be included if the isLive <a href="#islive" class="auto internal xref">Section 5.3.7</a> field value is true.<a href="#section-5.3.29-2" class="pilcrow">¶</a></p>
 </section>
