@@ -5,14 +5,14 @@
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
 Intended status: Informational                                 L. Curley
-Expires: 3 September 2026                                         Twitch
+Expires: 4 September 2026                                         Twitch
                                                              V. Vasiliev
                                                                   Google
                                                            S. Nandakumar
                                                                    Cisco
                                                                 K. Pugin
                                                                     Meta
-                                                            2 March 2026
+                                                            3 March 2026
 
 
                          MOQT Streaming Format
@@ -55,7 +55,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 3 September 2026.
+   This Internet-Draft will expire on 4 September 2026.
 
 Copyright Notice
 
@@ -1431,7 +1431,7 @@ Table of Contents
       -  moqt: the client may use either a WebTransport or native QUIC
          connection.
 
-      -  moqt-q: the client MUST use a native QUIC connection.
+      -  moqt+q: the client MUST use a native QUIC connection.
 
       -  moqt+wt: the client MUST use a WebTransport connection.
 
