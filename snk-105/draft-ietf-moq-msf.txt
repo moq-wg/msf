@@ -1373,7 +1373,7 @@ Table of Contents
    The template approach is best suited for content with fixed-duration
    segments, such as VOD assets or live broadcasts with constant segment
    durations.  For content with variable segment durations, the explicit
-   media timeline track (Section 7.1) SHOULD be used instead.
+   media timeline track (Section 7.1) MUST be used instead.
 
 7.4.1.  Template Format
 
