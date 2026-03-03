@@ -33,12 +33,15 @@ normative:
   MoQTransport: I-D.draft-ietf-moq-transport-11
   LOC: I-D.draft-mzanaty-moq-loc-05
   SecureObjects: I-D.draft-jennings-moq-secure-objects
+  C4M: I-D.draft-ietf-moq-c4m
   BASE64: RFC4648
   JSON: RFC8259
   LANG: RFC5646
   MIME: RFC6838
   RFC9000: RFC9000
   RFC4180: RFC4180
+  RFC5234: RFC5234
+  RFC3986: RFC3986
   GZIP: RFC1952
   WEBCODECS-CODEC-REGISTRY:
     title: "WebCodecs Codec Registry"
@@ -147,7 +150,7 @@ When LOC packaging is used for a track, the catalog packaging attribute
 MSF Tracks MAY be time-aligned. Those that are, are subject to the following
 requirements:
 
-* Tracks advertised in the catalog as belonging to a common render group MUST
+* Tracks advertised in the catalog as belonging to a common alternate group MUST
   be time-aligned.
 * The render duration of the first media object of each equally numbered MOQT
   Group, after decoding, MUST have overlapping presentation time.
@@ -225,10 +228,17 @@ The catalog track MUST have a case-sensitive Track Name of "catalog".
 
 A catalog object MAY be independent of other catalog objects or it MAY represent
 a delta update of a prior catalog object. The first catalog object published
-within a new group MUST be independent.  A catalog object SHOULD be
+within a new group MUST be independent and MUST provide a complete catalog that does not require any prior catalog object for interpretation. Any catalog objects that precede the first object of the latest group MUST be
+ignored.
+
+A catalog object SHOULD be
 published only when the availability of tracks changes.
 
 Each catalog update MUST be mapped to an MOQT Object.
+
+Subscribers accessing the catalog MUST use SUBSCRIBE with a Joining FETCH
+(offset = 0) in order to obtain the latest complete catalog along with all subsequent catalog objects, including
+delta updates, that follow.
 
 
 ## Catalog Fields
@@ -265,6 +275,7 @@ Table 1 provides an overview of all fields defined by this document.
 | Alternate group         | altGroup               | {{altgroup}}              |
 | Initialization data     | initData               | {{initdata}}              |
 | Dependencies            | depends                | {{dependencies}}          |
+| Template                | template               | {{template}}              |
 | Temporal ID             | temporalId             | {{temporalid}}            |
 | Spatial ID              | spatialId              | {{spatialid}}             |
 | Codec                   | codec                  | {{codec}}                 |
@@ -314,7 +325,8 @@ catalog if it is false.
 Location: R    Required: Optional    JSON Type: Array
 
 Indicates a delta processing instruction to add new tracks. The value of this
-field is an Array of track objects {{trackobject}}.
+field is an Array of track objects {{trackobject}}. This field MUST NOT be
+present when the deltaUpdate field is absent or false.
 
 ### Remove tracks {#removetracks}
 Location: R    Required: Optional    JSON Type: Array
@@ -322,14 +334,16 @@ Location: R    Required: Optional    JSON Type: Array
 Indicates a delta processing instruction to remove new tracks. The value of this
 field is an Array of track objects {{trackobject}}. Each track object MUST include
 a Track Name {{trackname}} field, MAY include a Track Namespace {{tracknamespace}}
-field and MUST NOT hold any other fields.
+field and MUST NOT hold any other fields. This field MUST NOT be present when
+the deltaUpdate field is absent or false.
 
 ### Clone tracks {#clonetracks}
 Location: R    Required: Optional    JSON Type: Array
 
 Indicates a delta processing instruction to clone new tracks from previously declared
 tracks. The value of this field is an Array of track objects {{trackobject}}. Each
-track object MUST include a Parent Name {{parentname}} field.
+track object MUST include a Parent Name {{parentname}} field. This field MUST NOT
+be present when the deltaUpdate field is absent or false.
 
 ### Generated at {#generatedat}
 Location: R    Required: Optional    JSON Type: Number
@@ -341,10 +355,12 @@ This field SHOULD NOT be included if the isLive field is false.
 ### Is Complete {#iscomplete}
 Location: R    Required: Optional    JSON Type: Boolean
 
-Issued once a previously live broadcast is complete. This is a commitment that all
-tracks are complete, no new tracks will be added and no new content will be
-published. This field MUST NOT be included if it is FALSE. This field MUST NOT be
-removed from a catalog once it has been added.
+A catalog-level indication that the broadcast is complete. This is a commitment that
+all tracks are complete, no new tracks will be added to the catalog, and no new
+content will be published on any track. Note that even if all individual tracks have
+isLive {{islive}} set to FALSE, new tracks could still be added to the catalog until
+isComplete is set to TRUE. This field MUST NOT be included if it is FALSE. This field
+MUST NOT be removed from a catalog once it has been added.
 
 ### Tracks {#tracks}
 Location: R    Required: Yes    JSON Type: Array
@@ -362,7 +378,7 @@ Location: T    Required: Optional    JSON Type: String
 The name space under which the track name is defined. See section 2.3 of
 {{MoQTransport}}. The track namespace is optional. If it is not declared within
 a track, then each track MUST inherit the namespace of the catalog track. A
-namespace declared in a track object overwrites any inherited name space.
+namespace declared in a track object overrides any inherited name space.
 
 ### Track name {#trackname}
 Location: T    Required: Yes   JSON Type: String
@@ -378,11 +394,11 @@ as defined in Table 3.
 
 Table 3: Allowed packaging values
 
-| Name            |   Value        |      Reference             |
-|:================|:===============|:===========================|
-| LOC             | loc            | See RFC XXXX               |
-| Media Timeline  | mediatimeline  | See {{mediatimelinetrack}} |
-| Event Timeline  | eventtimeline  | See {{eventtimelinetrack}} |
+| Name                    |   Value                |      Reference             |
+|:========================|:=======================|:===========================|
+| LOC                     | loc                    | See RFC XXXX               |
+| Media Timeline          | mediatimeline          | See {{mediatimelinetrack}} |
+| Event Timeline          | eventtimeline          | See {{eventtimelinetrack}} |
 
 
 ### Event timeline type {#eventtype}
@@ -391,7 +407,7 @@ Location: T    Required: Optional   JSON Type: String
 A String defining the type & structure of the data contained within the data
 field of the Event timeline track. Types are defined by the application provider
 and are not centrally registered. Implementers are encouraged to use a unique
-naming scheme, such as Reverse Domain Name Notation, to avoid naming collisions.
+naming scheme, such as Reverse Domain Name Notation, where domain name components are listed in reverse order (e.g., "com.example.myeventtype"), to avoid naming collisions.
 This field is required if the {{packaging}} value is "eventtimeline".
 This field MUST NOT be used if the packaging value is not "eventtimeline".
 
@@ -423,11 +439,13 @@ Custom roles MAY be used as long as they do not collide with the specified roles
 ### Is Live {#islive}
 Location: T    Required: Yes  JSON Type: Boolean
 
+A track-level indication of whether new Objects will be added to this specific track.
 True if new Objects will be added to the track.
-False if no new Objects will be added to the track. This is sent under two
+False if no new Objects will be added to the track. A False value is sent under two
 possible conditions:
 * the publisher of a previously live track has ended the track.
 * the track is Video-On-Demand (VOD) and was never live.
+A True value MUST never follow a False value.
 
 ### Target latency {#targetlatency}
 Location: T    Required: Optional  JSON Type: Number
@@ -436,11 +454,11 @@ The target latency in milliseconds. Target latency is defined as the offset in
 wallclock time between when content was encoded and when it is displayed to the
 end user. For example, if a frame of video is encoded at 10:08:32.638 UTC and the
 target latency is 5000, then that frame should be rendered to the end-user at
-10:08:37.638 UTC. This field MUST NOT be included if isLive is FALSE. All tracks
+10:08:37.638 UTC. If isLive is FALSE, this field MUST be ignored. All tracks
 belonging to the same render group MUST have identical target latencies. All tracks
 belonging to the same alternate group MUST have identical target latencies. If this
-field is absent from the track definition, then the player MAY choose the latency
-with which it renders the content.
+field is absent from the track definition, and isLive is TRUE, then the player
+MAY choose the latency with which it renders the content.
 
 ### Track label {#tracklabel}
 Location: T    Required: Optional   JSON Type: String
@@ -453,9 +471,9 @@ requires UTF-8 support by decoders.
 Location: T    Required: Optional   JSON Type: Number
 
 An integer specifying a group of tracks which are designed to be rendered
-together. Tracks with the same group number SHOULD be rendered simultaneously,
-are time-aligned and are designed to accompany one another. A common
-example would be tying together audio and video tracks.
+together. Tracks with the same group number SHOULD be rendered simultaneously
+and are designed to accompany one another. A common example would be tying
+together audio and video tracks.
 
 ### Alternate group {#altgroup}
 Location: T    Required: Optional   JSON Type: Number
@@ -479,6 +497,19 @@ Certain tracks may depend on other tracks for decoding. Dependencies holds an
 array of track names {{trackname}} on which the current track is dependent.
 Since only the track name is signaled, the namespace of the dependencies is
 assumed to match that of the track declaring the dependencies.
+
+### Template {#template}
+Location: T    Required: Optional   JSON Type: Array
+
+A media timeline template for tracks with fixed-duration segments. It specifies
+the relationship between media time, MOQT Location, and wallclock time through
+starting points and intervals. See {{mediatimelinetemplate}} for the complete
+format specification, field definitions, and computation formulas.
+
+Tracks that include a template field SHOULD NOT also have a separate media timeline
+track, as the template provides equivalent functionality. Different tracks (e.g.,
+audio and video) MAY have independent template values to accommodate different
+group durations.
 
 ### Temporal ID {#temporalid}
 Location: T    Required: Optional   JSON Type: Number
@@ -509,7 +540,7 @@ A string defining the mime type {{MIME}} of the track.
 Location: T    Required: Optional   JSON Type: Number
 
 A number defining the video framerate of the track, expressed as frames per
-second.
+second. This property SHOULD only accompany video codecs.
 
 ### Timescale {#timescale}
 Location: T    Required: Optional   JSON Type: Number
@@ -666,11 +697,12 @@ The following rules are to be followed in constructing and processing delta upda
   Evaluation continues until all operations are successfully applied.
 * A Cloned track inherits all the attributes of the track defined by the Parent Name
   {{parentname}}, except the Track Name which MUST be new. Attributes redefined
-  in the cloning Object overwrite inherited values.
+  in the cloning Object override inherited values.
 * The tuple of Track Namespace and Track Name defines a fixed set of Track attributes
   which MUST NOT be modified after being declared. To modify any attribute, a new
   track with a different Namespace|Name tuple is created by Adding or Cloning and then
   the old track is removed.
+* Producers that publish frequent delta updates SHOULD periodically publish a new independent catalog in a new MOQT Group in order to bound the amount of delta processing required for joining subscribers.
 
 
 ## Catalog Examples
@@ -725,7 +757,7 @@ packaged, time-aligned audio and video tracks.
 
 ### Simulcast video tracks - 3 alternate qualities along with audio
 
-This example shows catalog for a media producer capable of sending 3
+This example shows a catalog for a media producer capable of sending 3
 time-aligned video tracks for high definition, low definition and medium
 definition video qualities, along with an audio track. In this example the
 namespace is absent, which infers that each track must inherit the namespace
@@ -798,7 +830,7 @@ of the catalog.
 ### SVC video tracks with 2 spatial and 2 temporal qualities
 
 
-This example shows catalog for a media producer capable
+This example shows a catalog for a media producer capable
 of sending scalable video codec with 2 spatial and 2 temporal
 layers with a dependency relation as shown below:
 
@@ -957,7 +989,7 @@ from an established video conference.
 
 ### Time-aligned Audio/Video Tracks with custom field values
 
-This example shows catalog for a media producer capable of sending LOC packaged,
+This example shows a catalog for a media producer capable of sending LOC packaged,
 time-aligned audio and video tracks along with custom fields in each track
 description.
 
@@ -1002,7 +1034,7 @@ description.
 
 ### Time-aligned VOD Audio/Video Tracks
 
-This example shows catalog for a media producer offering VOD (video on-demand)
+This example shows a catalog for a media producer offering VOD (video on-demand)
 non-live content. The content is LOC packaged, and includes time-aligned audio
 and video tracks.
 
@@ -1149,9 +1181,57 @@ synchronized data.
 
 ~~~
 
+### Media timeline template
+
+This example shows a catalog using inline media timeline templates instead of an
+explicit media timeline track. The {{template}} attribute on each track defines a
+regular pattern where each segment is 2002ms long. Clients can compute any entry
+using the template parameters. Note that different tracks MAY have different
+template values to accommodate different group durations.
+
+~~~json
+{
+  "version": 1,
+  "generatedAt": 1746104606044,
+  "tracks": [
+    {
+      "name": "1080p-video",
+      "namespace": "conference.example.com/conference123/alice",
+      "packaging": "loc",
+      "isLive": true,
+      "targetLatency": 2000,
+      "role": "video",
+      "renderGroup": 1,
+      "template": [0, 2002, [0, 0], [1, 0], 1759924158381, 2002],
+      "codec":"av01.0.08M.10.0.110.09",
+      "width":1920,
+      "height":1080,
+      "framerate":30,
+      "bitrate":1500000
+    },
+    {
+      "name": "audio",
+      "namespace": "conference.example.com/conference123/alice",
+      "packaging": "loc",
+      "isLive": true,
+      "targetLatency": 2000,
+      "role": "audio",
+      "renderGroup": 1,
+      "template": [0, 2002, [0, 0], [1, 0], 1759924158381, 2002],
+      "codec":"opus",
+      "samplerate":48000,
+      "channelConfig":"2",
+      "bitrate":32000
+    }
+   ]
+}
+
+~~~
+
+
 ### Terminating a live broadcast
 
-This example shows catalog for a media producer terminating a previously
+This example shows a catalog for a media producer terminating a previously
 live broadcast containing a video and an audio track.
 
 ~~~json
@@ -1178,7 +1258,7 @@ group, represented as the number of milliseconds since the Unix epoch, rounded t
 the nearest millisecond. This ensures that republishing the same track in the
 future, such as after a loss of connectivity or an encoder restart, will not result
 in smaller or duplicate Group IDs for the same track name. Note that this method
-does not prevent duplication if more than 1000 groups are published per second.
+does not prevent duplication if more than 1000 Groups are published per second.
 
 Each subsequent Group ID MUST increase by 1.
 
@@ -1186,7 +1266,7 @@ If a publisher is able to maintain state across a republish, it MUST signal the 
 in Group IDs using the MOQT Prior Group ID Gap Extension header.
 
 # Media Timeline track {#mediatimelinetrack}
-The media timeline track provides data about the previously published groups and their
+The media timeline track provides data about the previously published Groups and their
 relationship to wallclock time and media time. Media timeline tracks allow players to
 seek to precise points behind the live head in a live broadcast, or for random access
 in a VOD asset. Media timeline tracks are optional. Multiple media timeline tracks
@@ -1194,7 +1274,11 @@ can exist inside a catalog.
 
 ## Media Timeline track payload {#mediatimelinepayload}
 A media timeline track is a JSON {{JSON}} document. This document MAY be compressed
-using GZIP {{GZIP}}. The document contains an array of records. Each record consists of
+using GZIP {{GZIP}}. The document supports two formats: an explicit entry format
+and a template format. Publishers MAY combine both formats in a single document.
+
+### Explicit entry format {#explicitentryformat}
+The explicit format contains an array of records. Each record consists of
 an array of three required items, whose ordinal position defines their type:
 
 * The first item holds the media presentation timestamp, expressed as a JSON Number.
@@ -1203,7 +1287,7 @@ an array of three required items, whose ordinal position defines their type:
 * The second item holds the MOQT Location of the entry, defined as a tuple of the MOQT
   Group ID and MOQT Object ID, and expressed as a JSON Array of Numbers, where the
   first number is the Group ID and the second number is the Object ID.
-* The third time holds the wallclock time at which the media was encoded, defined as
+* The third item holds the wallclock time at which the media was encoded, defined as
   the number of milliseconds that have elapsed since January 1, 1970
   (midnight UTC/GMT) and expressed as a JSON Number. For VOD assets, or if the
   wallclock time is not known, the value SHOULD be 0.
@@ -1231,6 +1315,62 @@ The publisher MUST publish an independent media timeline in the first MOQT Objec
 of each MOQT Group of a media timeline track. The publisher MAY publish incremental
 updates in the second and subsequent Objects within each Group. Incremental updates
 only contain media timeline records since the last media timeline Object.
+
+## Media Timeline Template {#mediatimelinetemplate}
+When the relationship between media time, MOQT Location and wallclock time follows
+a regular, predictable pattern, a media timeline template MAY be used instead of an
+explicit media timeline track. The template approach is best suited for content with
+fixed-duration segments, such as VOD assets or live broadcasts with constant segment
+durations. For content with variable segment durations, the explicit media timeline
+track ({{mediatimelinepayload}}) MUST be used instead.
+
+### Template Format
+A media timeline template is expressed as an inline track attribute using the
+{{template}} field. The template is a JSON Array containing six mandatory values
+in the following fixed order:
+
+1. startMediaTime - The media presentation timestamp of the first entry, as
+   defined for media timeline entries in {{explicitentryformat}}.
+2. deltaMediaTime - The constant interval between media presentation timestamps,
+   expressed as a JSON Number in milliseconds.
+3. startLocation - The MOQT Location of the first entry, as defined for media
+   timeline entries in {{explicitentryformat}}.
+4. deltaLocation - The constant interval between MOQT Locations, expressed as a
+   JSON Array of two Numbers where the first number is the Group ID delta and the
+   second number is the Object ID delta.
+5. startWallclock - The wallclock time of the first entry, as defined for media
+   timeline entries in {{explicitentryformat}}. For VOD assets, or if the wallclock
+   time is not known, the value SHOULD be 0.
+6. deltaWallclock - The constant interval between wallclock times, expressed as a
+   JSON Number in milliseconds. For VOD assets, or if the wallclock time is not
+   known, the value SHOULD be 0.
+
+All six values are mandatory and MUST appear in the specified order.
+
+Clients compute entry values using the following formulas, where n is the
+zero-based entry index:
+
+~~~
+mediaTime[n] = startMediaTime + (n * deltaMediaTime)
+location[n] = [startLocation[0] + (n * deltaLocation[0]),
+               startLocation[1] + (n * deltaLocation[1])]
+wallclock[n] = startWallclock + (n * deltaWallclock)
+~~~
+
+An example template value is shown below:
+
+~~~json
+[0, 2002, [0, 0], [1, 0], 1759924158381, 2002]
+~~~
+
+This template indicates that the first entry has media time 0ms, location [0,0],
+and wallclock time 1759924158381. Each subsequent entry increments media time by
+2002ms, location by [1,0] (next group, same object), and wallclock by 2002ms.
+
+### Template Immutability
+Unlike the explicit media timeline track, the media timeline template is intended
+to be immutable once publishing starts. Publishers MUST NOT change the template
+values for a track after the first Object has been published.
 
 # Event Timeline track {#eventtimelinetrack}
 The event timeline track provides a mechanism to associate ad-hoc event metadata with
@@ -1328,6 +1468,142 @@ This example shows drone GPS coordinates synched with the start of each Group.
 ~~~
 
 # Workflow
+
+## URL construction and interpretation
+
+An MSF URL identifies a MOQT session and an optional sub-resource within that session.
+It inherits the MOQT URI scheme defined by MOQT {{MoQTransport}} and extends it to
+add a fragment definition, which encodes the namespace and name of the track along
+with optional key-value attributes.
+
+"moqt" [ "+q" / "+wt" ] "://" authority path-abempty [ "?" query ] [ "#" msf-fragment ]
+
+The MOQT specification carries the normative definition of these components,
+along with processing instructions. They are repeated here for clarity:
+
+* Scheme: This case-insensitive scheme defines the underlying transport.
+    * moqt: the client may use either a WebTransport or native QUIC connection.
+    * moqt+q: the client MUST use a native QUIC connection.
+    * moqt+wt: the client MUST use a WebTransport connection.
+* Authority: Required. Contains the host and optional port (defaulting to 443).
+  This information is used by the client to establish the transport session.
+* Path: Optional. If present, it provides server-specific configuration or routing
+  information used during connection initialization.
+* Query: Optional. Contains key-value parameters separated by &. If the query is absent,
+  the ? separator MUST be omitted. Query arguments are intended for the server and
+  SHOULD ignored by the client.
+
+The msf-fragment element is defined by the following ABNF:
+
+~~~ abnf
+msf-fragment      = track-identifier [ "&" parameter-list ]
+track-identifier  = 1*( pchar-no-amp / "/" / "?" )
+                    ; MSF namespace-name string; MUST NOT contain '&'
+parameter-list    = parameter *( "&" parameter )
+parameter         = param-name "=" param-value
+param-name        = 1*( pchar-no-amp / "/" / "?" )
+param-value       = *( pchar-no-amp / "/" / "?" )
+pchar-no-amp      = unreserved / pct-encoded / "!" / "$" / "'" / "(" / ")"
+                    / "*" / "+" / "," / ";" / "=" / ":" / "@"
+~~~
+
+* msf-fragment: Optional. Identifies a specific Track. If present, the first element MUST be
+  formatted as an MSF namespace-name string (see {{namespacenameencoding}}). The client
+  uses this identifier to initiate a SUBSCRIBE or FETCH command once the transport session
+  is established. The namespace-name string MAY be followed by a series of key-value parameters,
+  separated by & from the namespace-name string and from each other. These key-value parameters
+  are intended for processing by the client and, being part of the fragment, are not transferred
+  to the server at connection time. Certain of the fragment key-value parameters have a reserved
+  meaning, as defined by {{reservedfragmentparameters}}.
+
+### Reserved fragment parameters {#reservedfragmentparameters}
+
+Table 5 defines reserved key names for the parameter portion of the msf-fragment. Keynames are
+case-sensitive.
+
+| Name            |                Description                       |
+|:================|:=================================================|
+| wallclock-range | A subclip defined by a wallclock time range      |
+| mediatime-range | A subclip defined by a media time range          |
+| location-range  | A subclip defined by a MOQT Location range       |
+| c4m             | A base64 encoded C4M token                       |
+
+* wallclock-range - a range defined by start and end wallclock times, each expressed
+  as milliseconds since Unix Epoch and separated by a "-" dash. The dash and end
+  time MAY be omitted to indicate an open range. The range definition is inclusive.
+* mediatime-range - a range defined by start and end media times, each expressed
+  as milliseconds and separated by a "-" dash. The dash and end time MAY be omitted
+  to indicate an open range. The range definition is inclusive.
+* location-range - a range defined by start and end media MOQT Location separated by
+  a "-" dash. Range definitions are inclusive. MOQT Location is expressed as Group ID
+  and Object ID separated by a "." dot. End Location may be omitted to indicate an
+  open range. End Object ID may be ommited, indicating the whole end group is included in
+  the range. The "." dot and "-" dash separators MUST be omitted when the second
+  value is ommited.
+* c4m - a base64 encoded token, as defined by {{C4M}}.
+
+If multiple ranges are specified within the same URL, the client shall process
+the union of those ranges.
+
+Example fragment parameters:
+
+* wallclock-range=1761759637565-1761759836189
+* wallclock-range=1761751753894
+* mediatime-range=0-13421
+* mediatime-range=982
+* location-range=34.0-2145.16
+* location-range=16.24 //open range starting at Group ID 16 Object ID 24
+* location-range=16-24 // range from Group ID 16 through to and including all Objects in Group ID 24
+* c4m=gqhkYWxnIGVzaGFyqGR0eXBNhdZ9hdWQAY3VybGZlbWlzcwZleWV2aW5u
+  ZWlhdGVwQWNyZW5lYnJmcmVqMTIzNDU2NzgwMHZpc3VlZF9hdD0xNzMwNDM
+
+### MSF Namespace-Name String Encoding {#namespacenameencoding}
+
+To represent MoQ Tuples (which are sequences of byte strings) within the URL
+fragment, MSF uses a specific encoding convention, which is normatively defined by
+ MOQT {{MoQTransport}} and repeated here for convenience:
+
+* Hierarchy: Each element of the Namespace tuple is rendered in order, separated by
+  a single hyphen (-).
+* Delimiter: The Track Name is appended to the end, separated from the namespace by
+  a double hyphen (--).
+* Character Escaping:
+    * Unreserved characters (a-z, A-Z, 0-9, _) are represented literally.
+    * All other byte values (including hyphens and periods used as data) MUST be
+    * percent-encoded using a period (.) followed by two lowercase hexadecimal digits
+      (e.g., a literal hyphen in a name becomes .2d).
+
+Note: This encoding ensures that the structural delimiters (- and --) remain unambiguous.
+
+### Example MSF URLs
+
+* URl with a required Webtransport connection pointing at a catalog track:
+  moqt+wt://example.com/server/config?a=1&b=2#customer-livestream-123--catalog
+    * Session: https://example.com/server/config?a=1&b=2
+    * Namespace: ('customer', 'livestream', '123')
+    * Track Name: 'catalog'
+
+* URL with a required raw QUIC connection pointing at a catalog:
+  moqt+q://example.com/relay-app/relayID#customerID-broadcastID--catalog
+
+* URL pointing at a non-catalog track (either Webtransport or native QUIC may be used):
+  moqt://example.com/relay-app/relayID#customerID-broadcastID--video
+
+* URL pointing at a subclip:
+  moqt://example.com/relay-app/relayID#customerID-broadcastID--catalog&location-range=34-64
+
+* URL pointing at a catalog and supplying a token for the client:
+  moqt://example.com/relay-app/relayID#customerID-broadcastID--
+  catalog&c4m=gqhkYWxnIGVzaGFyqGR0eXBNhdZ9hdWQAY3VybGZlbWlzcwZl
+  eWV2aW5uZWlhdGVwQWNyZW5lYnJmcmVqMTIzNDU2NzgwMHZpc3VlZF9hdD0xN
+  zMwNDM
+
+* URL pointing at a catalog and supplying a token for the client along with a separate token
+  for the server:
+  moqt://example.com/relay-app/relayID?token=HTRCII74GHFT@JHBCV
+  SW56HKKneH2Dbyq6NHBI2#customerID-broadcastID--catalog&c4m=gqh
+  kYWxnIGVzaGFyqGR0eXBNhdZ9hdWQAY3VybGZlbWlzcwZleWV2aW5uZWlhdGV
+  wQWNyZW5lYnJmcmVqMTIzNDU2NzgwMHZpc3VlZF9hdD0xNzMwNDM
 
 ## Initiating a broadcast
 An MSF publisher MUST publish a catalog track object before publishing any media
