@@ -1132,7 +1132,7 @@ fixed-duration segments, such as VOD assets or live broadcasts with constant seg
 durations. For content with variable segment durations, the explicit media timeline
 track ({{mediatimelinepayload}}) SHOULD be used instead.
 
-### Inline Template Format
+### Template Format
 A media timeline template is expressed as an inline track attribute using the
 {{template}} field. The template is a JSON Array containing six mandatory values
 in the following fixed order:
