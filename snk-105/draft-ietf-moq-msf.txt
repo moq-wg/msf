@@ -4,8 +4,8 @@
 
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
-Intended status: Informational                              2 March 2026
-Expires: 3 September 2026
+Intended status: Informational                              3 March 2026
+Expires: 4 September 2026
 
 
                          MOQT Streaming Format
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 3 September 2026.
+   This Internet-Draft will expire on 4 September 2026.
 
 Copyright Notice
 
@@ -136,7 +136,7 @@ Table of Contents
      7.2.  Media Timeline Catalog requirements
      7.3.  Media Timeline track updating
      7.4.  Media Timeline Template
-       7.4.1.  Inline Template Format
+       7.4.1.  Template Format
        7.4.2.  Template Immutability
    8.  Event Timeline track
      8.1.  Event Timeline data format
@@ -1375,7 +1375,7 @@ Table of Contents
    durations.  For content with variable segment durations, the explicit
    media timeline track (Section 7.1) SHOULD be used instead.
 
-7.4.1.  Inline Template Format
+7.4.1.  Template Format
 
    A media timeline template is expressed as an inline track attribute
    using the Section 5.1.22 field.  The template is a JSON Array
