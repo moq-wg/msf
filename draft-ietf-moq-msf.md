@@ -218,6 +218,7 @@ Table 1 provides an overview of all fields defined by this document.
 | Alternate group         | altGroup               | {{altgroup}}              |
 | Initialization data     | initData               | {{initdata}}              |
 | Dependencies            | depends                | {{dependencies}}          |
+| Template                | template               | {{template}}              |
 | Temporal ID             | temporalId             | {{temporalid}}            |
 | Spatial ID              | spatialId              | {{spatialid}}             |
 | Codec                   | codec                  | {{codec}}                 |
@@ -332,11 +333,11 @@ as defined in Table 3.
 
 Table 3: Allowed packaging values
 
-| Name            |   Value        |      Reference             |
-|:================|:===============|:===========================|
-| LOC             | loc            | See RFC XXXX               |
-| Media Timeline  | mediatimeline  | See {{mediatimelinetrack}} |
-| Event Timeline  | eventtimeline  | See {{eventtimelinetrack}} |
+| Name                    |   Value                |      Reference             |
+|:========================|:=======================|:===========================|
+| LOC                     | loc                    | See RFC XXXX               |
+| Media Timeline          | mediatimeline          | See {{mediatimelinetrack}} |
+| Event Timeline          | eventtimeline          | See {{eventtimelinetrack}} |
 
 
 ### Event timeline type {#eventtype}
@@ -435,6 +436,19 @@ Certain tracks may depend on other tracks for decoding. Dependencies holds an
 array of track names {{trackname}} on which the current track is dependent.
 Since only the track name is signaled, the namespace of the dependencies is
 assumed to match that of the track declaring the dependencies.
+
+### Template {#template}
+Location: T    Required: Optional   JSON Type: Array
+
+A media timeline template for tracks with fixed-duration segments. It specifies
+the relationship between media time, MOQT Location, and wallclock time through
+starting points and intervals. See {{mediatimelinetemplate}} for the complete
+format specification, field definitions, and computation formulas.
+
+Tracks that include a template field SHOULD NOT also have a separate media timeline
+track, as the template provides equivalent functionality. Different tracks (e.g.,
+audio and video) MAY have independent template values to accommodate different
+group durations.
 
 ### Temporal ID {#temporalid}
 Location: T    Required: Optional   JSON Type: Number
@@ -990,6 +1004,54 @@ synchronized data.
 
 ~~~
 
+### Media timeline template
+
+This example shows a catalog using inline media timeline templates instead of an
+explicit media timeline track. The {{template}} attribute on each track defines a
+regular pattern where each segment is 2002ms long. Clients can compute any entry
+using the template parameters. Note that different tracks MAY have different
+template values to accommodate different group durations.
+
+~~~json
+{
+  "version": 1,
+  "generatedAt": 1746104606044,
+  "tracks": [
+    {
+      "name": "1080p-video",
+      "namespace": "conference.example.com/conference123/alice",
+      "packaging": "loc",
+      "isLive": true,
+      "targetLatency": 2000,
+      "role": "video",
+      "renderGroup": 1,
+      "template": [0, 2002, [0, 0], [1, 0], 1759924158381, 2002],
+      "codec":"av01.0.08M.10.0.110.09",
+      "width":1920,
+      "height":1080,
+      "framerate":30,
+      "bitrate":1500000
+    },
+    {
+      "name": "audio",
+      "namespace": "conference.example.com/conference123/alice",
+      "packaging": "loc",
+      "isLive": true,
+      "targetLatency": 2000,
+      "role": "audio",
+      "renderGroup": 1,
+      "template": [0, 2002, [0, 0], [1, 0], 1759924158381, 2002],
+      "codec":"opus",
+      "samplerate":48000,
+      "channelConfig":"2",
+      "bitrate":32000
+    }
+   ]
+}
+
+~~~
+
+
 ### Terminating a live broadcast
 
 This example shows a catalog for a media producer terminating a previously
@@ -1035,7 +1097,11 @@ can exist inside a catalog.
 
 ## Media Timeline track payload {#mediatimelinepayload}
 A media timeline track is a JSON {{JSON}} document. This document MAY be compressed
-using GZIP {{GZIP}}. The document contains an array of records. Each record consists of
+using GZIP {{GZIP}}. The document supports two formats: an explicit entry format
+and a template format. Publishers MAY combine both formats in a single document.
+
+### Explicit entry format {#explicitentryformat}
+The explicit format contains an array of records. Each record consists of
 an array of three required items, whose ordinal position defines their type:
 
 * The first item holds the media presentation timestamp, expressed as a JSON Number.
@@ -1044,7 +1110,7 @@ an array of three required items, whose ordinal position defines their type:
 * The second item holds the MOQT Location of the entry, defined as a tuple of the MOQT
   Group ID and MOQT Object ID, and expressed as a JSON Array of Numbers, where the
   first number is the Group ID and the second number is the Object ID.
-* The third time holds the wallclock time at which the media was encoded, defined as
+* The third item holds the wallclock time at which the media was encoded, defined as
   the number of milliseconds that have elapsed since January 1, 1970
   (midnight UTC/GMT) and expressed as a JSON Number. For VOD assets, or if the
   wallclock time is not known, the value SHOULD be 0.
@@ -1072,6 +1138,62 @@ The publisher MUST publish an independent media timeline in the first MOQT Objec
 of each MOQT Group of a media timeline track. The publisher MAY publish incremental
 updates in the second and subsequent Objects within each Group. Incremental updates
 only contain media timeline records since the last media timeline Object.
+
+## Media Timeline Template {#mediatimelinetemplate}
+When the relationship between media time, MOQT Location and wallclock time follows
+a regular, predictable pattern, a media timeline template MAY be used instead of an
+explicit media timeline track. The template approach is best suited for content with
+fixed-duration segments, such as VOD assets or live broadcasts with constant segment
+durations. For content with variable segment durations, the explicit media timeline
+track ({{mediatimelinepayload}}) MUST be used instead.
+
+### Template Format
+A media timeline template is expressed as an inline track attribute using the
+{{template}} field. The template is a JSON Array containing six mandatory values
+in the following fixed order:
+
+1. startMediaTime - The media presentation timestamp of the first entry, as
+   defined for media timeline entries in {{explicitentryformat}}.
+2. deltaMediaTime - The constant interval between media presentation timestamps,
+   expressed as a JSON Number in milliseconds.
+3. startLocation - The MOQT Location of the first entry, as defined for media
+   timeline entries in {{explicitentryformat}}.
+4. deltaLocation - The constant interval between MOQT Locations, expressed as a
+   JSON Array of two Numbers where the first number is the Group ID delta and the
+   second number is the Object ID delta.
+5. startWallclock - The wallclock time of the first entry, as defined for media
+   timeline entries in {{explicitentryformat}}. For VOD assets, or if the wallclock
+   time is not known, the value SHOULD be 0.
+6. deltaWallclock - The constant interval between wallclock times, expressed as a
+   JSON Number in milliseconds. For VOD assets, or if the wallclock time is not
+   known, the value SHOULD be 0.
+
+All six values are mandatory and MUST appear in the specified order.
+
+Clients compute entry values using the following formulas, where n is the
+zero-based entry index:
+
+~~~
+mediaTime[n] = startMediaTime + (n * deltaMediaTime)
+location[n] = [startLocation[0] + (n * deltaLocation[0]),
+               startLocation[1] + (n * deltaLocation[1])]
+wallclock[n] = startWallclock + (n * deltaWallclock)
+~~~
+
+An example template value is shown below:
+
+~~~json
+[0, 2002, [0, 0], [1, 0], 1759924158381, 2002]
+~~~
+
+This template indicates that the first entry has media time 0ms, location [0,0],
+and wallclock time 1759924158381. Each subsequent entry increments media time by
+2002ms, location by [1,0] (next group, same object), and wallclock by 2002ms.
+
+### Template Immutability
+Unlike the explicit media timeline track, the media timeline template is intended
+to be immutable once publishing starts. Publishers MUST NOT change the template
+values for a track after the first Object has been published.
 
 # Event Timeline track {#eventtimelinetrack}
 The event timeline track provides a mechanism to associate ad-hoc event metadata with
