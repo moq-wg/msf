@@ -1188,7 +1188,7 @@ along with processing instructions. They are repeated here for clarity:
 
 * Scheme: This case-insensitive scheme defines the underlying transport.
     * moqt: the client may use either a WebTransport or native QUIC connection.
-    * moqt-q: the client MUST use a native QUIC connection.
+    * moqt+q: the client MUST use a native QUIC connection.
     * moqt+wt: the client MUST use a WebTransport connection.
 * Authority: Required. Contains the host and optional port (defaulting to 443).
   This information is used by the client to establish the transport session.
