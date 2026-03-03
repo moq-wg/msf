@@ -149,7 +149,7 @@ When LOC packaging is used for a track, the catalog packaging attribute
 MSF Tracks MAY be time-aligned. Those that are, are subject to the following
 requirements:
 
-* Tracks advertised in the catalog as belonging to a common render group MUST
+* Tracks advertised in the catalog as belonging to a common alternate group MUST
   be time-aligned.
 * The render duration of the first media object of each equally numbered MOQT
   Group, after decoding, MUST have overlapping presentation time.
@@ -413,9 +413,9 @@ requires UTF-8 support by decoders.
 Location: T    Required: Optional   JSON Type: Number
 
 An integer specifying a group of tracks which are designed to be rendered
-together. Tracks with the same group number SHOULD be rendered simultaneously,
-are time-aligned and are designed to accompany one another. A common
-example would be tying together audio and video tracks.
+together. Tracks with the same group number SHOULD be rendered simultaneously
+and are designed to accompany one another. A common example would be tying
+together audio and video tracks.
 
 ### Alternate group {#altgroup}
 Location: T    Required: Optional   JSON Type: Number
