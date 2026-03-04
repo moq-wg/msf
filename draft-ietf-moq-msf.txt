@@ -4,8 +4,8 @@
 
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
-Intended status: Informational                              3 March 2026
-Expires: 4 September 2026
+Intended status: Informational                              4 March 2026
+Expires: 5 September 2026
 
 
                          MOQT Streaming Format
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 4 September 2026.
+   This Internet-Draft will expire on 5 September 2026.
 
 Copyright Notice
 
@@ -122,21 +122,25 @@ Table of Contents
        5.1.41. Key ID
        5.1.42. Track Base Key
      5.2.  Delta updates
-     5.3.  Catalog Examples
-       5.3.1.  Time-aligned Audio/Video Tracks with single quality
-       5.3.2.  Simulcast video tracks - 3 alternate qualities along
+     5.3.  Variable Substitution
+       5.3.1.  Variable Syntax
+       5.3.2.  Variable Resolution
+     5.4.  Catalog Examples
+       5.4.1.  Time-aligned Audio/Video Tracks with single quality
+       5.4.2.  Simulcast video tracks - 3 alternate qualities along
                with audio
-       5.3.3.  SVC video tracks with 2 spatial and 2 temporal
+       5.4.3.  SVC video tracks with 2 spatial and 2 temporal
                qualities
-       5.3.4.  Delta update - adding two tracks
-       5.3.5.  Delta update removing tracks
-       5.3.6.  Time-aligned Audio/Video Tracks with custom field
+       5.4.4.  Delta update - adding two tracks
+       5.4.5.  Delta update removing tracks
+       5.4.6.  Time-aligned Audio/Video Tracks with custom field
                values
-       5.3.7.  Time-aligned VOD Audio/Video Tracks
-       5.3.8.  Encrypted Audio/Video Tracks
-       5.3.9.  Media timeline and Event timeline
-       5.3.10. Media timeline template
-       5.3.11. Terminating a live broadcast
+       5.4.7.  Time-aligned VOD Audio/Video Tracks
+       5.4.8.  Encrypted Audio/Video Tracks
+       5.4.9.  Media timeline and Event timeline
+       5.4.10. Media timeline template
+       5.4.11. Terminating a live broadcast
+       5.4.12. Variable Substitution for personalized delivery
    6.  Media transmission
      6.1.  Group numbering
    7.  Media Timeline track
@@ -1033,12 +1037,55 @@ Table of Contents
       bound the amount of delta processing required for joining
       subscribers.
 
-5.3.  Catalog Examples
+5.3.  Variable Substitution
+
+   Catalog field values MAY contain variables that are substituted at
+   delivery time.  This mechanism enables a single cached catalog to be
+   customized for each viewer, supporting use cases such as personalized
+   advertising, A/B watermarking, QoE reporting endpoints, and logging
+   identifiers.
+
+5.3.1.  Variable Syntax
+
+   Variables are denoted by enclosing the variable name in percent
+   characters (%).  Variable names MUST consist of alphanumeric
+   characters, hyphens, and underscores.  Variable names are case-
+   sensitive.
+
+   The percent character (%) MUST NOT appear in catalog field values
+   except as part of a variable reference.  Literal percent characters
+   are not permitted.
+
+   Variable values MUST consist only of alphanumeric characters,
+   hyphens, underscores, and the at sign (@).  Special characters
+   including commas, semicolons, quotes, ampersands, and other
+   punctuation MUST NOT appear in variable values.  This restriction
+   prevents injection attacks and ensures safe substitution into catalog
+   field values.
+
+5.3.2.  Variable Resolution
+
+   Variables are resolved from the fragment identifier of the URI used
+   to access the catalog.  The fragment identifier is the portion
+   following the # character and is processed entirely client-side,
+   making it suitable for per-viewer customization without affecting
+   server-side caching.
+
+   Query parameters (following the ? character) are reserved for server-
+   side processing and MUST NOT be used for variable substitution.
+
+   When a subscriber requests a catalog using a URI containing a
+   fragment identifier, the fragment is parsed as key-value pairs (using
+   & as delimiter and = as separator).  Each key becomes available as a
+   variable name, and the variable is replaced with the corresponding
+   value.
+
+5.4.  Catalog Examples
 
    The following section provides non-normative JSON examples of various
    catalogs compliant with this draft.
 
-5.3.1.  Time-aligned Audio/Video Tracks with single quality
+5.4.1.  Time-aligned Audio/Video Tracks with single quality
 
    This example shows a catalog for a media producer capable of sending
    LOC packaged, time-aligned audio and video tracks.
@@ -1077,7 +1124,7 @@ Table of Contents
       ]
    }
 
-5.3.2.  Simulcast video tracks - 3 alternate qualities along with audio
+5.4.2.  Simulcast video tracks - 3 alternate qualities along with audio
 
    This example shows a catalog for a media producer capable of sending
    3 time-aligned video tracks for high definition, low definition and
@@ -1146,7 +1193,7 @@ Table of Contents
       ]
    }
 
-5.3.3.  SVC video tracks with 2 spatial and 2 temporal qualities
+5.4.3.  SVC video tracks with 2 spatial and 2 temporal qualities
 
    This example shows a catalog for a media producer capable of sending
    scalable video codec with 2 spatial and 2 temporal layers with a
@@ -1249,7 +1296,7 @@ Table of Contents
       ]
    }
 
-5.3.4.  Delta update - adding two tracks
+5.4.4.  Delta update - adding two tracks
 
    This example shows the catalog delta update for a media producer
    adding two tracks to an established video conference.  One track is
@@ -1282,7 +1329,7 @@ Table of Contents
       ]
    }
 
-5.3.5.  Delta update removing tracks
+5.4.5.  Delta update removing tracks
 
    This example shows a delta update for a media producer removing two
    tracks from an established video conference.
@@ -1293,7 +1340,7 @@ Table of Contents
      "removeTracks": [{"name": "video"},{"name": "slides"}]
    }
 
-5.3.6.  Time-aligned Audio/Video Tracks with custom field values
+5.4.6.  Time-aligned Audio/Video Tracks with custom field values
 
    This example shows a catalog for a media producer capable of sending
    LOC packaged, time-aligned audio and video tracks along with custom
@@ -1334,7 +1381,7 @@ Table of Contents
       ]
    }
 
-5.3.7.  Time-aligned VOD Audio/Video Tracks
+5.4.7.  Time-aligned VOD Audio/Video Tracks
 
    This example shows a catalog for a media producer offering VOD (video
    on-demand) non-live content.  The content is LOC packaged, and
@@ -1371,7 +1418,7 @@ Table of Contents
       ]
    }
 
-5.3.8.  Encrypted Audio/Video Tracks
+5.4.8.  Encrypted Audio/Video Tracks
 
    This example shows a catalog for encrypted LOC-packaged audio and
    video tracks using MoQ Secure Objects with AES-128-GCM.
@@ -1418,7 +1465,7 @@ Table of Contents
      ]
    }
 
-5.3.9.  Media timeline and Event timeline
+5.4.9.  Media timeline and Event timeline
 
    This example shows a catalog for a media producer capable of sending
    LOC packaged, time-aligned audio and video tracks, along with a Media
@@ -1474,7 +1521,7 @@ Table of Contents
       ]
    }
 
-5.3.10.  Media timeline template
+5.4.10.  Media timeline template
 
    This example shows a catalog using inline media timeline templates
    instead of an explicit media timeline track.  The Section 5.1.22
@@ -1519,7 +1566,7 @@ Table of Contents
       ]
    }
 
-5.3.11.  Terminating a live broadcast
+5.4.11.  Terminating a live broadcast
 
    This example shows a catalog for a media producer terminating a
    previously live broadcast containing a video and an audio track.
@@ -1529,6 +1576,59 @@ Table of Contents
      "generatedAt": 1746104606044,
      "isComplete": true,
      "tracks": []
+   }
+
+5.4.12.  Variable Substitution for personalized delivery
+
+   This example shows a catalog using variable substitution to enable
+   personalized advertising and reporting while maintaining
+   cacheability.  Given a catalog request URI of:
+
+ moqt://relay.example.com/sports/catalog?a=1#token=1234&id=bob&event=xyz
+
+   The fragment parameters (token, id, event) are available for variable
+   substitution.  The following catalog template:
+
+   {
+     "version": 1,
+     "tracks": [
+       {
+         "name": "video",
+         "packaging": "loc",
+         "isLive": true,
+         "role": "video",
+         "renderGroup": 1
+       },
+       {
+         "name": "cmcdv2-%id%",
+         "namespace": "advertising-decisions/live-sports/%event%",
+         "packaging": "eventtimeline",
+         "eventType": "com.example.iab.vast",
+         "c4m": "%token%"
+       }
+     ]
+   }
+
+   Would be resolved by the subscriber as:
+
+   {
+     "version": 1,
+     "tracks": [
+       {
+         "name": "video",
+         "packaging": "loc",
+         "isLive": true,
+         "role": "video",
+         "renderGroup": 1
+       },
+       {
+         "name": "cmcdv2-bob",
+         "namespace": "advertising-decisions/live-sports/xyz",
+         "packaging": "eventtimeline",
+         "eventType": "com.example.iab.vast",
+         "c4m": "1234"
+       }
+     ]
    }
 
 6.  Media transmission
