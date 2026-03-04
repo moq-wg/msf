@@ -704,6 +704,42 @@ The following rules are to be followed in constructing and processing delta upda
   the old track is removed.
 * Producers that publish frequent delta updates SHOULD periodically publish a new independent catalog in a new MOQT Group in order to bound the amount of delta processing required for joining subscribers.
 
+## Variable Substitution {#variablesubstitution}
+
+Catalog field values MAY contain variables that are substituted at delivery time.
+This mechanism enables a single cached catalog to be customized for each viewer,
+supporting use cases such as personalized advertising, A/B watermarking, QoE
+reporting endpoints, and logging identifiers.
+
+### Variable Syntax {#variablesyntax}
+
+Variables are denoted by enclosing the variable name in percent characters (`%`).
+Variable names MUST consist of alphanumeric characters, hyphens, and underscores.
+Variable names are case-sensitive.
+
+The percent character (`%`) MUST NOT appear in catalog field values except as
+part of a variable reference. Literal percent characters are not permitted.
+
+Variable values MUST consist only of alphanumeric characters, hyphens, underscores,
+and the at sign (`@`). Special characters including commas, semicolons, quotes,
+ampersands, and other punctuation MUST NOT appear in variable values. This
+restriction prevents injection attacks and ensures safe substitution into
+catalog field values.
+
+### Variable Resolution {#variableresolution}
+
+Variables are resolved from the fragment identifier of the URI used to access
+the catalog. The fragment identifier is the portion following the `#` character
+and is processed entirely client-side, making it suitable for per-viewer
+customization without affecting server-side caching.
+
+Query parameters (following the `?` character) are reserved for server-side
+processing and MUST NOT be used for variable substitution.
+
+When a subscriber requests a catalog using a URI containing a fragment identifier,
+the fragment is parsed as key-value pairs (using `&` as delimiter and `=` as
+separator). Each key becomes available as a variable name, and the variable
+is replaced with the corresponding value.
 
 ## Catalog Examples
 
@@ -1242,6 +1278,63 @@ live broadcast containing a video and an audio track.
   "tracks": []
 }
 
+~~~
+
+### Variable Substitution for personalized delivery
+
+This example shows a catalog using variable substitution to enable
+personalized advertising and reporting while maintaining cacheability.
+Given a catalog request URI of:
+
+    moqt://relay.example.com/sports/catalog?a=1#token=1234&id=bob&event=xyz
+
+The fragment parameters (`token`, `id`, `event`) are available for variable
+substitution. The following catalog template:
+
+~~~json
+{
+  "version": 1,
+  "tracks": [
+    {
+      "name": "video",
+      "packaging": "loc",
+      "isLive": true,
+      "role": "video",
+      "renderGroup": 1
+    },
+    {
+      "name": "cmcdv2-%id%",
+      "namespace": "advertising-decisions/live-sports/%event%",
+      "packaging": "eventtimeline",
+      "eventType": "com.example.iab.vast",
+      "c4m": "%token%"
+    }
+  ]
+}
+~~~
+
+Would be resolved by the subscriber as:
+
+~~~json
+{
+  "version": 1,
+  "tracks": [
+    {
+      "name": "video",
+      "packaging": "loc",
+      "isLive": true,
+      "role": "video",
+      "renderGroup": 1
+    },
+    {
+      "name": "cmcdv2-bob",
+      "namespace": "advertising-decisions/live-sports/xyz",
+      "packaging": "eventtimeline",
+      "eventType": "com.example.iab.vast",
+      "c4m": "1234"
+    }
+  ]
+}
 ~~~
 
 
