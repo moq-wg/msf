@@ -4,8 +4,8 @@
 
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
-Intended status: Informational                          27 February 2026
-Expires: 31 August 2026
+Intended status: Informational                              4 March 2026
+Expires: 5 September 2026
 
 
                          MOQT Streaming Format
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 31 August 2026.
+   This Internet-Draft will expire on 5 September 2026.
 
 Copyright Notice
 
@@ -680,8 +680,8 @@ Table of Contents
    Location: T Required: Optional JSON Type: Number
 
    A number defining the framerate of the track, expressed as frames per
-   second.  This property SHOULD only accompany video or other time-
-   varying visual media codecs.
+   second.  This property SHOULD only accompany video or other frame-
+   based content.
 
 5.1.27.  Timescale
 
