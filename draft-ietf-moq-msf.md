@@ -1032,7 +1032,7 @@ This example shows a catalog using variable substitution to enable
 personalized advertising and reporting while maintaining cacheability.
 Given a catalog request URI of:
 
-    moqt://relay.example.com/live-sports/catalog#token=1234&id=bob&event=xyz
+    moqt://relay.example.com/sports/catalog?a=1#token=1234&id=bob&event=xyz
 
 The fragment parameters (`token`, `id`, `event`) are available for variable
 substitution. The following catalog template:
