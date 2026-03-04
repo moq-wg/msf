@@ -452,7 +452,7 @@ A string defining the mime type {{MIME}} of the track.
 Location: T    Required: Optional   JSON Type: Number
 
 A number defining the framerate of the track, expressed as frames per second.
-This property SHOULD only accompany video or other frame-based content. 
+This property SHOULD only accompany video or other frame-based content.
 
 ### Timescale {#timescale}
 Location: T    Required: Optional   JSON Type: Number
