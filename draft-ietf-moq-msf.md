@@ -1919,7 +1919,7 @@ failure gracefully:
 
 The specific error codes and retry semantics are defined by the authorization
 scheme specifications. See {{PrivacyPassAuth}} for Privacy Pass error handling
-and {{CATAuth}} for CAT error handling.
+and {{C4M}} for CAT error handling.
 
 # Security Considerations
 
