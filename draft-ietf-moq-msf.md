@@ -1146,8 +1146,7 @@ or resolution switch that requires new decoder configuration), the publisher MUS
 publish a new Group with an incremented Group ID containing the updated
 initialization data. That new Group ID MUST again match the target Group ID at which the
 new initialization data is required by the tracks which reference this initialization track
-in their initTrack property. 
-
+in their initTrack property.
 
 Subscribers can either fetch or subscribe to the initialization track. When
 joining a session, subscribers SHOULD fetch the latest Group from the
