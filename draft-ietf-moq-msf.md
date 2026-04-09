@@ -1117,7 +1117,7 @@ using the initTrack field {{inittrack}}. This approach offers several advantages
 
 * Independent updates to initialization data without modifying the catalog
 * Deduplication when multiple tracks share identical initialization segments
-* HTTP-addressable initialization segments for compatibility with HLS/DASH delivery
+* Compatibility with HLS/DASH delivery
 * Reduced catalog size for codecs with large initialization data
 
 ## Initialization track payload {#inittrackpayload}
@@ -1136,13 +1136,17 @@ that reference this initialization track.
 
 ## Initialization track group and object structure
 
-An initialization track publishes its payload as a single MOQT Object within a
-MOQT Group. The Object ID MUST be 0.
+An initialization track initially publishes its payload as a single MOQT Object within a
+MOQT Group. The Object ID MUST be 0. The Group ID MUST match the starting Group ID
+of the tracks which reference this initialization track in their initTrack property
 
-When the initialization data changes (for example, due to a codec parameter change
+If the initialization data then changes (for example, due to a codec parameter change
 or resolution switch that requires new decoder configuration), the publisher MUST
 publish a new Group with an incremented Group ID containing the updated
-initialization data.
+initialization data. That new Group ID MUST again match the target Group ID at which the
+new initialization data is required by the tracks which reference this initialization track
+in their initTrack property. 
+
 
 Subscribers can either fetch or subscribe to the initialization track. When
 joining a session, subscribers SHOULD fetch the latest Group from the
@@ -1166,11 +1170,13 @@ The referenced initialization track MUST exist in the same catalog.
 
 ## Initialization track updating
 
-For live streams, the publisher SHOULD publish the initialization data in
+For live streams, the publisher MUST publish the initialization data in
 Object 0 of the first Group at the start of the broadcast. The first Group ID
-MUST follow the requirements in {{group-numbering}}. If the initialization data
+MUST follow the requirements in {{group-numbering}} and MUST match the 
+Group ID of the tracks which uses this initTrack for initialization.  If the initialization data
 needs to change during the broadcast (such as a mid-stream resolution change),
-the publisher increments the Group ID and publishes the new initialization data.
+the publisher increments the Group ID to match the point at which the change applies in the
+dependent tracks and publishes the new initialization data.
 
 For VOD assets, the initialization track typically contains a single Group with
 the initialization data that applies to the entire asset.
