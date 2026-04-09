@@ -3793,9 +3793,12 @@ The mime-type of a media timeline track <span class="bcp14">MUST</span> be speci
 <a href="#section-7.3" class="section-number selfRef">7.3. </a><a href="#name-media-timeline-track-updati" class="section-name selfRef">Media Timeline track updating</a>
         </h3>
 <p id="section-7.3-1">The publisher <span class="bcp14">MUST</span> publish an independent media timeline in the first MOQT Object
-of each MOQT Group of a media timeline track. The publisher <span class="bcp14">MAY</span> publish incremental
-updates in the second and subsequent Objects within each Group. Incremental updates
-only contain media timeline records since the last media timeline Object.<a href="#section-7.3-1" class="pilcrow">¶</a></p>
+of each MOQT Group of a media timeline track. An independent media timeline object
+<span class="bcp14">MUST</span> contain all media timeline records accumulated and accessible up to that point, allowing a
+subscriber joining at any group boundary to receive the accessible timeline history.
+The publisher <span class="bcp14">MAY</span> publish incremental updates in the second and subsequent Objects
+within each Group. Incremental updates contain only new media timeline records since
+the previous media timeline Object in that Group.<a href="#section-7.3-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="mediatimelinetemplate">
@@ -3951,9 +3954,12 @@ event timeline track.<a href="#section-8.2-2.4.1" class="pilcrow">¶</a></p>
 <a href="#section-8.3" class="section-number selfRef">8.3. </a><a href="#name-event-timeline-track-updati" class="section-name selfRef">Event Timeline track updating</a>
         </h3>
 <p id="section-8.3-1">The publisher <span class="bcp14">MUST</span> publish an independent event timeline in the first MOQT Object
-of each MOQT Group of an event timeline track. The publisher <span class="bcp14">MAY</span> publish incremental
-updates in the second and subsequent Objects within each Group. Incremental updates
-only contain event timeline records since the last event timeline Object.<a href="#section-8.3-1" class="pilcrow">¶</a></p>
+of each MOQT Group of an event timeline track. An independent event timeline object
+<span class="bcp14">MUST</span> contain all event timeline records accumulated and accessible up to that point, allowing a
+subscriber joining at any group boundary to receive the accessible event history.
+The publisher <span class="bcp14">MAY</span> publish incremental updates in the second and subsequent Objects
+within each Group. Incremental updates contain only new event timeline records since
+the previous event timeline Object in that Group.<a href="#section-8.3-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="event-timeline-track-examples">
