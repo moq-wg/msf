@@ -541,7 +541,7 @@ specified, the subscriber MUST establish a new MOQT connection to this URI for
 publishing the track data. If this field is absent, the subscriber SHOULD reuse
 the existing MOQT connection that was used to receive the catalog.
 
-The URI MUST be a valid MOQT endpoint URI. Examples include
+The URI MUST be a valid MOQT endpoint URI as defined by {{MoQTransport}} (Sect 3.1.1). Examples include
 "moqt://logs.example.com:4443", "moqt://metrics.example.com:8443", or
 "https://logs.example.com/moqt".
 
