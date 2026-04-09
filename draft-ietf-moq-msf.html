@@ -9,24 +9,24 @@
 <meta content="
        This document specifies the MOQT Streaming Format, designed to operate on Media Over QUIC Transport. 
     " name="description">
-<meta content="xml2rfc 3.31.0" name="generator">
+<meta content="xml2rfc 3.32.0" name="generator">
 <meta content="MoQ" name="keyword">
 <meta content="MoQTransport" name="keyword">
 <meta content="MSF" name="keyword">
 <meta content="draft-ietf-moq-msf-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.31.0
+  xml2rfc 3.32.0
     Python 3.12.12
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
     intervaltree 3.2.1
     Jinja2 3.1.6
     lxml 6.0.2
-    platformdirs 4.5.1
+    platformdirs 4.9.4
     pycountry 24.6.1
     PyYAML 6.0.3
     requests 2.32.5
-    wcwidth 0.3.0
+    wcwidth 0.6.0
 -->
 <link href="draft-ietf-moq-msf.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -1047,11 +1047,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">MOQT Streaming Format</td>
-<td class="right">March 2026</td>
+<td class="right">April 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Law</td>
-<td class="center">Expires 13 September 2026</td>
+<td class="center">Expires 11 October 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1064,12 +1064,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-moq-msf-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-03-12" class="published">12 March 2026</time>
+<time datetime="2026-04-09" class="published">9 April 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-09-13">13 September 2026</time></dd>
+<dd class="expires"><time datetime="2026-10-11">11 October 2026</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1119,7 +1119,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 13 September 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 11 October 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1479,6 +1479,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
             <p id="section-toc.1-1.11.1"><a href="#section-11" class="auto internal xref">11</a>. <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.1">
+                <p id="section-toc.1-1.11.2.1.1"><a href="#section-11.1" class="auto internal xref">11.1</a>.  <a href="#name-moqt-uri-fragment-types-reg" class="internal xref">"MOQT URI Fragment Types" registry</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
             <p id="section-toc.1-1.12.1"><a href="#section-12" class="auto internal xref">12</a>. <a href="#name-references" class="internal xref">References</a></p>
@@ -3817,26 +3822,29 @@ sports broadcast.<a href="#section-8.4.1-1" class="pilcrow">¶</a></p>
 <a href="#section-9.1" class="section-number selfRef">9.1. </a><a href="#name-url-construction-and-interp" class="section-name selfRef">URL construction and interpretation</a>
         </h3>
 <p id="section-9.1-1">An MSF URL identifies a MOQT session and an optional sub-resource within that session.
-It inherits the MOQT URI scheme defined by MOQT <span>[<a href="#MoQTransport" class="cite xref">MoQTransport</a>]</span> and extends it to
-add a fragment definition, which encodes the namespace and name of the track along
+It inherits the MOQT URI scheme defined in <span>[<a href="#MoQTransport" class="cite xref">MoQTransport</a>]</span> and extends it to add a
+fragment definition, which defines the type, the namespace and name of the track along
 with optional key-value attributes.<a href="#section-9.1-1" class="pilcrow">¶</a></p>
-<p id="section-9.1-2">"moqt" [ "+q" / "+wt" ] "://" authority path-abempty [ "?" query ] [ "#" msf-fragment ]<a href="#section-9.1-2" class="pilcrow">¶</a></p>
+<div class="lang-abnf sourcecode" id="section-9.1-2">
+<pre>
+; MSF URI Definition
+; The following rules are imported from RFC 3986:
+;   authority    (Section 3.2)
+;   path-abempty (Section 3.3)
+;   query        (Section 3.4)
+
+msf-uri = "moqt://" authority path-abempty [ "?" query ] "#" msf-fragment
+</pre><a href="#section-9.1-2" class="pilcrow">¶</a>
+</div>
 <p id="section-9.1-3">The MOQT specification carries the normative definition of these components,
-along with processing instructions. They are repeated here for clarity:<a href="#section-9.1-3" class="pilcrow">¶</a></p>
+along with processing instructions. They are repeated here for clarity. In the event of
+any conflict, the definition in <span>[<a href="#MoQTransport" class="cite xref">MoQTransport</a>]</span> is authoritative.<a href="#section-9.1-3" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-9.1-4.1">
-            <p id="section-9.1-4.1.1">Scheme: This case-insensitive scheme defines the underlying transport.<a href="#section-9.1-4.1.1" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-9.1-4.1.2.1">
-                <p id="section-9.1-4.1.2.1.1">moqt: the client may use either a WebTransport or native QUIC connection.<a href="#section-9.1-4.1.2.1.1" class="pilcrow">¶</a></p>
-</li>
-              <li class="normal" id="section-9.1-4.1.2.2">
-                <p id="section-9.1-4.1.2.2.1">moqt+q: the client <span class="bcp14">MUST</span> use a native QUIC connection.<a href="#section-9.1-4.1.2.2.1" class="pilcrow">¶</a></p>
-</li>
-              <li class="normal" id="section-9.1-4.1.2.3">
-                <p id="section-9.1-4.1.2.3.1">moqt+wt: the client <span class="bcp14">MUST</span> use a WebTransport connection.<a href="#section-9.1-4.1.2.3.1" class="pilcrow">¶</a></p>
-</li>
-            </ul>
+            <p id="section-9.1-4.1.1">Scheme: This case-insensitive scheme defines the underlying transport. The client may
+use either a WebTransport or native QUIC connection. A moqt URI can be converted to an
+https URI by replacing the scheme, so the path-abempty and query components use the
+same syntax as https URIs.<a href="#section-9.1-4.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-9.1-4.2">
             <p id="section-9.1-4.2.1">Authority: Required. Contains the host and optional port (defaulting to 443).
@@ -3849,35 +3857,58 @@ information used during connection initialization.<a href="#section-9.1-4.3.1" c
           <li class="normal" id="section-9.1-4.4">
             <p id="section-9.1-4.4.1">Query: Optional. Contains key-value parameters separated by &amp;. If the query is absent,
 the ? separator <span class="bcp14">MUST</span> be omitted. Query arguments are intended for the server and
-<span class="bcp14">SHOULD</span> ignored by the client.<a href="#section-9.1-4.4.1" class="pilcrow">¶</a></p>
+<span class="bcp14">SHOULD</span> be ignored by the client.<a href="#section-9.1-4.4.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-9.1-5">The msf-fragment element is defined by the following ABNF:<a href="#section-9.1-5" class="pilcrow">¶</a></p>
-<div class="lang-abnf sourcecode" id="section-9.1-6">
+<p id="section-9.1-5">This specification registers a fragment type of "msf" in the "MOQT URI Fragment Types"
+registry established by <span>[<a href="#MoQTransport" class="cite xref">MoQTransport</a>]</span> (see <a href="#IANA" class="auto internal xref">Section 11</a>). This type is required for any
+URL defining an MSF resource. The value of this type is the msf-fragment-value.<a href="#section-9.1-5" class="pilcrow">¶</a></p>
+<p id="section-9.1-6">The msf-fragment is defined by the following ABNF:<a href="#section-9.1-6" class="pilcrow">¶</a></p>
+<div class="lang-abnf sourcecode" id="section-9.1-7">
 <pre>
-msf-fragment      = track-identifier [ "&amp;" parameter-list ]
-track-identifier  = 1*( pchar-no-amp / "/" / "?" )
-                    ; MSF namespace-name string; MUST NOT contain '&amp;'
+; MSF Fragment Definition
+; The following rules are imported from RFC 3986:
+;   pchar        (Section 3.3)
+;   unreserved   (Section 2.3)
+;   pct-encoded  (Section 2.1)
+;   sub-delims   (Section 2.2)
+
+msf-fragment      = "msf:" msf-fragment-value
+
+msf-fragment-value = track-identifier [ "&amp;" parameter-list ]
+
+track-identifier  = 1*( pchar-no-amp / "/" )
+                    ; MSF namespace-name string
+                    ; MUST NOT contain '&amp;' or '?'
+                    ; '?' MUST be percent-encoded as %3F within this component
+
 parameter-list    = parameter *( "&amp;" parameter )
+
 parameter         = param-name "=" param-value
-param-name        = 1*( pchar-no-amp / "/" / "?" )
-param-value       = *( pchar-no-amp / "/" / "?" )
-pchar-no-amp      = unreserved / pct-encoded / "!" / "$" / "'" / "(" / ")"
-                    / "*" / "+" / "," / ";" / "=" / ":" / "@"
-</pre><a href="#section-9.1-6" class="pilcrow">¶</a>
+
+param-name        = 1*( pchar-no-amp / "/" )
+
+param-value       = *( pchar-no-amp / "/" )
+
+; Derived from RFC 3986 pchar (Section 3.3), excluding '&amp;' and '?':
+;   pchar = unreserved / pct-encoded / sub-delims / ":" / "@"
+; '&amp;' is excluded as it serves as the MSF fragment component delimiter.
+; '?' is excluded to avoid ambiguity with the URI query component delimiter.
+pchar-no-amp      = unreserved / pct-encoded / sub-delims-no-amp / ":" / "@"
+
+; Derived from RFC 3986 sub-delims (Section 2.2), excluding '&amp;':
+;   sub-delims = "!" / "$" / "&amp;" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
+sub-delims-no-amp = "!" / "$" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
+</pre><a href="#section-9.1-7" class="pilcrow">¶</a>
 </div>
-<ul class="normal">
-<li class="normal" id="section-9.1-7.1">
-            <p id="section-9.1-7.1.1">msf-fragment: Optional. Identifies a specific Track. If present, the first element <span class="bcp14">MUST</span> be
+<p id="section-9.1-8">The msf-fragment-value identifies a specific Track. The track-identifier <span class="bcp14">MUST</span> be
 formatted as an MSF namespace-name string (see <a href="#namespacenameencoding" class="auto internal xref">Section 9.1.2</a>). The client
 uses this identifier to initiate a SUBSCRIBE or FETCH command once the transport session
-is established. The namespace-name string <span class="bcp14">MAY</span> be followed by a series of key-value parameters,
-separated by &amp; from the namespace-name string and from each other. These key-value parameters
+is established. The namespace-name string <span class="bcp14">MAY</span> be followed by a series of key-value
+parameters, each separated from the preceding element by &amp;. These key-value parameters
 are intended for processing by the client and, being part of the fragment, are not transferred
 to the server at connection time. Certain of the fragment key-value parameters have a reserved
-meaning, as defined by <a href="#reservedfragmentparameters" class="auto internal xref">Section 9.1.1</a>.<a href="#section-9.1-7.1.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
+meaning, as defined by <a href="#reservedfragmentparameters" class="auto internal xref">Section 9.1.1</a>.<a href="#section-9.1-8" class="pilcrow">¶</a></p>
 <div id="reservedfragmentparameters">
 <section id="section-9.1.1">
           <h4 id="name-reserved-fragment-parameter">
@@ -3910,6 +3941,10 @@ case-sensitive.<a href="#section-9.1.1-1" class="pilcrow">¶</a></p>
                 <td class="text-left" rowspan="1" colspan="1">c4m</td>
                 <td class="text-left" rowspan="1" colspan="1">A base64 encoded C4M token</td>
               </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">connection</td>
+                <td class="text-left" rowspan="1" colspan="1">Mandates a connection type</td>
+              </tr>
             </tbody>
           </table>
 <ul class="normal">
@@ -3927,42 +3962,52 @@ to indicate an open range. The range definition is inclusive.<a href="#section-9
               <p id="section-9.1.1-3.3.1">location-range - a range defined by start and end media MOQT Location separated by
 a "-" dash. Range definitions are inclusive. MOQT Location is expressed as Group ID
 and Object ID separated by a "." dot. End Location may be omitted to indicate an
-open range. End Object ID may be ommited, indicating the whole end group is included in
-the range. The "." dot and "-" dash separators <span class="bcp14">MUST</span> be omitted when the second
-value is ommited.<a href="#section-9.1.1-3.3.1" class="pilcrow">¶</a></p>
+open range which continues to the end of the content.  End Object ID may be omitted,
+indicating the whole end group is included in the range. The "." dot and "-" dash
+separators <span class="bcp14">MUST</span> be omitted when the second value is omitted.<a href="#section-9.1.1-3.3.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-9.1.1-3.4">
               <p id="section-9.1.1-3.4.1">c4m - a base64 encoded token, as defined by <span>[<a href="#C4M" class="cite xref">C4M</a>]</span>.<a href="#section-9.1.1-3.4.1" class="pilcrow">¶</a></p>
 </li>
+            <li class="normal" id="section-9.1.1-3.5">
+              <p id="section-9.1.1-3.5.1">connection - mandates the client to use a particular connection type when connecting to
+the server. There are two allowed values - "q" or "wt". "q" indicates that a Native QUIC
+connection <span class="bcp14">MUST</span> be used. "wt" indicates that a WebTransport connection <span class="bcp14">MUST</span> be used.<a href="#section-9.1.1-3.5.1" class="pilcrow">¶</a></p>
+</li>
           </ul>
-<p id="section-9.1.1-4">If multiple ranges are specified within the same URL, the client shall process
-the union of those ranges.<a href="#section-9.1.1-4" class="pilcrow">¶</a></p>
+<p id="section-9.1.1-4">If multiple ranges are specified within the same URL for the same parameter, the client <span class="bcp14">MUST</span>
+process the union of those ranges.<a href="#section-9.1.1-4" class="pilcrow">¶</a></p>
 <p id="section-9.1.1-5">Example fragment parameters:<a href="#section-9.1.1-5" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-9.1.1-6.1">
-              <p id="section-9.1.1-6.1.1">wallclock-range=1761759637565-1761759836189<a href="#section-9.1.1-6.1.1" class="pilcrow">¶</a></p>
+              <p id="section-9.1.1-6.1.1">connection=q<a href="#section-9.1.1-6.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-9.1.1-6.2">
-              <p id="section-9.1.1-6.2.1">wallclock-range=1761751753894<a href="#section-9.1.1-6.2.1" class="pilcrow">¶</a></p>
+              <p id="section-9.1.1-6.2.1">connection=wt<a href="#section-9.1.1-6.2.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-9.1.1-6.3">
-              <p id="section-9.1.1-6.3.1">mediatime-range=0-13421<a href="#section-9.1.1-6.3.1" class="pilcrow">¶</a></p>
+              <p id="section-9.1.1-6.3.1">wallclock-range=1761759637565-1761759836189<a href="#section-9.1.1-6.3.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-9.1.1-6.4">
-              <p id="section-9.1.1-6.4.1">mediatime-range=982<a href="#section-9.1.1-6.4.1" class="pilcrow">¶</a></p>
+              <p id="section-9.1.1-6.4.1">wallclock-range=1761751753894<a href="#section-9.1.1-6.4.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-9.1.1-6.5">
-              <p id="section-9.1.1-6.5.1">location-range=34.0-2145.16<a href="#section-9.1.1-6.5.1" class="pilcrow">¶</a></p>
+              <p id="section-9.1.1-6.5.1">mediatime-range=0-13421<a href="#section-9.1.1-6.5.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-9.1.1-6.6">
-              <p id="section-9.1.1-6.6.1">location-range=16.24 //open range starting at Group ID 16 Object ID 24<a href="#section-9.1.1-6.6.1" class="pilcrow">¶</a></p>
+              <p id="section-9.1.1-6.6.1">mediatime-range=982<a href="#section-9.1.1-6.6.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-9.1.1-6.7">
-              <p id="section-9.1.1-6.7.1">location-range=16-24 // range from Group ID 16 through to and including all Objects in Group ID 24<a href="#section-9.1.1-6.7.1" class="pilcrow">¶</a></p>
+              <p id="section-9.1.1-6.7.1">location-range=34.0-2145.16<a href="#section-9.1.1-6.7.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-9.1.1-6.8">
-              <p id="section-9.1.1-6.8.1">c4m=gqhkYWxnIGVzaGFyqGR0eXBNhdZ9hdWQAY3VybGZlbWlzcwZleWV2aW5u
-ZWlhdGVwQWNyZW5lYnJmcmVqMTIzNDU2NzgwMHZpc3VlZF9hdD0xNzMwNDM<a href="#section-9.1.1-6.8.1" class="pilcrow">¶</a></p>
+              <p id="section-9.1.1-6.8.1">location-range=16.24 (open range starting at Group ID 16 Object ID 24)<a href="#section-9.1.1-6.8.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.1-6.9">
+              <p id="section-9.1.1-6.9.1">location-range=16-24 (range from Group ID 16 through to and including all Objects in Group ID 24)<a href="#section-9.1.1-6.9.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-9.1.1-6.10">
+              <p id="section-9.1.1-6.10.1">c4m=gqhkYWxnIGVzaGFyqGR0eXBNhdZ9hdWQAY3VybGZlbWlzcwZleWV2aW5uZWlhdGVwQWNyZW5lY<a href="#section-9.1.1-6.10.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 </section>
@@ -3974,7 +4019,7 @@ ZWlhdGVwQWNyZW5lYnJmcmVqMTIzNDU2NzgwMHZpc3VlZF9hdD0xNzMwNDM<a href="#section-9.1
           </h4>
 <p id="section-9.1.2-1">To represent MoQ Tuples (which are sequences of byte strings) within the URL
 fragment, MSF uses a specific encoding convention, which is normatively defined by
- MOQT <span>[<a href="#MoQTransport" class="cite xref">MoQTransport</a>]</span> and repeated here for convenience:<a href="#section-9.1.2-1" class="pilcrow">¶</a></p>
+MOQT <span>[<a href="#MoQTransport" class="cite xref">MoQTransport</a>]</span> and repeated here for convenience:<a href="#section-9.1.2-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-9.1.2-2.1">
               <p id="section-9.1.2-2.1.1">Hierarchy: Each element of the Namespace tuple is rendered in order, separated by
@@ -3991,11 +4036,9 @@ a double hyphen (--).<a href="#section-9.1.2-2.2.1" class="pilcrow">¶</a></p>
                   <p id="section-9.1.2-2.3.2.1.1">Unreserved characters (a-z, A-Z, 0-9, _) are represented literally.<a href="#section-9.1.2-2.3.2.1.1" class="pilcrow">¶</a></p>
 </li>
                 <li class="normal" id="section-9.1.2-2.3.2.2">
-                  <p id="section-9.1.2-2.3.2.2.1">All other byte values (including hyphens and periods used as data) <span class="bcp14">MUST</span> be<a href="#section-9.1.2-2.3.2.2.1" class="pilcrow">¶</a></p>
-</li>
-                <li class="normal" id="section-9.1.2-2.3.2.3">
-                  <p id="section-9.1.2-2.3.2.3.1">percent-encoded using a period (.) followed by two lowercase hexadecimal digits
-(e.g., a literal hyphen in a name becomes .2d).<a href="#section-9.1.2-2.3.2.3.1" class="pilcrow">¶</a></p>
+                  <p id="section-9.1.2-2.3.2.2.1">All other byte values (including hyphens and periods used as data) <span class="bcp14">MUST</span> be
+percent-encoded using a period (.) followed by two lowercase hexadecimal digits
+(e.g., a literal hyphen in a name becomes .2d).<a href="#section-9.1.2-2.3.2.2.1" class="pilcrow">¶</a></p>
 </li>
               </ul>
 </li>
@@ -4010,46 +4053,48 @@ a double hyphen (--).<a href="#section-9.1.2-2.2.1" class="pilcrow">¶</a></p>
           </h4>
 <ul class="normal">
 <li class="normal" id="section-9.1.3-1.1">
-              <p id="section-9.1.3-1.1.1">URl with a required Webtransport connection pointing at a catalog track:
-moqt+wt://example.com/server/config?a=1&amp;b=2#customer-livestream-123--catalog<a href="#section-9.1.3-1.1.1" class="pilcrow">¶</a></p>
+              <p id="section-9.1.3-1.1.1">URL pointing at a catalog track (either WebTransport or native QUIC may be used):
+moqt://example.com/server/config?a=1&amp;b=2#msf:customer-livestream-123--catalog<a href="#section-9.1.3-1.1.1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-9.1.3-1.1.2.1">
-                  <p id="section-9.1.3-1.1.2.1.1">Session: https://example.com/server/config?a=1&amp;b=2<a href="#section-9.1.3-1.1.2.1.1" class="pilcrow">¶</a></p>
+                  <p id="section-9.1.3-1.1.2.1.1">Session: example.com/server/config?a=1&amp;b=2<a href="#section-9.1.3-1.1.2.1.1" class="pilcrow">¶</a></p>
 </li>
                 <li class="normal" id="section-9.1.3-1.1.2.2">
-                  <p id="section-9.1.3-1.1.2.2.1">Namespace: ('customer', 'livestream', '123')<a href="#section-9.1.3-1.1.2.2.1" class="pilcrow">¶</a></p>
+                  <p id="section-9.1.3-1.1.2.2.1">Streaming format type: msf<a href="#section-9.1.3-1.1.2.2.1" class="pilcrow">¶</a></p>
 </li>
                 <li class="normal" id="section-9.1.3-1.1.2.3">
-                  <p id="section-9.1.3-1.1.2.3.1">Track Name: 'catalog'<a href="#section-9.1.3-1.1.2.3.1" class="pilcrow">¶</a></p>
+                  <p id="section-9.1.3-1.1.2.3.1">Namespace: ('customer', 'livestream', '123')<a href="#section-9.1.3-1.1.2.3.1" class="pilcrow">¶</a></p>
+</li>
+                <li class="normal" id="section-9.1.3-1.1.2.4">
+                  <p id="section-9.1.3-1.1.2.4.1">Track Name: 'catalog'<a href="#section-9.1.3-1.1.2.4.1" class="pilcrow">¶</a></p>
 </li>
               </ul>
 </li>
             <li class="normal" id="section-9.1.3-1.2">
               <p id="section-9.1.3-1.2.1">URL with a required raw QUIC connection pointing at a catalog:
-moqt+q://example.com/relay-app/relayID#customerID-broadcastID--catalog<a href="#section-9.1.3-1.2.1" class="pilcrow">¶</a></p>
+moqt://example.com/relay-app/relayID#msf:customerID-broadcastID--catalog&amp;connection=q<a href="#section-9.1.3-1.2.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-9.1.3-1.3">
-              <p id="section-9.1.3-1.3.1">URL pointing at a non-catalog track (either Webtransport or native QUIC may be used):
-moqt://example.com/relay-app/relayID#customerID-broadcastID--video<a href="#section-9.1.3-1.3.1" class="pilcrow">¶</a></p>
+              <p id="section-9.1.3-1.3.1">URL pointing at a non-catalog track, with a required WebTransport connection
+moqt://example.com/relay-app/relayID#msf:customerID-broadcastID--video&amp;connection=wt<a href="#section-9.1.3-1.3.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-9.1.3-1.4">
               <p id="section-9.1.3-1.4.1">URL pointing at a subclip:
-moqt://example.com/relay-app/relayID#customerID-broadcastID--catalog&amp;location-range=34-64<a href="#section-9.1.3-1.4.1" class="pilcrow">¶</a></p>
+moqt://example.com/relay-app/relayID#msf:customerID-broadcastID--catalog&amp;location-range=34-64<a href="#section-9.1.3-1.4.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-9.1.3-1.5">
-              <p id="section-9.1.3-1.5.1">URL pointing at a catalog and supplying a token for the client:
-moqt://example.com/relay-app/relayID#customerID-broadcastID--
-catalog&amp;c4m=gqhkYWxnIGVzaGFyqGR0eXBNhdZ9hdWQAY3VybGZlbWlzcwZl
-eWV2aW5uZWlhdGVwQWNyZW5lYnJmcmVqMTIzNDU2NzgwMHZpc3VlZF9hdD0xN
-zMwNDM<a href="#section-9.1.3-1.5.1" class="pilcrow">¶</a></p>
+              <p id="section-9.1.3-1.5.1">URL pointing at a catalog and supplying a token for the client: (linebreaks for display only)
+moqt://example.com/relay-app/relayID#msf:customerID-broadcastID--
+catalog&amp;c4m=gqhkYWxnIGVzaGFyqGR0eXBNhdZ9hdWQAY3VybGZlbWlzcwZleWV2
+aW5uZWlhdGVwQWNyZW5lYnJmcmVqMTIzNDU2NzgwMHZpc3VlZF9hdD0xNzMwNDM<a href="#section-9.1.3-1.5.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-9.1.3-1.6">
               <p id="section-9.1.3-1.6.1">URL pointing at a catalog and supplying a token for the client along with a separate token
-for the server:
+for the server: (linebreaks for display only)
 moqt://example.com/relay-app/relayID?token=HTRCII74GHFT@JHBCV
-SW56HKKneH2Dbyq6NHBI2#customerID-broadcastID--catalog&amp;c4m=gqh
-kYWxnIGVzaGFyqGR0eXBNhdZ9hdWQAY3VybGZlbWlzcwZleWV2aW5uZWlhdGV
-wQWNyZW5lYnJmcmVqMTIzNDU2NzgwMHZpc3VlZF9hdD0xNzMwNDM<a href="#section-9.1.3-1.6.1" class="pilcrow">¶</a></p>
+SW56HKKneH2Dbyq6NHBI2#msf:customerID-broadcastID--catalog&amp;c4m=gqh
+kYWxnIGVzaGFyqGR0eXBNhdZ9hdWQAY3VybGZlbWlzcwZleWV2aW5uZWlhdGVwQWN
+yZW5lYnJmcmVqMTIzNDU2NzgwMHZpc3VlZF9hdD0xNzMwNDM<a href="#section-9.1.3-1.6.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 </section>
@@ -4106,9 +4151,32 @@ TRUE and which contains an empty Tracks <a href="#tracks" class="auto internal x
       <h2 id="name-iana-considerations">
 <a href="#section-11" class="section-number selfRef">11. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
       </h2>
-<p id="section-11-1">This document creates a new entry in the "MoQ Streaming Format" Registry
-(see <span>[<a href="#MoQTransport" class="cite xref">MoQTransport</a>]</span> Sect 8).  The type value is 0x001, the name is
-"MOQT Streaming Format" and the RFC is XXX.<a href="#section-11-1" class="pilcrow">¶</a></p>
+<div id="moqt-uri-fragment-types-registry">
+<section id="section-11.1">
+        <h3 id="name-moqt-uri-fragment-types-reg">
+<a href="#section-11.1" class="section-number selfRef">11.1. </a><a href="#name-moqt-uri-fragment-types-reg" class="section-name selfRef">"MOQT URI Fragment Types" registry</a>
+        </h3>
+<p id="section-11.1-1">This document creates a new entry in the "MOQT URI Fragment Types" registry
+(see <span>[<a href="#MoQTransport" class="cite xref">MoQTransport</a>]</span> Sect 14.3).<a href="#section-11.1-1" class="pilcrow">¶</a></p>
+<table class="center" id="table-9">
+          <caption><a href="#table-9" class="selfRef">Table 9</a></caption>
+<thead>
+            <tr>
+              <th class="text-left" rowspan="1" colspan="1">Fragment Type</th>
+              <th class="text-left" rowspan="1" colspan="1">Description</th>
+              <th class="text-left" rowspan="1" colspan="1">Specification</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">msf</td>
+              <td class="text-left" rowspan="1" colspan="1">MOQT Streaming Format</td>
+              <td class="text-left" rowspan="1" colspan="1">this</td>
+            </tr>
+          </tbody>
+        </table>
+</section>
+</div>
 </section>
 </div>
 <div id="sec-combined-references">
