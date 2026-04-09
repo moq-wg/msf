@@ -1138,9 +1138,10 @@ that reference this initialization track.
 
 An initialization track initially publishes its payload as a single MOQT Object within a
 MOQT Group. The Object ID MUST be 0. The Group ID MUST match the starting Group ID
-of the tracks which reference this initialization track in their initTrack property
+of the tracks which reference this initialization track in their initTrack property.
 
-If the initialization data then changes (for example, due to a codec parameter change
+If the initialization data then changes (for example, due to a codec parameter
+change
 or resolution switch that requires new decoder configuration), the publisher MUST
 publish a new Group with an incremented Group ID containing the updated
 initialization data. That new Group ID MUST again match the target Group ID at which the
