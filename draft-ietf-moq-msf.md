@@ -362,6 +362,7 @@ Table 3 lists the fields defined within each track object.
 | Render group            | renderGroup            | {{rendergroup}}           |
 | Alternate group         | altGroup               | {{altgroup}}              |
 | Initialization data     | initData               | {{initdata}}              |
+| Initialization track    | initTrack              | {{inittrack}}             |
 | Dependencies            | depends                | {{dependencies}}          |
 | Temporal ID             | temporalId             | {{temporalid}}            |
 | Spatial ID              | spatialId              | {{spatialid}}             |
@@ -443,6 +444,7 @@ Table 5: Reserved track roles
 | audiodescription | An audio description for visually impaired users           |
 | video            | Visual content                                             |
 | audio            | Audio content                                              |
+| init             | Initialization data for other tracks (see {{inittrack}})   |
 | mediatimeline    | An MSF media timeline {{mediatimelinetrack}}               |
 | eventtimeline    | An MSF event timeline {{eventtimelinetrack}}               |
 | caption          | A textual representation of the audio track                |
@@ -507,6 +509,17 @@ a set video tracks of the same content offered in alternate bitrates.
 Required: Optional    JSON Type: String    Location: Track Object
 
 A string holding Base64 {{BASE64}} encoded initialization data for the track.
+
+A track MUST NOT specify both initData and initTrack {{inittrack}}.
+
+### Initialization track {#inittrack}
+Location: T    Required: Optional   JSON Type: String
+
+A string specifying the name of a track that holds the initialization data
+for this track. The referenced track MUST exist in the same catalog and share
+the same namespace as the referencing track. A track MUST NOT specify both
+initTrack and initData. See {{initializationtrack}} for initialization track
+requirements and payload format.
 
 ### Dependencies {#dependencies}
 Required: Optional    JSON Type: Array    Location: Track Object
@@ -899,6 +912,89 @@ of the catalog.
       "samplerate":48000,
       "channelConfig":"2",
       "bitrate":32000
+    }
+   ]
+}
+~~~
+
+
+### ABR video tracks with shared initialization track
+
+This example shows a catalog using a shared initialization track for
+multiple ABR video renditions. All three video qualities reference the
+same init track, enabling deduplication and independent init segment updates.
+
+~~~json
+{
+  "version": 1,
+  "generatedAt": 1746104606044,
+  "tracks":[
+    {
+      "name": "video-init",
+      "namespace": "streaming.example.com/live/channel1",
+      "packaging": "loc",
+      "role": "init"
+    },
+    {
+      "name": "hd",
+      "namespace": "streaming.example.com/live/channel1",
+      "renderGroup": 1,
+      "packaging": "loc",
+      "isLive": true,
+      "targetLatency": 1500,
+      "role": "video",
+      "codec":"avc1.640028",
+      "width":1920,
+      "height":1080,
+      "bitrate":5000000,
+      "framerate":30,
+      "altGroup":1,
+      "initTrack": "video-init"
+    },
+    {
+      "name": "md",
+      "namespace": "streaming.example.com/live/channel1",
+      "renderGroup": 1,
+      "packaging": "loc",
+      "isLive": true,
+      "targetLatency": 1500,
+      "role": "video",
+      "codec":"avc1.640028",
+      "width":1280,
+      "height":720,
+      "bitrate":3000000,
+      "framerate":30,
+      "altGroup":1,
+      "initTrack": "video-init"
+    },
+    {
+      "name": "sd",
+      "namespace": "streaming.example.com/live/channel1",
+      "renderGroup": 1,
+      "packaging": "loc",
+      "isLive": true,
+      "targetLatency": 1500,
+      "role": "video",
+      "codec":"avc1.640028",
+      "width":640,
+      "height":360,
+      "bitrate":1000000,
+      "framerate":30,
+      "altGroup":1,
+      "initTrack": "video-init"
+    },
+    {
+      "name": "audio",
+      "namespace": "streaming.example.com/live/channel1",
+      "renderGroup": 1,
+      "packaging": "loc",
+      "isLive": true,
+      "targetLatency": 1500,
+      "role": "audio",
+      "codec":"mp4a.40.2",
+      "samplerate":48000,
+      "channelConfig":"2",
+      "bitrate":128000
     }
    ]
 }
@@ -1458,7 +1554,7 @@ The MOQT Groups and MOQT Objects need to be mapped to MOQT Streams. Irrespective
 of the {{mediapackaging}} in place, each MOQT Object MUST be mapped to a new
 MOQT Stream.
 
-## Group numbering
+## Group numbering {#group-numbering}
 The Group ID of the first Group published in a track at application startup MUST be
 a unique integer that will not repeat in the future. One approach to achieve this
 is to set the initial Group ID to the creation time of the first Object in the
@@ -1472,6 +1568,79 @@ Each subsequent Group ID MUST increase by 1.
 
 If a publisher is able to maintain state across a republish, it MUST signal the gap
 in Group IDs using the MOQT Prior Group ID Gap Extension header.
+
+# Initialization track {#initializationtrack}
+
+An initialization track provides codec initialization data for one or more media
+tracks. Instead of embedding initialization data directly in the catalog using the
+initData field {{initdata}}, publishers can reference a separate initialization track
+using the initTrack field {{inittrack}}. This approach offers several advantages:
+
+* Independent updates to initialization data without modifying the catalog
+* Deduplication when multiple tracks share identical initialization segments
+* Compatibility with HLS/DASH delivery
+* Reduced catalog size for codecs with large initialization data
+
+## Initialization track payload {#inittrackpayload}
+
+The initialization track payload contains raw (non-Base64 encoded) codec
+initialization data. The format of this data depends on the media packaging
+{{mediapackaging}} and codec in use:
+
+* For LOC packaging, the payload contains codec-specific initialization data as
+  defined in {{LOC}}.
+* For other container formats, the payload contains the codec-specific initialization
+  data as defined by that format.
+
+The initialization data MUST be sufficient to initialize a decoder for all tracks
+that reference this initialization track.
+
+## Initialization track group and object structure
+
+An initialization track initially publishes its payload as a single MOQT Object within a
+MOQT Group. The Object ID MUST be 0. The Group ID MUST match the starting Group ID
+of the tracks which reference this initialization track in their initTrack property.
+
+If the initialization data then changes (for example, due to a codec parameter
+change
+or resolution switch that requires new decoder configuration), the publisher MUST
+publish a new Group with an incremented Group ID containing the updated
+new initialization data is required by the tracks which reference this initialization track
+in their initTrack property.
+
+Subscribers can either fetch or subscribe to the initialization track. When
+joining a session, subscribers SHOULD fetch the latest Group from the
+initialization track before beginning media playback. Alternatively, subscribers
+MAY subscribe to the initialization track to receive live updates when the
+initialization data changes. Upon receiving a new Group, the subscriber SHOULD
+reinitialize its decoder with the updated initialization data.
+
+## Initialization track catalog requirements
+
+An initialization track MUST be declared in the catalog with the following properties:
+
+* The role field {{trackrole}} MUST be set to "init"
+* The packaging field {{packaging}} MUST match the packaging of the tracks that
+  reference it
+* The namespace MUST match the namespace of all tracks that reference it via
+  initTrack
+
+A track that specifies an initTrack field MUST NOT also specify an initData field.
+The referenced initialization track MUST exist in the same catalog.
+
+## Initialization track updating
+
+For live streams, the publisher MUST publish the initialization data in
+Object 0 of the first Group at the start of the broadcast. The first Group ID
+MUST follow the requirements in {{group-numbering}} and MUST match the
+Group ID of the tracks which uses this initTrack for initialization. If the
+initialization data
+needs to change during the broadcast (such as a mid-stream resolution change),
+the publisher increments the Group ID to match the point at which the change applies in the
+dependent tracks and publishes the new initialization data.
+
+For VOD assets, the initialization track typically contains a single Group with
+the initialization data that applies to the entire asset.
 
 # Media Timeline track {#mediatimelinetrack}
 The media timeline track provides data about the previously published Groups and their
