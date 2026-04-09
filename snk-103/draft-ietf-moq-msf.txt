@@ -1351,12 +1351,12 @@ Table of Contents
    The publisher MUST publish an independent event timeline in the first
    MOQT Object of each MOQT Group of an event timeline track.  An
    independent event timeline object MUST contain all event timeline
-   records accumulated up to that point, allowing a subscriber joining
-   at any group boundary to receive the complete event history.  The
-   publisher MAY publish incremental updates in the second and
-   subsequent Objects within each Group.  Incremental updates contain
-   only new event timeline records since the previous event timeline
-   Object in that Group.
+   records accumulated and accessible up to that point, allowing a
+   subscriber joining at any group boundary to receive the accessible
+   event history.  The publisher MAY publish incremental updates in the
+   second and subsequent Objects within each Group.  Incremental updates
+   contain only new event timeline records since the previous event
+   timeline Object in that Group.
 
 8.4.  Event timeline track examples
 

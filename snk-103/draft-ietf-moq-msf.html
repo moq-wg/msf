@@ -3070,8 +3070,8 @@ event timeline track.<a href="#section-8.2-2.4.1" class="pilcrow">¶</a></p>
         </h3>
 <p id="section-8.3-1">The publisher <span class="bcp14">MUST</span> publish an independent event timeline in the first MOQT Object
 of each MOQT Group of an event timeline track. An independent event timeline object
-<span class="bcp14">MUST</span> contain all event timeline records accumulated up to that point, allowing a
-subscriber joining at any group boundary to receive the complete event history.
+<span class="bcp14">MUST</span> contain all event timeline records accumulated and accessible up to that point, allowing a
+subscriber joining at any group boundary to receive the accessible event history.
 The publisher <span class="bcp14">MAY</span> publish incremental updates in the second and subsequent Objects
 within each Group. Incremental updates contain only new event timeline records since
 the previous event timeline Object in that Group.<a href="#section-8.3-1" class="pilcrow">¶</a></p>
