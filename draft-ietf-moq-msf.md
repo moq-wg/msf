@@ -1172,8 +1172,9 @@ The referenced initialization track MUST exist in the same catalog.
 
 For live streams, the publisher MUST publish the initialization data in
 Object 0 of the first Group at the start of the broadcast. The first Group ID
-MUST follow the requirements in {{group-numbering}} and MUST match the 
-Group ID of the tracks which uses this initTrack for initialization.  If the initialization data
+MUST follow the requirements in {{group-numbering}} and MUST match the
+Group ID of the tracks which uses this initTrack for initialization. If the
+initialization data
 needs to change during the broadcast (such as a mid-stream resolution change),
 the publisher increments the Group ID to match the point at which the change applies in the
 dependent tracks and publishes the new initialization data.
