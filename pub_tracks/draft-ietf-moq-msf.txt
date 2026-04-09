@@ -4,8 +4,8 @@
 
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
-Intended status: Informational                          18 February 2026
-Expires: 22 August 2026
+Intended status: Informational                              9 April 2026
+Expires: 11 October 2026
 
 
                          MOQT Streaming Format
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 22 August 2026.
+   This Internet-Draft will expire on 11 October 2026.
 
 Copyright Notice
 
@@ -811,7 +811,8 @@ Table of Contents
    is absent, the subscriber SHOULD reuse the existing MOQT connection
    that was used to receive the catalog.
 
-   The URI MUST be a valid MOQT endpoint URI.  Examples include
+   The URI MUST be a valid MOQT endpoint URI as defined by
+   [MoQTransport] (Sect 3.1.1).  Examples include
    "moqt://logs.example.com:4443", "moqt://metrics.example.com:8443", or
    "https://logs.example.com/moqt".
 
