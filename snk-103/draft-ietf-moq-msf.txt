@@ -4,8 +4,8 @@
 
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
-Intended status: Informational                          19 February 2026
-Expires: 23 August 2026
+Intended status: Informational                              9 April 2026
+Expires: 11 October 2026
 
 
                          MOQT Streaming Format
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 23 August 2026.
+   This Internet-Draft will expire on 11 October 2026.
 
 Copyright Notice
 
@@ -1288,12 +1288,12 @@ Table of Contents
    The publisher MUST publish an independent media timeline in the first
    MOQT Object of each MOQT Group of a media timeline track.  An
    independent media timeline object MUST contain all media timeline
-   records accumulated up to that point, allowing a subscriber joining
-   at any group boundary to receive the complete timeline history.  The
-   publisher MAY publish incremental updates in the second and
-   subsequent Objects within each Group.  Incremental updates contain
-   only new media timeline records since the previous media timeline
-   Object in that Group.
+   records accumulated and accessible up to that point, allowing a
+   subscriber joining at any group boundary to receive the accessible
+   timeline history.  The publisher MAY publish incremental updates in
+   the second and subsequent Objects within each Group.  Incremental
+   updates contain only new media timeline records since the previous
+   media timeline Object in that Group.
 
 8.  Event Timeline track
 
