@@ -83,6 +83,7 @@ Table of Contents
        5.1.2.  Generated at
        5.1.3.  Is Complete
        5.1.4.  Tracks
+       5.1.5.  Publish tracks
      5.2.  Delta Update Catalog Fields
        5.2.1.  Delta update
        5.2.2.  Add tracks
@@ -119,10 +120,12 @@ Table of Contents
        5.3.28. Language
        5.3.29. Parent name
        5.3.30. Track duration
-       5.3.31. Encryption scheme
-       5.3.32. Cipher suite
-       5.3.33. Key ID
-       5.3.34. Track Base Key
+       5.3.31. Connection URI
+       5.3.32. Token
+       5.3.33. Encryption scheme
+       5.3.34. Cipher suite
+       5.3.35. Key ID
+       5.3.36. Track Base Key
      5.4.  Delta updates
      5.5.  Variable Substitution
        5.5.1.  Variable Syntax
@@ -143,6 +146,7 @@ Table of Contents
        5.6.10. Media timeline template
        5.6.11. Terminating a live broadcast
        5.6.12. Variable Substitution for personalized delivery
+       5.6.13. Publish tracks for logs and metrics
    6.  Media transmission
      6.1.  Group numbering
    7.  Media Timeline track
@@ -160,19 +164,29 @@ Table of Contents
      8.4.  Event timeline track examples
        8.4.1.  Event timeline track with wallclock time indexing
        8.4.2.  Event timeline track with MOQT Location indexing
-   9.  Workflow
-     9.1.  URL construction and interpretation
-       9.1.1.  Reserved fragment parameters
-       9.1.2.  MSF Namespace-Name String Encoding
-       9.1.3.  Example MSF URLs
-     9.2.  Initiating a broadcast
-     9.3.  Ending a live broadcast
-   10. Security Considerations
-   11. IANA Considerations
-     11.1.  "MOQT URI Fragment Types" registry
-   12. References
-     12.1.  Normative References
-     12.2.  Informative References
+   9.  Log track
+     9.1.  Log track payload
+     9.2.  Log track namespace and name
+     9.3.  Log track Group ID and Object ID
+     9.4.  Log track catalog requirements
+   10. Metrics track
+     10.1.  Metrics track payload
+     10.2.  Metrics track namespace and name
+     10.3.  Metrics track Group ID and Object ID
+     10.4.  Metrics track catalog requirements
+   11. Workflow
+     11.1.  URL construction and interpretation
+       11.1.1.  Reserved fragment parameters
+       11.1.2.  MSF Namespace-Name String Encoding
+       11.1.3.  Example MSF URLs
+     11.2.  Initiating a broadcast
+     11.3.  Ending a live broadcast
+   12. Security Considerations
+   13. IANA Considerations
+     13.1.  "MOQT URI Fragment Types" registry
+   14. References
+     14.1.  Normative References
+     14.2.  Informative References
    Acknowledgments
    Contributors
    Author's Address
@@ -263,7 +277,8 @@ Table of Contents
    *  Capable of delivering interstitial advertising.
 
    *  Logs and analytics management - support for the reporting of
-      client-side QoE and relay delivery actions.
+      client-side QoE and relay delivery actions via publish tracks
+      using [MOQLOG] and [MOQMETRICS].
 
    Initial versions of MSF will prioritize basic features necessary to
    exercise interoperability across delivery systems.  Later versions
@@ -314,14 +329,14 @@ Table of Contents
    The encryption scheme and parameters are signaled in the catalog
    using the following track-level fields:
 
-   *  encryptionScheme Section 5.3.31 - identifies the encryption
+   *  encryptionScheme Section 5.3.33 - identifies the encryption
       mechanism
 
-   *  cipherSuite Section 5.3.32 - specifies the AEAD algorithm
+   *  cipherSuite Section 5.3.34 - specifies the AEAD algorithm
 
-   *  keyId Section 5.3.33 - identifies the key material for decryption
+   *  keyId Section 5.3.35 - identifies the key material for decryption
 
-   *  trackBaseKey Section 5.3.34 - the base key material for this track
+   *  trackBaseKey Section 5.3.36 - the base key material for this track
 
    When the encryptionScheme field is present in a track definition,
    subscribers MUST decrypt the object payload using the specified
@@ -421,17 +436,19 @@ Table of Contents
    Table 1 lists the fields defined at the root of the catalog JSON
    object.
 
-              +==============+=============+===============+
-              | Field        | Name        | Definition    |
-              +==============+=============+===============+
-              | MSF version  | version     | Section 5.1.1 |
-              +--------------+-------------+---------------+
-              | Generated at | generatedAt | Section 5.1.2 |
-              +--------------+-------------+---------------+
-              | Is Complete  | isComplete  | Section 5.1.3 |
-              +--------------+-------------+---------------+
-              | Tracks       | tracks      | Section 5.1.4 |
-              +--------------+-------------+---------------+
+            +================+===============+===============+
+            | Field          | Name          | Definition    |
+            +================+===============+===============+
+            | MSF version    | version       | Section 5.1.1 |
+            +----------------+---------------+---------------+
+            | Generated at   | generatedAt   | Section 5.1.2 |
+            +----------------+---------------+---------------+
+            | Is Complete    | isComplete    | Section 5.1.3 |
+            +----------------+---------------+---------------+
+            | Tracks         | tracks        | Section 5.1.4 |
+            +----------------+---------------+---------------+
+            | Publish tracks | publishTracks | Section 5.1.5 |
+            +----------------+---------------+---------------+
 
                                  Table 1
 
@@ -472,6 +489,17 @@ Table of Contents
    Required: Yes JSON Type: Array Location: Root Catalog
 
    An array of track objects Section 5.3.1.
+
+5.1.5.  Publish tracks
+
+   Location: R Required: Optional JSON Type: Array
+
+   An array of publish track objects.  Publish tracks define tracks to
+   which the subscriber can publish data, such as logs, metrics, or
+   other QoE data.  This enables bi-directional communication where the
+   subscriber acts as a publisher for specific tracks.  Each publish
+   track object follows the same structure as a regular track object
+   Section 5.3.1 but is used for the reverse direction of data flow.
 
 5.2.  Delta Update Catalog Fields
 
@@ -594,6 +622,10 @@ Table of Contents
         +-----------------------+---------------+----------------+
         | Track duration        | trackDuration | Section 5.3.30 |
         +-----------------------+---------------+----------------+
+        | Connection URI        | connectionUri | Section 5.3.31 |
+        +-----------------------+---------------+----------------+
+        | Token                 | token         | Section 5.3.32 |
+        +-----------------------+---------------+----------------+
 
                                  Table 3
 
@@ -627,19 +659,23 @@ Table of Contents
    A string defining the type of payload encapsulation.  Allowed values
    are strings as defined in Table 4.
 
+           +================+===============+==================+
+           | Name           | Value         | Reference        |
+           +================+===============+==================+
+           | LOC            | loc           | See RFC XXXX     |
+           +----------------+---------------+------------------+
+           | Media Timeline | mediatimeline | See Section 7    |
+           +----------------+---------------+------------------+
+           | Event Timeline | eventtimeline | See Section 8    |
+           +----------------+---------------+------------------+
+           | MoQ Log        | moqlog        | See [MOQLOG]     |
+           +----------------+---------------+------------------+
+           | MoQ Metrics    | moqmetrics    | See [MOQMETRICS] |
+           +----------------+---------------+------------------+
+
+                                  Table 4
+
    Table 4: Allowed packaging values
-
-            +================+===============+===============+
-            | Name           | Value         | Reference     |
-            +================+===============+===============+
-            | LOC            | loc           | See RFC XXXX  |
-            +----------------+---------------+---------------+
-            | Media Timeline | mediatimeline | See Section 7 |
-            +----------------+---------------+---------------+
-            | Event Timeline | eventtimeline | See Section 8 |
-            +----------------+---------------+---------------+
-
-                                 Table 4
 
 5.3.5.  Event timeline type
 
@@ -692,6 +728,12 @@ Table of Contents
               +------------------+--------------------------+
               | signlanguage     | A visual track for       |
               |                  | hearing impaired users.  |
+              +------------------+--------------------------+
+              | log              | A log publishing track   |
+              |                  | per [MOQLOG].            |
+              +------------------+--------------------------+
+              | metrics          | A metrics publishing     |
+              |                  | track per [MOQMETRICS].  |
               +------------------+--------------------------+
 
                                   Table 5
@@ -910,7 +952,31 @@ Table of Contents
    field MUST NOT be included if the isLive Section 5.3.7 field value is
    true.
 
-5.3.31.  Encryption scheme
+5.3.31.  Connection URI
+
+   Location: T Required: Optional JSON Type: String
+
+   A string containing the MOQT connection endpoint URI for the publish
+   track.  When specified, the subscriber MUST establish a new MOQT
+   connection to this URI for publishing the track data.  If this field
+   is absent, the subscriber SHOULD reuse the existing MOQT connection
+   that was used to receive the catalog.
+
+   The URI MUST be a valid MOQT endpoint URI as defined by
+   [MoQTransport] (Sect 3.1.1).  Examples include
+   "moqt://logs.example.com:4443", "moqt://metrics.example.com:8443", or
+   "https://logs.example.com/moqt".
+
+5.3.32.  Token
+
+   Location: T Required: Optional JSON Type: String
+
+   A string containing an authentication token or credential for the
+   track.  For publish tracks, this token authorizes the subscriber to
+   publish data to the specified track.  The format and validation of
+   the token is application-specific.
+
+5.3.33.  Encryption scheme
 
    Location: T Required: Optional JSON Type: String
 
@@ -933,7 +999,7 @@ Table of Contents
    use Reverse Domain Name Notation to avoid collisions (e.g.,
    "com.example.custom-encryption").
 
-5.3.32.  Cipher suite
+5.3.34.  Cipher suite
 
    Location: T Required: Optional JSON Type: String
 
@@ -963,7 +1029,7 @@ Table of Contents
    SHOULD support "aes-128-ctr-hmac-sha256-80" for scenarios requiring
    smaller authentication tags.
 
-5.3.33.  Key ID
+5.3.35.  Key ID
 
    Location: T Required: Optional JSON Type: String
 
@@ -983,7 +1049,7 @@ Table of Contents
    keys are derived using the track name as defined in ([SecureObjects],
    Section 5).
 
-5.3.34.  Track Base Key
+5.3.36.  Track Base Key
 
    Location: T Required: Optional JSON Type: String
 
@@ -1641,6 +1707,83 @@ Table of Contents
      ]
    }
 
+5.6.13.  Publish tracks for logs and metrics
+
+   This example shows a catalog that includes publish tracks for client-
+   side logging and metrics collection.  The subscriber can publish QoE
+   data and logs back to the delivery system using these track
+   definitions.  The namespace and track name formats follow the
+   conventions defined in [MOQLOG] and [MOQMETRICS].
+
+   {
+     "version": 1,
+     "generatedAt": 1746104606044,
+     "tracks": [
+       {
+         "name": "video",
+         "namespace": "broadcast.example.com/live/stream1",
+         "packaging": "loc",
+         "isLive": true,
+         "targetLatency": 2000,
+         "role": "video",
+         "renderGroup": 1,
+         "codec": "av01.0.08M.10.0.110.09",
+         "width": 1920,
+         "height": 1080,
+         "framerate": 30,
+         "bitrate": 1500000
+       },
+       {
+         "name": "audio",
+         "namespace": "broadcast.example.com/live/stream1",
+         "packaging": "loc",
+         "isLive": true,
+         "targetLatency": 2000,
+         "role": "audio",
+         "renderGroup": 1,
+         "codec": "opus",
+         "samplerate": 48000,
+         "channelConfig": "2",
+         "bitrate": 32000
+       }
+     ],
+     "publishTracks": [
+       {
+         "namespace": "moq://metrics.moq.arpa/v1/%resourceId%",
+         "name": "4",
+         "packaging": "moqmetrics",
+         "role": "metrics",
+         "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+       },
+       {
+         "namespace": "moq://moq-syslog.arpa/logs-v1/%resourceId%",
+         "name": "6",
+         "packaging": "moqlog",
+         "role": "log",
+         "connectionUri": "moqt://logs.example.com:4443",
+         "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+       }
+     ]
+   }
+
+   In this example:
+
+   *  The metrics track uses the namespace format defined in
+      [MOQMETRICS] with %resourceId% as a placeholder for the
+      subscriber's unique resource identifier.  The track name "4"
+      indicates Warning level granularity.
+
+   *  The log track uses the namespace format defined in [MOQLOG] with
+      %resourceId% as a placeholder.  The track name "6" indicates
+      Informational level priority.  This track establishes a separate
+      connection to logs.example.com.
+
+   *  Both tracks include authentication tokens for publishing
+      authorization.
+
+   *  The subscriber MUST replace %resourceId% with their actual
+      resource identifier as defined in the respective specifications.
+
 6.  Media transmission
 
    The MOQT Groups and MOQT Objects need to be mapped to MOQT Streams.
@@ -1902,9 +2045,140 @@ Table of Contents
        }
    ]
 
-9.  Workflow
+9.  Log track
 
-9.1.  URL construction and interpretation
+   Log tracks provide a mechanism for subscribers to publish diagnostic
+   and operational log data back to the delivery system.  This enables
+   QoE monitoring, debugging, and analytics collection.  Log tracks are
+   defined in the catalog's publishTracks array with a packaging value
+   of "moqlog".
+
+9.1.  Log track payload
+
+   The log track payload format is defined in [MOQLOG].  Each MOQT
+   Object contains a single JSON-formatted log entry.  The log entry
+   structure includes optional fields such as severity, timestamp,
+   hostname, application name, process ID, message ID, and the log
+   message itself.  Additional structured data fields support
+   distributed tracing integration with TraceID, SpanID, and
+   InstrumentationScope aligned with OpenTelemetry specifications.
+   Implementations MUST follow the object payload format specified in
+   Section 4 of [MOQLOG].
+
+9.2.  Log track namespace and name
+
+   TODO: Finalize on track naming
+
+   Log tracks MUST use the namespace and track name format defined in
+   Section 3 of [MOQLOG].  The Track Namespace consists of the tuples:
+   (moq://moq-syslog.arpa/logs-v1/),(resourceID) where resourceID is a
+   unique identifier for the publishing resource.
+
+   The Track Name is a single byte containing the log priority level in
+   binary.  Priority levels range from 0 (Emergency) to 7 (Debug),
+   following syslog severity conventions.
+
+9.3.  Log track Group ID and Object ID
+
+   The Group ID represents the timestamp at which the log entry was
+   captured, truncated to a 62-bit binary integer representing
+   microseconds since the Unix epoch.  This allows log entries to be
+   naturally ordered by time within the MOQT object model.
+
+   The Object ID is set to zero for a log entry unless multiple log
+   messages occur within the same microsecond, in which case the Object
+   ID increments to distinguish between messages captured at the same
+   timestamp.
+
+9.4.  Log track catalog requirements
+
+   A log track MUST be declared in the publishTracks array of the
+   catalog with:
+
+   *  a Section 5.3.4 attribute with a value of "moqlog".
+
+   *  a Section 5.3.6 attribute with a value of "log".
+
+   A log track MAY include:
+
+   *  a Section 5.3.31 attribute if logs should be published to a
+      different endpoint.
+
+   *  a Section 5.3.32 attribute for publish authorization.
+
+10.  Metrics track
+
+   Metrics tracks provide a mechanism for subscribers to publish
+   quantitative measurements back to the delivery system.  This enables
+   QoE analytics, performance monitoring, and operational dashboards.
+   Metrics tracks are defined in the catalog's publishTracks array with
+   a packaging value of "moqmetrics".
+
+10.1.  Metrics track payload
+
+   The metrics track payload format is defined in [MOQMETRICS].  The
+   data model consists of Resources (systems generating metrics
+   identified by ResourceID), optional Attributes (dimensional key-value
+   pairs), and Metrics (named measurements with timeseries values).
+
+   [MOQMETRICS] defines two metric value types - Gauge and Counter.
+   Both value types support either 64-bit floating point or integer
+   representation.  Implementations MUST follow the object payload
+   format specified in Section 3 of [MOQMETRICS].
+
+10.2.  Metrics track namespace and name
+
+   TODO: Finalize the track naming.
+
+   Metrics tracks MUST use the namespace and track name format defined
+   in Section 3 of [MOQMETRICS].  The Track Namespace consists of the
+   tuples: (moq://metrics.moq.arpa/v1/),(resourceID) where resourceID is
+   a unique identifier for the publishing resource.
+
+   The Track Name identifies the granularity level for the metrics being
+   published, specified as a single tuple (<granularity-level>) where
+   granularity-level is a value from 0 (Emergency) to 7 (Debug).  Higher
+   priority levels (lower numbers) indicate more critical metrics that
+   should always be reported.
+
+10.3.  Metrics track Group ID and Object ID
+
+   The Group ID represents the capture time as the number of
+   milliseconds since January 1, 1970 (Unix epoch).  This allows metrics
+   to be naturally grouped and ordered by their capture timestamp within
+   the MOQT object model.
+
+   Within each Group, Object IDs are assigned as follows:
+
+   *  *Object ID 0*: Contains the capture timestamp as Unix epoch time
+      in nanoseconds, along with any optional attributes for the metrics
+      in this group.
+
+   *  *Object ID 1 and above*: Each subsequent Object contains an
+      individual metric as a name-value pair.
+
+   This structure allows a single capture event to include multiple
+   metrics while maintaining efficient MOQT caching and distribution.
+
+10.4.  Metrics track catalog requirements
+
+   A metrics track MUST be declared in the publishTracks array of the
+   catalog with:
+
+   *  a Section 5.3.4 attribute with a value of "moqmetrics".
+
+   *  a Section 5.3.6 attribute with a value of "metrics".
+
+   A metrics track MAY include:
+
+   *  a Section 5.3.31 attribute if metrics should be published to a
+      different endpoint.
+
+   *  a Section 5.3.32 attribute for publish authorization.
+
+11.  Workflow
+
+11.1.  URL construction and interpretation
 
    An MSF URL identifies a MOQT session and an optional sub-resource
    within that session.  It inherits the MOQT URI scheme defined in
@@ -1946,7 +2220,7 @@ Table of Contents
 
    This specification registers a fragment type of "msf" in the "MOQT
    URI Fragment Types" registry established by [MoQTransport] (see
-   Section 11).  This type is required for any URL defining an MSF
+   Section 13).  This type is required for any URL defining an MSF
    resource.  The value of this type is the msf-fragment-value.
 
    The msf-fragment is defined by the following ABNF:
@@ -1987,16 +2261,16 @@ Table of Contents
 
    The msf-fragment-value identifies a specific Track.  The track-
    identifier MUST be formatted as an MSF namespace-name string (see
-   Section 9.1.2).  The client uses this identifier to initiate a
+   Section 11.1.2).  The client uses this identifier to initiate a
    SUBSCRIBE or FETCH command once the transport session is established.
    The namespace-name string MAY be followed by a series of key-value
    parameters, each separated from the preceding element by &. These
    key-value parameters are intended for processing by the client and,
    being part of the fragment, are not transferred to the server at
    connection time.  Certain of the fragment key-value parameters have a
-   reserved meaning, as defined by Section 9.1.1.
+   reserved meaning, as defined by Section 11.1.1.
 
-9.1.1.  Reserved fragment parameters
+11.1.1.  Reserved fragment parameters
 
    Table 5 defines reserved key names for the parameter portion of the
    msf-fragment.  Keynames are case-sensitive.
@@ -2070,7 +2344,7 @@ Table of Contents
 
    *  c4m=gqhkYWxnIGVzaGFyqGR0eXBNhdZ9hdWQAY3VybGZlbWlzcwZleWV2aW5uZWlhdGVwQWNyZW5lY
 
-9.1.2.  MSF Namespace-Name String Encoding
+11.1.2.  MSF Namespace-Name String Encoding
 
    To represent MoQ Tuples (which are sequences of byte strings) within
    the URL fragment, MSF uses a specific encoding convention, which is
@@ -2096,7 +2370,7 @@ Table of Contents
    Note: This encoding ensures that the structural delimiters (- and --)
    remain unambiguous.
 
-9.1.3.  Example MSF URLs
+11.1.3.  Example MSF URLs
 
    *  URL pointing at a catalog track (either WebTransport or native
       QUIC may be used): moqt://example.com/server/
@@ -2135,12 +2409,12 @@ Table of Contents
       kYWxnIGVzaGFyqGR0eXBNhdZ9hdWQAY3VybGZlbWlzcwZleWV2aW5uZWlhdGVwQWN
       yZW5lYnJmcmVqMTIzNDU2NzgwMHZpc3VlZF9hdD0xNzMwNDM
 
-9.2.  Initiating a broadcast
+11.2.  Initiating a broadcast
 
    An MSF publisher MUST publish a catalog track object before
    publishing any media track objects.
 
-9.3.  Ending a live broadcast
+11.3.  Ending a live broadcast
 
    After publishing a catalog and defining tracks carrying live content,
    an original publisher can deliver a deterministic signal to all
@@ -2160,13 +2434,13 @@ Table of Contents
       which signals isComplete Section 5.1.3 as TRUE and which contains
       an empty Tracks Section 5.1.4 field.
 
-10.  Security Considerations
+12.  Security Considerations
 
    ToDo
 
-11.  IANA Considerations
+13.  IANA Considerations
 
-11.1.  "MOQT URI Fragment Types" registry
+13.1.  "MOQT URI Fragment Types" registry
 
    This document creates a new entry in the "MOQT URI Fragment Types"
    registry (see [MoQTransport] Sect 14.3).
@@ -2179,9 +2453,9 @@ Table of Contents
 
                                   Table 9
 
-12.  References
+14.  References
 
-12.1.  Normative References
+14.1.  Normative References
 
    [BASE64]   Josefsson, S., "The Base16, Base32, and Base64 Data
               Encodings", RFC 4648, DOI 10.17487/RFC4648, October 2006,
@@ -2221,6 +2495,19 @@ Table of Contents
               Specifications and Registration Procedures", BCP 13,
               RFC 6838, DOI 10.17487/RFC6838, January 2013,
               <https://www.rfc-editor.org/rfc/rfc6838>.
+
+   [MOQLOG]   Jennings, C. F. and S. Nandakumar, "Logging over Media
+              over QUIC Transport", Work in Progress, Internet-Draft,
+              draft-jennings-moq-log-03, 20 October 2025,
+              <https://datatracker.ietf.org/doc/html/draft-jennings-moq-
+              log-03>.
+
+   [MOQMETRICS]
+              Jennings, C. F. and S. Nandakumar, "Metrics over MOQT",
+              Work in Progress, Internet-Draft, draft-jennings-moq-
+              metrics-02, 20 October 2025,
+              <https://datatracker.ietf.org/doc/html/draft-jennings-moq-
+              metrics-02>.
 
    [MoQTransport]
               Nandakumar, S., Vasiliev, V., Swett, I., and A. Frindell,
@@ -2274,7 +2561,7 @@ Table of Contents
               Text Tracks Format", April 2019,
               <https://www.w3.org/TR/webvtt1/>.
 
-12.2.  Informative References
+14.2.  Informative References
 
    [E2EE-MLS] Jennings, C. F., Nandakumar, S., and R. Barnes, "End-to-
               end Security for Media over QUIC", Work in Progress,
