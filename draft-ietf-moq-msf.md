@@ -752,9 +752,27 @@ scheme to use and then obtain tokens through out-of-band mechanisms.
 The specific token format, acquisition process, and presentation method
 are defined by the authorization scheme specification.
 
-TODO: Consider adding a mechanism to indicate which token should be applied
-during connection establishment vs. per-track operations. Revisit once MOQT
-variable parameters support is finalized.
+### Token Delivery via URI {#tokendelivery}
+
+Tokens can be delivered to subscribers through the catalog request URI using
+variable substitution. Fragment parameters (following the `#` character) are
+processed client-side and can be substituted into catalog fields using the
+variable substitution mechanism defined in {{variablesubstitution}}.
+
+For example, given a URI:
+
+    moqt://relay.example.com/live#token=XYZ789
+
+A catalog with:
+
+~~~json
+"authInfo": {
+  "cat": "%token%"
+}
+~~~
+
+Would be resolved by the subscriber to include `"cat": "XYZ789"`, which is
+then presented in control messages as specified by the authorization scheme.
 
 ## Delta updates {#deltaupdates}
 A catalog update might contain incremental changes. This is a useful property if
@@ -1509,7 +1527,11 @@ Would be resolved by the subscriber as:
 ### Time-aligned Audio/Video Tracks with Authorization
 
 This example shows a catalog for a media producer requiring authorization
-for premium content.
+for premium content. The premium 4K track uses CAT authorization with a
+token resolved via variable substitution from `%cat-token%`. The standard
+720p track uses Privacy Pass with a token resolved from `%pp-token%`.
+Token presentation timing is determined by the authorization scheme
+specification.
 
 ~~~json
 {
@@ -1530,7 +1552,7 @@ for premium content.
       "framerate": 60,
       "bitrate": 15000000,
       "authInfo": {
-        "cat": {}
+        "cat": "%cat-token%"
       }
     },
     {
@@ -1547,7 +1569,7 @@ for premium content.
       "framerate": 30,
       "bitrate": 2500000,
       "authInfo": {
-        "privacy-pass": {}
+        "privacy-pass": "%pp-token%"
       }
     },
     {
@@ -2303,42 +2325,16 @@ playback links. The parameter name and format are deployment-specific.
 
 Once tokens are obtained, both original publishers and end subscribers present
 them to relays according to the scheme specification. Tokens MAY be presented
-at two points during the connection lifecycle:
+in the SETUP message (CLIENT_SETUP or SERVER_SETUP) using the AUTHORIZATION
+TOKEN setup parameter, or in individual control messages using the
+AUTHORIZATION TOKEN message parameter.
 
-* **Connection establishment**: Tokens may be included in the SETUP message
-  (CLIENT_SETUP or SERVER_SETUP) using the AUTHORIZATION TOKEN setup parameter.
-  This authorizes the connection itself or pre-authorizes subsequent operations.
-
-* **Per-operation**: Tokens may be included in individual control messages
-  using the AUTHORIZATION TOKEN message parameter. For end subscribers, this
-  applies to SUBSCRIBE, SUBSCRIBE_NAMESPACE, FETCH, and REQUEST_UPDATE messages. For original
-  publishers, this applies to PUBLISH and PUBLISH_NAMESPACE messages. When a track's catalog entry includes an
-  `authInfo` field, valid authorization credentials MUST be included in the
-  control messages used to access that track.
-
-Original publishers and end subscribers independently choose when and how to
-present their tokens based on their authorization requirements.
-
-### Authorization in SETUP Messages
-
-Both original publishers and end subscribers MAY include authorization tokens
-in their respective SETUP messages to establish session-wide authorization:
-
-* **End subscribers** include an AUTHORIZATION TOKEN parameter in CLIENT_SETUP
-  when connecting to a relay. This token MAY pre-authorize the subscriber
-  for subsequent SUBSCRIBE, SUBSCRIBE_NAMESPACE, FETCH, and REQUEST_UPDATE
-  operations on tracks or namespaces covered by the token's scope.
-
-* **Original publishers** include an AUTHORIZATION TOKEN parameter in CLIENT_SETUP
-  when connecting to a relay. This token MAY pre-authorize the publisher
-  for subsequent PUBLISH and PUBLISH_NAMESPACE operations on namespaces
-  covered by the token's scope.
-
-The SETUP token establishes a default authorization context for the session.
-When a track's catalog entry includes an `authInfo` field, valid authorization
-tokens MUST be included in ALL control messages associated with that track,
-regardless of whether a token was provided in SETUP. This ensures that relays
-can independently verify authorization for each operation.
+When a token is associated with a track, it MUST be included in ALL control
+messages that accept the AUTHORIZATION TOKEN parameter and are associated
+with that track. For end subscribers, this includes SUBSCRIBE, SUBSCRIBE_NAMESPACE,
+FETCH, and REQUEST_UPDATE messages. For original publishers, this includes
+PUBLISH and PUBLISH_NAMESPACE messages. This requirement applies regardless
+of whether the token was also provided in SETUP.
 
 ### Handling Authorization Failures
 
