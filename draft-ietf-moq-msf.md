@@ -34,6 +34,7 @@ normative:
   LOC: I-D.draft-mzanaty-moq-loc-05
   SecureObjects: I-D.draft-jennings-moq-secure-objects
   C4M: I-D.draft-ietf-moq-c4m
+  PrivacyPassAuth: I-D.draft-ietf-moq-privacy-pass-auth
   BASE64: RFC4648
   JSON: RFC8259
   LANG: RFC5646
@@ -380,8 +381,7 @@ Table 3 lists the fields defined within each track object.
 | Language                | lang                   | {{language}}              |
 | Parent name             | parentName             | {{parentname}}            |
 | Track duration          | trackDuration          | {{trackduration}}         |
-| Connection URI          | connectionUri          | {{connectionuri}}         |
-| Token                   | token                  | {{token}}                 |
+| Authorization Info      | authInfo               | {{authinfo}}              |
 
 ### Tracks object {#trackobject}
 
@@ -724,6 +724,55 @@ When present, this field contains the raw key material that, together with
 the track name and other parameters defined in ({{SecureObjects, Section 5}}),
 is used to derive the actual encryption keys. Publishers and subscribers MUST
 use matching trackBaseKey values for successful decryption.
+
+### Authorization Info {#authinfo}
+Location: T    Required: Optional    JSON Type: Object
+
+An object indicating that authorization is required to access this track.
+The presence of this field signals to subscribers that they must obtain
+and present valid authorization tokens when subscribing to this track.
+
+The keys of this object are authorization scheme identifiers. Registered
+schemes are defined in Table 7. The values are scheme-specific configuration
+objects defined by the referenced specifications.
+
+Table 7: Registered Authorization Schemes
+
+| Scheme           | Value          | Reference                              |
+|:================|:===============|:======================================|
+| Privacy Pass     | privacy-pass   | {{PrivacyPassAuth}}                    |
+| CAT              | cat            | {{C4M}}                                |
+
+Custom authorization schemes MAY be used. Custom scheme names MUST use a
+unique naming convention, such as Reverse Domain Name Notation
+(e.g., "com.example.custom-auth"), to avoid naming collisions.
+
+Subscribers inspect the authInfo field to determine which authorization
+scheme to use and then obtain tokens through out-of-band mechanisms.
+The specific token format, acquisition process, and presentation method
+are defined by the authorization scheme specification.
+
+### Token Delivery via URI {#tokendelivery}
+
+Tokens can be delivered to subscribers through the catalog request URI using
+variable substitution. Fragment parameters (following the `#` character) are
+processed client-side and can be substituted into catalog fields using the
+variable substitution mechanism defined in {{variablesubstitution}}.
+
+For example, given a URI:
+
+    moqt://relay.example.com/live#namespace--name&token=XYZ789
+
+A catalog with:
+
+~~~json
+"authInfo": {
+  "cat": "%token%"
+}
+~~~
+
+Would be resolved by the subscriber to include `"cat": "XYZ789"`, which is
+then presented in control messages as specified by the authorization scheme.
 
 ## Delta updates {#deltaupdates}
 A catalog update might contain incremental changes. This is a useful property if
@@ -1475,6 +1524,71 @@ Would be resolved by the subscriber as:
 }
 ~~~
 
+### Time-aligned Audio/Video Tracks with Authorization
+
+This example shows a catalog for a media producer requiring authorization
+for premium content. The premium 4K track uses CAT authorization with a
+token resolved via variable substitution from `%cat-token%`. The standard
+720p track uses Privacy Pass with a token resolved from `%pp-token%`.
+Token presentation timing is determined by the authorization scheme
+specification.
+
+~~~json
+{
+  "version": 1,
+  "generatedAt": 1746104606044,
+  "tracks": [
+    {
+      "name": "premium-4k-video",
+      "namespace": "streaming.example.com/live/sports",
+      "packaging": "loc",
+      "isLive": true,
+      "targetLatency": 2000,
+      "role": "video",
+      "renderGroup": 1,
+      "codec": "av01.0.12M.10.0.110.09",
+      "width": 3840,
+      "height": 2160,
+      "framerate": 60,
+      "bitrate": 15000000,
+      "authInfo": {
+        "cat": "%cat-token%"
+      }
+    },
+    {
+      "name": "standard-720p-video",
+      "namespace": "streaming.example.com/live/sports",
+      "packaging": "loc",
+      "isLive": true,
+      "targetLatency": 2000,
+      "role": "video",
+      "renderGroup": 2,
+      "codec": "av01.0.05M.10.0.110.09",
+      "width": 1280,
+      "height": 720,
+      "framerate": 30,
+      "bitrate": 2500000,
+      "authInfo": {
+        "privacy-pass": "%pp-token%"
+      }
+    },
+    {
+      "name": "audio",
+      "namespace": "streaming.example.com/live/sports",
+      "packaging": "loc",
+      "isLive": true,
+      "targetLatency": 2000,
+      "role": "audio",
+      "renderGroup": 1,
+      "codec": "opus",
+      "samplerate": 48000,
+      "channelConfig": "2",
+      "bitrate": 128000
+    }
+  ]
+}
+~~~
+
 
 ### Publish tracks for logs and metrics
 
@@ -2161,6 +2275,88 @@ is complete by taking the following steps:
 * If the live stream is being terminated permanently without conversion to VOD, then
   publish an independent catalog update which signals isComplete {{iscomplete}} as
   TRUE and which contains an empty Tracks {{tracks}} field.
+
+## Authorization {#authorization}
+
+MSF supports token-based authorization through pluggable authentication schemes.
+Both original publishers and end subscribers can independently acquire authorization
+tokens and present them to relays. Relays use these tokens to authorize whether
+an end subscriber is permitted to setup the connection, as well as to receive content
+and/or to send content.
+
+### Discovering Authorization Requirements
+
+End subscribers discover authorization requirements by parsing the catalog.
+For each track of interest, examine the `authInfo` field. If present, the
+track requires authorization and the subscriber must obtain appropriate
+credentials for one of the schemes listed in the field.
+
+Original publishers and end subscribers may obtain authorization tokens from
+multiple sources, including out-of-band provisioning or as a parameter in
+the connection URI. These tokens can be presented either in the connection
+setup message (CLIENT_SETUP) or in control messages (SUBSCRIBE, FETCH, PUBLISH,
+PUBLISH_NAMESPACE) as described in {{presentingauthorization}}.
+
+### Token Acquisition
+
+Token acquisition is out of scope for this specification. Both original publishers
+and end subscribers independently obtain tokens through mechanisms such as:
+
+* Direct authentication with a distribution service
+* OAuth 2.0 or OpenID Connect flows
+* Out-of-band provisioning
+
+The token acquisition endpoint and flow depend on the authorization scheme
+and deployment configuration. Original publishers and end subscribers MAY
+use the same or different authorization services depending on the deployment.
+
+Tokens MAY also be supplied as parameters in the connection URI. When a
+connection URI contains token parameters, the subscriber extracts the token
+value and includes it in the appropriate MOQT message. For example:
+
+~~~
+moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
+~~~
+
+URI parameters provide a convenient mechanism for distributing pre-authorized
+playback links. The parameter name and format are deployment-specific.
+
+### Presenting Authorization {#presentingauthorization}
+
+Once tokens are obtained, both original publishers and end subscribers present
+them to relays according to the scheme specification. Tokens MAY be presented
+in the SETUP message (CLIENT_SETUP or SERVER_SETUP) using the AUTHORIZATION
+TOKEN setup parameter, or in individual control messages using the
+AUTHORIZATION TOKEN message parameter.
+
+When a token is associated with a track, it MUST be included in ALL control
+messages that accept the AUTHORIZATION TOKEN parameter and are associated
+with that track. For end subscribers, this includes SUBSCRIBE, SUBSCRIBE_NAMESPACE,
+FETCH, and REQUEST_UPDATE messages. For original publishers, this includes
+PUBLISH and PUBLISH_NAMESPACE messages. This requirement applies regardless
+of whether the token was also provided in SETUP.
+
+### Handling Authorization Failures
+
+When a relay rejects an authorization token, subscribers SHOULD handle the
+failure gracefully:
+
+* If a SUBSCRIBE or FETCH request is rejected due to invalid or expired
+  authorization, the subscriber MAY attempt to obtain a fresh token and
+  retry the request.
+
+* If a token is rejected due to insufficient scope, the subscriber SHOULD
+  NOT retry with the same token.
+
+* For interactive applications, subscribers MAY prompt users to
+  re-authenticate when authorization fails.
+
+* Subscribers SHOULD implement exponential backoff when retrying failed
+  authorization attempts to avoid overwhelming the relay or token issuer.
+
+The specific error codes and retry semantics are defined by the authorization
+scheme specifications. See {{PrivacyPassAuth}} for Privacy Pass error handling
+and {{C4M}} for CAT error handling.
 
 # Security Considerations
 
