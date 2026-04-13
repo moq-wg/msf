@@ -2281,8 +2281,8 @@ is complete by taking the following steps:
 MSF supports token-based authorization through pluggable authentication schemes.
 Both original publishers and end subscribers can independently acquire authorization
 tokens and present them to relays. Relays use these tokens to authorize whether
-an end subscriber is permitted to receive content and whether an original publisher
-is permitted to send content.
+an end subscriber is permitted to setup the connection, as well as to receive content
+and/or to send content.
 
 ### Discovering Authorization Requirements
 
