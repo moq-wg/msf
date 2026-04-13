@@ -2767,8 +2767,8 @@ Table of Contents
    authentication schemes.  Both original publishers and end subscribers
    can independently acquire authorization tokens and present them to
    relays.  Relays use these tokens to authorize whether an end
-   subscriber is permitted to receive content and whether an original
-   publisher is permitted to send content.
+   subscriber is permitted to setup the connection, as well as to
+   receive content and/or to send content.
 
 12.4.1.  Discovering Authorization Requirements
 
