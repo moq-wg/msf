@@ -2315,7 +2315,7 @@ connection URI contains token parameters, the subscriber extracts the token
 value and includes it in the appropriate MOQT message. For example:
 
 ~~~
-https://relay.example.com/moqt?token=eyJhbGciOiJFZERTQSJ9...
+moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
 ~~~
 
 URI parameters provide a convenient mechanism for distributing pre-authorized
