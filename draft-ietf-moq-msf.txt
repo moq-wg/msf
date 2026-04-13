@@ -4,8 +4,8 @@
 
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
-Intended status: Informational                              9 April 2026
-Expires: 11 October 2026
+Intended status: Informational                             13 April 2026
+Expires: 15 October 2026
 
 
                          MOQT Streaming Format
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 11 October 2026.
+   This Internet-Draft will expire on 15 October 2026.
 
 Copyright Notice
 
@@ -127,6 +127,8 @@ Table of Contents
        5.3.35. Cipher suite
        5.3.36. Key ID
        5.3.37. Track Base Key
+       5.3.38. Authorization Info
+       5.3.39. Token Delivery via URI
      5.4.  Delta updates
      5.5.  Variable Substitution
        5.5.1.  Variable Syntax
@@ -148,7 +150,8 @@ Table of Contents
        5.6.11. Media timeline template
        5.6.12. Terminating a live broadcast
        5.6.13. Variable Substitution for personalized delivery
-       5.6.14. Publish tracks for logs and metrics
+       5.6.14. Time-aligned Audio/Video Tracks with Authorization
+       5.6.15. Publish tracks for logs and metrics
    6.  Media transmission
      6.1.  Group numbering
    7.  Initialization track
@@ -188,6 +191,11 @@ Table of Contents
        12.1.3.  Example MSF URLs
      12.2.  Initiating a broadcast
      12.3.  Ending a live broadcast
+     12.4.  Authorization
+       12.4.1.  Discovering Authorization Requirements
+       12.4.2.  Token Acquisition
+       12.4.3.  Presenting Authorization
+       12.4.4.  Handling Authorization Failures
    13. Security Considerations
    14. IANA Considerations
      14.1.  "MOQT URI Fragment Types" registry
@@ -631,9 +639,7 @@ Table of Contents
         +-----------------------+---------------+----------------+
         | Track duration        | trackDuration | Section 5.3.31 |
         +-----------------------+---------------+----------------+
-        | Connection URI        | connectionUri | Section 5.3.32 |
-        +-----------------------+---------------+----------------+
-        | Token                 | token         | Section 5.3.33 |
+        | Authorization Info    | authInfo      | Section 5.3.38 |
         +-----------------------+---------------+----------------+
 
                                  Table 3
@@ -1088,6 +1094,64 @@ Table of Contents
    Section 5), is used to derive the actual encryption keys.  Publishers
    and subscribers MUST use matching trackBaseKey values for successful
    decryption.
+
+5.3.38.  Authorization Info
+
+   Location: T Required: Optional JSON Type: Object
+
+   An object indicating that authorization is required to access this
+   track.  The presence of this field signals to subscribers that they
+   must obtain and present valid authorization tokens when subscribing
+   to this track.
+
+   The keys of this object are authorization scheme identifiers.
+   Registered schemes are defined in Table 7.  The values are scheme-
+   specific configuration objects defined by the referenced
+   specifications.
+
+   Table 7: Registered Authorization Schemes
+
+            +==============+==============+===================+
+            | Scheme       | Value        | Reference         |
+            +==============+==============+===================+
+            | Privacy Pass | privacy-pass | [PrivacyPassAuth] |
+            +--------------+--------------+-------------------+
+            | CAT          | cat          | [C4M]             |
+            +--------------+--------------+-------------------+
+
+                                  Table 8
+
+   Custom authorization schemes MAY be used.  Custom scheme names MUST
+   use a unique naming convention, such as Reverse Domain Name Notation
+   (e.g., "com.example.custom-auth"), to avoid naming collisions.
+
+   Subscribers inspect the authInfo field to determine which
+   authorization scheme to use and then obtain tokens through out-of-
+   band mechanisms.  The specific token format, acquisition process, and
+   presentation method are defined by the authorization scheme
+   specification.
+
+5.3.39.  Token Delivery via URI
+
+   Tokens can be delivered to subscribers through the catalog request
+   URI using variable substitution.  Fragment parameters (following the
+   # character) are processed client-side and can be substituted into
+   catalog fields using the variable substitution mechanism defined in
+   Section 5.5.
+
+   For example, given a URI:
+
+   moqt://relay.example.com/live#namespace--name&token=XYZ789
+
+   A catalog with:
+
+   "authInfo": {
+     "cat": "%token%"
+   }
+
+   Would be resolved by the subscriber to include "cat": "XYZ789", which
+   is then presented in control messages as specified by the
+   authorization scheme.
 
 5.4.  Delta updates
 
@@ -1812,7 +1876,70 @@ Table of Contents
      ]
    }
 
-5.6.14.  Publish tracks for logs and metrics
+5.6.14.  Time-aligned Audio/Video Tracks with Authorization
+
+   This example shows a catalog for a media producer requiring
+   authorization for premium content.  The premium 4K track uses CAT
+   authorization with a token resolved via variable substitution from
+   %cat-token%. The standard 720p track uses Privacy Pass with a token
+   resolved from %pp-token%. Token presentation timing is determined by
+   the authorization scheme specification.
+
+   {
+     "version": 1,
+     "generatedAt": 1746104606044,
+     "tracks": [
+       {
+         "name": "premium-4k-video",
+         "namespace": "streaming.example.com/live/sports",
+         "packaging": "loc",
+         "isLive": true,
+         "targetLatency": 2000,
+         "role": "video",
+         "renderGroup": 1,
+         "codec": "av01.0.12M.10.0.110.09",
+         "width": 3840,
+         "height": 2160,
+         "framerate": 60,
+         "bitrate": 15000000,
+         "authInfo": {
+           "cat": "%cat-token%"
+         }
+       },
+       {
+         "name": "standard-720p-video",
+         "namespace": "streaming.example.com/live/sports",
+         "packaging": "loc",
+         "isLive": true,
+         "targetLatency": 2000,
+         "role": "video",
+         "renderGroup": 2,
+         "codec": "av01.0.05M.10.0.110.09",
+         "width": 1280,
+         "height": 720,
+         "framerate": 30,
+         "bitrate": 2500000,
+         "authInfo": {
+           "privacy-pass": "%pp-token%"
+         }
+       },
+       {
+         "name": "audio",
+         "namespace": "streaming.example.com/live/sports",
+         "packaging": "loc",
+         "isLive": true,
+         "targetLatency": 2000,
+         "role": "audio",
+         "renderGroup": 1,
+         "codec": "opus",
+         "samplerate": 48000,
+         "channelConfig": "2",
+         "bitrate": 128000
+       }
+     ]
+   }
+
+5.6.15.  Publish tracks for logs and metrics
 
    This example shows a catalog that includes publish tracks for client-
    side logging and metrics collection.  The subscriber can publish QoE
@@ -2489,7 +2616,7 @@ Table of Contents
      | connection      | Mandates a connection type                  |
      +-----------------+---------------------------------------------+
 
-                                  Table 8
+                                  Table 9
 
    *  wallclock-range - a range defined by start and end wallclock
       times, each expressed as milliseconds since Unix Epoch and
@@ -2634,6 +2761,98 @@ Table of Contents
       which signals isComplete Section 5.1.3 as TRUE and which contains
       an empty Tracks Section 5.1.4 field.
 
+12.4.  Authorization
+
+   MSF supports token-based authorization through pluggable
+   authentication schemes.  Both original publishers and end subscribers
+   can independently acquire authorization tokens and present them to
+   relays.  Relays use these tokens to authorize whether an end
+   subscriber is permitted to setup the connection, as well as to
+   receive content and/or to send content.
+
+12.4.1.  Discovering Authorization Requirements
+
+   End subscribers discover authorization requirements by parsing the
+   catalog.  For each track of interest, examine the authInfo field.  If
+   present, the track requires authorization and the subscriber must
+   obtain appropriate credentials for one of the schemes listed in the
+   field.
+
+   Original publishers and end subscribers may obtain authorization
+   tokens from multiple sources, including out-of-band provisioning or
+   as a parameter in the connection URI.  These tokens can be presented
+   either in the connection setup message (CLIENT_SETUP) or in control
+   messages (SUBSCRIBE, FETCH, PUBLISH, PUBLISH_NAMESPACE) as described
+   in Section 12.4.3.
+
+12.4.2.  Token Acquisition
+
+   Token acquisition is out of scope for this specification.  Both
+   original publishers and end subscribers independently obtain tokens
+   through mechanisms such as:
+
+   *  Direct authentication with a distribution service
+
+   *  OAuth 2.0 or OpenID Connect flows
+
+   *  Out-of-band provisioning
+
+   The token acquisition endpoint and flow depend on the authorization
+   scheme and deployment configuration.  Original publishers and end
+   subscribers MAY use the same or different authorization services
+   depending on the deployment.
+
+   Tokens MAY also be supplied as parameters in the connection URI.
+   When a connection URI contains token parameters, the subscriber
+   extracts the token value and includes it in the appropriate MOQT
+   message.  For example:
+
+moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
+
+   URI parameters provide a convenient mechanism for distributing pre-
+   authorized playback links.  The parameter name and format are
+   deployment-specific.
+
+12.4.3.  Presenting Authorization
+
+   Once tokens are obtained, both original publishers and end
+   subscribers present them to relays according to the scheme
+   specification.  Tokens MAY be presented in the SETUP message
+   (CLIENT_SETUP or SERVER_SETUP) using the AUTHORIZATION TOKEN setup
+   parameter, or in individual control messages using the AUTHORIZATION
+   TOKEN message parameter.
+
+   When a token is associated with a track, it MUST be included in ALL
+   control messages that accept the AUTHORIZATION TOKEN parameter and
+   are associated with that track.  For end subscribers, this includes
+   SUBSCRIBE, SUBSCRIBE_NAMESPACE, FETCH, and REQUEST_UPDATE messages.
+   For original publishers, this includes PUBLISH and PUBLISH_NAMESPACE
+   messages.  This requirement applies regardless of whether the token
+   was also provided in SETUP.
+
+12.4.4.  Handling Authorization Failures
+
+   When a relay rejects an authorization token, subscribers SHOULD
+   handle the failure gracefully:
+
+   *  If a SUBSCRIBE or FETCH request is rejected due to invalid or
+      expired authorization, the subscriber MAY attempt to obtain a
+      fresh token and retry the request.
+
+   *  If a token is rejected due to insufficient scope, the subscriber
+      SHOULD NOT retry with the same token.
+
+   *  For interactive applications, subscribers MAY prompt users to re-
+      authenticate when authorization fails.
+
+   *  Subscribers SHOULD implement exponential backoff when retrying
+      failed authorization attempts to avoid overwhelming the relay or
+      token issuer.
+
+   The specific error codes and retry semantics are defined by the
+   authorization scheme specifications.  See [PrivacyPassAuth] for
+   Privacy Pass error handling and [C4M] for CAT error handling.
+
 13.  Security Considerations
 
    ToDo
@@ -2651,7 +2870,7 @@ Table of Contents
          | msf           | MOQT Streaming Format | this          |
          +---------------+-----------------------+---------------+
 
-                                  Table 9
+                                  Table 10
 
 15.  References
 
@@ -2715,6 +2934,14 @@ Table of Contents
               Draft, draft-ietf-moq-transport-11, 28 April 2025,
               <https://datatracker.ietf.org/doc/html/draft-ietf-moq-
               transport-11>.
+
+   [PrivacyPassAuth]
+              Nandakumar, S., Jennings, C. F., and T. Meunier, "Privacy
+              Pass Authentication for Media over QUIC (MoQ)", Work in
+              Progress, Internet-Draft, draft-ietf-moq-privacy-pass-
+              auth-02, 2 March 2026,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-moq-
+              privacy-pass-auth-02>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
