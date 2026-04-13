@@ -761,7 +761,7 @@ variable substitution mechanism defined in {{variablesubstitution}}.
 
 For example, given a URI:
 
-    moqt://relay.example.com/live#token=XYZ789
+    moqt://relay.example.com/live#namespace--name&token=XYZ789
 
 A catalog with:
 
