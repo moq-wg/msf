@@ -4,8 +4,8 @@
 
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
-Intended status: Informational                             10 April 2026
-Expires: 12 October 2026
+Intended status: Informational                             13 April 2026
+Expires: 15 October 2026
 
 
                          MOQT Streaming Format
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 12 October 2026.
+   This Internet-Draft will expire on 15 October 2026.
 
 Copyright Notice
 
@@ -2807,7 +2807,7 @@ Table of Contents
    extracts the token value and includes it in the appropriate MOQT
    message.  For example:
 
-   https://relay.example.com/moqt?token=eyJhbGciOiJFZERTQSJ9...
+moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
 
    URI parameters provide a convenient mechanism for distributing pre-
    authorized playback links.  The parameter name and format are
