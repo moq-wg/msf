@@ -2000,7 +2000,8 @@ A metrics track MAY include:
 
 This section defines well-known event timeline types for common broadcast
 metadata. Publishers SHOULD use these standardized types when applicable
-to ensure interoperability.
+to ensure interoperability. The event types defined in this section are
+registered in the "MSF Event Timeline Types" registry (see {{iana-event-timeline-types}}).
 
 ### SCTE-35 markers {#scte35}
 
@@ -2364,6 +2365,24 @@ This document creates a new entry in the "MOQT URI Fragment Types" registry
 | Fragment Type   |  Description          | Specification  |
 |:================|:======================|:===============|
 | msf             | MOQT Streaming Format | this           |
+
+## "MSF Event Timeline Types" registry {#iana-event-timeline-types}
+
+This document establishes the "MSF Event Timeline Types" registry. This registry
+lists the event types that can be used with the eventType field {{eventtype}}
+in MSF catalogs.
+
+New entries in this registry are subject to Expert Review policy as defined in
+{{!RFC8126}}.
+
+The initial contents of this registry are:
+
+| Event Type                     | Description                        | Specification    |
+|:===============================|:===================================|:=================|
+| urn:scte:scte35:2013:bin       | SCTE-35 binary splice_info_section | this, {{scte35}} |
+| urn:scte:scte35:2013:xml       | SCTE-35 XML representation         | this, {{scte35}} |
+| urn:msf:captions:webvtt        | WebVTT caption cues                | this, {{oobcaptions}} |
+| urn:msf:captions:imsc1         | IMSC1 caption cues                 | this, {{oobcaptions}} |
 
 --- back
 
