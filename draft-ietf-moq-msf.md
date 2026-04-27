@@ -1451,6 +1451,51 @@ in the video track and a separate SCTE-35 event timeline for ad insertion.
 }
 ~~~
 
+### Video track with CEA-708 captions
+
+This example shows a live broadcast with CEA-708 closed captions embedded
+in the video track, demonstrating multiple caption services.
+
+~~~json
+{
+  "version": 1,
+  "generatedAt": 1746104606044,
+  "tracks": [
+    {
+      "name": "video",
+      "packaging": "loc",
+      "isLive": true,
+      "targetLatency": 4000,
+      "role": "video",
+      "renderGroup": 1,
+      "codec": "hev1.1.6.L93.B0",
+      "width": 1920,
+      "height": 1080,
+      "framerate": 30,
+      "bitrate": 4000000,
+      "accessibility": [
+        {
+          "scheme": "urn:scte:dash:cc:cea-708:2015",
+          "value": "1=lang:eng;2=lang:spa;3=lang:fra"
+        }
+      ]
+    },
+    {
+      "name": "audio",
+      "packaging": "loc",
+      "isLive": true,
+      "targetLatency": 4000,
+      "role": "audio",
+      "renderGroup": 1,
+      "codec": "mp4a.40.2",
+      "samplerate": 48000,
+      "channelConfig": "2",
+      "bitrate": 128000
+    }
+  ]
+}
+~~~
+
 ### Terminating a live broadcast
 
 This example shows a catalog for a media producer terminating a previously
