@@ -2072,6 +2072,29 @@ Example WebVTT caption event timeline:
 ]
 ~~~
 
+Example IMSC1 caption event timeline:
+
+~~~json
+[
+    {
+        "m": 0,
+        "data": {
+            "start": 0,
+            "end": 2500,
+            "xml": "<p xml:id=\"s1\" begin=\"0s\" end=\"2.5s\">Welcome to the show.</p>"
+        }
+    },
+    {
+        "m": 2500,
+        "data": {
+            "start": 2500,
+            "end": 5000,
+            "xml": "<p xml:id=\"s2\" begin=\"2.5s\" end=\"5s\">Today we will be discussing...</p>"
+        }
+    }
+]
+~~~
+
 # Workflow
 
 ## URL construction and interpretation
