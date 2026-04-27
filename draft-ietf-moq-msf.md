@@ -161,6 +161,39 @@ requirements:
 A consequence of this restriction is that an MSF receiver SHOULD be able to
 cleanly switch between time-aligned media tracks at group boundaries.
 
+## Packaging for track switching {#packagingforswitching}
+
+When publishing multiple tracks within an alternate group that have dissimilar
+keyframe intervals (different GOP sizes), publishers MUST follow these
+requirements to enable seamless track switching:
+
+* Each MOQT Group MUST start with a keyframe. Publishers MUST NOT place
+  multiple keyframes within a single group, as this hides intermediate join
+  points from subscribers.
+* All tracks within an alternate group MUST be time-aligned at object
+  boundaries, not only at group boundaries. This ensures that object N in
+  Track A represents the same media time as object N in Track B.
+* The keyframeSpacing {{keyframespacing}} catalog field MUST be specified for
+  each track, indicating the number of objects per keyframe interval.
+* If any track within an alternate group specifies a keyframeSpacing value,
+  then all tracks within that alternate group MUST specify a keyframeSpacing
+  value.
+
+For example, when packaging two tracks with different GOP sizes:
+
+* Track A with 2 frames per GOP: each group contains 2 objects (1 keyframe +
+  1 P-frame), keyframeSpacing = 2
+* Track B with 4 frames per GOP: each group contains 4 objects (1 keyframe +
+  3 P-frames), keyframeSpacing = 4
+
+In two seconds of content (assuming 30fps, 60 frames total):
+* Track A produces 30 groups of 2 objects each
+* Track B produces 15 groups of 4 objects each
+
+Both tracks have the same total number of objects (60) covering the same media
+duration, enabling object-level time alignment. See {{zapping}} for details on
+how subscribers use keyframeSpacing to calculate valid switch points.
+
 ## Content protection and encryption {#contentprotection}
 
 MSF supports end-to-end encryption of media content using MoQ Secure Objects
@@ -381,6 +414,7 @@ Table 3 lists the fields defined within each track object.
 | Parent name             | parentName             | {{parentname}}            |
 | Track duration          | trackDuration          | {{trackduration}}         |
 | Authorization Info      | authInfo               | {{authinfo}}              |
+| Keyframe spacing        | keyframeSpacing        | {{keyframespacing}}       |
 
 ### Tracks object {#trackobject}
 
@@ -760,6 +794,23 @@ A catalog with:
 
 Would be resolved by the subscriber to include `"cat": "XYZ789"`, which is
 then presented in control messages as specified by the authorization scheme.
+
+### Keyframe spacing {#keyframespacing}
+Location: T    Required: Optional   JSON Type: Number
+
+A number defining the number of objects per keyframe interval. A value of 2
+means each group contains a keyframe followed by one predicted frame (2 objects
+total). A value of 4 means each group contains a keyframe followed by three
+predicted frames (4 objects total).
+
+If any track within an alternate group specifies a keyframeSpacing value, then
+all tracks within that alternate group MUST specify a keyframeSpacing value.
+All tracks within the same alternate group that specify a keyframeSpacing value
+MUST be time-aligned at object boundaries, not only at group boundaries.
+
+This field is used by subscribers to calculate valid switch points when
+performing adaptive bitrate switching between tracks with different keyframe
+intervals. See {{zapping}} for details on how to use this field.
 
 ## Delta updates {#deltaupdates}
 A catalog update might contain incremental changes. This is a useful property if
@@ -1586,6 +1637,95 @@ Each subsequent Group ID MUST increase by 1.
 
 If a publisher is able to maintain state across a republish, it MUST signal the gap
 in Group IDs using the MOQT Prior Group ID Gap Extension header.
+
+## Zapping and Track Switching {#zapping}
+
+Zapping refers to the act of quickly joining a track or switching between
+tracks, such as changing channels in a live broadcast. When a viewer joins or
+switches to a new track, playback cannot begin until the decoder receives a
+keyframe (an independently decodable frame, also known as an I-frame). Tracks
+with longer intervals between keyframes (longer GOPs) offer better compression
+efficiency but increase the delay before playback can start after a switch.
+
+When multiple tracks in an alternate group have different keyframe intervals,
+subscribers need to determine valid switch points - moments when a switch will
+land on a keyframe in the target track. The keyframeSpacing {{keyframespacing}}
+field enables subscribers to calculate these valid switch points.
+
+### Calculating Valid Switch Points
+
+The keyframeSpacing value represents the number of objects per keyframe interval.
+Each group starts with a keyframe followed by (keyframeSpacing - 1) predicted
+frames. Publishers MUST place group boundaries at keyframe boundaries - each
+group MUST start with a keyframe.
+
+When switching from a source track to a target track, a valid switch point
+occurs at object boundaries where switching would land on a keyframe in the
+target track. Given a source track with keyframeSpacing S and a target track
+with keyframeSpacing T, a switch at object number N in the source track is
+valid if N is evenly divisible by T.
+
+For example, with source keyframeSpacing=2 and target keyframeSpacing=4:
+
+* Object 0: 0/4 = 0 (integer result, valid switch point)
+* Object 2: 2/4 = 0.5 (not an integer, NOT a valid switch point)
+* Object 4: 4/4 = 1 (integer result, valid switch point)
+* Object 6: 6/4 = 1.5 (not an integer, NOT a valid switch point)
+* Object 8: 8/4 = 2 (integer result, valid switch point)
+
+### Example: Switching Between Tracks with Different GOP Sizes
+
+Consider two video tracks in an alternate group:
+
+* Track A (HD): keyframeSpacing = 2 (2 objects per group: 1 keyframe + 1 P-frame)
+* Track B (SD): keyframeSpacing = 4 (4 objects per group: 1 keyframe + 3 P-frames)
+
+The following diagram shows the object structure and valid switch points:
+
+~~~ascii-figure
+Track A (keyframeSpacing=2):
+  Group:      1           2           3           4
+              |           |           |           |
+  Object:   0   1       2   3       4   5       6   7
+           [K] [P]     [K] [P]     [K] [P]     [K] [P]
+
+Track B (keyframeSpacing=4):
+  Group:          1                       2
+                  |                       |
+  Object:   0   1   2   3           4   5   6   7
+           [K] [P] [P] [P]         [K] [P] [P] [P]
+
+Valid switch points (A -> B):
+  Target keyframeSpacing = 4, so valid at objects divisible by 4: 0, 4, 8, ...
+
+  - Object 0: 0/4 = 0 (valid switch point)
+  - Object 2: 2/4 = 0.5 (NOT valid - lands on P-frame in B)
+  - Object 4: 4/4 = 1 (valid switch point)
+  - Object 6: 6/4 = 1.5 (NOT valid - lands on P-frame in B)
+  - Object 8: 8/4 = 2 (valid switch point)
+
+  K = Keyframe (independently decodable)
+  P = Predicted frame (depends on previous keyframe)
+~~~
+
+In this example, a subscriber can switch from Track A to Track B at objects
+0, 4, 8, etc. - points where the target track contains a keyframe. Note that
+valid switch points depend on the direction of the switch; switching from B
+to A has different valid points (objects divisible by 2).
+
+### Packaging Considerations
+
+When packaging content with multiple tracks that have dissimilar keyframe
+intervals, publishers MUST ensure the following:
+
+* Group boundaries MUST align with keyframe positions. Each group MUST start
+  with a keyframe. Placing multiple keyframes within a single group hides
+  intermediate join points from subscribers.
+* All tracks within the same alternate group MUST be time-aligned at object
+  boundaries, not only at group boundaries.
+* If any track within an alternate group specifies a keyframeSpacing value,
+  then all tracks within that alternate group MUST specify a keyframeSpacing
+  value.
 
 # Media Timeline track {#mediatimelinetrack}
 The media timeline track provides data about the previously published Groups and their
