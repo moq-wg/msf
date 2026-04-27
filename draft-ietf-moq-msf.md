@@ -69,6 +69,14 @@ informative:
     title: "SCTE 214-1: MPEG DASH for IP-Based Cable Services Part 1 - MPD Constraints and Extensions"
     date: 2022
     target: https://www.scte.org/standards/library/catalog/scte-214-1-mpeg-dash-for-ip-based-cable-services-part-1-mpd-constraints-and-extensions/
+  WebVTT-MSF:
+    title: "WebVTT Packaging for MOQT Streaming Format"
+    date: 2026
+    target: TBD
+  IMSC1-MSF:
+    title: "IMSC1 Packaging for MOQT Streaming Format"
+    date: 2026
+    target: TBD
 
 --- abstract
 
@@ -2047,7 +2055,9 @@ Event Type: `urn:msf:captions:webvtt` or `urn:msf:captions:imsc1`
 
 For captions delivered as separate event timeline tracks rather than
 embedded in video, publishers use these event types. The 'data' field
-contains the caption cue information.
+contains the caption cue information. The detailed packaging format
+for WebVTT cues is defined in {{WebVTT-MSF}} and the packaging format
+for IMSC1 cues is defined in {{IMSC1-MSF}}.
 
 Example WebVTT caption event timeline:
 
