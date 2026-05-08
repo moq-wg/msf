@@ -2111,16 +2111,20 @@ Example WebVTT caption event timeline:
     {
         "m": 0,
         "data": {
+            "id": "cue-1",
             "start": 0,
             "end": 2500,
+            "settings": "line:90% align:center size:80%",
             "text": "Welcome to the show."
         }
     },
     {
         "m": 2500,
         "data": {
+            "id": "cue-2",
             "start": 2500,
             "end": 5000,
+            "settings": "line:90% align:center size:80%",
             "text": "Today we will be discussing..."
         }
     }
@@ -2134,17 +2138,27 @@ Example IMSC1 caption event timeline:
     {
         "m": 0,
         "data": {
+            "type": "init",
+            "profile": "imsc1-text",
+            "xml": "<tt xml:lang=\"en\" tts:extent=\"1920px 1080px\" xmlns=\"http://www.w3.org/ns/ttml\" xmlns:tts=\"http://www.w3.org/ns/ttml#styling\"><head><styling><style xml:id=\"s1\" tts:color=\"white\"/></styling><layout><region xml:id=\"r1\" tts:origin=\"10% 80%\" tts:extent=\"80% 15%\"/></layout></head></tt>"
+        }
+    },
+    {
+        "m": 0,
+        "data": {
+            "type": "cue",
             "start": 0,
             "end": 2500,
-            "xml": "<p xml:id=\"s1\" begin=\"0s\" end=\"2.5s\">Welcome to the show.</p>"
+            "xml": "<p xml:id=\"c1\" begin=\"0s\" end=\"2.5s\" region=\"r1\" style=\"s1\">Welcome to the show.</p>"
         }
     },
     {
         "m": 2500,
         "data": {
+            "type": "cue",
             "start": 2500,
             "end": 5000,
-            "xml": "<p xml:id=\"s2\" begin=\"2.5s\" end=\"5s\">Today we will be discussing...</p>"
+            "xml": "<p xml:id=\"c2\" begin=\"2.5s\" end=\"5s\" region=\"r1\" style=\"s1\">Today we will be discussing...</p>"
         }
     }
 ]
