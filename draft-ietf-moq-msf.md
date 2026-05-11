@@ -1568,9 +1568,13 @@ In this example:
   as defined in the respective specifications.
 
 # Media transmission
-The MOQT Groups and MOQT Objects need to be mapped to MOQT Streams. Irrespective
-of the {{mediapackaging}} in place, each MOQT Object MUST be mapped to a new
-MOQT Stream.
+The {{mediapackaging}} defines how media samples are packaged into MOQT Objects.
+The mapping of MOQT Objects to MOQT Streams is implementation-specific. Examples
+of stream mapping strategies include:
+
+* Mapping each MOQT Object to a separate MOQT Stream
+* Mapping all Objects within a subgroup to a single MOQT Stream
+* Mapping Objects by temporal or spatial layer to separate MOQT Streams
 
 ## Group numbering
 The Group ID of the first Group published in a track at application startup MUST be
