@@ -1573,19 +1573,16 @@ of the {{mediapackaging}} in place, each MOQT Object MUST be mapped to a new
 MOQT Stream.
 
 ## Group numbering
-The Group ID of the first Group published in a track at application startup MUST be
-a unique integer that will not repeat in the future. One approach to achieve this
-is to set the initial Group ID to the creation time of the first Object in the
-group, represented as the number of milliseconds since the Unix epoch, rounded to
-the nearest millisecond. This ensures that republishing the same track in the
-future, such as after a loss of connectivity or an encoder restart, will not result
-in smaller or duplicate Group IDs for the same track name. Note that this method
-does not prevent duplication if more than 1000 Groups are published per second.
+Group IDs for a track MUST be unique and MUST increase monotonically. Within a
+continuous publishing session, each subsequent Group ID MUST increase by 1.
 
-Each subsequent Group ID MUST increase by 1.
+When a publisher restarts (e.g., after connectivity loss or encoder restart), it
+MUST ensure the new starting Group ID is greater than any previously published
+Group ID for that track. One approach is to use the current wall clock time in
+milliseconds since the Unix epoch as the starting Group ID.
 
-If a publisher is able to maintain state across a republish, it MUST signal the gap
-in Group IDs using the MOQT Prior Group ID Gap Extension header.
+If a publisher maintains state across a restart and knows the previous Group ID,
+it SHOULD signal the gap using the MOQT Prior Group ID Gap Extension header.
 
 # Media Timeline track {#mediatimelinetrack}
 The media timeline track provides data about the previously published Groups and their
