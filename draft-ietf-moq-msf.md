@@ -310,9 +310,7 @@ Table 2 lists the fields used for delta update operations at the root level.
 | Field                   |  Name                  |           Definition      |
 |:========================|:=======================|:==========================|
 | Delta update            | deltaUpdate            | {{deltaupdate}}           |
-| Add tracks              | addTracks              | {{addtracks}}             |
-| Remove tracks           | removeTracks           | {{removetracks}}          |
-| Clone tracks            | cloneTracks            | {{clonetracks}}           |
+| Operations              | operations             | {{operations}}            |
 
 ### Delta update {#deltaupdate}
 Required: Optional    JSON Type: Boolean    Location: Delta Update
@@ -322,29 +320,29 @@ A Boolean that if true indicates that this catalog object represents a delta
 processing rules - see {{deltaupdates}}. This value SHOULD NOT be added to a
 catalog if it is false.
 
-### Add tracks {#addtracks}
-Required: Optional    JSON Type: Array    Location: Delta Update
+### Operations {#operations}
+Required: Required (when deltaUpdate is true)    JSON Type: Array    Location: Delta Update
 
-Indicates a delta processing instruction to add new tracks. The value of this
-field is an Array of track objects {{trackobject}}. This field MUST NOT be
-present when the deltaUpdate field is absent or false.
+An ordered Array of operation objects that specify changes to apply to the catalog.
+Operations are applied sequentially in the order they appear in the array.
+This field MUST be present when deltaUpdate is true and MUST NOT be present
+when deltaUpdate is absent or false.
 
-### Remove tracks {#removetracks}
-Required: Optional    JSON Type: Array    Location: Delta Update
+Each operation object MUST contain an "op" field indicating the operation type,
+and a "tracks" field containing an Array of track objects {{trackobject}}.
+The following operation types are defined:
 
-Indicates a delta processing instruction to remove new tracks. The value of this
-field is an Array of track objects {{trackobject}}. Each track object MUST include
-a Track Name {{trackname}} field, MAY include a Track Namespace {{tracknamespace}}
-field and MUST NOT hold any other fields. This field MUST NOT be present when
-the deltaUpdate field is absent or false.
+* "add" - Add new tracks that have not previously been declared. Each track
+  object follows the standard track object format {{trackobject}}.
 
-### Clone tracks {#clonetracks}
-Required: Optional    JSON Type: Array    Location: Delta Update
+* "remove" - Remove tracks that have been previously declared. Each track
+  object MUST include a Track Name {{trackname}} field, MAY include a Track
+  Namespace {{tracknamespace}} field, and MUST NOT hold any other fields.
 
-Indicates a delta processing instruction to clone new tracks from previously declared
-tracks. The value of this field is an Array of track objects {{trackobject}}. Each
-track object MUST include a Parent Name {{parentname}} field. This field MUST NOT
-be present when the deltaUpdate field is absent or false.
+* "clone" - Clone new tracks from previously declared tracks. Each track
+  object MUST include a Parent Name {{parentname}} field. The cloned track
+  inherits all attributes from the parent except the Track Name which MUST
+  be new. Attributes redefined in the track object override inherited values.
 
 ## Track Object Fields
 
@@ -618,7 +616,7 @@ the standard Tags for Identifying Languages as defined by {{LANG}}.
 Required: Optional    JSON Type: String    Location: Track Object
 
 A string defining the parent track name {{trackname}} to be cloned. This field
-MUST only be included inside a Clone tracks {{clonetracks}} object.
+MUST only be included inside a clone operation {{operations}}.
 
 ### Track duration {#trackduration}
 Required: Optional    JSON Type: Number    Location: Track Object
@@ -776,17 +774,13 @@ A restricted set of operations are allowed with each delta update:
 The following rules are to be followed in constructing and processing delta updates:
 
 * A delta update MUST include the Delta Update {{deltaupdate}} field set to true.
-* A delta update catalog MUST contain at least one instance of Add tracks
-  {{addtracks}}, Remove tracks {{removetracks}} or Clone Tracks {{clonetracks}}
-  fields and MAY contain more. It MUST NOT contain an instance of a Tracks
-  {{tracks}} field or an MSF version {{msfversion}} field.
-* The Add, Delete and Clone operations are applied sequentially in the order they
-  are declared in the document. Each operation in the sequence is applied to the
-  target document; the resulting document becomes the target of the next operation.
-  Evaluation continues until all operations are successfully applied.
-* A Cloned track inherits all the attributes of the track defined by the Parent Name
-  {{parentname}}, except the Track Name which MUST be new. Attributes redefined
-  in the cloning Object override inherited values.
+* A delta update catalog MUST contain an Operations {{operations}} field with at
+  least one operation. It MUST NOT contain an instance of a Tracks {{tracks}}
+  field or an MSF version {{msfversion}} field.
+* Operations are applied sequentially in the order they appear in the operations
+  array. Each operation is applied to the target document; the resulting document
+  becomes the target of the next operation. Evaluation continues until all
+  operations are successfully applied.
 * The tuple of Track Namespace and Track Name defines a fixed set of Track attributes
   which MUST NOT be modified after being declared. To modify any attribute, a new
   track with a different Namespace|Name tuple is created by Adding or Cloning and then
@@ -1075,28 +1069,36 @@ the other is cloned from a previous track.
 {
   "deltaUpdate": true,
   "generatedAt": 1746104606044,
-  "addTracks": [
-      {
-        "name": "slides",
-        "isLive": true,
-        "role": "video",
-        "codec": "av01.0.08M.10.0.110.09",
-        "width": 1920,
-        "height": 1080,
-        "framerate": 15,
-        "bitrate": 750000,
-        "renderGroup": 1
-      }
-   ],
-   "cloneTracks": [
-      {
-        "parentName": "video-1080",
-        "name": "video-720",
-        "width":1280,
-        "height":720,
-        "bitrate":600000
-      }
-   ]
+  "operations": [
+    {
+      "op": "add",
+      "tracks": [
+        {
+          "name": "slides",
+          "isLive": true,
+          "role": "video",
+          "codec": "av01.0.08M.10.0.110.09",
+          "width": 1920,
+          "height": 1080,
+          "framerate": 15,
+          "bitrate": 750000,
+          "renderGroup": 1
+        }
+      ]
+    },
+    {
+      "op": "clone",
+      "tracks": [
+        {
+          "parentName": "video-1080",
+          "name": "video-720",
+          "width": 1280,
+          "height": 720,
+          "bitrate": 600000
+        }
+      ]
+    }
+  ]
 }
 ~~~
 
@@ -1109,7 +1111,12 @@ from an established video conference.
 {
   "deltaUpdate": true,
   "generatedAt": 1746104606044,
-  "removeTracks": [{"name": "video"},{"name": "slides"}]
+  "operations": [
+    {
+      "op": "remove",
+      "tracks": [{"name": "video"}, {"name": "slides"}]
+    }
+  ]
 }
 ~~~
 
