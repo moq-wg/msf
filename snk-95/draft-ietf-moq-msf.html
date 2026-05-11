@@ -1051,7 +1051,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Law</td>
-<td class="center">Expires 9 November 2026</td>
+<td class="center">Expires 12 November 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1064,12 +1064,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-moq-msf-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-05-08" class="published">8 May 2026</time>
+<time datetime="2026-05-11" class="published">11 May 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-11-09">9 November 2026</time></dd>
+<dd class="expires"><time datetime="2026-11-12">12 November 2026</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1119,7 +1119,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 9 November 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 12 November 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1513,14 +1513,6 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.5">
                 <p id="section-toc.1-1.10.2.5.1"><a href="#section-10.5" class="auto internal xref">10.5</a>.  <a href="#name-well-known-event-timeline-t" class="internal xref">Well-known event timeline types</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.5.2.1">
-                    <p id="section-toc.1-1.10.2.5.2.1.1"><a href="#section-10.5.1" class="auto internal xref">10.5.1</a>.  <a href="#name-scte-35-markers" class="internal xref">SCTE-35 markers</a></p>
-</li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.5.2.2">
-                    <p id="section-toc.1-1.10.2.5.2.2.1"><a href="#section-10.5.2" class="auto internal xref">10.5.2</a>.  <a href="#name-out-of-band-captions" class="internal xref">Out-of-band captions</a></p>
-</li>
-                </ul>
 </li>
             </ul>
 </li>
@@ -4551,123 +4543,36 @@ maintaining efficient MOQT caching and distribution.<a href="#section-10.3-4" cl
         <h3 id="name-well-known-event-timeline-t">
 <a href="#section-10.5" class="section-number selfRef">10.5. </a><a href="#name-well-known-event-timeline-t" class="section-name selfRef">Well-known event timeline types</a>
         </h3>
-<p id="section-10.5-1">This section defines well-known event timeline types for common broadcast
-metadata. Publishers <span class="bcp14">SHOULD</span> use these standardized types when applicable
-to ensure interoperability. The event types defined in this section are
-registered in the "MSF Event Timeline Types" registry (see <a href="#iana-event-timeline-types" class="auto internal xref">Section 13.2</a>).<a href="#section-10.5-1" class="pilcrow">¶</a></p>
-<div id="scte35">
-<section id="section-10.5.1">
-          <h4 id="name-scte-35-markers">
-<a href="#section-10.5.1" class="section-number selfRef">10.5.1. </a><a href="#name-scte-35-markers" class="section-name selfRef">SCTE-35 markers</a>
-          </h4>
-<p id="section-10.5.1-1">Event Type: <code>urn:scte:scte35:2013:bin</code> or <code>urn:scte:scte35:2013:xml</code><a href="#section-10.5.1-1" class="pilcrow">¶</a></p>
-<p id="section-10.5.1-2"><span>[<a href="#SCTE35" class="cite xref">SCTE35</a>]</span> markers signal ad insertion points, program boundaries, and other
-broadcast events. When using the binary format, the 'data' field contains
-a Base64 <span>[<a href="#BASE64" class="cite xref">BASE64</a>]</span> encoded SCTE-35 splice_info_section. When using the
-XML format, the 'data' field contains the SCTE-35 XML representation as
-a string.<a href="#section-10.5.1-2" class="pilcrow">¶</a></p>
-<p id="section-10.5.1-3">Publishers <span class="bcp14">SHOULD</span> include a 'duration' field (in milliseconds) when the
-SCTE-35 message indicates a splice duration.<a href="#section-10.5.1-3" class="pilcrow">¶</a></p>
-<p id="section-10.5.1-4">Example SCTE-35 event timeline:<a href="#section-10.5.1-4" class="pilcrow">¶</a></p>
-<div class="lang-json sourcecode" id="section-10.5.1-5">
-<pre>
-[
-    {
-        "m": 120000,
-        "data": {
-            "type": "splice_insert",
-            "eventId": 12345,
-            "outOfNetwork": true,
-            "duration": 30000,
-            "bin": "/DA0AAAA..."
-        }
-    },
-    {
-        "m": 150000,
-        "data": {
-            "type": "splice_insert",
-            "eventId": 12345,
-            "outOfNetwork": false
-        }
-    }
-]
-</pre><a href="#section-10.5.1-5" class="pilcrow">¶</a>
-</div>
-</section>
-</div>
-<div id="oobcaptions">
-<section id="section-10.5.2">
-          <h4 id="name-out-of-band-captions">
-<a href="#section-10.5.2" class="section-number selfRef">10.5.2. </a><a href="#name-out-of-band-captions" class="section-name selfRef">Out-of-band captions</a>
-          </h4>
-<p id="section-10.5.2-1">Event Type: <code>urn:msf:captions:webvtt</code> or <code>urn:msf:captions:imsc1</code><a href="#section-10.5.2-1" class="pilcrow">¶</a></p>
-<p id="section-10.5.2-2">For captions delivered as separate event timeline tracks rather than
-embedded in video, publishers use these event types. The 'data' field
-contains the caption cue information. The detailed packaging format
-for WebVTT cues is defined in <span>[<a href="#WebVTT-MSF" class="cite xref">WebVTT-MSF</a>]</span> and the packaging format
-for IMSC1 cues is defined in <span>[<a href="#IMSC1-MSF" class="cite xref">IMSC1-MSF</a>]</span>.<a href="#section-10.5.2-2" class="pilcrow">¶</a></p>
-<p id="section-10.5.2-3">Example WebVTT caption event timeline:<a href="#section-10.5.2-3" class="pilcrow">¶</a></p>
-<div class="lang-json sourcecode" id="section-10.5.2-4">
-<pre>
-[
-    {
-        "m": 0,
-        "data": {
-            "id": "cue-1",
-            "start": 0,
-            "end": 2500,
-            "settings": "line:90% align:center size:80%",
-            "text": "Welcome to the show."
-        }
-    },
-    {
-        "m": 2500,
-        "data": {
-            "id": "cue-2",
-            "start": 2500,
-            "end": 5000,
-            "settings": "line:90% align:center size:80%",
-            "text": "Today we will be discussing..."
-        }
-    }
-]
-</pre><a href="#section-10.5.2-4" class="pilcrow">¶</a>
-</div>
-<p id="section-10.5.2-5">Example IMSC1 caption event timeline:<a href="#section-10.5.2-5" class="pilcrow">¶</a></p>
-<div class="lang-json sourcecode" id="section-10.5.2-6">
-<pre>
-[
-    {
-        "m": 0,
-        "data": {
-            "type": "init",
-            "profile": "imsc1-text",
-            "xml": "&lt;tt xml:lang=\"en\" tts:extent=\"1920px 1080px\" xmlns=\"http://www.w3.org/ns/ttml\" xmlns:tts=\"http://www.w3.org/ns/ttml#styling\"&gt;&lt;head&gt;&lt;styling&gt;&lt;style xml:id=\"s1\" tts:color=\"white\"/&gt;&lt;/styling&gt;&lt;layout&gt;&lt;region xml:id=\"r1\" tts:origin=\"10% 80%\" tts:extent=\"80% 15%\"/&gt;&lt;/layout&gt;&lt;/head&gt;&lt;/tt&gt;"
-        }
-    },
-    {
-        "m": 0,
-        "data": {
-            "type": "cue",
-            "start": 0,
-            "end": 2500,
-            "xml": "&lt;p xml:id=\"c1\" begin=\"0s\" end=\"2.5s\" region=\"r1\" style=\"s1\"&gt;Welcome to the show.&lt;/p&gt;"
-        }
-    },
-    {
-        "m": 2500,
-        "data": {
-            "type": "cue",
-            "start": 2500,
-            "end": 5000,
-            "xml": "&lt;p xml:id=\"c2\" begin=\"2.5s\" end=\"5s\" region=\"r1\" style=\"s1\"&gt;Today we will be discussing...&lt;/p&gt;"
-        }
-    }
-]
-</pre><a href="#section-10.5.2-6" class="pilcrow">¶</a>
-</div>
-</section>
-</div>
+<p id="section-10.5-1">Event timelines can carry various types of broadcast metadata synchronized
+with media content. The "MSF Event Timeline Types" registry
+(<a href="#iana-event-timeline-types" class="auto internal xref">Section 13.2</a>) maintains a list of well-known event types.
+Publishers <span class="bcp14">SHOULD</span> use registered types when applicable to ensure
+interoperability.<a href="#section-10.5-1" class="pilcrow">¶</a></p>
+<p id="section-10.5-2">Event timelines can carry data types including but not limited to:<a href="#section-10.5-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-10.5-3.1">
+            <p id="section-10.5-3.1.1">Ad insertion signaling (e.g., SCTE-35 splice points) - see <span>[<a href="#SCTE35-MSF" class="cite xref">SCTE35-MSF</a>]</span><a href="#section-10.5-3.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-10.5-3.2">
+            <p id="section-10.5-3.2.1">Out-of-band caption cues (WebVTT, IMSC1) - see <span>[<a href="#WebVTT-MSF" class="cite xref">WebVTT-MSF</a>]</span> and <span>[<a href="#IMSC1-MSF" class="cite xref">IMSC1-MSF</a>]</span><a href="#section-10.5-3.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-10.5-3.3">
+            <p id="section-10.5-3.3.1">Sports scores and game state<a href="#section-10.5-3.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-10.5-3.4">
+            <p id="section-10.5-3.4.1">GPS coordinates and telemetry<a href="#section-10.5-3.4.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-10.5-3.5">
+            <p id="section-10.5-3.5.1">Active speaker notifications<a href="#section-10.5-3.5.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-10.5-3.6">
+            <p id="section-10.5-3.6.1">Custom application-specific metadata<a href="#section-10.5-3.6.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-10.5-4">The packaging format and data structure for each event type is defined by
+the specification referenced in the registry. Custom event types not in
+the registry <span class="bcp14">SHOULD</span> use Reverse Domain Name Notation (e.g.,
+"com.example.myeventtype") to avoid naming collisions.<a href="#section-10.5-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -5171,25 +5076,29 @@ in MSF catalogs.<a href="#section-13.2-1" class="pilcrow">¶</a></p>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">urn:scte:scte35:2013:bin</td>
               <td class="text-left" rowspan="1" colspan="1">SCTE-35 binary splice_info_section</td>
-              <td class="text-left" rowspan="1" colspan="1">this, <a href="#scte35" class="auto internal xref">Section 10.5.1</a>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#SCTE35-MSF" class="cite xref">SCTE35-MSF</a>]</span>
 </td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">urn:scte:scte35:2013:xml</td>
               <td class="text-left" rowspan="1" colspan="1">SCTE-35 XML representation</td>
-              <td class="text-left" rowspan="1" colspan="1">this, <a href="#scte35" class="auto internal xref">Section 10.5.1</a>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#SCTE35-MSF" class="cite xref">SCTE35-MSF</a>]</span>
 </td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">urn:msf:captions:webvtt</td>
               <td class="text-left" rowspan="1" colspan="1">WebVTT caption cues</td>
-              <td class="text-left" rowspan="1" colspan="1">this, <a href="#oobcaptions" class="auto internal xref">Section 10.5.2</a>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#WebVTT-MSF" class="cite xref">WebVTT-MSF</a>]</span>
 </td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">urn:msf:captions:imsc1</td>
               <td class="text-left" rowspan="1" colspan="1">IMSC1 caption cues</td>
-              <td class="text-left" rowspan="1" colspan="1">this, <a href="#oobcaptions" class="auto internal xref">Section 10.5.2</a>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#IMSC1-MSF" class="cite xref">IMSC1-MSF</a>]</span>
 </td>
             </tr>
           </tbody>
@@ -5312,7 +5221,7 @@ in MSF catalogs.<a href="#section-13.2-1" class="pilcrow">¶</a></p>
 <dd class="break"></dd>
 <dt id="IMSC1-MSF">[IMSC1-MSF]</dt>
         <dd>
-<span class="refTitle">"IMSC1 Packaging for MOQT Streaming Format"</span>, <time datetime="2026" class="refDate">2026</time>, <span>&lt;<a href="TBD">TBD</a>&gt;</span>. </dd>
+<span class="refTitle">"IMSC1 Packaging for MOQT Streaming Format"</span>, <time datetime="2026" class="refDate">2026</time>, <span>&lt;<a href="https://github.com/suhasHere/imsc1-msf">https://github.com/suhasHere/imsc1-msf</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="SCTE214-1">[SCTE214-1]</dt>
         <dd>
@@ -5322,9 +5231,13 @@ in MSF catalogs.<a href="#section-13.2-1" class="pilcrow">¶</a></p>
         <dd>
 <span class="refTitle">"SCTE 35: Digital Program Insertion Cueing Message"</span>, <time datetime="2022" class="refDate">2022</time>, <span>&lt;<a href="https://www.scte.org/standards/library/catalog/scte-35-digital-program-insertion-cueing-message/">https://www.scte.org/standards/library/catalog/scte-35-digital-program-insertion-cueing-message/</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="SCTE35-MSF">[SCTE35-MSF]</dt>
+        <dd>
+<span class="refTitle">"SCTE-35 over MSF Event Timeline"</span>, <time datetime="2026" class="refDate">2026</time>, <span>&lt;<a href="https://github.com/wilaw/SCTE35-over-MSF-Event-Timeline">https://github.com/wilaw/SCTE35-over-MSF-Event-Timeline</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="WebVTT-MSF">[WebVTT-MSF]</dt>
       <dd>
-<span class="refTitle">"WebVTT Packaging for MOQT Streaming Format"</span>, <time datetime="2026" class="refDate">2026</time>, <span>&lt;<a href="TBD">TBD</a>&gt;</span>. </dd>
+<span class="refTitle">"WebVTT Packaging for MOQT Streaming Format"</span>, <time datetime="2026" class="refDate">2026</time>, <span>&lt;<a href="https://github.com/suhasHere/webvtt-msf">https://github.com/suhasHere/webvtt-msf</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
 </section>

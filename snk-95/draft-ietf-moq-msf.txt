@@ -4,8 +4,8 @@
 
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
-Intended status: Informational                                8 May 2026
-Expires: 9 November 2026
+Intended status: Informational                               11 May 2026
+Expires: 12 November 2026
 
 
                          MOQT Streaming Format
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 9 November 2026.
+   This Internet-Draft will expire on 12 November 2026.
 
 Copyright Notice
 
@@ -181,8 +181,6 @@ Table of Contents
      10.3.  Metrics track Group ID and Object ID
      10.4.  Metrics track catalog requirements
      10.5.  Well-known event timeline types
-       10.5.1.  SCTE-35 markers
-       10.5.2.  Out-of-band captions
    11. Workflow
      11.1.  URL construction and interpretation
        11.1.1.  Reserved fragment parameters
@@ -2452,113 +2450,33 @@ Table of Contents
 
 10.5.  Well-known event timeline types
 
-   This section defines well-known event timeline types for common
-   broadcast metadata.  Publishers SHOULD use these standardized types
-   when applicable to ensure interoperability.  The event types defined
-   in this section are registered in the "MSF Event Timeline Types"
-   registry (see Section 13.2).
+   Event timelines can carry various types of broadcast metadata
+   synchronized with media content.  The "MSF Event Timeline Types"
+   registry (Section 13.2) maintains a list of well-known event types.
+   Publishers SHOULD use registered types when applicable to ensure
+   interoperability.
 
-10.5.1.  SCTE-35 markers
+   Event timelines can carry data types including but not limited to:
 
-   Event Type: urn:scte:scte35:2013:bin or urn:scte:scte35:2013:xml
+   *  Ad insertion signaling (e.g., SCTE-35 splice points) - see
+      [SCTE35-MSF]
 
-   [SCTE35] markers signal ad insertion points, program boundaries, and
-   other broadcast events.  When using the binary format, the 'data'
-   field contains a Base64 [BASE64] encoded SCTE-35 splice_info_section.
-   When using the XML format, the 'data' field contains the SCTE-35 XML
-   representation as a string.
+   *  Out-of-band caption cues (WebVTT, IMSC1) - see [WebVTT-MSF] and
+      [IMSC1-MSF]
 
-   Publishers SHOULD include a 'duration' field (in milliseconds) when
-   the SCTE-35 message indicates a splice duration.
+   *  Sports scores and game state
 
-   Example SCTE-35 event timeline:
+   *  GPS coordinates and telemetry
 
-   [
-       {
-           "m": 120000,
-           "data": {
-               "type": "splice_insert",
-               "eventId": 12345,
-               "outOfNetwork": true,
-               "duration": 30000,
-               "bin": "/DA0AAAA..."
-           }
-       },
-       {
-           "m": 150000,
-           "data": {
-               "type": "splice_insert",
-               "eventId": 12345,
-               "outOfNetwork": false
-           }
-       }
-   ]
+   *  Active speaker notifications
 
-10.5.2.  Out-of-band captions
+   *  Custom application-specific metadata
 
-   Event Type: urn:msf:captions:webvtt or urn:msf:captions:imsc1
-
-   For captions delivered as separate event timeline tracks rather than
-   embedded in video, publishers use these event types.  The 'data'
-   field contains the caption cue information.  The detailed packaging
-   format for WebVTT cues is defined in [WebVTT-MSF] and the packaging
-   format for IMSC1 cues is defined in [IMSC1-MSF].
-
-   Example WebVTT caption event timeline:
-
-   [
-       {
-           "m": 0,
-           "data": {
-               "id": "cue-1",
-               "start": 0,
-               "end": 2500,
-               "settings": "line:90% align:center size:80%",
-               "text": "Welcome to the show."
-           }
-       },
-       {
-           "m": 2500,
-           "data": {
-               "id": "cue-2",
-               "start": 2500,
-               "end": 5000,
-               "settings": "line:90% align:center size:80%",
-               "text": "Today we will be discussing..."
-           }
-       }
-   ]
-
-   Example IMSC1 caption event timeline:
-
-   [
-       {
-           "m": 0,
-           "data": {
-               "type": "init",
-               "profile": "imsc1-text",
-               "xml": "<tt xml:lang=\"en\" tts:extent=\"1920px 1080px\" xmlns=\"http://www.w3.org/ns/ttml\" xmlns:tts=\"http://www.w3.org/ns/ttml#styling\"><head><styling><style xml:id=\"s1\" tts:color=\"white\"/></styling><layout><region xml:id=\"r1\" tts:origin=\"10% 80%\" tts:extent=\"80% 15%\"/></layout></head></tt>"
-           }
-       },
-       {
-           "m": 0,
-           "data": {
-               "type": "cue",
-               "start": 0,
-               "end": 2500,
-               "xml": "<p xml:id=\"c1\" begin=\"0s\" end=\"2.5s\" region=\"r1\" style=\"s1\">Welcome to the show.</p>"
-           }
-       },
-       {
-           "m": 2500,
-           "data": {
-               "type": "cue",
-               "start": 2500,
-               "end": 5000,
-               "xml": "<p xml:id=\"c2\" begin=\"2.5s\" end=\"5s\" region=\"r1\" style=\"s1\">Today we will be discussing...</p>"
-           }
-       }
-   ]
+   The packaging format and data structure for each event type is
+   defined by the specification referenced in the registry.  Custom
+   event types not in the registry SHOULD use Reverse Domain Name
+   Notation (e.g., "com.example.myeventtype") to avoid naming
+   collisions.
 
 11.  Workflow
 
@@ -2943,17 +2861,15 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
     +==========================+=====================+===============+
     | Event Type               | Description         | Specification |
     +==========================+=====================+===============+
-    | urn:scte:scte35:2013:bin | SCTE-35 binary      | this, Section |
-    |                          | splice_info_section | 10.5.1        |
+    | urn:scte:scte35:2013:bin | SCTE-35 binary      | [SCTE35-MSF]  |
+    |                          | splice_info_section |               |
     +--------------------------+---------------------+---------------+
-    | urn:scte:scte35:2013:xml | SCTE-35 XML         | this, Section |
-    |                          | representation      | 10.5.1        |
+    | urn:scte:scte35:2013:xml | SCTE-35 XML         | [SCTE35-MSF]  |
+    |                          | representation      |               |
     +--------------------------+---------------------+---------------+
-    | urn:msf:captions:webvtt  | WebVTT caption cues | this, Section |
-    |                          |                     | 10.5.2        |
+    | urn:msf:captions:webvtt  | WebVTT caption cues | [WebVTT-MSF]  |
     +--------------------------+---------------------+---------------+
-    | urn:msf:captions:imsc1   | IMSC1 caption cues  | this, Section |
-    |                          |                     | 10.5.2        |
+    | urn:msf:captions:imsc1   | IMSC1 caption cues  | [IMSC1-MSF]   |
     +--------------------------+---------------------+---------------+
 
                                  Table 12
@@ -3088,7 +3004,8 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
               jennings-moq-e2ee-mls-03>.
 
    [IMSC1-MSF]
-              "IMSC1 Packaging for MOQT Streaming Format", 2026, <TBD>.
+              "IMSC1 Packaging for MOQT Streaming Format", 2026,
+              <https://github.com/suhasHere/imsc1-msf>.
 
    [SCTE214-1]
               "SCTE 214-1: MPEG DASH for IP-Based Cable Services Part 1
@@ -3101,8 +3018,13 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
               <https://www.scte.org/standards/library/catalog/scte-35-
               digital-program-insertion-cueing-message/>.
 
+   [SCTE35-MSF]
+              "SCTE-35 over MSF Event Timeline", 2026,
+              <https://github.com/wilaw/SCTE35-over-MSF-Event-Timeline>.
+
    [WebVTT-MSF]
-              "WebVTT Packaging for MOQT Streaming Format", 2026, <TBD>.
+              "WebVTT Packaging for MOQT Streaming Format", 2026,
+              <https://github.com/suhasHere/webvtt-msf>.
 
 Acknowledgments
 
