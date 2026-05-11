@@ -72,11 +72,15 @@ informative:
   WebVTT-MSF:
     title: "WebVTT Packaging for MOQT Streaming Format"
     date: 2026
-    target: TBD
+    target: https://github.com/suhasHere/webvtt-msf
   IMSC1-MSF:
     title: "IMSC1 Packaging for MOQT Streaming Format"
     date: 2026
-    target: TBD
+    target: https://github.com/suhasHere/imsc1-msf
+  SCTE35-MSF:
+    title: "SCTE-35 over MSF Event Timeline"
+    date: 2026
+    target: https://github.com/wilaw/SCTE35-over-MSF-Event-Timeline
 
 --- abstract
 
@@ -2051,118 +2055,25 @@ A metrics track MAY include:
 
 ## Well-known event timeline types {#wellknowneventtypes}
 
-This section defines well-known event timeline types for common broadcast
-metadata. Publishers SHOULD use these standardized types when applicable
-to ensure interoperability. The event types defined in this section are
-registered in the "MSF Event Timeline Types" registry (see {{iana-event-timeline-types}}).
+Event timelines can carry various types of broadcast metadata synchronized
+with media content. The "MSF Event Timeline Types" registry
+({{iana-event-timeline-types}}) maintains a list of well-known event types.
+Publishers SHOULD use registered types when applicable to ensure
+interoperability.
 
-### SCTE-35 markers {#scte35}
+Event timelines can carry data types including but not limited to:
 
-Event Type: `urn:scte:scte35:2013:bin` or `urn:scte:scte35:2013:xml`
+* Ad insertion signaling (e.g., SCTE-35 splice points) - see {{SCTE35-MSF}}
+* Out-of-band caption cues (WebVTT, IMSC1) - see {{WebVTT-MSF}} and {{IMSC1-MSF}}
+* Sports scores and game state
+* GPS coordinates and telemetry
+* Active speaker notifications
+* Custom application-specific metadata
 
-{{SCTE35}} markers signal ad insertion points, program boundaries, and other
-broadcast events. When using the binary format, the 'data' field contains
-a Base64 {{BASE64}} encoded SCTE-35 splice_info_section. When using the
-XML format, the 'data' field contains the SCTE-35 XML representation as
-a string.
-
-Publishers SHOULD include a 'duration' field (in milliseconds) when the
-SCTE-35 message indicates a splice duration.
-
-Example SCTE-35 event timeline:
-
-~~~json
-[
-    {
-        "m": 120000,
-        "data": {
-            "type": "splice_insert",
-            "eventId": 12345,
-            "outOfNetwork": true,
-            "duration": 30000,
-            "bin": "/DA0AAAA..."
-        }
-    },
-    {
-        "m": 150000,
-        "data": {
-            "type": "splice_insert",
-            "eventId": 12345,
-            "outOfNetwork": false
-        }
-    }
-]
-~~~
-
-### Out-of-band captions {#oobcaptions}
-
-Event Type: `urn:msf:captions:webvtt` or `urn:msf:captions:imsc1`
-
-For captions delivered as separate event timeline tracks rather than
-embedded in video, publishers use these event types. The 'data' field
-contains the caption cue information. The detailed packaging format
-for WebVTT cues is defined in {{WebVTT-MSF}} and the packaging format
-for IMSC1 cues is defined in {{IMSC1-MSF}}.
-
-Example WebVTT caption event timeline:
-
-~~~json
-[
-    {
-        "m": 0,
-        "data": {
-            "id": "cue-1",
-            "start": 0,
-            "end": 2500,
-            "settings": "line:90% align:center size:80%",
-            "text": "Welcome to the show."
-        }
-    },
-    {
-        "m": 2500,
-        "data": {
-            "id": "cue-2",
-            "start": 2500,
-            "end": 5000,
-            "settings": "line:90% align:center size:80%",
-            "text": "Today we will be discussing..."
-        }
-    }
-]
-~~~
-
-Example IMSC1 caption event timeline:
-
-~~~json
-[
-    {
-        "m": 0,
-        "data": {
-            "type": "init",
-            "profile": "imsc1-text",
-            "xml": "<tt xml:lang=\"en\" tts:extent=\"1920px 1080px\" xmlns=\"http://www.w3.org/ns/ttml\" xmlns:tts=\"http://www.w3.org/ns/ttml#styling\"><head><styling><style xml:id=\"s1\" tts:color=\"white\"/></styling><layout><region xml:id=\"r1\" tts:origin=\"10% 80%\" tts:extent=\"80% 15%\"/></layout></head></tt>"
-        }
-    },
-    {
-        "m": 0,
-        "data": {
-            "type": "cue",
-            "start": 0,
-            "end": 2500,
-            "xml": "<p xml:id=\"c1\" begin=\"0s\" end=\"2.5s\" region=\"r1\" style=\"s1\">Welcome to the show.</p>"
-        }
-    },
-    {
-        "m": 2500,
-        "data": {
-            "type": "cue",
-            "start": 2500,
-            "end": 5000,
-            "xml": "<p xml:id=\"c2\" begin=\"2.5s\" end=\"5s\" region=\"r1\" style=\"s1\">Today we will be discussing...</p>"
-        }
-    }
-]
-~~~
+The packaging format and data structure for each event type is defined by
+the specification referenced in the registry. Custom event types not in
+the registry SHOULD use Reverse Domain Name Notation (e.g.,
+"com.example.myeventtype") to avoid naming collisions.
 
 # Workflow
 
@@ -2471,10 +2382,10 @@ The initial contents of this registry are:
 
 | Event Type                     | Description                        | Specification    |
 |:===============================|:===================================|:=================|
-| urn:scte:scte35:2013:bin       | SCTE-35 binary splice_info_section | this, {{scte35}} |
-| urn:scte:scte35:2013:xml       | SCTE-35 XML representation         | this, {{scte35}} |
-| urn:msf:captions:webvtt        | WebVTT caption cues                | this, {{oobcaptions}} |
-| urn:msf:captions:imsc1         | IMSC1 caption cues                 | this, {{oobcaptions}} |
+| urn:scte:scte35:2013:bin       | SCTE-35 binary splice_info_section | {{SCTE35-MSF}}   |
+| urn:scte:scte35:2013:xml       | SCTE-35 XML representation         | {{SCTE35-MSF}}   |
+| urn:msf:captions:webvtt        | WebVTT caption cues                | {{WebVTT-MSF}}   |
+| urn:msf:captions:imsc1         | IMSC1 caption cues                 | {{IMSC1-MSF}}    |
 
 --- back
 
