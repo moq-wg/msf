@@ -4,8 +4,9 @@
 
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
-Intended status: Informational                             22 April 2026
-Expires: 24 October 2026
+Intended status: Informational                             S. Nandakumar
+Expires: 13 November 2026                                          Cisco
+                                                             12 May 2026
 
 
                          MOQT Streaming Format
@@ -48,7 +49,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 24 October 2026.
+   This Internet-Draft will expire on 13 November 2026.
 
 Copyright Notice
 
@@ -197,7 +198,7 @@ Table of Contents
      14.2.  Informative References
    Acknowledgments
    Contributors
-   Author's Address
+   Authors' Addresses
 
 1.  Introduction
 
@@ -2823,8 +2824,13 @@ Contributors
 
    *  Will Law
 
-Author's Address
+Authors' Addresses
 
    Will Law
    Akamai
    Email: wilaw@akamai.com
+
+
+   Suhas Nandakumar
+   Cisco
+   Email: snandaku@cisco.com
