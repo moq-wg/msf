@@ -28,6 +28,10 @@ author:
     fullname: Will Law
     organization: Akamai
     email: wilaw@akamai.com
+ -
+    fullname: Suhas Nandakumar
+    organization: Cisco
+    email: snandaku@cisco.com
 
 normative:
   MoQTransport: I-D.draft-ietf-moq-transport-11
