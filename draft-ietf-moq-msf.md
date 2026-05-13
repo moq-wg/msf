@@ -283,40 +283,6 @@ A parser MUST ignore fields it does not understand.
 
 ## Root Catalog Fields
 
-
-## Catalog Compression {#catalog-compression}
-
-Catalogs can contain significant redundancy, particularly when initialization
-data is included. To reduce payload size, the catalog MAY be compressed.
-
-Compression is signaled via the MSF_CATALOG_COMPRESSION MOQT Track Property
-(see {{MoQTransport}} Section 14.4). Track properties are carried in MOQT
-control messages, allowing endpoints to learn the compression algorithm
-before receiving any catalog objects. The property value is a varint
-indicating the compression algorithm:
-
-| Value | Compression Algorithm | Reference |
-|:======|:======================|:==========|
-| 0     | None (uncompressed)   | RFC XXXX  |
-| 1     | GZIP                  | {{GZIP}}  |
-
-Table X: Catalog Compression Values
-
-Publishers that compress the catalog MUST include the MSF_CATALOG_COMPRESSION
-track property in the PUBLISH message (publisher-initiated flow) or
-SUBSCRIBE_OK (subscriber-initiated flow).
-
-Subscribers MUST check for this property in the corresponding message before
-processing the catalog payload.
-
-If the property is absent, the subscriber MUST treat the catalog as
-uncompressed. If the property is present with a value the subscriber does
-not support, the subscriber MUST NOT attempt to process the catalog and
-SHOULD unsubscribe from the track.
-
-All MSF implementations MUST support both uncompressed catalogs (value 0 or
-property absent) and GZIP compressed catalogs (value 1).
-
 Table 1 lists the fields defined at the root of the catalog JSON object.
 
 | Field                   |  Name                  |           Definition      |
@@ -900,6 +866,12 @@ When a subscriber requests a catalog using a URI containing a fragment identifie
 the fragment is parsed as key-value pairs (using `&` as delimiter and `=` as
 separator). Each key becomes available as a variable name, and the variable
 is replaced with the corresponding value.
+
+## Catalog Compression {#catalog-compression}
+
+Catalogs can contain significant redundancy, particularly when initialization
+data is included. To reduce payload size, the catalog MAY be compressed using
+the MSF_COMPRESSION track property ({{compression-property}}).
 
 ## Catalog Examples
 
@@ -1774,8 +1746,9 @@ can exist inside a catalog.
 
 ## Media Timeline track payload {#mediatimelinepayload}
 A media timeline track is a JSON {{JSON}} document. This document MAY be compressed
-using GZIP {{GZIP}}. The document supports two formats: an explicit entry format
-and a template format. Publishers MAY combine both formats in a single document.
+using the MSF_COMPRESSION track property ({{compression-property}}). The document
+supports two formats: an explicit entry format and a template format. Publishers
+MAY combine both formats in a single document.
 
 ### Explicit entry format {#explicitentryformat}
 The explicit format contains an array of records. Each record consists of
@@ -1890,8 +1863,9 @@ declared in the catalog, to facilitate client selection and parsing.
 
 ## Event Timeline data format {#eventtimelineformat}
 An event timeline track is a JSON {{JSON}} document. This document MAY be compressed
-using GZIP {{GZIP}}. The document contains an array of records. Each record consists of
-a JSON Object containing the following required fields:
+using the MSF_COMPRESSION track property ({{compression-property}}). The document
+contains an array of records. Each record consists of a JSON Object containing
+the following required fields:
 
 * An index reference, which MUST be either 't' for wallclock time, 'l' for Location or
   'm' for Media PTS. Only one of these index values may be used within each record. Event
@@ -2389,6 +2363,42 @@ The specific error codes and retry semantics are defined by the authorization
 scheme specifications. See {{PrivacyPassAuth}} for Privacy Pass error handling
 and {{C4M}} for CAT error handling.
 
+# MSF Track Properties {#track-properties}
+
+MSF defines MOQT Track Properties (see {{MoQTransport}} Section 14.4) to signal
+metadata about MSF tracks. Track properties are carried in MOQT control messages,
+allowing endpoints to learn track characteristics before receiving any payload data.
+
+## MSF_COMPRESSION Track Property {#compression-property}
+
+The MSF_COMPRESSION track property signals the compression algorithm applied to
+JSON-based MSF track payloads, including catalogs ({{catalog}}), media timeline
+tracks ({{mediatimelinetrack}}), and event timeline tracks ({{eventtimelinetrack}}).
+
+Publishers that compress a track payload MUST include the MSF_COMPRESSION track
+property in the PUBLISH message (publisher-initiated flow) or SUBSCRIBE_OK
+(subscriber-initiated flow).
+
+Subscribers MUST check for this property in the corresponding message before
+processing the track payload.
+
+If the property is absent, the subscriber MUST treat the payload as uncompressed.
+If the property is present with a value the subscriber does not support, the
+subscriber MUST NOT attempt to process the payload and SHOULD unsubscribe from
+the track.
+
+The property value is a varint indicating the compression algorithm:
+
+| Value | Compression Algorithm | Reference |
+|:======|:======================|:==========|
+| 0     | None (uncompressed)   | RFC XXXX  |
+| 1     | GZIP                  | {{GZIP}}  |
+
+Table: MSF Compression Values
+
+All MSF implementations MUST support both uncompressed payloads (value 0 or
+property absent) and GZIP compressed payloads (value 1).
+
 # Security Considerations
 
 ToDo
@@ -2421,25 +2431,28 @@ The initial contents of this registry are:
 | urn:msf:timedtext:webvtt        | WebVTT timed text cues                | {{WebVTT-MSF}}   |
 | urn:msf:timedtext:imsc1         | IMSC1 timed text  cues                 | {{IMSC1-MSF}}    |
 
-## MSF_CATALOG_COMPRESSION Track Property {#iana-track-properties}
+## MSF_COMPRESSION Track Property {#iana-track-properties}
 
 This document requests IANA to register the following entry in the
 "Track Properties" registry established by {{MoQTransport}} (Section 14.4):
 
-| Property Name             | Property ID | Value Type | Reference |
-|:==========================|:============|:===========|:==========|
-| MSF_CATALOG_COMPRESSION   | TBD         | varint     | RFC XXXX  |
+| Property Name   | Property ID | Value Type | Reference |
+|:================|:============|:===========|:==========|
+| MSF_COMPRESSION | TBD         | varint     | RFC XXXX  |
 
-The MSF_CATALOG_COMPRESSION property indicates the compression algorithm
-applied to the catalog track payload. The property value is a varint with
-the following defined values:
+The MSF_COMPRESSION property indicates the compression algorithm applied to
+JSON-based MSF track payloads. See {{compression-property}} for the full
+specification.
+
+This document also requests IANA to create a new "MSF Compression Algorithms"
+registry with the following initial values:
 
 | Value | Compression Algorithm | Reference |
 |:======|:======================|:==========|
 | 0     | None (uncompressed)   | RFC XXXX  |
 | 1     | GZIP                  | {{GZIP}}  |
 
-Values 2-127 are reserved for future standardized compression algorithms.
+Values 2-127 are available for registration via Standards Action.
 Values 128 and above are reserved for private use.
 
 --- back
