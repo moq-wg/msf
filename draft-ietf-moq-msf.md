@@ -256,7 +256,8 @@ encrypted. The Catalog provides the names and namespaces of the tracks being
 produced, along with the relationship between tracks, properties of the tracks
 that consumers may use for selection and any relevant initialization data.
 
-The catalog track MUST have a case-sensitive Track Name of "catalog".
+The catalog track MUST have a case-sensitive Track Name beginning with "catalog",
+optionally followed by a compression suffix as defined in {{catalog-compression}}.
 
 A catalog object MAY be independent of other catalog objects or it MAY represent
 a delta update of a prior catalog object. The first catalog object published
@@ -272,6 +273,30 @@ Each catalog update MUST be mapped to an MOQT Object.
 Subscribers accessing the catalog MUST use SUBSCRIBE with a Joining FETCH
 (offset = 0) in order to obtain the latest complete catalog along with all subsequent
 catalog objects, including delta updates, that follow.
+
+## Catalog Compression {#catalog-compression}
+
+Catalogs can contain significant redundancy, particularly when initialization
+data is included. To reduce payload size, the catalog MAY be compressed.
+
+Compression is signaled via the catalog track name suffix:
+
+| Track Name   | Compression | Reference    |
+|:=============|:============|:=============|
+| catalog      | None        | -            |
+| catalog.gz   | GZIP        | {{GZIP}}     |
+
+Table X: Catalog Compression Suffixes
+
+Publishers MAY advertise multiple catalog track variants with different
+compression algorithms. Subscribers MUST subscribe to a catalog variant
+using a compression algorithm they support.
+
+All MSF implementations MUST support both "catalog" (uncompressed) and
+"catalog.gz" (GZIP compressed).
+
+Future compression algorithms can be added to the MSF Compression Suffix
+Registry ({{iana-compression-registry}}).
 
 A catalog is a JSON {{JSON}} document, comprised of a series of mandatory and
 optional fields. At a minimum, a catalog MUST provide all mandatory fields. A
@@ -2386,6 +2411,20 @@ The initial contents of this registry are:
 | urn:scte:scte35:2013:xml       | SCTE-35 XML representation         | {{SCTE35-MSF}}   |
 | urn:msf:timedtext:webvtt        | WebVTT timed text cues                | {{WebVTT-MSF}}   |
 | urn:msf:timedtext:imsc1         | IMSC1 timed text  cues                 | {{IMSC1-MSF}}    |
+
+## MSF Compression Suffix Registry {#iana-compression-registry}
+
+IANA is requested to create a new "MSF Compression Suffix Registry" with
+the following initial entries:
+
+| Suffix | Compression Algorithm | Reference | Status   |
+|:=======|:======================|:==========|:=========|
+| (none) | None                  | RFC XXXX  | MTI      |
+| .gz    | GZIP                  | {{GZIP}}  | MTI      |
+| .zst   | Zstandard             | RFC 8878  | Optional |
+| .br    | Brotli                | RFC 7932  | Optional |
+
+New entries require Specification Required policy per RFC 8126.
 
 --- back
 
