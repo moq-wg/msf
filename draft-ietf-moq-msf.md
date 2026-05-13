@@ -273,6 +273,17 @@ Subscribers accessing the catalog MUST use SUBSCRIBE with a Joining FETCH
 (offset = 0) in order to obtain the latest complete catalog along with all subsequent
 catalog objects, including delta updates, that follow.
 
+A catalog is a JSON {{JSON}} document, comprised of a series of mandatory and
+optional fields. At a minimum, a catalog MUST provide all mandatory fields. A
+producer MAY add additional fields to the ones described in this draft. Custom
+field names MUST NOT collide with field names described in this draft. The order
+of field names within the JSON document is not important.
+
+A parser MUST ignore fields it does not understand.
+
+## Root Catalog Fields
+
+
 ## Catalog Compression {#catalog-compression}
 
 Catalogs can contain significant redundancy, particularly when initialization
@@ -281,7 +292,7 @@ data is included. To reduce payload size, the catalog MAY be compressed.
 Compression is signaled via the MSF_CATALOG_COMPRESSION MOQT Track Property
 (see {{MoQTransport}} Section 14.4). Track properties are carried in MOQT
 control messages, allowing endpoints to learn the compression algorithm
-before receiving any catalog object. The property value is a varint
+before receiving any catalog objects. The property value is a varint
 indicating the compression algorithm:
 
 | Value | Compression Algorithm | Reference |
@@ -305,16 +316,6 @@ SHOULD unsubscribe from the track.
 
 All MSF implementations MUST support both uncompressed catalogs (value 0 or
 property absent) and GZIP compressed catalogs (value 1).
-
-A catalog is a JSON {{JSON}} document, comprised of a series of mandatory and
-optional fields. At a minimum, a catalog MUST provide all mandatory fields. A
-producer MAY add additional fields to the ones described in this draft. Custom
-field names MUST NOT collide with field names described in this draft. The order
-of field names within the JSON document is not important.
-
-A parser MUST ignore fields it does not understand.
-
-## Root Catalog Fields
 
 Table 1 lists the fields defined at the root of the catalog JSON object.
 
@@ -2420,10 +2421,10 @@ The initial contents of this registry are:
 | urn:msf:timedtext:webvtt        | WebVTT timed text cues                | {{WebVTT-MSF}}   |
 | urn:msf:timedtext:imsc1         | IMSC1 timed text  cues                 | {{IMSC1-MSF}}    |
 
-## "MOQ Track Properties" registry {#iana-track-properties}
+## MSF_CATALOG_COMPRESSION Track Property {#iana-track-properties}
 
 This document requests IANA to register the following entry in the
-"MOQ Track Properties" registry (see {{MoQTransport}} Sect 14.4):
+"Track Properties" registry established by {{MoQTransport}} (Section 14.4):
 
 | Property Name             | Property ID | Value Type | Reference |
 |:==========================|:============|:===========|:==========|
