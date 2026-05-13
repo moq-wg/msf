@@ -2384,8 +2384,8 @@ The initial contents of this registry are:
 |:===============================|:===================================|:=================|
 | urn:scte:scte35:2013:bin       | SCTE-35 binary splice_info_section | {{SCTE35-MSF}}   |
 | urn:scte:scte35:2013:xml       | SCTE-35 XML representation         | {{SCTE35-MSF}}   |
-| urn:msf:captions:webvtt        | WebVTT caption cues                | {{WebVTT-MSF}}   |
-| urn:msf:captions:imsc1         | IMSC1 caption cues                 | {{IMSC1-MSF}}    |
+| urn:msf:timedtext:webvtt        | WebVTT timed text cues                | {{WebVTT-MSF}}   |
+| urn:msf:timedtext:imsc1         | IMSC1 timed text  cues                 | {{IMSC1-MSF}}    |
 
 --- back
 
