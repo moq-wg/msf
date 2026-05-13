@@ -1051,7 +1051,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Law</td>
-<td class="center">Expires 12 November 2026</td>
+<td class="center">Expires 14 November 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1064,12 +1064,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-moq-msf-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-05-11" class="published">11 May 2026</time>
+<time datetime="2026-05-13" class="published">13 May 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-11-12">12 November 2026</time></dd>
+<dd class="expires"><time datetime="2026-11-14">14 November 2026</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1119,7 +1119,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 12 November 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 14 November 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1189,10 +1189,10 @@ svg :is([fill="white"], [fill^="#fff"]) {
             <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-catalog" class="internal xref">Catalog</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1">
-                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-catalog-compression" class="internal xref">Catalog Compression</a></p>
+                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-root-catalog-fields" class="internal xref">Root Catalog Fields</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2">
-                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="auto internal xref">5.2</a>.  <a href="#name-root-catalog-fields" class="internal xref">Root Catalog Fields</a></p>
+                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="auto internal xref">5.2</a>.  <a href="#name-catalog-compression" class="internal xref">Catalog Compression</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2.2.1">
                     <p id="section-toc.1-1.5.2.2.2.1.1"><a href="#section-5.2.1" class="auto internal xref">5.2.1</a>.  <a href="#name-msf-version" class="internal xref">MSF version</a></p>
@@ -1559,7 +1559,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
                 <p id="section-toc.1-1.13.2.1.1"><a href="#section-13.1" class="auto internal xref">13.1</a>.  <a href="#name-moqt-uri-fragment-types-reg" class="internal xref">"MOQT URI Fragment Types" registry</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.2">
-                <p id="section-toc.1-1.13.2.2.1"><a href="#section-13.2" class="auto internal xref">13.2</a>.  <a href="#name-msf-compression-suffix-regi" class="internal xref">MSF Compression Suffix Registry</a></p>
+                <p id="section-toc.1-1.13.2.2.1"><a href="#section-13.2" class="auto internal xref">13.2</a>.  <a href="#name-msf_catalog_compression-tra" class="internal xref">MSF_CATALOG_COMPRESSION Track Property</a></p>
 </li>
             </ul>
 </li>
@@ -1861,8 +1861,7 @@ payload of the Catalog object is opaque to Relays and can be end-to-end
 encrypted. The Catalog provides the names and namespaces of the tracks being
 produced, along with the relationship between tracks, properties of the tracks
 that consumers may use for selection and any relevant initialization data.<a href="#section-5-1" class="pilcrow">¶</a></p>
-<p id="section-5-2">The catalog track <span class="bcp14">MUST</span> have a case-sensitive Track Name beginning with "catalog",
-optionally followed by a compression suffix as defined in <a href="#catalog-compression" class="auto internal xref">Section 5.1</a>.<a href="#section-5-2" class="pilcrow">¶</a></p>
+<p id="section-5-2">The catalog track <span class="bcp14">MUST</span> have a case-sensitive Track Name of "catalog".<a href="#section-5-2" class="pilcrow">¶</a></p>
 <p id="section-5-3">A catalog object <span class="bcp14">MAY</span> be independent of other catalog objects or it <span class="bcp14">MAY</span> represent
 a delta update of a prior catalog object. The first catalog object published
 within a new group <span class="bcp14">MUST</span> be independent and <span class="bcp14">MUST</span> provide a complete catalog that
@@ -1874,31 +1873,48 @@ published only when the availability of tracks changes.<a href="#section-5-4" cl
 <p id="section-5-6">Subscribers accessing the catalog <span class="bcp14">MUST</span> use SUBSCRIBE with a Joining FETCH
 (offset = 0) in order to obtain the latest complete catalog along with all subsequent
 catalog objects, including delta updates, that follow.<a href="#section-5-6" class="pilcrow">¶</a></p>
-<div id="catalog-compression">
+<p id="section-5-7">A catalog is a JSON <span>[<a href="#JSON" class="cite xref">JSON</a>]</span> document, comprised of a series of mandatory and
+optional fields. At a minimum, a catalog <span class="bcp14">MUST</span> provide all mandatory fields. A
+producer <span class="bcp14">MAY</span> add additional fields to the ones described in this draft. Custom
+field names <span class="bcp14">MUST NOT</span> collide with field names described in this draft. The order
+of field names within the JSON document is not important.<a href="#section-5-7" class="pilcrow">¶</a></p>
+<p id="section-5-8">A parser <span class="bcp14">MUST</span> ignore fields it does not understand.<a href="#section-5-8" class="pilcrow">¶</a></p>
+<div id="root-catalog-fields">
 <section id="section-5.1">
+        <h3 id="name-root-catalog-fields">
+<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-root-catalog-fields" class="section-name selfRef">Root Catalog Fields</a>
+      </h3>
+</section>
+</div>
+<div id="catalog-compression">
+<section id="section-5.2">
         <h3 id="name-catalog-compression">
-<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-catalog-compression" class="section-name selfRef">Catalog Compression</a>
+<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-catalog-compression" class="section-name selfRef">Catalog Compression</a>
         </h3>
-<p id="section-5.1-1">Catalogs can contain significant redundancy, particularly when initialization
-data is included. To reduce payload size, the catalog <span class="bcp14">MAY</span> be compressed.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
-<p id="section-5.1-2">Compression is signaled via the catalog track name suffix:<a href="#section-5.1-2" class="pilcrow">¶</a></p>
+<p id="section-5.2-1">Catalogs can contain significant redundancy, particularly when initialization
+data is included. To reduce payload size, the catalog <span class="bcp14">MAY</span> be compressed.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
+<p id="section-5.2-2">Compression is signaled via the MSF_CATALOG_COMPRESSION MOQT Track Property
+(see <span>[<a href="#MoQTransport" class="cite xref">MoQTransport</a>]</span> Section 14.4). Track properties are carried in MOQT
+control messages, allowing endpoints to learn the compression algorithm
+before receiving any catalog objects. The property value is a varint
+indicating the compression algorithm:<a href="#section-5.2-2" class="pilcrow">¶</a></p>
 <table class="center" id="table-1">
           <caption><a href="#table-1" class="selfRef">Table 1</a></caption>
 <thead>
             <tr>
-              <th class="text-left" rowspan="1" colspan="1">Track Name</th>
-              <th class="text-left" rowspan="1" colspan="1">Compression</th>
+              <th class="text-left" rowspan="1" colspan="1">Value</th>
+              <th class="text-left" rowspan="1" colspan="1">Compression Algorithm</th>
               <th class="text-left" rowspan="1" colspan="1">Reference</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td class="text-left" rowspan="1" colspan="1">catalog</td>
-              <td class="text-left" rowspan="1" colspan="1">None</td>
-              <td class="text-left" rowspan="1" colspan="1">-</td>
+              <td class="text-left" rowspan="1" colspan="1">0</td>
+              <td class="text-left" rowspan="1" colspan="1">None (uncompressed)</td>
+              <td class="text-left" rowspan="1" colspan="1">RFC XXXX</td>
             </tr>
             <tr>
-              <td class="text-left" rowspan="1" colspan="1">catalog.gz</td>
+              <td class="text-left" rowspan="1" colspan="1">1</td>
               <td class="text-left" rowspan="1" colspan="1">GZIP</td>
               <td class="text-left" rowspan="1" colspan="1">
                 <span>[<a href="#GZIP" class="cite xref">GZIP</a>]</span>
@@ -1906,28 +1922,19 @@ data is included. To reduce payload size, the catalog <span class="bcp14">MAY</s
             </tr>
           </tbody>
         </table>
-<p id="section-5.1-4">Table X: Catalog Compression Suffixes<a href="#section-5.1-4" class="pilcrow">¶</a></p>
-<p id="section-5.1-5">Publishers <span class="bcp14">MAY</span> advertise multiple catalog track variants with different
-compression algorithms. Subscribers <span class="bcp14">MUST</span> subscribe to a catalog variant
-using a compression algorithm they support.<a href="#section-5.1-5" class="pilcrow">¶</a></p>
-<p id="section-5.1-6">All MSF implementations <span class="bcp14">MUST</span> support both "catalog" (uncompressed) and
-"catalog.gz" (GZIP compressed).<a href="#section-5.1-6" class="pilcrow">¶</a></p>
-<p id="section-5.1-7">Future compression algorithms can be added to the MSF Compression Suffix
-Registry (<a href="#iana-compression-registry" class="auto internal xref">Section 13.2</a>).<a href="#section-5.1-7" class="pilcrow">¶</a></p>
-<p id="section-5.1-8">A catalog is a JSON <span>[<a href="#JSON" class="cite xref">JSON</a>]</span> document, comprised of a series of mandatory and
-optional fields. At a minimum, a catalog <span class="bcp14">MUST</span> provide all mandatory fields. A
-producer <span class="bcp14">MAY</span> add additional fields to the ones described in this draft. Custom
-field names <span class="bcp14">MUST NOT</span> collide with field names described in this draft. The order
-of field names within the JSON document is not important.<a href="#section-5.1-8" class="pilcrow">¶</a></p>
-<p id="section-5.1-9">A parser <span class="bcp14">MUST</span> ignore fields it does not understand.<a href="#section-5.1-9" class="pilcrow">¶</a></p>
-</section>
-</div>
-<div id="root-catalog-fields">
-<section id="section-5.2">
-        <h3 id="name-root-catalog-fields">
-<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-root-catalog-fields" class="section-name selfRef">Root Catalog Fields</a>
-        </h3>
-<p id="section-5.2-1">Table 1 lists the fields defined at the root of the catalog JSON object.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
+<p id="section-5.2-4">Table X: Catalog Compression Values<a href="#section-5.2-4" class="pilcrow">¶</a></p>
+<p id="section-5.2-5">Publishers that compress the catalog <span class="bcp14">MUST</span> include the MSF_CATALOG_COMPRESSION
+track property in the PUBLISH message (publisher-initiated flow) or
+SUBSCRIBE_OK (subscriber-initiated flow).<a href="#section-5.2-5" class="pilcrow">¶</a></p>
+<p id="section-5.2-6">Subscribers <span class="bcp14">MUST</span> check for this property in the corresponding message before
+processing the catalog payload.<a href="#section-5.2-6" class="pilcrow">¶</a></p>
+<p id="section-5.2-7">If the property is absent, the subscriber <span class="bcp14">MUST</span> treat the catalog as
+uncompressed. If the property is present with a value the subscriber does
+not support, the subscriber <span class="bcp14">MUST NOT</span> attempt to process the catalog and
+<span class="bcp14">SHOULD</span> unsubscribe from the track.<a href="#section-5.2-7" class="pilcrow">¶</a></p>
+<p id="section-5.2-8">All MSF implementations <span class="bcp14">MUST</span> support both uncompressed catalogs (value 0 or
+property absent) and GZIP compressed catalogs (value 1).<a href="#section-5.2-8" class="pilcrow">¶</a></p>
+<p id="section-5.2-9">Table 1 lists the fields defined at the root of the catalog JSON object.<a href="#section-5.2-9" class="pilcrow">¶</a></p>
 <table class="center" id="table-2">
           <caption><a href="#table-2" class="selfRef">Table 2</a></caption>
 <thead>
@@ -4888,53 +4895,61 @@ and <span>[<a href="#C4M" class="cite xref">C4M</a>]</span> for CAT error handli
         </table>
 </section>
 </div>
-<div id="iana-compression-registry">
+<div id="iana-track-properties">
 <section id="section-13.2">
-        <h3 id="name-msf-compression-suffix-regi">
-<a href="#section-13.2" class="section-number selfRef">13.2. </a><a href="#name-msf-compression-suffix-regi" class="section-name selfRef">MSF Compression Suffix Registry</a>
+        <h3 id="name-msf_catalog_compression-tra">
+<a href="#section-13.2" class="section-number selfRef">13.2. </a><a href="#name-msf_catalog_compression-tra" class="section-name selfRef">MSF_CATALOG_COMPRESSION Track Property</a>
         </h3>
-<p id="section-13.2-1">IANA is requested to create a new "MSF Compression Suffix Registry" with
-the following initial entries:<a href="#section-13.2-1" class="pilcrow">¶</a></p>
+<p id="section-13.2-1">This document requests IANA to register the following entry in the
+"Track Properties" registry established by <span>[<a href="#MoQTransport" class="cite xref">MoQTransport</a>]</span> (Section 14.4):<a href="#section-13.2-1" class="pilcrow">¶</a></p>
 <table class="center" id="table-12">
           <caption><a href="#table-12" class="selfRef">Table 12</a></caption>
 <thead>
             <tr>
-              <th class="text-left" rowspan="1" colspan="1">Suffix</th>
-              <th class="text-left" rowspan="1" colspan="1">Compression Algorithm</th>
+              <th class="text-left" rowspan="1" colspan="1">Property Name</th>
+              <th class="text-left" rowspan="1" colspan="1">Property ID</th>
+              <th class="text-left" rowspan="1" colspan="1">Value Type</th>
               <th class="text-left" rowspan="1" colspan="1">Reference</th>
-              <th class="text-left" rowspan="1" colspan="1">Status</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td class="text-left" rowspan="1" colspan="1">(none)</td>
-              <td class="text-left" rowspan="1" colspan="1">None</td>
+              <td class="text-left" rowspan="1" colspan="1">MSF_CATALOG_COMPRESSION</td>
+              <td class="text-left" rowspan="1" colspan="1">TBD</td>
+              <td class="text-left" rowspan="1" colspan="1">varint</td>
               <td class="text-left" rowspan="1" colspan="1">RFC XXXX</td>
-              <td class="text-left" rowspan="1" colspan="1">MTI</td>
+            </tr>
+          </tbody>
+        </table>
+<p id="section-13.2-3">The MSF_CATALOG_COMPRESSION property indicates the compression algorithm
+applied to the catalog track payload. The property value is a varint with
+the following defined values:<a href="#section-13.2-3" class="pilcrow">¶</a></p>
+<table class="center" id="table-13">
+          <caption><a href="#table-13" class="selfRef">Table 13</a></caption>
+<thead>
+            <tr>
+              <th class="text-left" rowspan="1" colspan="1">Value</th>
+              <th class="text-left" rowspan="1" colspan="1">Compression Algorithm</th>
+              <th class="text-left" rowspan="1" colspan="1">Reference</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">0</td>
+              <td class="text-left" rowspan="1" colspan="1">None (uncompressed)</td>
+              <td class="text-left" rowspan="1" colspan="1">RFC XXXX</td>
             </tr>
             <tr>
-              <td class="text-left" rowspan="1" colspan="1">.gz</td>
+              <td class="text-left" rowspan="1" colspan="1">1</td>
               <td class="text-left" rowspan="1" colspan="1">GZIP</td>
               <td class="text-left" rowspan="1" colspan="1">
                 <span>[<a href="#GZIP" class="cite xref">GZIP</a>]</span>
 </td>
-              <td class="text-left" rowspan="1" colspan="1">MTI</td>
-            </tr>
-            <tr>
-              <td class="text-left" rowspan="1" colspan="1">.zst</td>
-              <td class="text-left" rowspan="1" colspan="1">Zstandard</td>
-              <td class="text-left" rowspan="1" colspan="1">RFC 8878</td>
-              <td class="text-left" rowspan="1" colspan="1">Optional</td>
-            </tr>
-            <tr>
-              <td class="text-left" rowspan="1" colspan="1">.br</td>
-              <td class="text-left" rowspan="1" colspan="1">Brotli</td>
-              <td class="text-left" rowspan="1" colspan="1">RFC 7932</td>
-              <td class="text-left" rowspan="1" colspan="1">Optional</td>
             </tr>
           </tbody>
         </table>
-<p id="section-13.2-3">New entries require Specification Required policy per RFC 8126.<a href="#section-13.2-3" class="pilcrow">¶</a></p>
+<p id="section-13.2-5">Values 2-127 are reserved for future standardized compression algorithms.
+Values 128 and above are reserved for private use.<a href="#section-13.2-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>

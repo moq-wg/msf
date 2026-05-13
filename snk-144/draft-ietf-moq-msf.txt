@@ -4,8 +4,8 @@
 
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
-Intended status: Informational                               11 May 2026
-Expires: 12 November 2026
+Intended status: Informational                               13 May 2026
+Expires: 14 November 2026
 
 
                          MOQT Streaming Format
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 12 November 2026.
+   This Internet-Draft will expire on 14 November 2026.
 
 Copyright Notice
 
@@ -78,8 +78,8 @@ Table of Contents
        4.3.3.  Recommended encryption scheme
        4.3.4.  Encrypted object structure
    5.  Catalog
-     5.1.  Catalog Compression
-     5.2.  Root Catalog Fields
+     5.1.  Root Catalog Fields
+     5.2.  Catalog Compression
        5.2.1.  MSF version
        5.2.2.  Generated at
        5.2.3.  Is Complete
@@ -193,7 +193,7 @@ Table of Contents
    12. Security Considerations
    13. IANA Considerations
      13.1.  "MOQT URI Fragment Types" registry
-     13.2.  MSF Compression Suffix Registry
+     13.2.  MSF_CATALOG_COMPRESSION Track Property
    14. References
      14.1.  Normative References
      14.2.  Informative References
@@ -413,9 +413,7 @@ Table of Contents
    relationship between tracks, properties of the tracks that consumers
    may use for selection and any relevant initialization data.
 
-   The catalog track MUST have a case-sensitive Track Name beginning
-   with "catalog", optionally followed by a compression suffix as
-   defined in Section 5.1.
+   The catalog track MUST have a case-sensitive Track Name of "catalog".
 
    A catalog object MAY be independent of other catalog objects or it
    MAY represent a delta update of a prior catalog object.  The first
@@ -434,36 +432,6 @@ Table of Contents
    along with all subsequent catalog objects, including delta updates,
    that follow.
 
-5.1.  Catalog Compression
-
-   Catalogs can contain significant redundancy, particularly when
-   initialization data is included.  To reduce payload size, the catalog
-   MAY be compressed.
-
-   Compression is signaled via the catalog track name suffix:
-
-                 +============+=============+===========+
-                 | Track Name | Compression | Reference |
-                 +============+=============+===========+
-                 | catalog    | None        | -         |
-                 +------------+-------------+-----------+
-                 | catalog.gz | GZIP        | [GZIP]    |
-                 +------------+-------------+-----------+
-
-                                 Table 1
-
-   Table X: Catalog Compression Suffixes
-
-   Publishers MAY advertise multiple catalog track variants with
-   different compression algorithms.  Subscribers MUST subscribe to a
-   catalog variant using a compression algorithm they support.
-
-   All MSF implementations MUST support both "catalog" (uncompressed)
-   and "catalog.gz" (GZIP compressed).
-
-   Future compression algorithms can be added to the MSF Compression
-   Suffix Registry (Section 13.2).
-
    A catalog is a JSON [JSON] document, comprised of a series of
    mandatory and optional fields.  At a minimum, a catalog MUST provide
    all mandatory fields.  A producer MAY add additional fields to the
@@ -473,7 +441,47 @@ Table of Contents
 
    A parser MUST ignore fields it does not understand.
 
-5.2.  Root Catalog Fields
+5.1.  Root Catalog Fields
+
+5.2.  Catalog Compression
+
+   Catalogs can contain significant redundancy, particularly when
+   initialization data is included.  To reduce payload size, the catalog
+   MAY be compressed.
+
+   Compression is signaled via the MSF_CATALOG_COMPRESSION MOQT Track
+   Property (see [MoQTransport] Section 14.4).  Track properties are
+   carried in MOQT control messages, allowing endpoints to learn the
+   compression algorithm before receiving any catalog objects.  The
+   property value is a varint indicating the compression algorithm:
+
+               +=======+=======================+===========+
+               | Value | Compression Algorithm | Reference |
+               +=======+=======================+===========+
+               | 0     | None (uncompressed)   | RFC XXXX  |
+               +-------+-----------------------+-----------+
+               | 1     | GZIP                  | [GZIP]    |
+               +-------+-----------------------+-----------+
+
+                                  Table 1
+
+   Table X: Catalog Compression Values
+
+   Publishers that compress the catalog MUST include the
+   MSF_CATALOG_COMPRESSION track property in the PUBLISH message
+   (publisher-initiated flow) or SUBSCRIBE_OK (subscriber-initiated
+   flow).
+
+   Subscribers MUST check for this property in the corresponding message
+   before processing the catalog payload.
+
+   If the property is absent, the subscriber MUST treat the catalog as
+   uncompressed.  If the property is present with a value the subscriber
+   does not support, the subscriber MUST NOT attempt to process the
+   catalog and SHOULD unsubscribe from the track.
+
+   All MSF implementations MUST support both uncompressed catalogs
+   (value 0 or property absent) and GZIP compressed catalogs (value 1).
 
    Table 1 lists the fields defined at the root of the catalog JSON
    object.
@@ -2714,26 +2722,36 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
 
                                   Table 11
 
-13.2.  MSF Compression Suffix Registry
+13.2.  MSF_CATALOG_COMPRESSION Track Property
 
-   IANA is requested to create a new "MSF Compression Suffix Registry"
-   with the following initial entries:
+   This document requests IANA to register the following entry in the
+   "Track Properties" registry established by [MoQTransport]
+   (Section 14.4):
 
-         +========+=======================+===========+==========+
-         | Suffix | Compression Algorithm | Reference | Status   |
-         +========+=======================+===========+==========+
-         | (none) | None                  | RFC XXXX  | MTI      |
-         +--------+-----------------------+-----------+----------+
-         | .gz    | GZIP                  | [GZIP]    | MTI      |
-         +--------+-----------------------+-----------+----------+
-         | .zst   | Zstandard             | RFC 8878  | Optional |
-         +--------+-----------------------+-----------+----------+
-         | .br    | Brotli                | RFC 7932  | Optional |
-         +--------+-----------------------+-----------+----------+
+    +=========================+=============+============+===========+
+    | Property Name           | Property ID | Value Type | Reference |
+    +=========================+=============+============+===========+
+    | MSF_CATALOG_COMPRESSION | TBD         | varint     | RFC XXXX  |
+    +-------------------------+-------------+------------+-----------+
 
-                                  Table 12
+                                 Table 12
 
-   New entries require Specification Required policy per RFC 8126.
+   The MSF_CATALOG_COMPRESSION property indicates the compression
+   algorithm applied to the catalog track payload.  The property value
+   is a varint with the following defined values:
+
+               +=======+=======================+===========+
+               | Value | Compression Algorithm | Reference |
+               +=======+=======================+===========+
+               | 0     | None (uncompressed)   | RFC XXXX  |
+               +-------+-----------------------+-----------+
+               | 1     | GZIP                  | [GZIP]    |
+               +-------+-----------------------+-----------+
+
+                                  Table 13
+
+   Values 2-127 are reserved for future standardized compression
+   algorithms.  Values 128 and above are reserved for private use.
 
 14.  References
 
