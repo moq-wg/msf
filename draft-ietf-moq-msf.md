@@ -281,7 +281,7 @@ data is included. To reduce payload size, the catalog MAY be compressed.
 Compression is signaled via the MSF_CATALOG_COMPRESSION MOQT Track Property
 (see {{MoQTransport}} Section 14.4). Track properties are carried in MOQT
 control messages, allowing endpoints to learn the compression algorithm
-before receiving any catalog object payload. The property value is a varint
+before receiving any catalog object. The property value is a varint
 indicating the compression algorithm:
 
 | Value | Compression Algorithm | Reference |
@@ -292,22 +292,11 @@ indicating the compression algorithm:
 Table X: Catalog Compression Values
 
 Publishers that compress the catalog MUST include the MSF_CATALOG_COMPRESSION
-track property in control messages as follows:
+track property in the PUBLISH message (publisher-initiated flow) or
+SUBSCRIBE_OK (subscriber-initiated flow).
 
-* When the publisher initiates the flow using a PUBLISH message to announce
-  the catalog track, the property MUST be included in the PUBLISH message.
-* When responding to a SUBSCRIBE message from a subscriber, the property
-  MUST be included in the SUBSCRIBE_OK response.
-
-Publishers MUST NOT omit this property when the catalog is compressed.
-
-Subscribers MUST check for the presence of the MSF_CATALOG_COMPRESSION track
-property before processing the catalog payload:
-
-* When subscribing to the catalog track, subscribers MUST examine the
-  SUBSCRIBE_OK message for this property.
-* When receiving a catalog track via a publisher-initiated flow, subscribers
-  MUST examine the incoming announcement for this property.
+Subscribers MUST check for this property in the corresponding message before
+processing the catalog payload.
 
 If the property is absent, the subscriber MUST treat the catalog as
 uncompressed. If the property is present with a value the subscriber does
