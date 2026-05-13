@@ -180,10 +180,15 @@ requirements:
 * Tracks advertised in the catalog as belonging to a common alternate group MUST
   be time-aligned.
 * The render duration of the first media object of each equally numbered MOQT
-  Group, after decoding, MUST have overlapping presentation time.
+  Group, after decoding, SHOULD have overlapping presentation time.
 
 A consequence of this restriction is that an MSF receiver SHOULD be able to
 cleanly switch between time-aligned media tracks at group boundaries.
+
+If time-aligned media tracks do not have overlapping presentation time at
+equally-numbered group boundaries, then an alternate mechanism, not defined by
+this specification, must be provided to the client to enable it to switch smoothly
+between time-aligned, but numerically dissimilar, Group IDs.
 
 ## Content protection and encryption {#contentprotection}
 
