@@ -2867,9 +2867,11 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
     | urn:scte:scte35:2013:xml | SCTE-35 XML         | [SCTE35-MSF]  |
     |                          | representation      |               |
     +--------------------------+---------------------+---------------+
-    | urn:msf:captions:webvtt  | WebVTT caption cues | [WebVTT-MSF]  |
+    | urn:msf:timedtext:webvtt | WebVTT timed text   | [WebVTT-MSF]  |
+    |                          | cues                |               |
     +--------------------------+---------------------+---------------+
-    | urn:msf:captions:imsc1   | IMSC1 caption cues  | [IMSC1-MSF]   |
+    | urn:msf:timedtext:imsc1  | IMSC1 timed text    | [IMSC1-MSF]   |
+    |                          | cues                |               |
     +--------------------------+---------------------+---------------+
 
                                  Table 12
