@@ -263,6 +263,7 @@ Table 1 lists the fields defined at the root of the catalog JSON object.
 | Is Complete             | isComplete             | {{iscomplete}}            |
 | Tracks                  | tracks                 | {{tracks}}                |
 | Publish tracks          | publishTracks          | {{publishtracks}}         |
+| Delta update            | deltaUpdate            | {{deltaupdate}}           |
 
 ### MSF version {#msfversion}
 Required: Yes    JSON Type: Number    Location: Root Catalog
@@ -303,50 +304,36 @@ bi-directional communication where the subscriber acts as a publisher for specif
 tracks. Each publish track object follows the same structure as a regular track
 object {{trackobject}} but is used for the reverse direction of data flow.
 
-## Delta Update Catalog Fields
-
-Table 2 lists the fields used for delta update operations at the root level.
-
-| Field                   |  Name                  |           Definition      |
-|:========================|:=======================|:==========================|
-| Delta update            | deltaUpdate            | {{deltaupdate}}           |
-| Operations              | operations             | {{operations}}            |
-
 ### Delta update {#deltaupdate}
-Required: Optional    JSON Type: Boolean    Location: Delta Update
-
-A Boolean that if true indicates that this catalog object represents a delta
-(or partial) update. A delta update has a restricted set of fields and special
-processing rules - see {{deltaupdates}}. This value SHOULD NOT be added to a
-catalog if it is false.
-
-### Operations {#operations}
-Required: Required (when deltaUpdate is true)    JSON Type: Array    Location: Delta Update
+Required: Optional    JSON Type: Array    Location: Root Catalog
 
 An ordered Array of operation objects that specify changes to apply to the catalog.
-Operations are applied sequentially in the order they appear in the array.
-This field MUST be present when deltaUpdate is true and MUST NOT be present
-when deltaUpdate is absent or false.
+If this field is present, the catalog represents a delta (or partial) update with
+a restricted set of fields and special processing rules - see {{deltaupdates}}.
+If this field is absent, the catalog is independent.
 
+Operations are applied sequentially in the order they appear in the array.
 Each operation object MUST contain an "op" field indicating the operation type,
 and a "tracks" field containing an Array of track objects {{trackobject}}.
 The following operation types are defined:
 
-* "add" - Add new tracks that have not previously been declared. Each track
-  object follows the standard track object format {{trackobject}}.
+* "add" - Add new tracks that have not previously been declared. The value of
+  the "tracks" field is an Array of track objects {{trackobject}}.
 
-* "remove" - Remove tracks that have been previously declared. Each track
+* "remove" - Remove tracks that have been previously declared. The value of
+  the "tracks" field is an Array of track objects {{trackobject}}. Each track
   object MUST include a Track Name {{trackname}} field, MAY include a Track
   Namespace {{tracknamespace}} field, and MUST NOT hold any other fields.
 
-* "clone" - Clone new tracks from previously declared tracks. Each track
+* "clone" - Clone new tracks from previously declared tracks. The value of
+  the "tracks" field is an Array of track objects {{trackobject}}. Each track
   object MUST include a Parent Name {{parentname}} field. The cloned track
   inherits all attributes from the parent except the Track Name which MUST
   be new. Attributes redefined in the track object override inherited values.
 
 ## Track Object Fields
 
-Table 3 lists the fields defined within each track object.
+Table 2 lists the fields defined within each track object.
 
 | Field                   |  Name                  |           Definition      |
 |:========================|:=======================|:==========================|
@@ -383,7 +370,7 @@ Table 3 lists the fields defined within each track object.
 ### Tracks object {#trackobject}
 
 A track object is a JSON Object containing a collection of fields whose location
-is specified in Table 3.
+is specified in Table 2.
 
 ### Track namespace {#tracknamespace}
 Required: Optional    JSON Type: String    Location: Track Object
@@ -403,7 +390,7 @@ Within the catalog, track names MUST be unique per namespace.
 Required: Yes    JSON Type: String    Location: Track Object
 
 A string defining the type of payload encapsulation. Allowed values are strings
-as defined in Table 4.
+as defined in Table 3.
 
 | Name            |   Value        |      Reference             |
 |:================|:===============|:===========================|
@@ -413,7 +400,7 @@ as defined in Table 4.
 | MoQ Log         | moqlog         | See {{MOQLOG}}             |
 | MoQ Metrics     | moqmetrics     | See {{MOQMETRICS}}         |
 
-Table 4: Allowed packaging values
+Table 3: Allowed packaging values
 
 ### Event timeline type {#eventtype}
 Required: Optional    JSON Type: String    Location: Track Object
@@ -429,12 +416,12 @@ This field MUST NOT be used if the packaging value is not "eventtimeline".
 Required: Optional    JSON Type: String    Location: Track Object
 
 A string defining the role of content carried by the track. Specified roles
-are described in Table 5. These role values are case-sensitive.
+are described in Table 4. These role values are case-sensitive.
 
 This role field MAY be used in conjunction with the Mimetype {{mimetype}} to
 fully describe the content of the track.
 
-Table 5: Reserved track roles
+Table 4: Reserved track roles
 
 | Role             |   Description                                              |
 |:=================|:===========================================================|
@@ -616,7 +603,7 @@ the standard Tags for Identifying Languages as defined by {{LANG}}.
 Required: Optional    JSON Type: String    Location: Track Object
 
 A string defining the parent track name {{trackname}} to be cloned. This field
-MUST only be included inside a clone operation {{operations}}.
+MUST only be included inside a clone operation in a delta update {{deltaupdate}}.
 
 ### Track duration {#trackduration}
 Required: Optional    JSON Type: Number    Location: Track Object
@@ -773,11 +760,10 @@ A restricted set of operations are allowed with each delta update:
 
 The following rules are to be followed in constructing and processing delta updates:
 
-* A delta update MUST include the Delta Update {{deltaupdate}} field set to true.
-* A delta update catalog MUST contain an Operations {{operations}} field with at
+* A delta update MUST include the Delta Update {{deltaupdate}} field with at
   least one operation. It MUST NOT contain an instance of a Tracks {{tracks}}
   field or an MSF version {{msfversion}} field.
-* Operations are applied sequentially in the order they appear in the operations
+* Operations are applied sequentially in the order they appear in the deltaUpdate
   array. Each operation is applied to the target document; the resulting document
   becomes the target of the next operation. Evaluation continues until all
   operations are successfully applied.
@@ -1067,9 +1053,8 @@ the other is cloned from a previous track.
 
 ~~~json
 {
-  "deltaUpdate": true,
   "generatedAt": 1746104606044,
-  "operations": [
+  "deltaUpdate": [
     {
       "op": "add",
       "tracks": [
@@ -1109,9 +1094,8 @@ from an established video conference.
 
 ~~~json
 {
-  "deltaUpdate": true,
   "generatedAt": 1746104606044,
-  "operations": [
+  "deltaUpdate": [
     {
       "op": "remove",
       "tracks": [{"name": "video"}, {"name": "slides"}]
@@ -2004,7 +1988,7 @@ meaning, as defined by {{reservedfragmentparameters}}.
 
 ### Reserved fragment parameters {#reservedfragmentparameters}
 
-Table 5 defines reserved key names for the parameter portion of the msf-fragment. Keynames are
+Table 8 defines reserved key names for the parameter portion of the msf-fragment. Keynames are
 case-sensitive.
 
 | Name            |                Description                       |
