@@ -1737,11 +1737,15 @@ be time-aligned.<a href="#section-4.2-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-4.2-2.2">
             <p id="section-4.2-2.2.1">The render duration of the first media object of each equally numbered MOQT
-Group, after decoding, <span class="bcp14">MUST</span> have overlapping presentation time.<a href="#section-4.2-2.2.1" class="pilcrow">¶</a></p>
+Group, after decoding, <span class="bcp14">SHOULD</span> have overlapping presentation time.<a href="#section-4.2-2.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <p id="section-4.2-3">A consequence of this restriction is that an MSF receiver <span class="bcp14">SHOULD</span> be able to
 cleanly switch between time-aligned media tracks at group boundaries.<a href="#section-4.2-3" class="pilcrow">¶</a></p>
+<p id="section-4.2-4">If time-aligned media tracks do not have overlapping presentation time at
+equally-numbered group boundaries, then an alternate mechanism, not defined by
+this specification, must be provided to the client to enable it to switch smoothly
+between time-aligned, but numerically dissimilar, Group IDs.<a href="#section-4.2-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="contentprotection">
