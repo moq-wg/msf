@@ -2064,7 +2064,7 @@ interoperability.
 Event timelines can carry data types including but not limited to:
 
 * Ad insertion signaling (e.g., SCTE-35 splice points) - see {{SCTE35-MSF}}
-* Out-of-band caption cues (WebVTT, IMSC1) - see {{WebVTT-MSF}} and {{IMSC1-MSF}}
+* Out-of-band timed-text cues (WebVTT, IMSC1) - see {{WebVTT-MSF}} and {{IMSC1-MSF}}
 * Sports scores and game state
 * GPS coordinates and telemetry
 * Active speaker notifications
