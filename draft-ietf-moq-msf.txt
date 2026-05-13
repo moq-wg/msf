@@ -125,6 +125,7 @@ Table of Contents
        5.2.36. Track Base Key
        5.2.37. Authorization Info
        5.2.38. Token Delivery via URI
+       5.2.39. Accessibility
      5.3.  Delta updates
      5.4.  Variable Substitution
        5.4.1.  Variable Syntax
@@ -143,10 +144,12 @@ Table of Contents
        5.5.8.  Encrypted Audio/Video Tracks
        5.5.9.  Media timeline and Event timeline
        5.5.10. Media timeline template
-       5.5.11. Terminating a live broadcast
-       5.5.12. Variable Substitution for personalized delivery
-       5.5.13. Time-aligned Audio/Video Tracks with Authorization
-       5.5.14. Publish tracks for logs and metrics
+       5.5.11. Video track with embedded captions and SCTE-35 events
+       5.5.12. Video track with CEA-708 captions
+       5.5.13. Terminating a live broadcast
+       5.5.14. Variable Substitution for personalized delivery
+       5.5.15. Time-aligned Audio/Video Tracks with Authorization
+       5.5.16. Publish tracks for logs and metrics
    6.  Media transmission
      6.1.  Group numbering
    7.  Media Timeline track
@@ -174,6 +177,7 @@ Table of Contents
      10.2.  Metrics track namespace and name
      10.3.  Metrics track Group ID and Object ID
      10.4.  Metrics track catalog requirements
+     10.5.  Well-known event timeline types
    11. Workflow
      11.1.  URL construction and interpretation
        11.1.1.  Reserved fragment parameters
@@ -189,6 +193,7 @@ Table of Contents
    12. Security Considerations
    13. IANA Considerations
      13.1.  "MOQT URI Fragment Types" registry
+     13.2.  "MSF Event Timeline Types" registry
    14. References
      14.1.  Normative References
      14.2.  Informative References
@@ -605,6 +610,8 @@ Table of Contents
         | Track duration        | trackDuration | Section 5.2.30 |
         +-----------------------+---------------+----------------+
         | Authorization Info    | authInfo      | Section 5.2.37 |
+        +-----------------------+---------------+----------------+
+        | Accessibility         | accessibility | Section 5.2.39 |
         +-----------------------+---------------+----------------+
 
                                  Table 2
@@ -1102,6 +1109,40 @@ Table of Contents
    Would be resolved by the subscriber to include "cat": "XYZ789", which
    is then presented in control messages as specified by the
    authorization scheme.
+
+5.2.39.  Accessibility
+
+   Location: T Required: Optional JSON Type: Array
+
+   An array of accessibility descriptors indicating accessibility
+   features embedded within the track.  Each descriptor is a JSON Object
+   containing:
+
+   *  A required 'scheme' field (String) identifying the accessibility
+      scheme.
+
+   *  A required 'value' field (String) specifying the accessibility
+      channels or features available.
+
+   Table 6: Registered accessibility schemes
+
+        +===============================+=========================+
+        | Scheme                        | Description             |
+        +===============================+=========================+
+        | urn:scte:dash:cc:cea-608:2015 | CEA-608 closed captions |
+        +-------------------------------+-------------------------+
+        | urn:scte:dash:cc:cea-708:2015 | CEA-708 closed captions |
+        +-------------------------------+-------------------------+
+
+                                  Table 8
+
+   The 'value' field for CEA-608/708 schemes uses the format defined by
+   [SCTE214-1], where caption service channels are specified as
+   semicolon-separated pairs of channel identifier and language code
+   (e.g., "CC1=eng;CC3=spa").
+
+   A subscriber MAY use this information to determine caption
+   availability and configure an appropriate caption decoder.
 
 5.3.  Delta updates
 
@@ -1681,7 +1722,103 @@ Table of Contents
       ]
    }
 
-5.5.11.  Terminating a live broadcast
+5.5.11.  Video track with embedded captions and SCTE-35 events
+
+   This example shows a live broadcast with CEA-608 closed captions
+   embedded in the video track and a separate SCTE-35 event timeline for
+   ad insertion.
+
+   {
+     "version": 1,
+     "generatedAt": 1746104606044,
+     "tracks": [
+       {
+         "name": "video",
+         "packaging": "loc",
+         "isLive": true,
+         "targetLatency": 4000,
+         "role": "video",
+         "renderGroup": 1,
+         "codec": "avc1.4d401f",
+         "width": 1920,
+         "height": 1080,
+         "framerate": 30,
+         "bitrate": 5000000,
+         "accessibility": [
+           {
+             "scheme": "urn:scte:dash:cc:cea-608:2015",
+             "value": "CC1=eng;CC3=spa"
+           }
+         ]
+       },
+       {
+         "name": "audio",
+         "packaging": "loc",
+         "isLive": true,
+         "targetLatency": 4000,
+         "role": "audio",
+         "renderGroup": 1,
+         "codec": "opus",
+         "samplerate": 48000,
+         "channelConfig": "2",
+         "bitrate": 128000
+       },
+       {
+         "name": "scte35",
+         "packaging": "eventtimeline",
+         "eventType": "urn:scte:scte35:2013:bin",
+         "mimeType": "application/json",
+         "isLive": true,
+         "role": "eventtimeline",
+         "depends": ["video"]
+       }
+     ]
+   }
+
+5.5.12.  Video track with CEA-708 captions
+
+   This example shows a live broadcast with CEA-708 closed captions
+   embedded in the video track, demonstrating multiple caption services.
+
+   {
+     "version": 1,
+     "generatedAt": 1746104606044,
+     "tracks": [
+       {
+         "name": "video",
+         "packaging": "loc",
+         "isLive": true,
+         "targetLatency": 4000,
+         "role": "video",
+         "renderGroup": 1,
+         "codec": "hev1.1.6.L93.B0",
+         "width": 1920,
+         "height": 1080,
+         "framerate": 30,
+         "bitrate": 4000000,
+         "accessibility": [
+           {
+             "scheme": "urn:scte:dash:cc:cea-708:2015",
+             "value": "1=lang:eng;2=lang:spa;3=lang:fra"
+           }
+         ]
+       },
+       {
+         "name": "audio",
+         "packaging": "loc",
+         "isLive": true,
+         "targetLatency": 4000,
+         "role": "audio",
+         "renderGroup": 1,
+         "codec": "mp4a.40.2",
+         "samplerate": 48000,
+         "channelConfig": "2",
+         "bitrate": 128000
+       }
+     ]
+   }
+
+5.5.13.  Terminating a live broadcast
 
    This example shows a catalog for a media producer terminating a
    previously live broadcast containing a video and an audio track.
@@ -1693,7 +1830,7 @@ Table of Contents
      "tracks": []
    }
 
-5.5.12.  Variable Substitution for personalized delivery
+5.5.14.  Variable Substitution for personalized delivery
 
    This example shows a catalog using variable substitution to enable
    personalized advertising and reporting while maintaining
@@ -1746,7 +1883,7 @@ Table of Contents
      ]
    }
 
-5.5.13.  Time-aligned Audio/Video Tracks with Authorization
+5.5.15.  Time-aligned Audio/Video Tracks with Authorization
 
    This example shows a catalog for a media producer requiring
    authorization for premium content.  The premium 4K track uses CAT
@@ -1809,7 +1946,7 @@ Table of Contents
      ]
    }
 
-5.5.14.  Publish tracks for logs and metrics
+5.5.16.  Publish tracks for logs and metrics
 
    This example shows a catalog that includes publish tracks for client-
    side logging and metrics collection.  The subscriber can publish QoE
@@ -2286,6 +2423,36 @@ Table of Contents
 
    *  a Section 5.2.32 attribute for publish authorization.
 
+10.5.  Well-known event timeline types
+
+   Event timelines can carry various types of broadcast metadata
+   synchronized with media content.  The "MSF Event Timeline Types"
+   registry (Section 13.2) maintains a list of well-known event types.
+   Publishers SHOULD use registered types when applicable to ensure
+   interoperability.
+
+   Event timelines can carry data types including but not limited to:
+
+   *  Ad insertion signaling (e.g., SCTE-35 splice points) - see
+      [SCTE35-MSF]
+
+   *  Out-of-band timed-text cues (WebVTT, IMSC1) - see [WebVTT-MSF] and
+      [IMSC1-MSF]
+
+   *  Sports scores and game state
+
+   *  GPS coordinates and telemetry
+
+   *  Active speaker notifications
+
+   *  Custom application-specific metadata
+
+   The packaging format and data structure for each event type is
+   defined by the specification referenced in the registry.  Custom
+   event types not in the registry SHOULD use Reverse Domain Name
+   Notation (e.g., "com.example.myeventtype") to avoid naming
+   collisions.
+
 11.  Workflow
 
 11.1.  URL construction and interpretation
@@ -2399,7 +2566,7 @@ Table of Contents
      | connection      | Mandates a connection type                  |
      +-----------------+---------------------------------------------+
 
-                                  Table 8
+                                  Table 9
 
    *  wallclock-range - a range defined by start and end wallclock
       times, each expressed as milliseconds since Unix Epoch and
@@ -2653,7 +2820,36 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
          | msf           | MOQT Streaming Format | this          |
          +---------------+-----------------------+---------------+
 
-                                  Table 9
+                                  Table 10
+
+13.2.  "MSF Event Timeline Types" registry
+
+   This document establishes the "MSF Event Timeline Types" registry.
+   This registry lists the event types that can be used with the
+   eventType field Section 5.2.5 in MSF catalogs.
+
+   New entries in this registry are subject to Expert Review policy as
+   defined in [RFC8126].
+
+   The initial contents of this registry are:
+
+    +==========================+=====================+===============+
+    | Event Type               | Description         | Specification |
+    +==========================+=====================+===============+
+    | urn:scte:scte35:2013:bin | SCTE-35 binary      | [SCTE35-MSF]  |
+    |                          | splice_info_section |               |
+    +--------------------------+---------------------+---------------+
+    | urn:scte:scte35:2013:xml | SCTE-35 XML         | [SCTE35-MSF]  |
+    |                          | representation      |               |
+    +--------------------------+---------------------+---------------+
+    | urn:msf:timedtext:webvtt | WebVTT timed text   | [WebVTT-MSF]  |
+    |                          | cues                |               |
+    +--------------------------+---------------------+---------------+
+    | urn:msf:timedtext:imsc1  | IMSC1 timed text    | [IMSC1-MSF]   |
+    |                          | cues                |               |
+    +--------------------------+---------------------+---------------+
+
+                                 Table 11
 
 14.  References
 
@@ -2746,6 +2942,11 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
               DOI 10.17487/RFC5234, January 2008,
               <https://www.rfc-editor.org/rfc/rfc5234>.
 
+   [RFC8126]  Cotton, M., Leiba, B., and T. Narten, "Guidelines for
+              Writing an IANA Considerations Section in RFCs", BCP 26,
+              RFC 8126, DOI 10.17487/RFC8126, June 2017,
+              <https://www.rfc-editor.org/rfc/rfc8126>.
+
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
@@ -2778,6 +2979,29 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
               Internet-Draft, draft-jennings-moq-e2ee-mls-03, 30 June
               2025, <https://datatracker.ietf.org/doc/html/draft-
               jennings-moq-e2ee-mls-03>.
+
+   [IMSC1-MSF]
+              "IMSC1 Packaging for MOQT Streaming Format", 2026,
+              <https://github.com/suhasHere/imsc1-msf>.
+
+   [SCTE214-1]
+              "SCTE 214-1: MPEG DASH for IP-Based Cable Services Part 1
+              - MPD Constraints and Extensions", 2022,
+              <https://www.scte.org/standards/library/catalog/scte-
+              214-1-mpeg-dash-for-ip-based-cable-services-part-1-mpd-
+              constraints-and-extensions/>.
+
+   [SCTE35]   "SCTE 35: Digital Program Insertion Cueing Message", 2022,
+              <https://www.scte.org/standards/library/catalog/scte-35-
+              digital-program-insertion-cueing-message/>.
+
+   [SCTE35-MSF]
+              "SCTE-35 over MSF Event Timeline", 2026,
+              <https://github.com/wilaw/SCTE35-over-MSF-Event-Timeline>.
+
+   [WebVTT-MSF]
+              "WebVTT Packaging for MOQT Streaming Format", 2026,
+              <https://github.com/suhasHere/webvtt-msf>.
 
 Acknowledgments
 
