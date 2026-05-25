@@ -533,7 +533,7 @@ a set video tracks of the same content offered in alternate bitrates.
 ### Initialization reference {#initref}
 Required: Optional    JSON Type: Number    Location: Track Object
 
-A number pointing at the zero-based index of an entry in the Intialization
+A number pointing at the zero-based index of an entry in the Initialization
 Data List {{initdatalist}}.
 
 ### Dependencies {#dependencies}
