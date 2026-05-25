@@ -812,7 +812,7 @@ Table of Contents
    Required: Optional JSON Type: Number Location: Track Object
 
    A number pointing at the zero-based index of an entry in the
-   Intialization Data List Section 5.1.7.
+   Initialization Data List Section 5.1.7.
 
 5.2.13.  Dependencies
 
