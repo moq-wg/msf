@@ -5,8 +5,8 @@
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
 Intended status: Informational                             S. Nandakumar
-Expires: 14 November 2026                                          Cisco
-                                                             13 May 2026
+Expires: 26 November 2026                                          Cisco
+                                                             25 May 2026
 
 
                          MOQT Streaming Format
@@ -49,7 +49,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 14 November 2026.
+   This Internet-Draft will expire on 26 November 2026.
 
 Copyright Notice
 
@@ -107,24 +107,28 @@ Table of Contents
        5.2.18. Mimetype
        5.2.19. Framerate
        5.2.20. Timescale
-       5.2.21. Bitrate
-       5.2.22. Width
-       5.2.23. Height
-       5.2.24. Audio sample rate
-       5.2.25. Channel configuration
-       5.2.26. Display width
-       5.2.27. Display height
-       5.2.28. Language
-       5.2.29. Parent name
-       5.2.30. Track duration
-       5.2.31. Connection URI
-       5.2.32. Token
-       5.2.33. Encryption scheme
-       5.2.34. Cipher suite
-       5.2.35. Key ID
-       5.2.36. Track Base Key
-       5.2.37. Authorization Info
-       5.2.38. Token Delivery via URI
+       5.2.21. Maximum Bitrate
+       5.2.22. Average Bitrate
+       5.2.23. Maximum GOP duration
+       5.2.24. Maximum Group duration
+       5.2.25. Width
+       5.2.26. Height
+       5.2.27. Audio sample rate
+       5.2.28. Channel configuration
+       5.2.29. Display width
+       5.2.30. Display height
+       5.2.31. Language
+       5.2.32. Parent name
+       5.2.33. Track duration
+       5.2.34. Connection URI
+       5.2.35. Token
+       5.2.36. Encryption scheme
+       5.2.37. Cipher suite
+       5.2.38. Key ID
+       5.2.39. Track Base Key
+       5.2.40. Authorization Info
+       5.2.41. Token Delivery via URI
+       5.2.42. Accessibility
      5.3.  Delta updates
      5.4.  Variable Substitution
        5.4.1.  Variable Syntax
@@ -143,10 +147,12 @@ Table of Contents
        5.5.8.  Encrypted Audio/Video Tracks
        5.5.9.  Media timeline and Event timeline
        5.5.10. Media timeline template
-       5.5.11. Terminating a live broadcast
-       5.5.12. Variable Substitution for personalized delivery
-       5.5.13. Time-aligned Audio/Video Tracks with Authorization
-       5.5.14. Publish tracks for logs and metrics
+       5.5.11. Video track with embedded captions and SCTE-35 events
+       5.5.12. Video track with CEA-708 captions
+       5.5.13. Terminating a live broadcast
+       5.5.14. Variable Substitution for personalized delivery
+       5.5.15. Time-aligned Audio/Video Tracks with Authorization
+       5.5.16. Publish tracks for logs and metrics
    6.  Media transmission
      6.1.  Group numbering
    7.  Media Timeline track
@@ -174,6 +180,7 @@ Table of Contents
      10.2.  Metrics track namespace and name
      10.3.  Metrics track Group ID and Object ID
      10.4.  Metrics track catalog requirements
+     10.5.  Well-known event timeline types
    11. Workflow
      11.1.  URL construction and interpretation
        11.1.1.  Reserved fragment parameters
@@ -189,6 +196,7 @@ Table of Contents
    12. Security Considerations
    13. IANA Considerations
      13.1.  "MOQT URI Fragment Types" registry
+     13.2.  "MSF Event Timeline Types" registry
    14. References
      14.1.  Normative References
      14.2.  Informative References
@@ -340,14 +348,14 @@ Table of Contents
    The encryption scheme and parameters are signaled in the catalog
    using the following track-level fields:
 
-   *  encryptionScheme Section 5.2.33 - identifies the encryption
+   *  encryptionScheme Section 5.2.36 - identifies the encryption
       mechanism
 
-   *  cipherSuite Section 5.2.34 - specifies the AEAD algorithm
+   *  cipherSuite Section 5.2.37 - specifies the AEAD algorithm
 
-   *  keyId Section 5.2.35 - identifies the key material for decryption
+   *  keyId Section 5.2.38 - identifies the key material for decryption
 
-   *  trackBaseKey Section 5.2.36 - the base key material for this track
+   *  trackBaseKey Section 5.2.39 - the base key material for this track
 
    When the encryptionScheme field is present in a track definition,
    subscribers MUST decrypt the object payload using the specified
@@ -542,7 +550,7 @@ Table of Contents
    *  "clone" - Clone new tracks from previously declared tracks.  The
       value of the "tracks" field is an Array of track objects
       Section 5.2.1.  Each track object MUST include a Parent Name
-      Section 5.2.29 field.  The cloned track inherits all attributes
+      Section 5.2.32 field.  The cloned track inherits all attributes
       from the parent except the Track Name which MUST be new.
       Attributes redefined in the track object override inherited
       values.
@@ -551,67 +559,75 @@ Table of Contents
 
    Table 2 lists the fields defined within each track object.
 
-        +=======================+===============+================+
-        | Field                 | Name          | Definition     |
-        +=======================+===============+================+
-        | Track namespace       | namespace     | Section 5.2.2  |
-        +-----------------------+---------------+----------------+
-        | Track name            | name          | Section 5.2.3  |
-        +-----------------------+---------------+----------------+
-        | Packaging             | packaging     | Section 5.2.4  |
-        +-----------------------+---------------+----------------+
-        | Event timeline type   | eventType     | Section 5.2.5  |
-        +-----------------------+---------------+----------------+
-        | Is Live               | isLive        | Section 5.2.7  |
-        +-----------------------+---------------+----------------+
-        | Target latency        | targetLatency | Section 5.2.8  |
-        +-----------------------+---------------+----------------+
-        | Track role            | role          | Section 5.2.6  |
-        +-----------------------+---------------+----------------+
-        | Track label           | label         | Section 5.2.9  |
-        +-----------------------+---------------+----------------+
-        | Render group          | renderGroup   | Section 5.2.10 |
-        +-----------------------+---------------+----------------+
-        | Alternate group       | altGroup      | Section 5.2.11 |
-        +-----------------------+---------------+----------------+
-        | Initialization data   | initData      | Section 5.2.12 |
-        +-----------------------+---------------+----------------+
-        | Dependencies          | depends       | Section 5.2.13 |
-        +-----------------------+---------------+----------------+
-        | Temporal ID           | temporalId    | Section 5.2.15 |
-        +-----------------------+---------------+----------------+
-        | Spatial ID            | spatialId     | Section 5.2.16 |
-        +-----------------------+---------------+----------------+
-        | Codec                 | codec         | Section 5.2.17 |
-        +-----------------------+---------------+----------------+
-        | Mime type             | mimeType      | Section 5.2.18 |
-        +-----------------------+---------------+----------------+
-        | Framerate             | framerate     | Section 5.2.19 |
-        +-----------------------+---------------+----------------+
-        | Timescale             | timescale     | Section 5.2.20 |
-        +-----------------------+---------------+----------------+
-        | Bitrate               | bitrate       | Section 5.2.21 |
-        +-----------------------+---------------+----------------+
-        | Width                 | width         | Section 5.2.22 |
-        +-----------------------+---------------+----------------+
-        | Height                | height        | Section 5.2.23 |
-        +-----------------------+---------------+----------------+
-        | Audio sample rate     | samplerate    | Section 5.2.24 |
-        +-----------------------+---------------+----------------+
-        | Channel configuration | channelConfig | Section 5.2.25 |
-        +-----------------------+---------------+----------------+
-        | Display width         | displayWidth  | Section 5.2.26 |
-        +-----------------------+---------------+----------------+
-        | Display height        | displayHeight | Section 5.2.27 |
-        +-----------------------+---------------+----------------+
-        | Language              | lang          | Section 5.2.28 |
-        +-----------------------+---------------+----------------+
-        | Parent name           | parentName    | Section 5.2.29 |
-        +-----------------------+---------------+----------------+
-        | Track duration        | trackDuration | Section 5.2.30 |
-        +-----------------------+---------------+----------------+
-        | Authorization Info    | authInfo      | Section 5.2.37 |
-        +-----------------------+---------------+----------------+
+      +========================+==================+================+
+      | Field                  | Name             | Definition     |
+      +========================+==================+================+
+      | Track namespace        | namespace        | Section 5.2.2  |
+      +------------------------+------------------+----------------+
+      | Track name             | name             | Section 5.2.3  |
+      +------------------------+------------------+----------------+
+      | Packaging              | packaging        | Section 5.2.4  |
+      +------------------------+------------------+----------------+
+      | Event timeline type    | eventType        | Section 5.2.5  |
+      +------------------------+------------------+----------------+
+      | Is Live                | isLive           | Section 5.2.7  |
+      +------------------------+------------------+----------------+
+      | Target latency         | targetLatency    | Section 5.2.8  |
+      +------------------------+------------------+----------------+
+      | Track role             | role             | Section 5.2.6  |
+      +------------------------+------------------+----------------+
+      | Track label            | label            | Section 5.2.9  |
+      +------------------------+------------------+----------------+
+      | Render group           | renderGroup      | Section 5.2.10 |
+      +------------------------+------------------+----------------+
+      | Alternate group        | altGroup         | Section 5.2.11 |
+      +------------------------+------------------+----------------+
+      | Initialization data    | initData         | Section 5.2.12 |
+      +------------------------+------------------+----------------+
+      | Dependencies           | depends          | Section 5.2.13 |
+      +------------------------+------------------+----------------+
+      | Temporal ID            | temporalId       | Section 5.2.15 |
+      +------------------------+------------------+----------------+
+      | Spatial ID             | spatialId        | Section 5.2.16 |
+      +------------------------+------------------+----------------+
+      | Codec                  | codec            | Section 5.2.17 |
+      +------------------------+------------------+----------------+
+      | Mime type              | mimeType         | Section 5.2.18 |
+      +------------------------+------------------+----------------+
+      | Framerate              | framerate        | Section 5.2.19 |
+      +------------------------+------------------+----------------+
+      | Timescale              | timescale        | Section 5.2.20 |
+      +------------------------+------------------+----------------+
+      | Maximum bitrate        | bitrate          | Section 5.2.21 |
+      +------------------------+------------------+----------------+
+      | Average bitrate        | avgBitrate       | Section 5.2.22 |
+      +------------------------+------------------+----------------+
+      | Maximum GOP duration   | maxGopDuration   | Section 5.2.23 |
+      +------------------------+------------------+----------------+
+      | Maximum group duration | maxGroupDuration | Section 5.2.24 |
+      +------------------------+------------------+----------------+
+      | Width                  | width            | Section 5.2.25 |
+      +------------------------+------------------+----------------+
+      | Height                 | height           | Section 5.2.26 |
+      +------------------------+------------------+----------------+
+      | Audio sample rate      | samplerate       | Section 5.2.27 |
+      +------------------------+------------------+----------------+
+      | Channel configuration  | channelConfig    | Section 5.2.28 |
+      +------------------------+------------------+----------------+
+      | Display width          | displayWidth     | Section 5.2.29 |
+      +------------------------+------------------+----------------+
+      | Display height         | displayHeight    | Section 5.2.30 |
+      +------------------------+------------------+----------------+
+      | Language               | lang             | Section 5.2.31 |
+      +------------------------+------------------+----------------+
+      | Parent name            | parentName       | Section 5.2.32 |
+      +------------------------+------------------+----------------+
+      | Track duration         | trackDuration    | Section 5.2.33 |
+      +------------------------+------------------+----------------+
+      | Authorization Info     | authInfo         | Section 5.2.40 |
+      +------------------------+------------------+----------------+
+      | Accessibility          | accessibility    | Section 5.2.42 |
+      +------------------------+------------------+----------------+
 
                                  Table 2
 
@@ -802,7 +818,7 @@ Table of Contents
 
 5.2.14.  Template
 
-   Location: T Required: Optional JSON Type: Array
+   Required: Optional JSON Type: Array Location: Track Object
 
    A media timeline template for tracks with fixed-duration segments.
    It specifies the relationship between media time, MOQT Location, and
@@ -833,11 +849,13 @@ Table of Contents
 
 5.2.17.  Codec
 
-   Required: Optional JSON Type: String Location: Track Object
+   Required: Conditional JSON Type: String Location: Track Object
 
    A string defining the codec used to encode the track.  For LOC
    packaged content, the string codec registrations are defined in Sect
-   3 and Section 4 of [WEBCODECS-CODEC-REGISTRY].
+   3 and Section 4 of [WEBCODECS-CODEC-REGISTRY].  This property MUST be
+   specified for tracks which have an inherent codec associated with
+   them.
 
 5.2.18.  Mimetype
 
@@ -859,46 +877,69 @@ Table of Contents
 
    The number of time units that pass per second.
 
-5.2.21.  Bitrate
+5.2.21.  Maximum Bitrate
+
+   Required: Yes JSON Type: Number Location: Track Object
+
+   A number defining the maximum bitrate of the track, expressed in bits
+   per second.
+
+5.2.22.  Average Bitrate
 
    Required: Optional JSON Type: Number Location: Track Object
 
-   A number defining the bitrate of the track, expressed in bits per
-   second.
+   A number defining the average bitrate of the track, over the lifetime
+   of the track, expressed in bits per second.
 
-5.2.22.  Width
+5.2.23.  Maximum GOP duration
 
    Required: Optional JSON Type: Number Location: Track Object
 
-   A number expressing the encoded width of the video frames in pixels.
-   This property SHOULD only accompany tracks which have a visual
+   A number defining the maximum duration, expressed in milliseconds,
+   between any independently coded sequence of media samples.  This
+   property SHOULD only accompany video tracks.
+
+5.2.24.  Maximum Group duration
+
+   Required: Optional JSON Type: Number Location: Track Object
+
+   A number defining the maximum duration, expressed in milliseconds, of
+   any MOQT Group in this track.
+
+5.2.25.  Width
+
+   Required: Conditional JSON Type: Number Location: Track Object
+
+   A number expressing the maximum encoded width of the video frames in
+   pixels.  This property MUST accompany tracks which have a visual
    representation.
 
-5.2.23.  Height
+5.2.26.  Height
 
-   Required: Optional JSON Type: Number Location: Track Object
+   Required: Conditional JSON Type: Number Location: Track Object
 
-   A number expressing the encoded height of the video frames in pixels.
-   This property SHOULD only accompany tracks which have a visual
+   A number expressing the maximum encoded height of the video frames in
+   pixels.  This property MUST accompany tracks which have a visual
    representation.
 
-5.2.24.  Audio sample rate
+5.2.27.  Audio sample rate
 
-   Required: Optional JSON Type: Number Location: Track Object
+   Required: Conditional JSON Type: Number Location: Track Object
 
-   The number of audio frame samples per second.  This property SHOULD
-   only accompany audio codecs.
+   The number of audio frame samples per second.  This property MUST
+   accompany tracks for which audio codecs are specified.
 
-5.2.25.  Channel configuration
+5.2.28.  Channel configuration
 
-   Required: Optional JSON Type: String Location: Track Object
+   Required: Conditional JSON Type: String Location: Track Object
 
    A string specifying the audio channel configuration.  This property
    SHOULD only accompany audio codecs.  A string is used in order to
    provide the flexibility to describe complex channel configurations
-   for multi-channel and Next Generation Audio schemas.
+   for multi-channel and Next Generation Audio schemas.  This property
+   MUST accompany tracks for which audio codecs are specified.
 
-5.2.26.  Display width
+5.2.29.  Display width
 
    Required: Optional JSON Type: Number Location: Track Object
 
@@ -906,7 +947,7 @@ Table of Contents
    in pixels.  This property SHOULD only accompany tracks which have a
    visual representation.
 
-5.2.27.  Display height
+5.2.30.  Display height
 
    Required: Optional JSON Type: Number Location: Track Object
 
@@ -914,7 +955,7 @@ Table of Contents
    in pixels.  This property SHOULD only accompany tracks which have a
    visual representation.
 
-5.2.28.  Language
+5.2.31.  Language
 
    Required: Optional JSON Type: String Location: Track Object
 
@@ -922,7 +963,7 @@ Table of Contents
    MUST be one of the standard Tags for Identifying Languages as defined
    by [LANG].
 
-5.2.29.  Parent name
+5.2.32.  Parent name
 
    Required: Optional JSON Type: String Location: Track Object
 
@@ -930,7 +971,7 @@ Table of Contents
    This field MUST only be included inside a clone operation in a delta
    update Section 5.1.6.
 
-5.2.30.  Track duration
+5.2.33.  Track duration
 
    Required: Optional JSON Type: Number Location: Track Object
 
@@ -938,9 +979,9 @@ Table of Contents
    field MUST NOT be included if the isLive Section 5.2.7 field value is
    true.
 
-5.2.31.  Connection URI
+5.2.34.  Connection URI
 
-   Location: T Required: Optional JSON Type: String
+   Required: Optional JSON Type: String Location: Track Object
 
    A string containing the MOQT connection endpoint URI for the publish
    track.  When specified, the subscriber MUST establish a new MOQT
@@ -953,18 +994,18 @@ Table of Contents
    "moqt://logs.example.com:4443", "moqt://metrics.example.com:8443", or
    "https://logs.example.com/moqt".
 
-5.2.32.  Token
+5.2.35.  Token
 
-   Location: T Required: Optional JSON Type: String
+   Required: Optional JSON Type: String Location: Track Object
 
    A string containing an authentication token or credential for the
    track.  For publish tracks, this token authorizes the subscriber to
    publish data to the specified track.  The format and validation of
    the token is application-specific.
 
-5.2.33.  Encryption scheme
+5.2.36.  Encryption scheme
 
-   Location: T Required: Optional JSON Type: String
+   Required: Optional JSON Type: String Location: Track Object
 
    A string identifying the encryption scheme used to protect the track
    content.  The default and RECOMMENDED value is "moq-secure-objects"
@@ -985,9 +1026,9 @@ Table of Contents
    use Reverse Domain Name Notation to avoid collisions (e.g.,
    "com.example.custom-encryption").
 
-5.2.34.  Cipher suite
+5.2.37.  Cipher suite
 
-   Location: T Required: Optional JSON Type: String
+   Required: Optional JSON Type: String Location: Track Object
 
    A string identifying the AEAD cipher suite used for encryption.  This
    field MUST be present when encryptionScheme is specified.  For the
@@ -1015,9 +1056,9 @@ Table of Contents
    SHOULD support "aes-128-ctr-hmac-sha256-80" for scenarios requiring
    smaller authentication tags.
 
-5.2.35.  Key ID
+5.2.38.  Key ID
 
-   Location: T Required: Optional JSON Type: String
+   Required: Optional JSON Type: String Location: Track Object
 
    A string identifying the key material used for encryption.  This
    value is transmitted in the Secure Object KID extension header as
@@ -1035,9 +1076,9 @@ Table of Contents
    keys are derived using the track name as defined in ([SecureObjects],
    Section 5).
 
-5.2.36.  Track Base Key
+5.2.39.  Track Base Key
 
-   Location: T Required: Optional JSON Type: String
+   Required: Optional JSON Type: String Location: Track Object
 
    A base64-encoded [BASE64] string containing the base key material for
    this track, as defined in ([SecureObjects], Section 5).  This field
@@ -1051,9 +1092,9 @@ Table of Contents
    and subscribers MUST use matching trackBaseKey values for successful
    decryption.
 
-5.2.37.  Authorization Info
+5.2.40.  Authorization Info
 
-   Location: T Required: Optional JSON Type: Object
+   Required: Optional JSON Type: Object Location: Track Object
 
    An object indicating that authorization is required to access this
    track.  The presence of this field signals to subscribers that they
@@ -1087,7 +1128,7 @@ Table of Contents
    presentation method are defined by the authorization scheme
    specification.
 
-5.2.38.  Token Delivery via URI
+5.2.41.  Token Delivery via URI
 
    Tokens can be delivered to subscribers through the catalog request
    URI using variable substitution.  Fragment parameters (following the
@@ -1108,6 +1149,40 @@ Table of Contents
    Would be resolved by the subscriber to include "cat": "XYZ789", which
    is then presented in control messages as specified by the
    authorization scheme.
+
+5.2.42.  Accessibility
+
+   Required: Optional JSON Type: Array Location: Track Object
+
+   An array of accessibility descriptors indicating accessibility
+   features embedded within the track.  Each descriptor is a JSON Object
+   containing:
+
+   *  A required 'scheme' field (String) identifying the accessibility
+      scheme.
+
+   *  A required 'value' field (String) specifying the accessibility
+      channels or features available.
+
+   Table 6: Registered accessibility schemes
+
+        +===============================+=========================+
+        | Scheme                        | Description             |
+        +===============================+=========================+
+        | urn:scte:dash:cc:cea-608:2015 | CEA-608 closed captions |
+        +-------------------------------+-------------------------+
+        | urn:scte:dash:cc:cea-708:2015 | CEA-708 closed captions |
+        +-------------------------------+-------------------------+
+
+                                  Table 8
+
+   The 'value' field for CEA-608/708 schemes uses the format defined by
+   [SCTE214-1], where caption service channels are specified as
+   semicolon-separated pairs of channel identifier and language code
+   (e.g., "CC1=eng;CC3=spa").
+
+   A subscriber MAY use this information to determine caption
+   availability and configure an appropriate caption decoder.
 
 5.3.  Delta updates
 
@@ -1687,7 +1762,103 @@ Table of Contents
       ]
    }
 
-5.5.11.  Terminating a live broadcast
+5.5.11.  Video track with embedded captions and SCTE-35 events
+
+   This example shows a live broadcast with CEA-608 closed captions
+   embedded in the video track and a separate SCTE-35 event timeline for
+   ad insertion.
+
+   {
+     "version": 1,
+     "generatedAt": 1746104606044,
+     "tracks": [
+       {
+         "name": "video",
+         "packaging": "loc",
+         "isLive": true,
+         "targetLatency": 4000,
+         "role": "video",
+         "renderGroup": 1,
+         "codec": "avc1.4d401f",
+         "width": 1920,
+         "height": 1080,
+         "framerate": 30,
+         "bitrate": 5000000,
+         "accessibility": [
+           {
+             "scheme": "urn:scte:dash:cc:cea-608:2015",
+             "value": "CC1=eng;CC3=spa"
+           }
+         ]
+       },
+       {
+         "name": "audio",
+         "packaging": "loc",
+         "isLive": true,
+         "targetLatency": 4000,
+         "role": "audio",
+         "renderGroup": 1,
+         "codec": "opus",
+         "samplerate": 48000,
+         "channelConfig": "2",
+         "bitrate": 128000
+       },
+       {
+         "name": "scte35",
+         "packaging": "eventtimeline",
+         "eventType": "urn:scte:scte35:2013:bin",
+         "mimeType": "application/json",
+         "isLive": true,
+         "role": "eventtimeline",
+         "depends": ["video"]
+       }
+     ]
+   }
+
+5.5.12.  Video track with CEA-708 captions
+
+   This example shows a live broadcast with CEA-708 closed captions
+   embedded in the video track, demonstrating multiple caption services.
+
+   {
+     "version": 1,
+     "generatedAt": 1746104606044,
+     "tracks": [
+       {
+         "name": "video",
+         "packaging": "loc",
+         "isLive": true,
+         "targetLatency": 4000,
+         "role": "video",
+         "renderGroup": 1,
+         "codec": "hev1.1.6.L93.B0",
+         "width": 1920,
+         "height": 1080,
+         "framerate": 30,
+         "bitrate": 4000000,
+         "accessibility": [
+           {
+             "scheme": "urn:scte:dash:cc:cea-708:2015",
+             "value": "1=lang:eng;2=lang:spa;3=lang:fra"
+           }
+         ]
+       },
+       {
+         "name": "audio",
+         "packaging": "loc",
+         "isLive": true,
+         "targetLatency": 4000,
+         "role": "audio",
+         "renderGroup": 1,
+         "codec": "mp4a.40.2",
+         "samplerate": 48000,
+         "channelConfig": "2",
+         "bitrate": 128000
+       }
+     ]
+   }
+
+5.5.13.  Terminating a live broadcast
 
    This example shows a catalog for a media producer terminating a
    previously live broadcast containing a video and an audio track.
@@ -1699,7 +1870,7 @@ Table of Contents
      "tracks": []
    }
 
-5.5.12.  Variable Substitution for personalized delivery
+5.5.14.  Variable Substitution for personalized delivery
 
    This example shows a catalog using variable substitution to enable
    personalized advertising and reporting while maintaining
@@ -1752,7 +1923,7 @@ Table of Contents
      ]
    }
 
-5.5.13.  Time-aligned Audio/Video Tracks with Authorization
+5.5.15.  Time-aligned Audio/Video Tracks with Authorization
 
    This example shows a catalog for a media producer requiring
    authorization for premium content.  The premium 4K track uses CAT
@@ -1815,7 +1986,7 @@ Table of Contents
      ]
    }
 
-5.5.14.  Publish tracks for logs and metrics
+5.5.16.  Publish tracks for logs and metrics
 
    This example shows a catalog that includes publish tracks for client-
    side logging and metrics collection.  The subscriber can publish QoE
@@ -1900,22 +2071,19 @@ Table of Contents
 
 6.1.  Group numbering
 
-   The Group ID of the first Group published in a track at application
-   startup MUST be a unique integer that will not repeat in the future.
-   One approach to achieve this is to set the initial Group ID to the
-   creation time of the first Object in the group, represented as the
-   number of milliseconds since the Unix epoch, rounded to the nearest
-   millisecond.  This ensures that republishing the same track in the
-   future, such as after a loss of connectivity or an encoder restart,
-   will not result in smaller or duplicate Group IDs for the same track
-   name.  Note that this method does not prevent duplication if more
-   than 1000 Groups are published per second.
+   Group IDs for a track MUST be unique and MUST increase monotonically.
+   Within a continuous publishing session, each subsequent Group ID
+   SHOULD increase by 1.
 
-   Each subsequent Group ID MUST increase by 1.
+   When a publisher restarts (e.g., after connectivity loss or encoder
+   restart), it MUST ensure the new starting Group ID is greater than
+   any previously published Group ID for that track.  One approach is to
+   use the current wall clock time in milliseconds since the Unix epoch
+   as the starting Group ID.
 
-   If a publisher is able to maintain state across a republish, it MUST
-   signal the gap in Group IDs using the MOQT Prior Group ID Gap
-   Extension header.
+   If a publisher maintains state across a restart and knows the
+   previous Group ID, it SHOULD signal the gap using the MOQT Prior
+   Group ID Gap Extension header.
 
 7.  Media Timeline track
 
@@ -2217,10 +2385,10 @@ Table of Contents
 
    A log track MAY include:
 
-   *  a Section 5.2.31 attribute if logs should be published to a
+   *  a Section 5.2.34 attribute if logs should be published to a
       different endpoint.
 
-   *  a Section 5.2.32 attribute for publish authorization.
+   *  a Section 5.2.35 attribute for publish authorization.
 
 10.  Metrics track
 
@@ -2287,10 +2455,40 @@ Table of Contents
 
    A metrics track MAY include:
 
-   *  a Section 5.2.31 attribute if metrics should be published to a
+   *  a Section 5.2.34 attribute if metrics should be published to a
       different endpoint.
 
-   *  a Section 5.2.32 attribute for publish authorization.
+   *  a Section 5.2.35 attribute for publish authorization.
+
+10.5.  Well-known event timeline types
+
+   Event timelines can carry various types of broadcast metadata
+   synchronized with media content.  The "MSF Event Timeline Types"
+   registry (Section 13.2) maintains a list of well-known event types.
+   Publishers SHOULD use registered types when applicable to ensure
+   interoperability.
+
+   Event timelines can carry data types including but not limited to:
+
+   *  Ad insertion signaling (e.g., SCTE-35 splice points) - see
+      [SCTE35-MSF]
+
+   *  Out-of-band timed-text cues (WebVTT, IMSC1) - see [WebVTT-MSF] and
+      [IMSC1-MSF]
+
+   *  Sports scores and game state
+
+   *  GPS coordinates and telemetry
+
+   *  Active speaker notifications
+
+   *  Custom application-specific metadata
+
+   The packaging format and data structure for each event type is
+   defined by the specification referenced in the registry.  Custom
+   event types not in the registry SHOULD use Reverse Domain Name
+   Notation (e.g., "com.example.myeventtype") to avoid naming
+   collisions.
 
 11.  Workflow
 
@@ -2405,7 +2603,7 @@ Table of Contents
      | connection      | Mandates a connection type                  |
      +-----------------+---------------------------------------------+
 
-                                  Table 8
+                                  Table 9
 
    *  wallclock-range - a range defined by start and end wallclock
       times, each expressed as milliseconds since Unix Epoch and
@@ -2543,7 +2741,7 @@ Table of Contents
    *  If the live stream is being converted instantly to a VOD asset,
       then publish an independent (non-delta) catalog update which, for
       each track, sets isLive Section 5.2.7 to FALSE and adds a track
-      duration Section 5.2.30 field.
+      duration Section 5.2.33 field.
 
    *  If the live stream is being terminated permanently without
       conversion to VOD, then publish an independent catalog update
@@ -2659,7 +2857,36 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
          | msf           | MOQT Streaming Format | this          |
          +---------------+-----------------------+---------------+
 
-                                  Table 9
+                                  Table 10
+
+13.2.  "MSF Event Timeline Types" registry
+
+   This document establishes the "MSF Event Timeline Types" registry.
+   This registry lists the event types that can be used with the
+   eventType field Section 5.2.5 in MSF catalogs.
+
+   New entries in this registry are subject to Expert Review policy as
+   defined in [RFC8126].
+
+   The initial contents of this registry are:
+
+    +==========================+=====================+===============+
+    | Event Type               | Description         | Specification |
+    +==========================+=====================+===============+
+    | urn:scte:scte35:2013:bin | SCTE-35 binary      | [SCTE35-MSF]  |
+    |                          | splice_info_section |               |
+    +--------------------------+---------------------+---------------+
+    | urn:scte:scte35:2013:xml | SCTE-35 XML         | [SCTE35-MSF]  |
+    |                          | representation      |               |
+    +--------------------------+---------------------+---------------+
+    | urn:msf:timedtext:webvtt | WebVTT timed text   | [WebVTT-MSF]  |
+    |                          | cues                |               |
+    +--------------------------+---------------------+---------------+
+    | urn:msf:timedtext:imsc1  | IMSC1 timed text    | [IMSC1-MSF]   |
+    |                          | cues                |               |
+    +--------------------------+---------------------+---------------+
+
+                                 Table 11
 
 14.  References
 
@@ -2752,6 +2979,11 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
               DOI 10.17487/RFC5234, January 2008,
               <https://www.rfc-editor.org/rfc/rfc5234>.
 
+   [RFC8126]  Cotton, M., Leiba, B., and T. Narten, "Guidelines for
+              Writing an IANA Considerations Section in RFCs", BCP 26,
+              RFC 8126, DOI 10.17487/RFC8126, June 2017,
+              <https://www.rfc-editor.org/rfc/rfc8126>.
+
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
@@ -2784,6 +3016,29 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
               Internet-Draft, draft-jennings-moq-e2ee-mls-03, 30 June
               2025, <https://datatracker.ietf.org/doc/html/draft-
               jennings-moq-e2ee-mls-03>.
+
+   [IMSC1-MSF]
+              "IMSC1 Packaging for MOQT Streaming Format", 2026,
+              <https://github.com/suhasHere/imsc1-msf>.
+
+   [SCTE214-1]
+              "SCTE 214-1: MPEG DASH for IP-Based Cable Services Part 1
+              - MPD Constraints and Extensions", 2022,
+              <https://www.scte.org/standards/library/catalog/scte-
+              214-1-mpeg-dash-for-ip-based-cable-services-part-1-mpd-
+              constraints-and-extensions/>.
+
+   [SCTE35]   "SCTE 35: Digital Program Insertion Cueing Message", 2022,
+              <https://www.scte.org/standards/library/catalog/scte-35-
+              digital-program-insertion-cueing-message/>.
+
+   [SCTE35-MSF]
+              "SCTE-35 over MSF Event Timeline", 2026,
+              <https://github.com/wilaw/SCTE35-over-MSF-Event-Timeline>.
+
+   [WebVTT-MSF]
+              "WebVTT Packaging for MOQT Streaming Format", 2026,
+              <https://github.com/suhasHere/webvtt-msf>.
 
 Acknowledgments
 
