@@ -384,7 +384,10 @@ Table 2 lists the fields defined within each track object.
 | Mime type               | mimeType               | {{mimetype}}              |
 | Framerate               | framerate              | {{framerate}}             |
 | Timescale               | timescale              | {{timescale}}             |
-| Bitrate                 | bitrate                | {{bitrate}}               |
+| Maximum bitrate         | bitrate                | {{bitrate}}               |
+| Average bitrate         | avgBitrate             | {{averagebitrate}}        |
+| Maximum GOP duration    | maxGopDuration         | {{maximumgopduration}}    |
+| Maximum group duration  | maxGroupDuration       | {{maximumgroupduration}}  |
 | Width                   | width                  | {{width}}                 |
 | Height                  | height                 | {{height}}                |
 | Audio sample rate       | samplerate             | {{audiosamplerate}}       |
@@ -532,7 +535,7 @@ Since only the track name is signaled, the namespace of the dependencies is
 assumed to match that of the track declaring the dependencies.
 
 ### Template {#template}
-Location: T    Required: Optional   JSON Type: Array
+Required: Optional   JSON Type: Array    Location: Track Object   
 
 A media timeline template for tracks with fixed-duration segments. It specifies
 the relationship between media time, MOQT Location, and wallclock time through
@@ -558,11 +561,13 @@ A number identifying the spatial layer encoding of the track, starting with 0
 for the base layer, and increasing by 1 for the next higher fidelity.
 
 ### Codec {#codec}
-Required: Optional    JSON Type: String    Location: Track Object
+Required: Conditional    JSON Type: String    Location: Track Object
 
 A string defining the codec used to encode the track.
 For LOC packaged content, the string codec registrations are defined in Sect 3
 and Section 4 of {{WEBCODECS-CODEC-REGISTRY}}.
+This property MUST be specified for tracks which have an inherent codec
+associated with them. 
 
 ### Mimetype {#mimetype}
 Required: Optional    JSON Type: String    Location: Track Object
@@ -580,36 +585,56 @@ Required: Optional    JSON Type: Number    Location: Track Object
 
 The number of time units that pass per second.
 
-### Bitrate {#bitrate}
+### Maximum Bitrate {#bitrate}
+Required: Yes    JSON Type: Number    Location: Track Object
+
+A number defining the maximum bitrate of the track, expressed in bits per second.
+
+### Average Bitrate {#averagebitrate}
 Required: Optional    JSON Type: Number    Location: Track Object
 
-A number defining the bitrate of the track, expressed in bits per second.
+A number defining the average bitrate of the track, over the lifetime of the track,
+expressed in bits per second.
+
+### Maximum GOP duration {#maximumgopduration}
+Required: Optional    JSON Type: Number    Location: Track Object
+
+A number defining the maximum duration, expressed in milliseconds, between
+any independently coded sequence of media samples. This property SHOULD only
+accompany video tracks.
+
+### Maximum Group duration {#maximumgroupduration}
+Required: Optional    JSON Type: Number    Location: Track Object
+
+A number defining the maximum duration, expressed in milliseconds, of any MOQT Group
+in this track.
 
 ### Width {#width}
-Required: Optional    JSON Type: Number    Location: Track Object
+Required: Conditional  JSON Type: Number    Location: Track Object
 
-A number expressing the encoded width of the video frames in pixels.
-This property SHOULD only accompany tracks which have a visual representation.
+A number expressing the maximum encoded width of the video frames in pixels.
+This property MUST accompany tracks which have a visual representation.
 
 ### Height {#height}
-Required: Optional    JSON Type: Number    Location: Track Object
+Required: Conditional   JSON Type: Number    Location: Track Object
 
-A number expressing the encoded height of the video frames in pixels.
-This property SHOULD only accompany tracks which have a visual representation.
+A number expressing the maximum encoded height of the video frames in pixels.
+This property MUST accompany tracks which have a visual representation.
 
 ### Audio sample rate {#audiosamplerate}
-Required: Optional    JSON Type: Number    Location: Track Object
+Required: Conditional  JSON Type: Number    Location: Track Object
 
-The number of audio frame samples per second. This property SHOULD only
-accompany audio codecs.
+The number of audio frame samples per second. This property MUST
+accompany tracks for which audio codecs are specified.
 
 ### Channel configuration {#channelconfiguration}
-Required: Optional    JSON Type: String    Location: Track Object
+Required: Conditional    JSON Type: String    Location: Track Object
 
 A string specifying the audio channel configuration. This property SHOULD only
 accompany audio codecs. A string is used in order to provide the flexibility to
 describe complex channel configurations for multi-channel and Next Generation
-Audio schemas.
+Audio schemas. This property MUST accompany tracks for which audio codecs
+are specified.
 
 ### Display width {#displaywidth}
 Required: Optional    JSON Type: Number    Location: Track Object
@@ -642,7 +667,7 @@ The duration of the track expressed in integer milliseconds. This field MUST NOT
 be included if the isLive {{islive}} field value is true.
 
 ### Connection URI {#connectionuri}
-Location: T    Required: Optional   JSON Type: String
+Required: Optional   JSON Type: String    Location: Track Object   
 
 A string containing the MOQT connection endpoint URI for the publish track. When
 specified, the subscriber MUST establish a new MOQT connection to this URI for
@@ -654,14 +679,14 @@ The URI MUST be a valid MOQT endpoint URI as defined by {{MoQTransport}} (Sect 3
 "https://logs.example.com/moqt".
 
 ### Token {#token}
-Location: T    Required: Optional   JSON Type: String
+Required: Optional   JSON Type: String    Location: Track Object 
 
 A string containing an authentication token or credential for the track. For
 publish tracks, this token authorizes the subscriber to publish data to the
 specified track. The format and validation of the token is application-specific.
 
 ### Encryption scheme {#encryptionscheme}
-Location: T    Required: Optional   JSON Type: String
+Required: Optional   JSON Type: String    Location: Track Object 
 
 A string identifying the encryption scheme used to protect the track content.
 The default and RECOMMENDED value is "moq-secure-objects" as defined in
@@ -677,7 +702,7 @@ Custom encryption schemes MAY be used. Custom scheme names SHOULD use Reverse
 Domain Name Notation to avoid collisions (e.g., "com.example.custom-encryption").
 
 ### Cipher suite {#ciphersuite}
-Location: T    Required: Optional   JSON Type: String
+Required: Optional   JSON Type: String    Location: Track Object 
 
 A string identifying the AEAD cipher suite used for encryption. This field
 MUST be present when encryptionScheme is specified. For the "moq-secure-objects"
@@ -696,7 +721,7 @@ support "aes-128-ctr-hmac-sha256-80" for scenarios requiring smaller
 authentication tags.
 
 ### Key ID {#keyid}
-Location: T    Required: Optional   JSON Type: String
+Required: Optional   JSON Type: String    Location: Track Object 
 
 A string identifying the key material used for encryption. This value is
 transmitted in the Secure Object KID extension header as defined in
@@ -714,7 +739,7 @@ share the same base key material, though per-track keys are derived using
 the track name as defined in ({{SecureObjects, Section 5}}).
 
 ### Track Base Key {#trackbasekey}
-Location: T    Required: Optional   JSON Type: String
+Required: Optional   JSON Type: String    Location: Track Object 
 
 A base64-encoded {{BASE64}} string containing the base key material for this
 track, as defined in ({{SecureObjects, Section 5}}). This field works in
@@ -728,7 +753,7 @@ is used to derive the actual encryption keys. Publishers and subscribers MUST
 use matching trackBaseKey values for successful decryption.
 
 ### Authorization Info {#authinfo}
-Location: T    Required: Optional    JSON Type: Object
+Required: Optional   JSON Type: Object    Location: Track Object 
 
 An object indicating that authorization is required to access this track.
 The presence of this field signals to subscribers that they must obtain
@@ -777,7 +802,7 @@ Would be resolved by the subscriber to include `"cat": "XYZ789"`, which is
 then presented in control messages as specified by the authorization scheme.
 
 ### Accessibility {#accessibility}
-Location: T    Required: Optional   JSON Type: Array
+Required: Optional   JSON Type: Array  Location: Track Object 
 
 An array of accessibility descriptors indicating accessibility features
 embedded within the track. Each descriptor is a JSON Object containing:
