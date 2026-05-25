@@ -366,11 +366,11 @@ Required: Optional    JSON Type: Array    Location: Root Catalog
 
 An array of strings, with each string holding Base64 {{BASE64}} encoded
 initialization data. Each entry can be referenced within a track definition
-{{initref}} by specifying the zero-based index of that item within the array. 
+{{initref}} by specifying the zero-based index of that item within the array.
 
 The Initialization Data List, if present, MUST be the last field listed in
 the root of the JSON catalog. The purpose of this is to improve the human readability
-of the catalog tracks by moving the verbose init data to the end of the document. 
+of the catalog tracks by moving the verbose init data to the end of the document.
 
 ## Track Object Fields
 
