@@ -1736,7 +1736,7 @@ it SHOULD signal the gap using the MOQT Prior Group ID Gap Extension header.
 
 ## Object Numbering
 Object ID MUST be zero for the first Object within a Group and then MUST increase
-monotonically by one within that Group. 
+monotonically by one within that Group.
 
 # Media Timeline track {#mediatimelinetrack}
 The media timeline track provides data about the previously published Groups and their
