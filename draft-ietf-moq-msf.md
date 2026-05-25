@@ -372,6 +372,7 @@ Table 2 lists the fields defined within each track object.
 | Event timeline type     | eventType              | {{eventtype}}             |
 | Is Live                 | isLive                 | {{islive}}                |
 | Target latency          | targetLatency          | {{targetlatency}}         |
+| Target buffer           | targetBuffer           | {{targetbuffer}}          |
 | Track role              | role                   | {{trackrole}}             |
 | Track label             | label                  | {{tracklabel}}            |
 | Render group            | renderGroup            | {{rendergroup}}           |
@@ -492,6 +493,26 @@ belonging to the same render group MUST have identical target latencies. All tra
 belonging to the same alternate group MUST have identical target latencies. If this
 field is absent from the track definition, and isLive is TRUE, then the player
 MAY choose the latency with which it renders the content.
+
+This property MUST NOT be present if the target buffer {{targetbuffer}} property
+is present within a track definition.
+
+### Target buffer {#targetbuffer}
+Required: Optional    JSON Type: Number    Location: Track Object
+
+The target buffer length in milliseconds. Target buffer is defined as the duration of
+data that MUST be buffered before decoding commences. This is typically known as a
+forward or jitter-buffer in a media player. Players with identical buffer lengths
+are likely to be synchronized.
+
+If isLive is FALSE, this field MUST be ignored. All tracks
+belonging to the same render group MUST have identical target buffers. All tracks
+belonging to the same alternate group MUST have identical target buffers. If this
+field is absent from the track definition, and isLive is TRUE, then the player
+MAY choose the buffer with which it builds before commencing playback.
+
+This property MUST NOT be present if the target latency {{targetlatency}} property
+is present within a track definition.
 
 ### Track label {#tracklabel}
 Required: Optional    JSON Type: String    Location: Track Object
