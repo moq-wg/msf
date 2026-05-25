@@ -535,7 +535,7 @@ Since only the track name is signaled, the namespace of the dependencies is
 assumed to match that of the track declaring the dependencies.
 
 ### Template {#template}
-Required: Optional   JSON Type: Array    Location: Track Object   
+Required: Optional   JSON Type: Array    Location: Track Object
 
 A media timeline template for tracks with fixed-duration segments. It specifies
 the relationship between media time, MOQT Location, and wallclock time through
@@ -567,7 +567,7 @@ A string defining the codec used to encode the track.
 For LOC packaged content, the string codec registrations are defined in Sect 3
 and Section 4 of {{WEBCODECS-CODEC-REGISTRY}}.
 This property MUST be specified for tracks which have an inherent codec
-associated with them. 
+associated with them.
 
 ### Mimetype {#mimetype}
 Required: Optional    JSON Type: String    Location: Track Object
@@ -667,7 +667,7 @@ The duration of the track expressed in integer milliseconds. This field MUST NOT
 be included if the isLive {{islive}} field value is true.
 
 ### Connection URI {#connectionuri}
-Required: Optional   JSON Type: String    Location: Track Object   
+Required: Optional   JSON Type: String    Location: Track Object
 
 A string containing the MOQT connection endpoint URI for the publish track. When
 specified, the subscriber MUST establish a new MOQT connection to this URI for
@@ -679,14 +679,14 @@ The URI MUST be a valid MOQT endpoint URI as defined by {{MoQTransport}} (Sect 3
 "https://logs.example.com/moqt".
 
 ### Token {#token}
-Required: Optional   JSON Type: String    Location: Track Object 
+Required: Optional   JSON Type: String    Location: Track Object
 
 A string containing an authentication token or credential for the track. For
 publish tracks, this token authorizes the subscriber to publish data to the
 specified track. The format and validation of the token is application-specific.
 
 ### Encryption scheme {#encryptionscheme}
-Required: Optional   JSON Type: String    Location: Track Object 
+Required: Optional   JSON Type: String    Location: Track Object
 
 A string identifying the encryption scheme used to protect the track content.
 The default and RECOMMENDED value is "moq-secure-objects" as defined in
@@ -702,7 +702,7 @@ Custom encryption schemes MAY be used. Custom scheme names SHOULD use Reverse
 Domain Name Notation to avoid collisions (e.g., "com.example.custom-encryption").
 
 ### Cipher suite {#ciphersuite}
-Required: Optional   JSON Type: String    Location: Track Object 
+Required: Optional   JSON Type: String    Location: Track Object
 
 A string identifying the AEAD cipher suite used for encryption. This field
 MUST be present when encryptionScheme is specified. For the "moq-secure-objects"
@@ -721,7 +721,7 @@ support "aes-128-ctr-hmac-sha256-80" for scenarios requiring smaller
 authentication tags.
 
 ### Key ID {#keyid}
-Required: Optional   JSON Type: String    Location: Track Object 
+Required: Optional   JSON Type: String    Location: Track Object
 
 A string identifying the key material used for encryption. This value is
 transmitted in the Secure Object KID extension header as defined in
@@ -739,7 +739,7 @@ share the same base key material, though per-track keys are derived using
 the track name as defined in ({{SecureObjects, Section 5}}).
 
 ### Track Base Key {#trackbasekey}
-Required: Optional   JSON Type: String    Location: Track Object 
+Required: Optional   JSON Type: String    Location: Track Object
 
 A base64-encoded {{BASE64}} string containing the base key material for this
 track, as defined in ({{SecureObjects, Section 5}}). This field works in
@@ -753,7 +753,7 @@ is used to derive the actual encryption keys. Publishers and subscribers MUST
 use matching trackBaseKey values for successful decryption.
 
 ### Authorization Info {#authinfo}
-Required: Optional   JSON Type: Object    Location: Track Object 
+Required: Optional   JSON Type: Object    Location: Track Object
 
 An object indicating that authorization is required to access this track.
 The presence of this field signals to subscribers that they must obtain
@@ -802,7 +802,7 @@ Would be resolved by the subscriber to include `"cat": "XYZ789"`, which is
 then presented in control messages as specified by the authorization scheme.
 
 ### Accessibility {#accessibility}
-Required: Optional   JSON Type: Array  Location: Track Object 
+Required: Optional   JSON Type: Array  Location: Track Object
 
 An array of accessibility descriptors indicating accessibility features
 embedded within the track. Each descriptor is a JSON Object containing:
