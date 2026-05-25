@@ -1574,7 +1574,7 @@ MOQT Stream.
 
 ## Group numbering
 Group IDs for a track MUST be unique and MUST increase monotonically. Within a
-continuous publishing session, each subsequent Group ID MUST increase by 1.
+continuous publishing session, each subsequent Group ID SHOULD increase by 1.
 
 When a publisher restarts (e.g., after connectivity loss or encoder restart), it
 MUST ensure the new starting Group ID is greater than any previously published
