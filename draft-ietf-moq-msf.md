@@ -376,7 +376,7 @@ object has the following fields:
 |:==============|:===============================================|
 | inline        |  Base64 {{BASE64}} encoded initialization data |
 
-* data: a string holding the init payload as defined by the type. 
+* data: a string holding the init payload as defined by the type.
 
 The Initialization Data List, if present, MUST be located after the tracks array in
 the root of the JSON catalog. The purpose of this is to improve the human readability
