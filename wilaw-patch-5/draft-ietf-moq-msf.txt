@@ -5,8 +5,8 @@
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
 Intended status: Informational                             S. Nandakumar
-Expires: 26 November 2026                                          Cisco
-                                                             25 May 2026
+Expires: 27 November 2026                                          Cisco
+                                                             26 May 2026
 
 
                          MOQT Streaming Format
@@ -49,7 +49,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 26 November 2026.
+   This Internet-Draft will expire on 27 November 2026.
 
 Copyright Notice
 
@@ -559,15 +559,30 @@ Table of Contents
 
    Required: Optional JSON Type: Array Location: Root Catalog
 
-   An array of strings, with each string holding Base64 [BASE64] encoded
-   initialization data.  Each entry can be referenced within a track
-   definition Section 5.2.12 by specifying the zero-based index of that
-   item within the array.
+   An array of initialization reference objects.  Each initialization
+   reference object has the following fields:
 
-   The Initialization Data List, if present, MUST be the last field
-   listed in the root of the JSON catalog.  The purpose of this is to
-   improve the human readability of the catalog tracks by moving the
-   verbose init data to the end of the document.
+   *  id : a string defining a reference to this initialization data
+      which is unique within the scope of the catalog.
+
+   *  type: as string defining the type of reference.  This version of
+      the specification defines a single allowed type, per the table
+      below
+
+         +========+=============================================+
+         | Type   | Data field definition                       |
+         +========+=============================================+
+         | inline | Base64 [BASE64] encoded initialization data |
+         +--------+---------------------------------------------+
+
+                                 Table 2
+
+   *  data: a string holding the init payload as defined by the type.
+
+   The Initialization Data List, if present, MUST be located after the
+   tracks array in the root of the JSON catalog.  The purpose of this is
+   to improve the human readability of the catalog tracks by moving the
+   verbose init data towards the end of the document.
 
 5.2.  Track Object Fields
 
@@ -637,7 +652,7 @@ Table of Contents
         | Accessibility         | accessibility | Section 5.2.39 |
         +-----------------------+---------------+----------------+
 
-                                 Table 2
+                                 Table 3
 
 5.2.1.  Tracks object
 
@@ -683,7 +698,7 @@ Table of Contents
            | MoQ Metrics    | moqmetrics    | See [MOQMETRICS] |
            +----------------+---------------+------------------+
 
-                                  Table 3
+                                  Table 4
 
    Table 3: Allowed packaging values
 
@@ -746,7 +761,7 @@ Table of Contents
               |                  | track per [MOQMETRICS].  |
               +------------------+--------------------------+
 
-                                  Table 4
+                                  Table 5
 
    Custom roles MAY be used as long as they do not collide with the
    specified roles.
@@ -809,10 +824,10 @@ Table of Contents
 
 5.2.12.  Initialization reference
 
-   Required: Optional JSON Type: Number Location: Track Object
+   Required: Optional JSON Type: String Location: Track Object
 
-   A number pointing at the zero-based index of an entry in the
-   Initialization Data List Section 5.1.7.
+   A string pointing at the id field of an entry in the Initialization
+   Data List Section 5.1.7.
 
 5.2.13.  Dependencies
 
@@ -1003,7 +1018,7 @@ Table of Contents
        | MoQ Secure Objects | moq-secure-objects | [SecureObjects] |
        +--------------------+--------------------+-----------------+
 
-                                  Table 5
+                                  Table 6
 
    Custom encryption schemes MAY be used.  Custom scheme names SHOULD
    use Reverse Domain Name Notation to avoid collisions (e.g.,
@@ -1033,7 +1048,7 @@ Table of Contents
     |                            |                            | bits |
     +----------------------------+----------------------------+------+
 
-                                 Table 6
+                                 Table 7
 
    Implementations MUST support "aes-128-gcm-sha256".  Implementations
    SHOULD support "aes-128-ctr-hmac-sha256-80" for scenarios requiring
@@ -1099,7 +1114,7 @@ Table of Contents
             | CAT          | cat          | [C4M]             |
             +--------------+--------------+-------------------+
 
-                                  Table 7
+                                  Table 8
 
    Custom authorization schemes MAY be used.  Custom scheme names MUST
    use a unique naming convention, such as Reverse Domain Name Notation
@@ -1157,7 +1172,7 @@ Table of Contents
         | urn:scte:dash:cc:cea-708:2015 | CEA-708 closed captions |
         +-------------------------------+-------------------------+
 
-                                  Table 8
+                                  Table 9
 
    The 'value' field for CEA-608/708 schemes uses the format defined by
    [SCTE214-1], where caption service channels are specified as
@@ -2586,7 +2601,7 @@ Table of Contents
      | connection      | Mandates a connection type                  |
      +-----------------+---------------------------------------------+
 
-                                  Table 9
+                                  Table 10
 
    *  wallclock-range - a range defined by start and end wallclock
       times, each expressed as milliseconds since Unix Epoch and
@@ -2840,7 +2855,7 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
          | msf           | MOQT Streaming Format | this          |
          +---------------+-----------------------+---------------+
 
-                                  Table 10
+                                  Table 11
 
 13.2.  "MSF Event Timeline Types" registry
 
@@ -2869,7 +2884,7 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
     |                          | cues                |               |
     +--------------------------+---------------------+---------------+
 
-                                 Table 11
+                                 Table 12
 
 14.  References
 
