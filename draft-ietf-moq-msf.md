@@ -364,13 +364,23 @@ The following operation types are defined:
 ### Initialization Data List {#initdatalist}
 Required: Optional    JSON Type: Array    Location: Root Catalog
 
-An array of strings, with each string holding Base64 {{BASE64}} encoded
-initialization data. Each entry can be referenced within a track definition
-{{initref}} by specifying the zero-based index of that item within the array.
+An array of initialization reference objects. Each initialization reference
+object has the following fields:
 
-The Initialization Data List, if present, MUST be the last field listed in
+* id : a string defining a reference to this initialization data which is unique
+  within the scope of the catalog.
+* type: as string defining the type of reference. This version of the specification
+  defines a single allowed type, per the table below
+
+| Type          |   Data field definition                        |
+|:==============|:===============================================|
+| inline        |  Base64 {{BASE64}} encoded initialization data |
+
+* data: a string holding the init payload as defined by the type. 
+
+The Initialization Data List, if present, MUST be located after the tracks array in
 the root of the JSON catalog. The purpose of this is to improve the human readability
-of the catalog tracks by moving the verbose init data to the end of the document.
+of the catalog tracks by moving the verbose init data towards the end of the document.
 
 ## Track Object Fields
 
@@ -531,9 +541,9 @@ tracks specifying the same alternate group number. A common example would be
 a set video tracks of the same content offered in alternate bitrates.
 
 ### Initialization reference {#initref}
-Required: Optional    JSON Type: Number    Location: Track Object
+Required: Optional    JSON Type: String    Location: Track Object
 
-A number pointing at the zero-based index of an entry in the Initialization
+A string pointing at the id field of an entry in the Initialization
 Data List {{initdatalist}}.
 
 ### Dependencies {#dependencies}
