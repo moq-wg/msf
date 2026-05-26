@@ -372,7 +372,7 @@ Table 2 lists the fields defined within each track object.
 | Event timeline type     | eventType              | {{eventtype}}             |
 | Is Live                 | isLive                 | {{islive}}                |
 | Target latency          | targetLatency          | {{targetlatency}}         |
-| Target buffer           | targetBuffer           | {{targetbuffer}}          |
+| Target buffers          | targetBuffers          | {{targetbuffers}}         |
 | Track role              | role                   | {{trackrole}}             |
 | Track label             | label                  | {{tracklabel}}            |
 | Render group            | renderGroup            | {{rendergroup}}           |
@@ -494,22 +494,32 @@ belonging to the same alternate group MUST have identical target latencies. If t
 field is absent from the track definition, and isLive is TRUE, then the player
 MAY choose the latency with which it renders the content.
 
-This property MUST NOT be present if the target buffer {{targetbuffer}} property
+This property MUST NOT be present if the target buffers {{targetbuffers}} property
 is present within a track definition.
 
-### Target buffer {#targetbuffer}
-Required: Optional    JSON Type: Number    Location: Track Object
+### Target buffers {#targetbuffers}
+Required: Optional    JSON Type: Array   Location: Track Object
 
-The target buffer length in milliseconds. Target buffer is defined as the duration of
-data that MUST be buffered before decoding commences. This is typically known as a
-forward or jitter-buffer in a media player. Players with identical buffer lengths
-are likely to be synchronized.
+An array of variable length holding a set of buffers, each defined in integer milliseconds.
+Buffer is defined as the duration of media data that MUST be buffered before decoding
+commences. This is typically known as a forward or jitter-buffer in a media player.
+Players with identical buffer lengths are likely to be synchronized. The index
+position in the array defines the type of buffer:
+
+* the first item defines the target buffer. Players SHOULD attempt to stabilize playback
+  at this value.
+* the second item defines the minimum buffer. Players SHOULD NOT operate below this value.
+* the third item defines the maximum buffer. Players SHOULD NOT operate above this value.
+
+Not all items need be present. An array with a length of 1 carries only a target buffer,
+and with a length of two carries a target and a minimum buffer. Items beyond a zeroth index
+position of 2 MUST be ignored.
 
 If isLive is FALSE, this field MUST be ignored. All tracks
 belonging to the same render group MUST have identical target buffers. All tracks
 belonging to the same alternate group MUST have identical target buffers. If this
 field is absent from the track definition, and isLive is TRUE, then the player
-MAY choose the buffer with which it builds before commencing playback.
+MAY choose the buffers with which it conducts playback.
 
 This property MUST NOT be present if the target latency {{targetlatency}} property
 is present within a track definition.
@@ -1055,6 +1065,7 @@ express the track relationships.
       "renderGroup": 1,
       "packaging": "loc",
       "isLive": true,
+      "targetBuffers": [2000],
       "role": "video",
       "codec":"av01.0.01M.10.0.110.09",
       "width":640,
@@ -1068,6 +1079,7 @@ express the track relationships.
       "renderGroup": 1,
       "packaging": "loc",
       "isLive": true,
+      "targetBuffers": [2000],
       "role": "video",
       "codec":"av01.0.04M.10.0.110.09",
       "width":640,
@@ -1082,6 +1094,7 @@ express the track relationships.
       "renderGroup": 1,
       "packaging": "loc",
       "isLive": true,
+      "targetBuffers": [2000],
       "role": "video",
       "codec":"av01.0.05M.10.0.110.09",
       "width":1920,
@@ -1097,6 +1110,7 @@ express the track relationships.
       "renderGroup": 1,
       "packaging": "loc",
       "isLive": true,
+      "targetBuffers": [2000],
       "role": "video",
       "codec":"av01.0.08M.10.0.110.09",
       "width":1920,
@@ -1111,6 +1125,7 @@ express the track relationships.
       "renderGroup": 1,
       "packaging": "loc",
       "isLive": true,
+      "targetBuffers": [2000],
       "role": "audio",
       "codec":"opus",
       "samplerate":48000,
@@ -1197,6 +1212,7 @@ description.
       "namespace": "conference.example.com/conference123/alice",
       "packaging": "loc",
       "isLive": true,
+      "targetBuffers": [2000,1500,5000],
       "role": "video",
       "renderGroup": 1,
       "codec":"av01.0.08M.10.0.110.09",
@@ -1213,6 +1229,7 @@ description.
       "namespace": "conference.example.com/conference123/alice",
       "packaging": "loc",
       "isLive": true,
+      "targetBuffers": [2000,1500,5000],
       "role": "audio",
       "renderGroup": 1,
       "codec":"opus",
