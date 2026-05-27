@@ -610,16 +610,16 @@ A number defining the maximum duration, expressed in milliseconds, of any MOQT G
 in this track.
 
 ### Width {#width}
-Required: Conditional  JSON Type: Number    Location: Track Object
+Required: Optional  JSON Type: Number    Location: Track Object
 
 A number expressing the maximum encoded width of the video frames in pixels.
-This property MUST accompany tracks which have a visual representation.
+This property SHOULD accompany tracks which have a visual representation.
 
 ### Height {#height}
-Required: Conditional   JSON Type: Number    Location: Track Object
+Required: Optional  JSON Type: Number    Location: Track Object
 
 A number expressing the maximum encoded height of the video frames in pixels.
-This property MUST accompany tracks which have a visual representation.
+This property SHOULD accompany tracks which have a visual representation.
 
 ### Audio sample rate {#audiosamplerate}
 Required: Conditional  JSON Type: Number    Location: Track Object
