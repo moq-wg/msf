@@ -261,23 +261,29 @@ The catalog track MUST have a case-sensitive Track Name of "catalog".
 A catalog object MAY be independent of other catalog objects or it MAY represent
 a delta update of a prior catalog object. The first catalog object published
 within a new group MUST be independent and MUST provide a complete catalog that
-does not require any prior catalog object for interpretation. Any catalog objects
-that precede the first object of the latest group MUST be ignored.
+does not require any prior catalog object for interpretation. Any catalog updates
+that precede the first Object of the latest Group MUST be ignored.
 
-A catalog object SHOULD be
-published only when the availability of tracks changes.
+A catalog object SHOULD be published only when the availability of tracks changes, or
+after a period of time has passed such that the catalog object might fall out of cache
+in a delivery network.
 
-Each catalog update MUST be mapped to an MOQT Object.
+Each catalog update MUST be mapped to an MOQT Object. All catalog updates, both
+independent and delta, MUST be mapped to MOQT sub-group 0. The first Object (with
+Object ID 0) in any Group in a catalog track MUST hold an independent copy of the
+catalog. All subsequent Objects within that Group (i.e Objects IDs >= 1) MUST hold
+a delta update. As soon as an independent update is produced, it MUST be placed at the
+start of a new Group.
 
 Subscribers accessing the catalog MUST use SUBSCRIBE with a Joining FETCH
 (offset = 0) in order to obtain the latest complete catalog along with all subsequent
 catalog objects, including delta updates, that follow.
 
 A catalog is a JSON {{JSON}} document, comprised of a series of mandatory and
-optional fields. At a minimum, a catalog MUST provide all mandatory fields. A
-producer MAY add additional fields to the ones described in this draft. Custom
-field names MUST NOT collide with field names described in this draft. The order
-of field names within the JSON document is not important.
+optional fields. At a minimum, a catalog MUST provide all mandatory fields. Some
+fields are conditional depending on the type of content carried. A producer MAY add
+additional fields to the ones described in this draft. Custom field names MUST NOT
+collide with field names described in this draft.
 
 A parser MUST ignore fields it does not understand.
 
@@ -1727,6 +1733,10 @@ milliseconds since the Unix epoch as the starting Group ID.
 
 If a publisher maintains state across a restart and knows the previous Group ID,
 it SHOULD signal the gap using the MOQT Prior Group ID Gap Extension header.
+
+## Object Numbering
+Object ID MUST be zero for the first Object within a Group and then MUST increase
+monotonically by one within that Group.
 
 # Media Timeline track {#mediatimelinetrack}
 The media timeline track provides data about the previously published Groups and their
