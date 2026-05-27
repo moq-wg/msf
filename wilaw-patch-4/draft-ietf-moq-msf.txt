@@ -5,8 +5,8 @@
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
 Intended status: Informational                             S. Nandakumar
-Expires: 26 November 2026                                          Cisco
-                                                             25 May 2026
+Expires: 28 November 2026                                          Cisco
+                                                             27 May 2026
 
 
                          MOQT Streaming Format
@@ -49,7 +49,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 26 November 2026.
+   This Internet-Draft will expire on 28 November 2026.
 
 Copyright Notice
 
@@ -908,18 +908,18 @@ Table of Contents
 
 5.2.25.  Width
 
-   Required: Conditional JSON Type: Number Location: Track Object
+   Required: Optional JSON Type: Number Location: Track Object
 
    A number expressing the maximum encoded width of the video frames in
-   pixels.  This property MUST accompany tracks which have a visual
+   pixels.  This property SHOULD accompany tracks which have a visual
    representation.
 
 5.2.26.  Height
 
-   Required: Conditional JSON Type: Number Location: Track Object
+   Required: Optional JSON Type: Number Location: Track Object
 
    A number expressing the maximum encoded height of the video frames in
-   pixels.  This property MUST accompany tracks which have a visual
+   pixels.  This property SHOULD accompany tracks which have a visual
    representation.
 
 5.2.27.  Audio sample rate
