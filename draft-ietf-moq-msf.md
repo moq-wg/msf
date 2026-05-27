@@ -400,6 +400,7 @@ Table 2 lists the fields defined within each track object.
 | Event timeline type     | eventType              | {{eventtype}}             |
 | Is Live                 | isLive                 | {{islive}}                |
 | Target latency          | targetLatency          | {{targetlatency}}         |
+| Buffers                 | buffers                | {{buffers}}               |
 | Track role              | role                   | {{trackrole}}             |
 | Track label             | label                  | {{tracklabel}}            |
 | Render group            | renderGroup            | {{rendergroup}}           |
@@ -520,6 +521,35 @@ belonging to the same render group MUST have identical target latencies. All tra
 belonging to the same alternate group MUST have identical target latencies. If this
 field is absent from the track definition, and isLive is TRUE, then the player
 MAY choose the latency with which it renders the content.
+
+This property MUST NOT be present if the buffers {{buffers}} property
+is present within a track definition.
+
+### Buffers {#buffers}
+Required: Optional    JSON Type: Object   Location: Track Object
+
+An object defining a set of target buffers. Buffer is defined as the duration of
+media data that MUST be buffered before decoding commences. This is typically known
+as a forward or jitter-buffer in a media player.Players with identical buffer lengths
+are likely to be synchronized. The target buffer object has these keys:
+
+* target : defines the target buffer in integer milliseconds. Players SHOULD attempt
+  to stabilize playback at this value.
+* min : defines the minimum buffer in milliseconds. Players SHOULD NOT operate below
+  this value.
+* max : defines the maximum buffer in milliseconds. Players SHOULD NOT operate above
+  this value.
+
+Keys are optional. Unknown keys in the target buffer object MUST be ignored.
+
+If isLive is FALSE, this target buffer property MUST be ignored. All tracks
+belonging to the same render group MUST have identical target buffers. All tracks
+belonging to the same alternate group MUST have identical target buffers. If this
+field is absent from the track definition, and isLive is TRUE, then the player
+MAY choose the buffers with which it conducts playback.
+
+This property MUST NOT be present if the target latency {{targetlatency}} property
+is present within a track definition.
 
 ### Track label {#tracklabel}
 Required: Optional    JSON Type: String    Location: Track Object
@@ -1063,6 +1093,7 @@ express the track relationships.
       "renderGroup": 1,
       "packaging": "loc",
       "isLive": true,
+      "buffers": {"target":2000},
       "role": "video",
       "codec":"av01.0.01M.10.0.110.09",
       "width":640,
@@ -1076,6 +1107,7 @@ express the track relationships.
       "renderGroup": 1,
       "packaging": "loc",
       "isLive": true,
+      "buffers": {"target":2000},
       "role": "video",
       "codec":"av01.0.04M.10.0.110.09",
       "width":640,
@@ -1090,6 +1122,7 @@ express the track relationships.
       "renderGroup": 1,
       "packaging": "loc",
       "isLive": true,
+      "buffers": {"target":2000},
       "role": "video",
       "codec":"av01.0.05M.10.0.110.09",
       "width":1920,
@@ -1105,6 +1138,7 @@ express the track relationships.
       "renderGroup": 1,
       "packaging": "loc",
       "isLive": true,
+      "buffers": {"target":2000},
       "role": "video",
       "codec":"av01.0.08M.10.0.110.09",
       "width":1920,
@@ -1119,6 +1153,7 @@ express the track relationships.
       "renderGroup": 1,
       "packaging": "loc",
       "isLive": true,
+      "buffers": {"target":2000},
       "role": "audio",
       "codec":"opus",
       "samplerate":48000,
@@ -1205,6 +1240,7 @@ description.
       "namespace": "conference.example.com/conference123/alice",
       "packaging": "loc",
       "isLive": true,
+      "buffers": {"target":2000, "min": 1500, "max": 5000},
       "role": "video",
       "renderGroup": 1,
       "codec":"av01.0.08M.10.0.110.09",
@@ -1221,6 +1257,7 @@ description.
       "namespace": "conference.example.com/conference123/alice",
       "packaging": "loc",
       "isLive": true,
+      "buffers": {"target":2000, "min": 1500, "max": 5000},
       "role": "audio",
       "renderGroup": 1,
       "codec":"opus",
