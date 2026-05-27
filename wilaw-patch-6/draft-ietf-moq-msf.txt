@@ -5,8 +5,8 @@
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
 Intended status: Informational                             S. Nandakumar
-Expires: 27 November 2026                                          Cisco
-                                                             26 May 2026
+Expires: 28 November 2026                                          Cisco
+                                                             27 May 2026
 
 
                          MOQT Streaming Format
@@ -49,7 +49,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 27 November 2026.
+   This Internet-Draft will expire on 28 November 2026.
 
 Copyright Notice
 
@@ -95,7 +95,7 @@ Table of Contents
        5.2.6.  Track role
        5.2.7.  Is Live
        5.2.8.  Target latency
-       5.2.9.  Target buffers
+       5.2.9.  Buffers
        5.2.10. Track label
        5.2.11. Render group
        5.2.12. Alternate group
@@ -572,7 +572,7 @@ Table of Contents
         +-----------------------+---------------+----------------+
         | Target latency        | targetLatency | Section 5.2.8  |
         +-----------------------+---------------+----------------+
-        | Target buffers        | targetBuffers | Section 5.2.9  |
+        | Buffers               | buffers       | Section 5.2.9  |
         +-----------------------+---------------+----------------+
         | Track role            | role          | Section 5.2.6  |
         +-----------------------+---------------+----------------+
@@ -764,40 +764,37 @@ Table of Contents
    and isLive is TRUE, then the player MAY choose the latency with which
    it renders the content.
 
-   This property MUST NOT be present if the target buffers Section 5.2.9
+   This property MUST NOT be present if the buffers Section 5.2.9
    property is present within a track definition.
 
-5.2.9.  Target buffers
+5.2.9.  Buffers
 
-   Required: Optional JSON Type: Array Location: Track Object
+   Required: Optional JSON Type: Object Location: Track Object
 
-   An array of variable length holding a set of buffers, each defined in
-   integer milliseconds.  Buffer is defined as the duration of media
-   data that MUST be buffered before decoding commences.  This is
-   typically known as a forward or jitter-buffer in a media player.
-   Players with identical buffer lengths are likely to be synchronized.
-   The index position in the array defines the type of buffer:
+   An object defining a set of target buffers.  Buffer is defined as the
+   duration of media data that MUST be buffered before decoding
+   commences.  This is typically known as a forward or jitter-buffer in
+   a media player.Players with identical buffer lengths are likely to be
+   synchronized.  The target buffer object has these keys:
 
-   *  the first item defines the target buffer.  Players SHOULD attempt
-      to stabilize playback at this value.
+   *  target : defines the target buffer in integer milliseconds.
+      Players SHOULD attempt to stabilize playback at this value.
 
-   *  the second item defines the minimum buffer.  Players SHOULD NOT
-      operate below this value.
+   *  min : defines the minimum buffer in milliseconds.  Players SHOULD
+      NOT operate below this value.
 
-   *  the third item defines the maximum buffer.  Players SHOULD NOT
-      operate above this value.
+   *  max : defines the maximum buffer in milliseconds.  Players SHOULD
+      NOT operate above this value.
 
-   Not all items need be present.  An array with a length of 1 carries
-   only a target buffer, and with a length of two carries a target and a
-   minimum buffer.  Items beyond a zeroth index position of 2 MUST be
+   Keys are optional.  Unknown keys in the target buffer object MUST be
    ignored.
 
-   If isLive is FALSE, this field MUST be ignored.  All tracks belonging
-   to the same render group MUST have identical target buffers.  All
-   tracks belonging to the same alternate group MUST have identical
-   target buffers.  If this field is absent from the track definition,
-   and isLive is TRUE, then the player MAY choose the buffers with which
-   it conducts playback.
+   If isLive is FALSE, this target buffer property MUST be ignored.  All
+   tracks belonging to the same render group MUST have identical target
+   buffers.  All tracks belonging to the same alternate group MUST have
+   identical target buffers.  If this field is absent from the track
+   definition, and isLive is TRUE, then the player MAY choose the
+   buffers with which it conducts playback.
 
    This property MUST NOT be present if the target latency Section 5.2.8
    property is present within a track definition.
@@ -1423,7 +1420,7 @@ Table of Contents
          "renderGroup": 1,
          "packaging": "loc",
          "isLive": true,
-         "targetBuffers": [2000],
+         "buffers": {"target":2000},
          "role": "video",
          "codec":"av01.0.01M.10.0.110.09",
          "width":640,
@@ -1437,7 +1434,7 @@ Table of Contents
          "renderGroup": 1,
          "packaging": "loc",
          "isLive": true,
-         "targetBuffers": [2000],
+         "buffers": {"target":2000},
          "role": "video",
          "codec":"av01.0.04M.10.0.110.09",
          "width":640,
@@ -1452,7 +1449,7 @@ Table of Contents
          "renderGroup": 1,
          "packaging": "loc",
          "isLive": true,
-         "targetBuffers": [2000],
+         "buffers": {"target":2000},
          "role": "video",
          "codec":"av01.0.05M.10.0.110.09",
          "width":1920,
@@ -1468,7 +1465,7 @@ Table of Contents
          "renderGroup": 1,
          "packaging": "loc",
          "isLive": true,
-         "targetBuffers": [2000],
+         "buffers": {"target":2000},
          "role": "video",
          "codec":"av01.0.08M.10.0.110.09",
          "width":1920,
@@ -1483,7 +1480,7 @@ Table of Contents
          "renderGroup": 1,
          "packaging": "loc",
          "isLive": true,
-         "targetBuffers": [2000],
+         "buffers": {"target":2000},
          "role": "audio",
          "codec":"opus",
          "samplerate":48000,
@@ -1563,7 +1560,7 @@ Table of Contents
          "namespace": "conference.example.com/conference123/alice",
          "packaging": "loc",
          "isLive": true,
-         "targetBuffers": [2000,1500,5000],
+         "buffers": {"target":2000, "min": 1500, "max": 5000},
          "role": "video",
          "renderGroup": 1,
          "codec":"av01.0.08M.10.0.110.09",
@@ -1580,7 +1577,7 @@ Table of Contents
          "namespace": "conference.example.com/conference123/alice",
          "packaging": "loc",
          "isLive": true,
-         "targetBuffers": [2000,1500,5000],
+         "buffers": {"target":2000, "min": 1500, "max": 5000},
          "role": "audio",
          "renderGroup": 1,
          "codec":"opus",
