@@ -512,7 +512,7 @@ are likely to be synchronized. The target buffer object has these keys:
 * max : defines the maximum buffer in milliseconds. Players SHOULD NOT operate above
   this value.
 
-Keys are optional. Unknown keys in the target buffer object MUST be ignored. 
+Keys are optional. Unknown keys in the target buffer object MUST be ignored.
 
 If isLive is FALSE, this target buffer property MUST be ignored. All tracks
 belonging to the same render group MUST have identical target buffers. All tracks
