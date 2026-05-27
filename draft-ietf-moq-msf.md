@@ -291,14 +291,15 @@ A parser MUST ignore fields it does not understand.
 
 Table 1 lists the fields defined at the root of the catalog JSON object.
 
-| Field                   |  Name                  |           Definition      |
-|:========================|:=======================|:==========================|
-| MSF version             | version                | {{msfversion}}            |
-| Generated at            | generatedAt            | {{generatedat}}           |
-| Is Complete             | isComplete             | {{iscomplete}}            |
-| Tracks                  | tracks                 | {{tracks}}                |
-| Publish tracks          | publishTracks          | {{publishtracks}}         |
-| Delta update            | deltaUpdate            | {{deltaupdate}}           |
+| Field                     |  Name                  |           Definition      |
+|:==========================|:=======================|:==========================|
+| MSF version               | version                | {{msfversion}}            |
+| Generated at              | generatedAt            | {{generatedat}}           |
+| Is Complete               | isComplete             | {{iscomplete}}            |
+| Tracks                    | tracks                 | {{tracks}}                |
+| Publish tracks            | publishTracks          | {{publishtracks}}         |
+| Delta update              | deltaUpdate            | {{deltaupdate}}           |
+| Initialization Data List  | initDataList           | {{initdatalist}}          |
 
 ### MSF version {#msfversion}
 Required: Yes    JSON Type: Number    Location: Root Catalog
@@ -366,6 +367,27 @@ The following operation types are defined:
   inherits all attributes from the parent except the Track Name which MUST
   be new. Attributes redefined in the track object override inherited values.
 
+### Initialization Data List {#initdatalist}
+Required: Optional    JSON Type: Array    Location: Root Catalog
+
+An array of initialization reference objects. Each initialization reference
+object has the following fields:
+
+* id : a string defining a reference to this initialization data which is unique
+  within the scope of the catalog.
+* type: as string defining the type of reference. This version of the specification
+  defines a single allowed type, per the table below
+
+| Type          |   Data field definition                        |
+|:==============|:===============================================|
+| inline        |  Base64 {{BASE64}} encoded initialization data |
+
+* data: a string holding the init payload as defined by the type.
+
+The Initialization Data List, if present, MUST be located after the tracks array in
+the root of the JSON catalog. The purpose of this is to improve the human readability
+of the catalog tracks by moving the verbose init data towards the end of the document.
+
 ## Track Object Fields
 
 Table 2 lists the fields defined within each track object.
@@ -382,7 +404,7 @@ Table 2 lists the fields defined within each track object.
 | Track label             | label                  | {{tracklabel}}            |
 | Render group            | renderGroup            | {{rendergroup}}           |
 | Alternate group         | altGroup               | {{altgroup}}              |
-| Initialization data     | initData               | {{initdata}}              |
+| Initialization ref      | initRef                | {{initref}}               |
 | Dependencies            | depends                | {{dependencies}}          |
 | Temporal ID             | temporalId             | {{temporalid}}            |
 | Spatial ID              | spatialId              | {{spatialid}}             |
@@ -524,10 +546,11 @@ sequences. A subscriber typically subscribes to one track from a set of
 tracks specifying the same alternate group number. A common example would be
 a set video tracks of the same content offered in alternate bitrates.
 
-### Initialization data {#initdata}
+### Initialization reference {#initref}
 Required: Optional    JSON Type: String    Location: Track Object
 
-A string holding Base64 {{BASE64}} encoded initialization data for the track.
+A string pointing at the id field of an entry in the Initialization
+Data List {{initdatalist}}.
 
 ### Dependencies {#dependencies}
 Required: Optional    JSON Type: Array    Location: Track Object
