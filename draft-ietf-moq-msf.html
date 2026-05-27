@@ -1212,6 +1212,9 @@ svg {
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.6">
                     <p id="section-toc.1-1.5.2.1.2.6.1"><a href="#section-5.1.6" class="auto internal xref">5.1.6</a>.  <a href="#name-delta-update" class="internal xref">Delta update</a></p>
 </li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.7">
+                    <p id="section-toc.1-1.5.2.1.2.7.1"><a href="#section-5.1.7" class="auto internal xref">5.1.7</a>.  <a href="#name-initialization-data-list" class="internal xref">Initialization Data List</a></p>
+</li>
                 </ul>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2">
@@ -1251,7 +1254,7 @@ svg {
                     <p id="section-toc.1-1.5.2.2.2.11.1"><a href="#section-5.2.11" class="auto internal xref">5.2.11</a>. <a href="#name-alternate-group" class="internal xref">Alternate group</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2.2.12">
-                    <p id="section-toc.1-1.5.2.2.2.12.1"><a href="#section-5.2.12" class="auto internal xref">5.2.12</a>. <a href="#name-initialization-data" class="internal xref">Initialization data</a></p>
+                    <p id="section-toc.1-1.5.2.2.2.12.1"><a href="#section-5.2.12" class="auto internal xref">5.2.12</a>. <a href="#name-initialization-reference" class="internal xref">Initialization reference</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2.2.13">
                     <p id="section-toc.1-1.5.2.2.2.13.1"><a href="#section-5.2.13" class="auto internal xref">5.2.13</a>. <a href="#name-dependencies" class="internal xref">Dependencies</a></p>
@@ -1948,6 +1951,13 @@ collide with field names described in this draft.<a href="#section-5-7" class="p
                 <a href="#deltaupdate" class="auto internal xref">Section 5.1.6</a>
 </td>
             </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Initialization Data List</td>
+              <td class="text-left" rowspan="1" colspan="1">initDataList</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <a href="#initdatalist" class="auto internal xref">Section 5.1.7</a>
+</td>
+            </tr>
           </tbody>
         </table>
 <div id="msfversion">
@@ -2044,6 +2054,49 @@ be new. Attributes redefined in the track object override inherited values.<a hr
           </ul>
 </section>
 </div>
+<div id="initdatalist">
+<section id="section-5.1.7">
+          <h4 id="name-initialization-data-list">
+<a href="#section-5.1.7" class="section-number selfRef">5.1.7. </a><a href="#name-initialization-data-list" class="section-name selfRef">Initialization Data List</a>
+          </h4>
+<p id="section-5.1.7-1">Required: Optional    JSON Type: Array    Location: Root Catalog<a href="#section-5.1.7-1" class="pilcrow">¶</a></p>
+<p id="section-5.1.7-2">An array of initialization reference objects. Each initialization reference
+object has the following fields:<a href="#section-5.1.7-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.1.7-3.1">
+              <p id="section-5.1.7-3.1.1">id : a string defining a reference to this initialization data which is unique
+within the scope of the catalog.<a href="#section-5.1.7-3.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-5.1.7-3.2">
+              <p id="section-5.1.7-3.2.1">type: as string defining the type of reference. This version of the specification
+defines a single allowed type, per the table below<a href="#section-5.1.7-3.2.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+<table class="center" id="table-2">
+            <caption><a href="#table-2" class="selfRef">Table 2</a></caption>
+<thead>
+              <tr>
+                <th class="text-left" rowspan="1" colspan="1">Type</th>
+                <th class="text-left" rowspan="1" colspan="1">Data field definition</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">inline</td>
+                <td class="text-left" rowspan="1" colspan="1">Base64 <span>[<a href="#BASE64" class="cite xref">BASE64</a>]</span> encoded initialization data</td>
+              </tr>
+            </tbody>
+          </table>
+<ul class="normal">
+<li class="normal" id="section-5.1.7-5.1">
+              <p id="section-5.1.7-5.1.1">data: a string holding the init payload as defined by the type.<a href="#section-5.1.7-5.1.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+<p id="section-5.1.7-6">The Initialization Data List, if present, <span class="bcp14">MUST</span> be located after the tracks array in
+the root of the JSON catalog. The purpose of this is to improve the human readability
+of the catalog tracks by moving the verbose init data towards the end of the document.<a href="#section-5.1.7-6" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="track-object-fields">
@@ -2052,8 +2105,8 @@ be new. Attributes redefined in the track object override inherited values.<a hr
 <a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-track-object-fields" class="section-name selfRef">Track Object Fields</a>
         </h3>
 <p id="section-5.2-1">Table 2 lists the fields defined within each track object.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
-<table class="center" id="table-2">
-          <caption><a href="#table-2" class="selfRef">Table 2</a></caption>
+<table class="center" id="table-3">
+          <caption><a href="#table-3" class="selfRef">Table 3</a></caption>
 <thead>
             <tr>
               <th class="text-left" rowspan="1" colspan="1">Field</th>
@@ -2133,10 +2186,10 @@ be new. Attributes redefined in the track object override inherited values.<a hr
 </td>
             </tr>
             <tr>
-              <td class="text-left" rowspan="1" colspan="1">Initialization data</td>
-              <td class="text-left" rowspan="1" colspan="1">initData</td>
+              <td class="text-left" rowspan="1" colspan="1">Initialization ref</td>
+              <td class="text-left" rowspan="1" colspan="1">initRef</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <a href="#initdata" class="auto internal xref">Section 5.2.12</a>
+                <a href="#initref" class="auto internal xref">Section 5.2.12</a>
 </td>
             </tr>
             <tr>
@@ -2313,8 +2366,8 @@ Within the catalog, track names <span class="bcp14">MUST</span> be unique per na
 <p id="section-5.2.4-1">Required: Yes    JSON Type: String    Location: Track Object<a href="#section-5.2.4-1" class="pilcrow">¶</a></p>
 <p id="section-5.2.4-2">A string defining the type of payload encapsulation. Allowed values are strings
 as defined in Table 3.<a href="#section-5.2.4-2" class="pilcrow">¶</a></p>
-<table class="center" id="table-3">
-            <caption><a href="#table-3" class="selfRef">Table 3</a></caption>
+<table class="center" id="table-4">
+            <caption><a href="#table-4" class="selfRef">Table 4</a></caption>
 <thead>
               <tr>
                 <th class="text-left" rowspan="1" colspan="1">Name</th>
@@ -2382,8 +2435,8 @@ are described in Table 4. These role values are case-sensitive.<a href="#section
 <p id="section-5.2.6-3">This role field <span class="bcp14">MAY</span> be used in conjunction with the Mimetype <a href="#mimetype" class="auto internal xref">Section 5.2.18</a> to
 fully describe the content of the track.<a href="#section-5.2.6-3" class="pilcrow">¶</a></p>
 <p id="section-5.2.6-4">Table 4: Reserved track roles<a href="#section-5.2.6-4" class="pilcrow">¶</a></p>
-<table class="center" id="table-4">
-            <caption><a href="#table-4" class="selfRef">Table 4</a></caption>
+<table class="center" id="table-5">
+            <caption><a href="#table-5" class="selfRef">Table 5</a></caption>
 <thead>
               <tr>
                 <th class="text-left" rowspan="1" colspan="1">Role</th>
@@ -2507,13 +2560,14 @@ tracks specifying the same alternate group number. A common example would be
 a set video tracks of the same content offered in alternate bitrates.<a href="#section-5.2.11-2" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="initdata">
+<div id="initref">
 <section id="section-5.2.12">
-          <h4 id="name-initialization-data">
-<a href="#section-5.2.12" class="section-number selfRef">5.2.12. </a><a href="#name-initialization-data" class="section-name selfRef">Initialization data</a>
+          <h4 id="name-initialization-reference">
+<a href="#section-5.2.12" class="section-number selfRef">5.2.12. </a><a href="#name-initialization-reference" class="section-name selfRef">Initialization reference</a>
           </h4>
 <p id="section-5.2.12-1">Required: Optional    JSON Type: String    Location: Track Object<a href="#section-5.2.12-1" class="pilcrow">¶</a></p>
-<p id="section-5.2.12-2">A string holding Base64 <span>[<a href="#BASE64" class="cite xref">BASE64</a>]</span> encoded initialization data for the track.<a href="#section-5.2.12-2" class="pilcrow">¶</a></p>
+<p id="section-5.2.12-2">A string pointing at the id field of an entry in the Initialization
+Data List <a href="#initdatalist" class="auto internal xref">Section 5.1.7</a>.<a href="#section-5.2.12-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="dependencies">
@@ -2741,8 +2795,8 @@ specified track. The format and validation of the token is application-specific.
 The default and <span class="bcp14">RECOMMENDED</span> value is "moq-secure-objects" as defined in
 <span>[<a href="#SecureObjects" class="cite xref">SecureObjects</a>]</span>. If this field is absent, the track content is unencrypted.<a href="#section-5.2.33-2" class="pilcrow">¶</a></p>
 <p id="section-5.2.33-3">Table 5: Registered encryption schemes<a href="#section-5.2.33-3" class="pilcrow">¶</a></p>
-<table class="center" id="table-5">
-            <caption><a href="#table-5" class="selfRef">Table 5</a></caption>
+<table class="center" id="table-6">
+            <caption><a href="#table-6" class="selfRef">Table 6</a></caption>
 <thead>
               <tr>
                 <th class="text-left" rowspan="1" colspan="1">Name</th>
@@ -2774,8 +2828,8 @@ Domain Name Notation to avoid collisions (e.g., "com.example.custom-encryption")
 <span class="bcp14">MUST</span> be present when encryptionScheme is specified. For the "moq-secure-objects"
 scheme, the following cipher suites are defined:<a href="#section-5.2.34-2" class="pilcrow">¶</a></p>
 <p id="section-5.2.34-3">Table 6: Cipher suites for moq-secure-objects<a href="#section-5.2.34-3" class="pilcrow">¶</a></p>
-<table class="center" id="table-6">
-            <caption><a href="#table-6" class="selfRef">Table 6</a></caption>
+<table class="center" id="table-7">
+            <caption><a href="#table-7" class="selfRef">Table 7</a></caption>
 <thead>
               <tr>
                 <th class="text-left" rowspan="1" colspan="1">Name</th>
@@ -2856,8 +2910,8 @@ and present valid authorization tokens when subscribing to this track.<a href="#
 schemes are defined in Table 7. The values are scheme-specific configuration
 objects defined by the referenced specifications.<a href="#section-5.2.37-3" class="pilcrow">¶</a></p>
 <p id="section-5.2.37-4">Table 7: Registered Authorization Schemes<a href="#section-5.2.37-4" class="pilcrow">¶</a></p>
-<table class="center" id="table-7">
-            <caption><a href="#table-7" class="selfRef">Table 7</a></caption>
+<table class="center" id="table-8">
+            <caption><a href="#table-8" class="selfRef">Table 8</a></caption>
 <thead>
               <tr>
                 <th class="text-left" rowspan="1" colspan="1">Scheme</th>
@@ -2936,8 +2990,8 @@ or features available.<a href="#section-5.2.39-3.2.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 <p id="section-5.2.39-4">Table 6: Registered accessibility schemes<a href="#section-5.2.39-4" class="pilcrow">¶</a></p>
-<table class="center" id="table-8">
-            <caption><a href="#table-8" class="selfRef">Table 8</a></caption>
+<table class="center" id="table-9">
+            <caption><a href="#table-9" class="selfRef">Table 9</a></caption>
 <thead>
               <tr>
                 <th class="text-left" rowspan="1" colspan="1">Scheme</th>
@@ -4638,8 +4692,8 @@ meaning, as defined by <a href="#reservedfragmentparameters" class="auto interna
           </h4>
 <p id="section-11.1.1-1">Table 8 defines reserved key names for the parameter portion of the msf-fragment. Keynames are
 case-sensitive.<a href="#section-11.1.1-1" class="pilcrow">¶</a></p>
-<table class="center" id="table-9">
-            <caption><a href="#table-9" class="selfRef">Table 9</a></caption>
+<table class="center" id="table-10">
+            <caption><a href="#table-10" class="selfRef">Table 10</a></caption>
 <thead>
               <tr>
                 <th class="text-left" rowspan="1" colspan="1">Name</th>
@@ -4989,8 +5043,8 @@ and <span>[<a href="#C4M" class="cite xref">C4M</a>]</span> for CAT error handli
         </h3>
 <p id="section-13.1-1">This document creates a new entry in the "MOQT URI Fragment Types" registry
 (see <span>[<a href="#MoQTransport" class="cite xref">MoQTransport</a>]</span> Sect 14.3).<a href="#section-13.1-1" class="pilcrow">¶</a></p>
-<table class="center" id="table-10">
-          <caption><a href="#table-10" class="selfRef">Table 10</a></caption>
+<table class="center" id="table-11">
+          <caption><a href="#table-11" class="selfRef">Table 11</a></caption>
 <thead>
             <tr>
               <th class="text-left" rowspan="1" colspan="1">Fragment Type</th>
@@ -5019,8 +5073,8 @@ in MSF catalogs.<a href="#section-13.2-1" class="pilcrow">¶</a></p>
 <p id="section-13.2-2">New entries in this registry are subject to Expert Review policy as defined in
 <span>[<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>.<a href="#section-13.2-2" class="pilcrow">¶</a></p>
 <p id="section-13.2-3">The initial contents of this registry are:<a href="#section-13.2-3" class="pilcrow">¶</a></p>
-<table class="center" id="table-11">
-          <caption><a href="#table-11" class="selfRef">Table 11</a></caption>
+<table class="center" id="table-12">
+          <caption><a href="#table-12" class="selfRef">Table 12</a></caption>
 <thead>
             <tr>
               <th class="text-left" rowspan="1" colspan="1">Event Type</th>
