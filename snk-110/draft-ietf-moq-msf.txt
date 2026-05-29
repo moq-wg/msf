@@ -4,8 +4,9 @@
 
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
-Intended status: Informational                             27 April 2026
-Expires: 29 October 2026
+Intended status: Informational                             S. Nandakumar
+Expires: 30 November 2026                                          Cisco
+                                                             29 May 2026
 
 
                          MOQT Streaming Format
@@ -48,7 +49,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 29 October 2026.
+   This Internet-Draft will expire on 30 November 2026.
 
 Copyright Notice
 
@@ -85,80 +86,82 @@ Table of Contents
        5.1.3.  Is Complete
        5.1.4.  Tracks
        5.1.5.  Publish tracks
-     5.2.  Delta Update Catalog Fields
-       5.2.1.  Delta update
-       5.2.2.  Add tracks
-       5.2.3.  Remove tracks
-       5.2.4.  Clone tracks
-     5.3.  Track Object Fields
-       5.3.1.  Tracks object
-       5.3.2.  Track namespace
-       5.3.3.  Track name
-       5.3.4.  Packaging
-       5.3.5.  Event timeline type
-       5.3.6.  Track role
-       5.3.7.  Is Live
-       5.3.8.  Target latency
-       5.3.9.  Track label
-       5.3.10. Render group
-       5.3.11. Alternate group
-       5.3.12. Initialization data
-       5.3.13. Dependencies
-       5.3.14. Template
-       5.3.15. Temporal ID
-       5.3.16. Spatial ID
-       5.3.17. Codec
-       5.3.18. Mimetype
-       5.3.19. Framerate
-       5.3.20. Timescale
-       5.3.21. Bitrate
-       5.3.22. Width
-       5.3.23. Height
-       5.3.24. Audio sample rate
-       5.3.25. Channel configuration
-       5.3.26. Display width
-       5.3.27. Display height
-       5.3.28. Language
-       5.3.29. Parent name
-       5.3.30. Track duration
-       5.3.31. Connection URI
-       5.3.32. Token
-       5.3.33. Encryption scheme
-       5.3.34. Cipher suite
-       5.3.35. Key ID
-       5.3.36. Track Base Key
-       5.3.37. Authorization Info
-       5.3.38. Token Delivery via URI
-       5.3.39. Keyframe spacing
-     5.4.  Delta updates
-     5.5.  Variable Substitution
-       5.5.1.  Variable Syntax
-       5.5.2.  Variable Resolution
-     5.6.  Catalog Examples
-       5.6.1.  Time-aligned Audio/Video Tracks with single quality
-       5.6.2.  Simulcast video tracks - 3 alternate qualities along
+       5.1.6.  Delta update
+       5.1.7.  Initialization Data List
+     5.2.  Track Object Fields
+       5.2.1.  Tracks object
+       5.2.2.  Track namespace
+       5.2.3.  Track name
+       5.2.4.  Packaging
+       5.2.5.  Event timeline type
+       5.2.6.  Track role
+       5.2.7.  Is Live
+       5.2.8.  Target latency
+       5.2.9.  Buffers
+       5.2.10. Track label
+       5.2.11. Render group
+       5.2.12. Alternate group
+       5.2.13. Initialization reference
+       5.2.14. Dependencies
+       5.2.15. Template
+       5.2.16. Temporal ID
+       5.2.17. Spatial ID
+       5.2.18. Codec
+       5.2.19. Mimetype
+       5.2.20. Framerate
+       5.2.21. Timescale
+       5.2.22. Bitrate
+       5.2.23. Width
+       5.2.24. Height
+       5.2.25. Audio sample rate
+       5.2.26. Channel configuration
+       5.2.27. Display width
+       5.2.28. Display height
+       5.2.29. Language
+       5.2.30. Parent name
+       5.2.31. Track duration
+       5.2.32. Connection URI
+       5.2.33. Token
+       5.2.34. Encryption scheme
+       5.2.35. Cipher suite
+       5.2.36. Key ID
+       5.2.37. Track Base Key
+       5.2.38. Authorization Info
+       5.2.39. Token Delivery via URI
+       5.2.40. Accessibility
+       5.2.41. Keyframe spacing
+     5.3.  Delta updates
+     5.4.  Variable Substitution
+       5.4.1.  Variable Syntax
+       5.4.2.  Variable Resolution
+     5.5.  Catalog Examples
+       5.5.1.  Time-aligned Audio/Video Tracks with single quality
+       5.5.2.  Simulcast video tracks - 3 alternate qualities along
                with audio
-       5.6.3.  SVC video tracks with 2 spatial and 2 temporal
+       5.5.3.  SVC video tracks with 2 spatial and 2 temporal
                qualities
-       5.6.4.  Delta update - adding two tracks
-       5.6.5.  Delta update removing tracks
-       5.6.6.  Time-aligned Audio/Video Tracks with custom field
+       5.5.4.  Delta update - adding two tracks
+       5.5.5.  Delta update removing tracks
+       5.5.6.  Time-aligned Audio/Video Tracks with custom field
                values
-       5.6.7.  Time-aligned VOD Audio/Video Tracks
-       5.6.8.  Encrypted Audio/Video Tracks
-       5.6.9.  Media timeline and Event timeline
-       5.6.10. Media timeline template
-       5.6.11. Terminating a live broadcast
-       5.6.12. Variable Substitution for personalized delivery
-       5.6.13. Time-aligned Audio/Video Tracks with Authorization
-       5.6.14. Publish tracks for logs and metrics
+       5.5.7.  Time-aligned VOD Audio/Video Tracks
+       5.5.8.  Encrypted Audio/Video Tracks
+       5.5.9.  Media timeline and Event timeline
+       5.5.10. Media timeline template
+       5.5.11. Video track with embedded captions and SCTE-35 events
+       5.5.12. Video track with CEA-708 captions
+       5.5.13. Terminating a live broadcast
+       5.5.14. Variable Substitution for personalized delivery
+       5.5.15. Time-aligned Audio/Video Tracks with Authorization
+       5.5.16. Publish tracks for logs and metrics
    6.  Media transmission
      6.1.  Group numbering
-     6.2.  Zapping and Track Switching
-       6.2.1.  Calculating Valid Switch Points
-       6.2.2.  Example: Switching Between Tracks with Different GOP
+     6.2.  Object Numbering
+     6.3.  Zapping and Track Switching
+       6.3.1.  Calculating Valid Switch Points
+       6.3.2.  Example: Switching Between Tracks with Different GOP
                Sizes
-       6.2.3.  Packaging Considerations
+       6.3.3.  Packaging Considerations
    7.  Media Timeline track
      7.1.  Media Timeline track payload
        7.1.1.  Explicit entry format
@@ -184,6 +187,7 @@ Table of Contents
      10.2.  Metrics track namespace and name
      10.3.  Metrics track Group ID and Object ID
      10.4.  Metrics track catalog requirements
+     10.5.  Well-known event timeline types
    11. Workflow
      11.1.  URL construction and interpretation
        11.1.1.  Reserved fragment parameters
@@ -199,12 +203,13 @@ Table of Contents
    12. Security Considerations
    13. IANA Considerations
      13.1.  "MOQT URI Fragment Types" registry
+     13.2.  "MSF Event Timeline Types" registry
    14. References
      14.1.  Normative References
      14.2.  Informative References
    Acknowledgments
    Contributors
-   Author's Address
+   Authors' Addresses
 
 1.  Introduction
 
@@ -312,7 +317,7 @@ Table of Contents
    Pictures (GOP) MUST be placed within the same MOQT Group.
 
    When LOC packaging is used for a track, the catalog packaging
-   attribute (Section 5.3.4) MUST be present and it MUST be populated
+   attribute (Section 5.2.4) MUST be present and it MUST be populated
    with a value of "loc".
 
 4.2.  Time-alignment
@@ -324,12 +329,18 @@ Table of Contents
       alternate group MUST be time-aligned.
 
    *  The render duration of the first media object of each equally
-      numbered MOQT Group, after decoding, MUST have overlapping
+      numbered MOQT Group, after decoding, SHOULD have overlapping
       presentation time.
 
    A consequence of this restriction is that an MSF receiver SHOULD be
    able to cleanly switch between time-aligned media tracks at group
    boundaries.
+
+   If time-aligned media tracks do not have overlapping presentation
+   time at equally-numbered group boundaries, then an alternate
+   mechanism, not defined by this specification, must be provided to the
+   client to enable it to switch smoothly between time-aligned, but
+   numerically dissimilar, Group IDs.
 
 4.3.  Packaging for track switching
 
@@ -346,7 +357,7 @@ Table of Contents
       that object N in Track A represents the same media time as object
       N in Track B.
 
-   *  The keyframeSpacing Section 5.3.39 catalog field MUST be specified
+   *  The keyframeSpacing Section 5.2.41 catalog field MUST be specified
       for each track, indicating the number of objects per keyframe
       interval.
 
@@ -368,7 +379,7 @@ Table of Contents
 
    Both tracks have the same total number of objects (60) covering the
    same media duration, enabling object-level time alignment.  See
-   Section 6.2 for details on how subscribers use keyframeSpacing to
+   Section 6.3 for details on how subscribers use keyframeSpacing to
    calculate valid switch points.
 
 4.4.  Content protection and encryption
@@ -384,14 +395,14 @@ Table of Contents
    The encryption scheme and parameters are signaled in the catalog
    using the following track-level fields:
 
-   *  encryptionScheme Section 5.3.33 - identifies the encryption
+   *  encryptionScheme Section 5.2.34 - identifies the encryption
       mechanism
 
-   *  cipherSuite Section 5.3.34 - specifies the AEAD algorithm
+   *  cipherSuite Section 5.2.35 - specifies the AEAD algorithm
 
-   *  keyId Section 5.3.35 - identifies the key material for decryption
+   *  keyId Section 5.2.36 - identifies the key material for decryption
 
-   *  trackBaseKey Section 5.3.36 - the base key material for this track
+   *  trackBaseKey Section 5.2.37 - the base key material for this track
 
    When the encryptionScheme field is present in a track definition,
    subscribers MUST decrypt the object payload using the specified
@@ -464,13 +475,20 @@ Table of Contents
    MAY represent a delta update of a prior catalog object.  The first
    catalog object published within a new group MUST be independent and
    MUST provide a complete catalog that does not require any prior
-   catalog object for interpretation.  Any catalog objects that precede
-   the first object of the latest group MUST be ignored.
+   catalog object for interpretation.  Any catalog updates that precede
+   the first Object of the latest Group MUST be ignored.
 
    A catalog object SHOULD be published only when the availability of
-   tracks changes.
+   tracks changes, or after a period of time has passed such that the
+   catalog object might fall out of cache in a delivery network.
 
-   Each catalog update MUST be mapped to an MOQT Object.
+   Each catalog update MUST be mapped to an MOQT Object.  All catalog
+   updates, both independent and delta, MUST be mapped to MOQT sub-group
+   0.  The first Object (with Object ID 0) in any Group in a catalog
+   track MUST hold an independent copy of the catalog.  All subsequent
+   Objects within that Group (i.e Objects IDs >= 1) MUST hold a delta
+   update.  As soon as an independent update is produced, it MUST be
+   placed at the start of a new Group.
 
    Subscribers accessing the catalog MUST use SUBSCRIBE with a Joining
    FETCH (offset = 0) in order to obtain the latest complete catalog
@@ -479,10 +497,10 @@ Table of Contents
 
    A catalog is a JSON [JSON] document, comprised of a series of
    mandatory and optional fields.  At a minimum, a catalog MUST provide
-   all mandatory fields.  A producer MAY add additional fields to the
+   all mandatory fields.  Some fields are conditional depending on the
+   type of content carried.  A producer MAY add additional fields to the
    ones described in this draft.  Custom field names MUST NOT collide
-   with field names described in this draft.  The order of field names
-   within the JSON document is not important.
+   with field names described in this draft.
 
    A parser MUST ignore fields it does not understand.
 
@@ -491,19 +509,23 @@ Table of Contents
    Table 1 lists the fields defined at the root of the catalog JSON
    object.
 
-            +================+===============+===============+
-            | Field          | Name          | Definition    |
-            +================+===============+===============+
-            | MSF version    | version       | Section 5.1.1 |
-            +----------------+---------------+---------------+
-            | Generated at   | generatedAt   | Section 5.1.2 |
-            +----------------+---------------+---------------+
-            | Is Complete    | isComplete    | Section 5.1.3 |
-            +----------------+---------------+---------------+
-            | Tracks         | tracks        | Section 5.1.4 |
-            +----------------+---------------+---------------+
-            | Publish tracks | publishTracks | Section 5.1.5 |
-            +----------------+---------------+---------------+
+       +==========================+===============+===============+
+       | Field                    | Name          | Definition    |
+       +==========================+===============+===============+
+       | MSF version              | version       | Section 5.1.1 |
+       +--------------------------+---------------+---------------+
+       | Generated at             | generatedAt   | Section 5.1.2 |
+       +--------------------------+---------------+---------------+
+       | Is Complete              | isComplete    | Section 5.1.3 |
+       +--------------------------+---------------+---------------+
+       | Tracks                   | tracks        | Section 5.1.4 |
+       +--------------------------+---------------+---------------+
+       | Publish tracks           | publishTracks | Section 5.1.5 |
+       +--------------------------+---------------+---------------+
+       | Delta update             | deltaUpdate   | Section 5.1.6 |
+       +--------------------------+---------------+---------------+
+       | Initialization Data List | initDataList  | Section 5.1.7 |
+       +--------------------------+---------------+---------------+
 
                                  Table 1
 
@@ -533,7 +555,7 @@ Table of Contents
    A catalog-level indication that the broadcast is complete.  This is a
    commitment that all tracks are complete, no new tracks will be added
    to the catalog, and no new content will be published on any track.
-   Note that even if all individual tracks have isLive Section 5.3.7 set
+   Note that even if all individual tracks have isLive Section 5.2.7 set
    to FALSE, new tracks could still be added to the catalog until
    isComplete is set to TRUE.  This field MUST NOT be included if it is
    FALSE.  This field MUST NOT be removed from a catalog once it has
@@ -543,7 +565,7 @@ Table of Contents
 
    Required: Yes JSON Type: Array Location: Root Catalog
 
-   An array of track objects Section 5.3.1.
+   An array of track objects Section 5.2.1.
 
 5.1.5.  Publish tracks
 
@@ -554,142 +576,150 @@ Table of Contents
    other QoE data.  This enables bi-directional communication where the
    subscriber acts as a publisher for specific tracks.  Each publish
    track object follows the same structure as a regular track object
-   Section 5.3.1 but is used for the reverse direction of data flow.
+   Section 5.2.1 but is used for the reverse direction of data flow.
 
-5.2.  Delta Update Catalog Fields
+5.1.6.  Delta update
 
-   Table 2 lists the fields used for delta update operations at the root
-   level.
+   Required: Optional JSON Type: Array Location: Root Catalog
 
-             +===============+==============+===============+
-             | Field         | Name         | Definition    |
-             +===============+==============+===============+
-             | Delta update  | deltaUpdate  | Section 5.2.1 |
-             +---------------+--------------+---------------+
-             | Add tracks    | addTracks    | Section 5.2.2 |
-             +---------------+--------------+---------------+
-             | Remove tracks | removeTracks | Section 5.2.3 |
-             +---------------+--------------+---------------+
-             | Clone tracks  | cloneTracks  | Section 5.2.4 |
-             +---------------+--------------+---------------+
+   An ordered Array of operation objects that specify changes to apply
+   to the catalog.  If this field is present, the catalog represents a
+   delta (or partial) update with a restricted set of fields and special
+   processing rules - see Section 5.3.  If this field is absent, the
+   catalog is independent.
+
+   Operations are applied sequentially in the order they appear in the
+   array.  Each operation object MUST contain an "op" field indicating
+   the operation type, and a "tracks" field containing an Array of track
+   objects Section 5.2.1.  The following operation types are defined:
+
+   *  "add" - Add new tracks that have not previously been declared.
+      The value of the "tracks" field is an Array of track objects
+      Section 5.2.1.
+
+   *  "remove" - Remove tracks that have been previously declared.  The
+      value of the "tracks" field is an Array of track objects
+      Section 5.2.1.  Each track object MUST include a Track Name
+      Section 5.2.3 field, MAY include a Track Namespace Section 5.2.2
+      field, and MUST NOT hold any other fields.
+
+   *  "clone" - Clone new tracks from previously declared tracks.  The
+      value of the "tracks" field is an Array of track objects
+      Section 5.2.1.  Each track object MUST include a Parent Name
+      Section 5.2.30 field.  The cloned track inherits all attributes
+      from the parent except the Track Name which MUST be new.
+      Attributes redefined in the track object override inherited
+      values.
+
+5.1.7.  Initialization Data List
+
+   Required: Optional JSON Type: Array Location: Root Catalog
+
+   An array of initialization reference objects.  Each initialization
+   reference object has the following fields:
+
+   *  id : a string defining a reference to this initialization data
+      which is unique within the scope of the catalog.
+
+   *  type: as string defining the type of reference.  This version of
+      the specification defines a single allowed type, per the table
+      below
+
+         +========+=============================================+
+         | Type   | Data field definition                       |
+         +========+=============================================+
+         | inline | Base64 [BASE64] encoded initialization data |
+         +--------+---------------------------------------------+
 
                                  Table 2
 
-5.2.1.  Delta update
+   *  data: a string holding the init payload as defined by the type.
 
-   Required: Optional JSON Type: Boolean Location: Delta Update
+   The Initialization Data List, if present, MUST be located after the
+   tracks array in the root of the JSON catalog.  The purpose of this is
+   to improve the human readability of the catalog tracks by moving the
+   verbose init data towards the end of the document.
 
-   A Boolean that if true indicates that this catalog object represents
-   a delta (or partial) update.  A delta update has a restricted set of
-   fields and special processing rules - see Section 5.4.  This value
-   SHOULD NOT be added to a catalog if it is false.
+5.2.  Track Object Fields
 
-5.2.2.  Add tracks
-
-   Required: Optional JSON Type: Array Location: Delta Update
-
-   Indicates a delta processing instruction to add new tracks.  The
-   value of this field is an Array of track objects Section 5.3.1.  This
-   field MUST NOT be present when the deltaUpdate field is absent or
-   false.
-
-5.2.3.  Remove tracks
-
-   Required: Optional JSON Type: Array Location: Delta Update
-
-   Indicates a delta processing instruction to remove new tracks.  The
-   value of this field is an Array of track objects Section 5.3.1.  Each
-   track object MUST include a Track Name Section 5.3.3 field, MAY
-   include a Track Namespace Section 5.3.2 field and MUST NOT hold any
-   other fields.  This field MUST NOT be present when the deltaUpdate
-   field is absent or false.
-
-5.2.4.  Clone tracks
-
-   Required: Optional JSON Type: Array Location: Delta Update
-
-   Indicates a delta processing instruction to clone new tracks from
-   previously declared tracks.  The value of this field is an Array of
-   track objects Section 5.3.1.  Each track object MUST include a Parent
-   Name Section 5.3.29 field.  This field MUST NOT be present when the
-   deltaUpdate field is absent or false.
-
-5.3.  Track Object Fields
-
-   Table 3 lists the fields defined within each track object.
+   Table 2 lists the fields defined within each track object.
 
        +=======================+=================+================+
        | Field                 | Name            | Definition     |
        +=======================+=================+================+
-       | Track namespace       | namespace       | Section 5.3.2  |
+       | Track namespace       | namespace       | Section 5.2.2  |
        +-----------------------+-----------------+----------------+
-       | Track name            | name            | Section 5.3.3  |
+       | Track name            | name            | Section 5.2.3  |
        +-----------------------+-----------------+----------------+
-       | Packaging             | packaging       | Section 5.3.4  |
+       | Packaging             | packaging       | Section 5.2.4  |
        +-----------------------+-----------------+----------------+
-       | Event timeline type   | eventType       | Section 5.3.5  |
+       | Event timeline type   | eventType       | Section 5.2.5  |
        +-----------------------+-----------------+----------------+
-       | Is Live               | isLive          | Section 5.3.7  |
+       | Is Live               | isLive          | Section 5.2.7  |
        +-----------------------+-----------------+----------------+
-       | Target latency        | targetLatency   | Section 5.3.8  |
+       | Target latency        | targetLatency   | Section 5.2.8  |
        +-----------------------+-----------------+----------------+
-       | Track role            | role            | Section 5.3.6  |
+       | Buffers               | buffers         | Section 5.2.9  |
        +-----------------------+-----------------+----------------+
-       | Track label           | label           | Section 5.3.9  |
+       | Track role            | role            | Section 5.2.6  |
        +-----------------------+-----------------+----------------+
-       | Render group          | renderGroup     | Section 5.3.10 |
+       | Track label           | label           | Section 5.2.10 |
        +-----------------------+-----------------+----------------+
-       | Alternate group       | altGroup        | Section 5.3.11 |
+       | Render group          | renderGroup     | Section 5.2.11 |
        +-----------------------+-----------------+----------------+
-       | Initialization data   | initData        | Section 5.3.12 |
+       | Alternate group       | altGroup        | Section 5.2.12 |
        +-----------------------+-----------------+----------------+
-       | Dependencies          | depends         | Section 5.3.13 |
+       | Initialization ref    | initRef         | Section 5.2.13 |
        +-----------------------+-----------------+----------------+
-       | Temporal ID           | temporalId      | Section 5.3.15 |
+       | Dependencies          | depends         | Section 5.2.14 |
        +-----------------------+-----------------+----------------+
-       | Spatial ID            | spatialId       | Section 5.3.16 |
+       | Temporal ID           | temporalId      | Section 5.2.16 |
        +-----------------------+-----------------+----------------+
-       | Codec                 | codec           | Section 5.3.17 |
+       | Spatial ID            | spatialId       | Section 5.2.17 |
        +-----------------------+-----------------+----------------+
-       | Mime type             | mimeType        | Section 5.3.18 |
+       | Codec                 | codec           | Section 5.2.18 |
        +-----------------------+-----------------+----------------+
-       | Framerate             | framerate       | Section 5.3.19 |
+       | Mime type             | mimeType        | Section 5.2.19 |
        +-----------------------+-----------------+----------------+
-       | Timescale             | timescale       | Section 5.3.20 |
+       | Framerate             | framerate       | Section 5.2.20 |
        +-----------------------+-----------------+----------------+
-       | Bitrate               | bitrate         | Section 5.3.21 |
+       | Timescale             | timescale       | Section 5.2.21 |
        +-----------------------+-----------------+----------------+
-       | Width                 | width           | Section 5.3.22 |
+       | Bitrate               | bitrate         | Section 5.2.22 |
        +-----------------------+-----------------+----------------+
-       | Height                | height          | Section 5.3.23 |
+       | Width                 | width           | Section 5.2.23 |
        +-----------------------+-----------------+----------------+
-       | Audio sample rate     | samplerate      | Section 5.3.24 |
+       | Height                | height          | Section 5.2.24 |
        +-----------------------+-----------------+----------------+
-       | Channel configuration | channelConfig   | Section 5.3.25 |
+       | Audio sample rate     | samplerate      | Section 5.2.25 |
        +-----------------------+-----------------+----------------+
-       | Display width         | displayWidth    | Section 5.3.26 |
+       | Channel configuration | channelConfig   | Section 5.2.26 |
        +-----------------------+-----------------+----------------+
-       | Display height        | displayHeight   | Section 5.3.27 |
+       | Display width         | displayWidth    | Section 5.2.27 |
        +-----------------------+-----------------+----------------+
-       | Language              | lang            | Section 5.3.28 |
+       | Display height        | displayHeight   | Section 5.2.28 |
        +-----------------------+-----------------+----------------+
-       | Parent name           | parentName      | Section 5.3.29 |
+       | Language              | lang            | Section 5.2.29 |
        +-----------------------+-----------------+----------------+
-       | Track duration        | trackDuration   | Section 5.3.30 |
+       | Parent name           | parentName      | Section 5.2.30 |
        +-----------------------+-----------------+----------------+
-       | Authorization Info    | authInfo        | Section 5.3.37 |
+       | Track duration        | trackDuration   | Section 5.2.31 |
        +-----------------------+-----------------+----------------+
-       | Keyframe spacing      | keyframeSpacing | Section 5.3.39 |
+       | Authorization Info    | authInfo        | Section 5.2.38 |
+       +-----------------------+-----------------+----------------+
+       | Accessibility         | accessibility   | Section 5.2.40 |
+       +-----------------------+-----------------+----------------+
+       | Keyframe spacing      | keyframeSpacing | Section 5.2.41 |
        +-----------------------+-----------------+----------------+
 
                                  Table 3
 
-5.3.1.  Tracks object
+5.2.1.  Tracks object
 
    A track object is a JSON Object containing a collection of fields
-   whose location is specified in Table 3.
+   whose location is specified in Table 2.
 
-5.3.2.  Track namespace
+5.2.2.  Track namespace
 
    Required: Optional JSON Type: String Location: Track Object
 
@@ -699,7 +729,7 @@ Table of Contents
    namespace of the catalog track.  A namespace declared in a track
    object overrides any inherited name space.
 
-5.3.3.  Track name
+5.2.3.  Track name
 
    Required: Yes JSON Type: String Location: Track Object
 
@@ -707,12 +737,12 @@ Table of Contents
    [MoQTransport].  Within the catalog, track names MUST be unique per
    namespace.
 
-5.3.4.  Packaging
+5.2.4.  Packaging
 
    Required: Yes JSON Type: String Location: Track Object
 
    A string defining the type of payload encapsulation.  Allowed values
-   are strings as defined in Table 4.
+   are strings as defined in Table 3.
 
            +================+===============+==================+
            | Name           | Value         | Reference        |
@@ -730,9 +760,9 @@ Table of Contents
 
                                   Table 4
 
-   Table 4: Allowed packaging values
+   Table 3: Allowed packaging values
 
-5.3.5.  Event timeline type
+5.2.5.  Event timeline type
 
    Required: Optional JSON Type: String Location: Track Object
 
@@ -742,22 +772,22 @@ Table of Contents
    are encouraged to use a unique naming scheme, such as Reverse Domain
    Name Notation, where domain name components are listed in reverse
    order (e.g., "com.example.myeventtype"), to avoid naming collisions.
-   This field is required if the Section 5.3.4 value is "eventtimeline".
+   This field is required if the Section 5.2.4 value is "eventtimeline".
    This field MUST NOT be used if the packaging value is not
    "eventtimeline".
 
-5.3.6.  Track role
+5.2.6.  Track role
 
    Required: Optional JSON Type: String Location: Track Object
 
    A string defining the role of content carried by the track.
-   Specified roles are described in Table 5.  These role values are
+   Specified roles are described in Table 4.  These role values are
    case-sensitive.
 
    This role field MAY be used in conjunction with the Mimetype
-   Section 5.3.18 to fully describe the content of the track.
+   Section 5.2.19 to fully describe the content of the track.
 
-   Table 5: Reserved track roles
+   Table 4: Reserved track roles
 
               +==================+==========================+
               | Role             | Description              |
@@ -796,7 +826,7 @@ Table of Contents
    Custom roles MAY be used as long as they do not collide with the
    specified roles.
 
-5.3.7.  Is Live
+5.2.7.  Is Live
 
    Required: Yes JSON Type: Boolean Location: Track Object
 
@@ -807,7 +837,7 @@ Table of Contents
    live track has ended the track. * the track is Video-On-Demand (VOD)
    and was never live.  A True value MUST never follow a False value.
 
-5.3.8.  Target latency
+5.2.8.  Target latency
 
    Required: Optional JSON Type: Number Location: Track Object
 
@@ -823,7 +853,42 @@ Table of Contents
    and isLive is TRUE, then the player MAY choose the latency with which
    it renders the content.
 
-5.3.9.  Track label
+   This property MUST NOT be present if the buffers Section 5.2.9
+   property is present within a track definition.
+
+5.2.9.  Buffers
+
+   Required: Optional JSON Type: Object Location: Track Object
+
+   An object defining a set of target buffers.  Buffer is defined as the
+   duration of media data that MUST be buffered before decoding
+   commences.  This is typically known as a forward or jitter-buffer in
+   a media player.Players with identical buffer lengths are likely to be
+   synchronized.  The target buffer object has these keys:
+
+   *  target : defines the target buffer in integer milliseconds.
+      Players SHOULD attempt to stabilize playback at this value.
+
+   *  min : defines the minimum buffer in milliseconds.  Players SHOULD
+      NOT operate below this value.
+
+   *  max : defines the maximum buffer in milliseconds.  Players SHOULD
+      NOT operate above this value.
+
+   Keys are optional.  Unknown keys in the target buffer object MUST be
+   ignored.
+
+   If isLive is FALSE, this target buffer property MUST be ignored.  All
+   tracks belonging to the same render group MUST have identical target
+   buffers.  All tracks belonging to the same alternate group MUST have
+   identical target buffers.  If this field is absent from the track
+   definition, and isLive is TRUE, then the player MAY choose the
+   buffers with which it conducts playback.
+
+   This property MUST NOT be present if the target latency Section 5.2.8
+   property is present within a track definition.
+
+5.2.10.  Track label
 
    Required: Optional JSON Type: String Location: Track Object
 
@@ -831,7 +896,7 @@ Table of Contents
    might be "Overhead camera view" or "Deutscher Kommentar".  Note that
    the [JSON] spec requires UTF-8 support by decoders.
 
-5.3.10.  Render group
+5.2.11.  Render group
 
    Required: Optional JSON Type: Number Location: Track Object
 
@@ -840,7 +905,7 @@ Table of Contents
    rendered simultaneously and are designed to accompany one another.  A
    common example would be tying together audio and video tracks.
 
-5.3.11.  Alternate group
+5.2.12.  Alternate group
 
    Required: Optional JSON Type: Number Location: Track Object
 
@@ -852,24 +917,24 @@ Table of Contents
    number.  A common example would be a set video tracks of the same
    content offered in alternate bitrates.
 
-5.3.12.  Initialization data
+5.2.13.  Initialization reference
 
    Required: Optional JSON Type: String Location: Track Object
 
-   A string holding Base64 [BASE64] encoded initialization data for the
-   track.
+   A string pointing at the id field of an entry in the Initialization
+   Data List Section 5.1.7.
 
-5.3.13.  Dependencies
+5.2.14.  Dependencies
 
    Required: Optional JSON Type: Array Location: Track Object
 
    Certain tracks may depend on other tracks for decoding.  Dependencies
-   holds an array of track names Section 5.3.3 on which the current
+   holds an array of track names Section 5.2.3 on which the current
    track is dependent.  Since only the track name is signaled, the
    namespace of the dependencies is assumed to match that of the track
    declaring the dependencies.
 
-5.3.14.  Template
+5.2.15.  Template
 
    Location: T Required: Optional JSON Type: Array
 
@@ -884,7 +949,7 @@ Table of Contents
    functionality.  Different tracks (e.g., audio and video) MAY have
    independent template values to accommodate different group durations.
 
-5.3.15.  Temporal ID
+5.2.16.  Temporal ID
 
    Required: Optional JSON Type: Number Location: Track Object
 
@@ -892,7 +957,7 @@ Table of Contents
    track, starting with 0 for the base layer, and increasing by 1 for
    the next higher temporal fidelity.
 
-5.3.16.  Spatial ID
+5.2.17.  Spatial ID
 
    Required: Optional JSON Type: Number Location: Track Object
 
@@ -900,7 +965,7 @@ Table of Contents
    starting with 0 for the base layer, and increasing by 1 for the next
    higher fidelity.
 
-5.3.17.  Codec
+5.2.18.  Codec
 
    Required: Optional JSON Type: String Location: Track Object
 
@@ -908,13 +973,13 @@ Table of Contents
    packaged content, the string codec registrations are defined in Sect
    3 and Section 4 of [WEBCODECS-CODEC-REGISTRY].
 
-5.3.18.  Mimetype
+5.2.19.  Mimetype
 
    Required: Optional JSON Type: String Location: Track Object
 
    A string defining the mime type [MIME] of the track.
 
-5.3.19.  Framerate
+5.2.20.  Framerate
 
    Required: Optional JSON Type: Number Location: Track Object
 
@@ -922,20 +987,20 @@ Table of Contents
    second.  This property SHOULD only accompany video or other frame-
    based content.
 
-5.3.20.  Timescale
+5.2.21.  Timescale
 
    Required: Optional JSON Type: Number Location: Track Object
 
    The number of time units that pass per second.
 
-5.3.21.  Bitrate
+5.2.22.  Bitrate
 
    Required: Optional JSON Type: Number Location: Track Object
 
    A number defining the bitrate of the track, expressed in bits per
    second.
 
-5.3.22.  Width
+5.2.23.  Width
 
    Required: Optional JSON Type: Number Location: Track Object
 
@@ -943,7 +1008,7 @@ Table of Contents
    This property SHOULD only accompany tracks which have a visual
    representation.
 
-5.3.23.  Height
+5.2.24.  Height
 
    Required: Optional JSON Type: Number Location: Track Object
 
@@ -951,14 +1016,14 @@ Table of Contents
    This property SHOULD only accompany tracks which have a visual
    representation.
 
-5.3.24.  Audio sample rate
+5.2.25.  Audio sample rate
 
    Required: Optional JSON Type: Number Location: Track Object
 
    The number of audio frame samples per second.  This property SHOULD
    only accompany audio codecs.
 
-5.3.25.  Channel configuration
+5.2.26.  Channel configuration
 
    Required: Optional JSON Type: String Location: Track Object
 
@@ -967,7 +1032,7 @@ Table of Contents
    provide the flexibility to describe complex channel configurations
    for multi-channel and Next Generation Audio schemas.
 
-5.3.26.  Display width
+5.2.27.  Display width
 
    Required: Optional JSON Type: Number Location: Track Object
 
@@ -975,7 +1040,7 @@ Table of Contents
    in pixels.  This property SHOULD only accompany tracks which have a
    visual representation.
 
-5.3.27.  Display height
+5.2.28.  Display height
 
    Required: Optional JSON Type: Number Location: Track Object
 
@@ -983,7 +1048,7 @@ Table of Contents
    in pixels.  This property SHOULD only accompany tracks which have a
    visual representation.
 
-5.3.28.  Language
+5.2.29.  Language
 
    Required: Optional JSON Type: String Location: Track Object
 
@@ -991,23 +1056,23 @@ Table of Contents
    MUST be one of the standard Tags for Identifying Languages as defined
    by [LANG].
 
-5.3.29.  Parent name
+5.2.30.  Parent name
 
    Required: Optional JSON Type: String Location: Track Object
 
-   A string defining the parent track name Section 5.3.3 to be cloned.
-   This field MUST only be included inside a Clone tracks Section 5.2.4
-   object.
+   A string defining the parent track name Section 5.2.3 to be cloned.
+   This field MUST only be included inside a clone operation in a delta
+   update Section 5.1.6.
 
-5.3.30.  Track duration
+5.2.31.  Track duration
 
    Required: Optional JSON Type: Number Location: Track Object
 
    The duration of the track expressed in integer milliseconds.  This
-   field MUST NOT be included if the isLive Section 5.3.7 field value is
+   field MUST NOT be included if the isLive Section 5.2.7 field value is
    true.
 
-5.3.31.  Connection URI
+5.2.32.  Connection URI
 
    Location: T Required: Optional JSON Type: String
 
@@ -1022,7 +1087,7 @@ Table of Contents
    "moqt://logs.example.com:4443", "moqt://metrics.example.com:8443", or
    "https://logs.example.com/moqt".
 
-5.3.32.  Token
+5.2.33.  Token
 
    Location: T Required: Optional JSON Type: String
 
@@ -1031,7 +1096,7 @@ Table of Contents
    publish data to the specified track.  The format and validation of
    the token is application-specific.
 
-5.3.33.  Encryption scheme
+5.2.34.  Encryption scheme
 
    Location: T Required: Optional JSON Type: String
 
@@ -1054,7 +1119,7 @@ Table of Contents
    use Reverse Domain Name Notation to avoid collisions (e.g.,
    "com.example.custom-encryption").
 
-5.3.34.  Cipher suite
+5.2.35.  Cipher suite
 
    Location: T Required: Optional JSON Type: String
 
@@ -1084,7 +1149,7 @@ Table of Contents
    SHOULD support "aes-128-ctr-hmac-sha256-80" for scenarios requiring
    smaller authentication tags.
 
-5.3.35.  Key ID
+5.2.36.  Key ID
 
    Location: T Required: Optional JSON Type: String
 
@@ -1104,7 +1169,7 @@ Table of Contents
    keys are derived using the track name as defined in ([SecureObjects],
    Section 5).
 
-5.3.36.  Track Base Key
+5.2.37.  Track Base Key
 
    Location: T Required: Optional JSON Type: String
 
@@ -1120,7 +1185,7 @@ Table of Contents
    and subscribers MUST use matching trackBaseKey values for successful
    decryption.
 
-5.3.37.  Authorization Info
+5.2.38.  Authorization Info
 
    Location: T Required: Optional JSON Type: Object
 
@@ -1156,13 +1221,13 @@ Table of Contents
    presentation method are defined by the authorization scheme
    specification.
 
-5.3.38.  Token Delivery via URI
+5.2.39.  Token Delivery via URI
 
    Tokens can be delivered to subscribers through the catalog request
    URI using variable substitution.  Fragment parameters (following the
    # character) are processed client-side and can be substituted into
    catalog fields using the variable substitution mechanism defined in
-   Section 5.5.
+   Section 5.4.
 
    For example, given a URI:
 
@@ -1178,7 +1243,41 @@ Table of Contents
    is then presented in control messages as specified by the
    authorization scheme.
 
-5.3.39.  Keyframe spacing
+5.2.40.  Accessibility
+
+   Location: T Required: Optional JSON Type: Array
+
+   An array of accessibility descriptors indicating accessibility
+   features embedded within the track.  Each descriptor is a JSON Object
+   containing:
+
+   *  A required 'scheme' field (String) identifying the accessibility
+      scheme.
+
+   *  A required 'value' field (String) specifying the accessibility
+      channels or features available.
+
+   Table 6: Registered accessibility schemes
+
+        +===============================+=========================+
+        | Scheme                        | Description             |
+        +===============================+=========================+
+        | urn:scte:dash:cc:cea-608:2015 | CEA-608 closed captions |
+        +-------------------------------+-------------------------+
+        | urn:scte:dash:cc:cea-708:2015 | CEA-708 closed captions |
+        +-------------------------------+-------------------------+
+
+                                  Table 9
+
+   The 'value' field for CEA-608/708 schemes uses the format defined by
+   [SCTE214-1], where caption service channels are specified as
+   semicolon-separated pairs of channel identifier and language code
+   (e.g., "CC1=eng;CC3=spa").
+
+   A subscriber MAY use this information to determine caption
+   availability and configure an appropriate caption decoder.
+
+5.2.41.  Keyframe spacing
 
    Location: T Required: Optional JSON Type: Number
 
@@ -1196,10 +1295,10 @@ Table of Contents
 
    This field is used by subscribers to calculate valid switch points
    when performing adaptive bitrate switching between tracks with
-   different keyframe intervals.  See Section 6.2 for details on how to
+   different keyframe intervals.  See Section 6.3 for details on how to
    use this field.
 
-5.4.  Delta updates
+5.3.  Delta updates
 
    A catalog update might contain incremental changes.  This is a useful
    property if many tracks may be initially declared but then there are
@@ -1216,25 +1315,15 @@ Table of Contents
    The following rules are to be followed in constructing and processing
    delta updates:
 
-   *  A delta update MUST include the Delta Update Section 5.2.1 field
-      set to true.
+   *  A delta update MUST include the Delta Update Section 5.1.6 field
+      with at least one operation.  It MUST NOT contain an instance of a
+      Tracks Section 5.1.4 field or an MSF version Section 5.1.1 field.
 
-   *  A delta update catalog MUST contain at least one instance of Add
-      tracks Section 5.2.2, Remove tracks Section 5.2.3 or Clone Tracks
-      Section 5.2.4 fields and MAY contain more.  It MUST NOT contain an
-      instance of a Tracks Section 5.1.4 field or an MSF version
-      Section 5.1.1 field.
-
-   *  The Add, Delete and Clone operations are applied sequentially in
-      the order they are declared in the document.  Each operation in
-      the sequence is applied to the target document; the resulting
-      document becomes the target of the next operation.  Evaluation
-      continues until all operations are successfully applied.
-
-   *  A Cloned track inherits all the attributes of the track defined by
-      the Parent Name Section 5.3.29, except the Track Name which MUST
-      be new.  Attributes redefined in the cloning Object override
-      inherited values.
+   *  Operations are applied sequentially in the order they appear in
+      the deltaUpdate array.  Each operation is applied to the target
+      document; the resulting document becomes the target of the next
+      operation.  Evaluation continues until all operations are
+      successfully applied.
 
    *  The tuple of Track Namespace and Track Name defines a fixed set of
       Track attributes which MUST NOT be modified after being declared.
@@ -1247,7 +1336,7 @@ Table of Contents
       bound the amount of delta processing required for joining
       subscribers.
 
-5.5.  Variable Substitution
+5.4.  Variable Substitution
 
    Catalog field values MAY contain variables that are substituted at
    delivery time.  This mechanism enables a single cached catalog to be
@@ -1255,7 +1344,7 @@ Table of Contents
    advertising, A/B watermarking, QoE reporting endpoints, and logging
    identifiers.
 
-5.5.1.  Variable Syntax
+5.4.1.  Variable Syntax
 
    Variables are denoted by enclosing the variable name in percent
    characters (%).  Variable names MUST consist of alphanumeric
@@ -1273,7 +1362,7 @@ Table of Contents
    prevents injection attacks and ensures safe substitution into catalog
    field values.
 
-5.5.2.  Variable Resolution
+5.4.2.  Variable Resolution
 
    Variables are resolved from the fragment identifier of the URI used
    to access the catalog.  The fragment identifier is the portion
@@ -1290,12 +1379,12 @@ Table of Contents
    variable name, and the variable is replaced with the corresponding
    value.
 
-5.6.  Catalog Examples
+5.5.  Catalog Examples
 
    The following section provides non-normative JSON examples of various
    catalogs compliant with this draft.
 
-5.6.1.  Time-aligned Audio/Video Tracks with single quality
+5.5.1.  Time-aligned Audio/Video Tracks with single quality
 
    This example shows a catalog for a media producer capable of sending
    LOC packaged, time-aligned audio and video tracks.
@@ -1334,7 +1423,7 @@ Table of Contents
       ]
    }
 
-5.6.2.  Simulcast video tracks - 3 alternate qualities along with audio
+5.5.2.  Simulcast video tracks - 3 alternate qualities along with audio
 
    This example shows a catalog for a media producer capable of sending
    3 time-aligned video tracks for high definition, low definition and
@@ -1403,7 +1492,7 @@ Table of Contents
       ]
    }
 
-5.6.3.  SVC video tracks with 2 spatial and 2 temporal qualities
+5.5.3.  SVC video tracks with 2 spatial and 2 temporal qualities
 
    This example shows a catalog for a media producer capable of sending
    scalable video codec with 2 spatial and 2 temporal layers with a
@@ -1441,6 +1530,7 @@ Table of Contents
          "renderGroup": 1,
          "packaging": "loc",
          "isLive": true,
+         "buffers": {"target":2000},
          "role": "video",
          "codec":"av01.0.01M.10.0.110.09",
          "width":640,
@@ -1454,6 +1544,7 @@ Table of Contents
          "renderGroup": 1,
          "packaging": "loc",
          "isLive": true,
+         "buffers": {"target":2000},
          "role": "video",
          "codec":"av01.0.04M.10.0.110.09",
          "width":640,
@@ -1468,6 +1559,7 @@ Table of Contents
          "renderGroup": 1,
          "packaging": "loc",
          "isLive": true,
+         "buffers": {"target":2000},
          "role": "video",
          "codec":"av01.0.05M.10.0.110.09",
          "width":1920,
@@ -1483,6 +1575,7 @@ Table of Contents
          "renderGroup": 1,
          "packaging": "loc",
          "isLive": true,
+         "buffers": {"target":2000},
          "role": "video",
          "codec":"av01.0.08M.10.0.110.09",
          "width":1920,
@@ -1497,6 +1590,7 @@ Table of Contents
          "renderGroup": 1,
          "packaging": "loc",
          "isLive": true,
+         "buffers": {"target":2000},
          "role": "audio",
          "codec":"opus",
          "samplerate":48000,
@@ -1506,51 +1600,62 @@ Table of Contents
       ]
    }
 
-5.6.4.  Delta update - adding two tracks
+5.5.4.  Delta update - adding two tracks
 
    This example shows the catalog delta update for a media producer
    adding two tracks to an established video conference.  One track is
    newly declared, the other is cloned from a previous track.
 
    {
-     "deltaUpdate": true,
      "generatedAt": 1746104606044,
-     "addTracks": [
-         {
-           "name": "slides",
-           "isLive": true,
-           "role": "video",
-           "codec": "av01.0.08M.10.0.110.09",
-           "width": 1920,
-           "height": 1080,
-           "framerate": 15,
-           "bitrate": 750000,
-           "renderGroup": 1
-         }
-      ],
-      "cloneTracks": [
-         {
-           "parentName": "video-1080",
-           "name": "video-720",
-           "width":1280,
-           "height":720,
-           "bitrate":600000
-         }
-      ]
+     "deltaUpdate": [
+       {
+         "op": "add",
+         "tracks": [
+           {
+             "name": "slides",
+             "isLive": true,
+             "role": "video",
+             "codec": "av01.0.08M.10.0.110.09",
+             "width": 1920,
+             "height": 1080,
+             "framerate": 15,
+             "bitrate": 750000,
+             "renderGroup": 1
+           }
+         ]
+       },
+       {
+         "op": "clone",
+         "tracks": [
+           {
+             "parentName": "video-1080",
+             "name": "video-720",
+             "width": 1280,
+             "height": 720,
+             "bitrate": 600000
+           }
+         ]
+       }
+     ]
    }
 
-5.6.5.  Delta update removing tracks
+5.5.5.  Delta update removing tracks
 
    This example shows a delta update for a media producer removing two
    tracks from an established video conference.
 
    {
-     "deltaUpdate": true,
      "generatedAt": 1746104606044,
-     "removeTracks": [{"name": "video"},{"name": "slides"}]
+     "deltaUpdate": [
+       {
+         "op": "remove",
+         "tracks": [{"name": "video"}, {"name": "slides"}]
+       }
+     ]
    }
 
-5.6.6.  Time-aligned Audio/Video Tracks with custom field values
+5.5.6.  Time-aligned Audio/Video Tracks with custom field values
 
    This example shows a catalog for a media producer capable of sending
    LOC packaged, time-aligned audio and video tracks along with custom
@@ -1565,6 +1670,7 @@ Table of Contents
          "namespace": "conference.example.com/conference123/alice",
          "packaging": "loc",
          "isLive": true,
+         "buffers": {"target":2000, "min": 1500, "max": 5000},
          "role": "video",
          "renderGroup": 1,
          "codec":"av01.0.08M.10.0.110.09",
@@ -1581,6 +1687,7 @@ Table of Contents
          "namespace": "conference.example.com/conference123/alice",
          "packaging": "loc",
          "isLive": true,
+         "buffers": {"target":2000, "min": 1500, "max": 5000},
          "role": "audio",
          "renderGroup": 1,
          "codec":"opus",
@@ -1591,7 +1698,7 @@ Table of Contents
       ]
    }
 
-5.6.7.  Time-aligned VOD Audio/Video Tracks
+5.5.7.  Time-aligned VOD Audio/Video Tracks
 
    This example shows a catalog for a media producer offering VOD (video
    on-demand) non-live content.  The content is LOC packaged, and
@@ -1628,7 +1735,7 @@ Table of Contents
       ]
    }
 
-5.6.8.  Encrypted Audio/Video Tracks
+5.5.8.  Encrypted Audio/Video Tracks
 
    This example shows a catalog for encrypted LOC-packaged audio and
    video tracks using MoQ Secure Objects with AES-128-GCM.
@@ -1675,7 +1782,7 @@ Table of Contents
      ]
    }
 
-5.6.9.  Media timeline and Event timeline
+5.5.9.  Media timeline and Event timeline
 
    This example shows a catalog for a media producer capable of sending
    LOC packaged, time-aligned audio and video tracks, along with a Media
@@ -1731,10 +1838,10 @@ Table of Contents
       ]
    }
 
-5.6.10.  Media timeline template
+5.5.10.  Media timeline template
 
    This example shows a catalog using inline media timeline templates
-   instead of an explicit media timeline track.  The Section 5.3.14
+   instead of an explicit media timeline track.  The Section 5.2.15
    attribute on each track defines a regular pattern where each segment
    is 2002ms long.  Clients can compute any entry using the template
    parameters.  Note that different tracks MAY have different template
@@ -1776,7 +1883,103 @@ Table of Contents
       ]
    }
 
-5.6.11.  Terminating a live broadcast
+5.5.11.  Video track with embedded captions and SCTE-35 events
+
+   This example shows a live broadcast with CEA-608 closed captions
+   embedded in the video track and a separate SCTE-35 event timeline for
+   ad insertion.
+
+   {
+     "version": 1,
+     "generatedAt": 1746104606044,
+     "tracks": [
+       {
+         "name": "video",
+         "packaging": "loc",
+         "isLive": true,
+         "targetLatency": 4000,
+         "role": "video",
+         "renderGroup": 1,
+         "codec": "avc1.4d401f",
+         "width": 1920,
+         "height": 1080,
+         "framerate": 30,
+         "bitrate": 5000000,
+         "accessibility": [
+           {
+             "scheme": "urn:scte:dash:cc:cea-608:2015",
+             "value": "CC1=eng;CC3=spa"
+           }
+         ]
+       },
+       {
+         "name": "audio",
+         "packaging": "loc",
+         "isLive": true,
+         "targetLatency": 4000,
+         "role": "audio",
+         "renderGroup": 1,
+         "codec": "opus",
+         "samplerate": 48000,
+         "channelConfig": "2",
+         "bitrate": 128000
+       },
+       {
+         "name": "scte35",
+         "packaging": "eventtimeline",
+         "eventType": "urn:scte:scte35:2013:bin",
+         "mimeType": "application/json",
+         "isLive": true,
+         "role": "eventtimeline",
+         "depends": ["video"]
+       }
+     ]
+   }
+
+5.5.12.  Video track with CEA-708 captions
+
+   This example shows a live broadcast with CEA-708 closed captions
+   embedded in the video track, demonstrating multiple caption services.
+
+   {
+     "version": 1,
+     "generatedAt": 1746104606044,
+     "tracks": [
+       {
+         "name": "video",
+         "packaging": "loc",
+         "isLive": true,
+         "targetLatency": 4000,
+         "role": "video",
+         "renderGroup": 1,
+         "codec": "hev1.1.6.L93.B0",
+         "width": 1920,
+         "height": 1080,
+         "framerate": 30,
+         "bitrate": 4000000,
+         "accessibility": [
+           {
+             "scheme": "urn:scte:dash:cc:cea-708:2015",
+             "value": "1=lang:eng;2=lang:spa;3=lang:fra"
+           }
+         ]
+       },
+       {
+         "name": "audio",
+         "packaging": "loc",
+         "isLive": true,
+         "targetLatency": 4000,
+         "role": "audio",
+         "renderGroup": 1,
+         "codec": "mp4a.40.2",
+         "samplerate": 48000,
+         "channelConfig": "2",
+         "bitrate": 128000
+       }
+     ]
+   }
+
+5.5.13.  Terminating a live broadcast
 
    This example shows a catalog for a media producer terminating a
    previously live broadcast containing a video and an audio track.
@@ -1788,7 +1991,7 @@ Table of Contents
      "tracks": []
    }
 
-5.6.12.  Variable Substitution for personalized delivery
+5.5.14.  Variable Substitution for personalized delivery
 
    This example shows a catalog using variable substitution to enable
    personalized advertising and reporting while maintaining
@@ -1841,7 +2044,7 @@ Table of Contents
      ]
    }
 
-5.6.13.  Time-aligned Audio/Video Tracks with Authorization
+5.5.15.  Time-aligned Audio/Video Tracks with Authorization
 
    This example shows a catalog for a media producer requiring
    authorization for premium content.  The premium 4K track uses CAT
@@ -1904,7 +2107,7 @@ Table of Contents
      ]
    }
 
-5.6.14.  Publish tracks for logs and metrics
+5.5.16.  Publish tracks for logs and metrics
 
    This example shows a catalog that includes publish tracks for client-
    side logging and metrics collection.  The subscriber can publish QoE
@@ -1989,24 +2192,26 @@ Table of Contents
 
 6.1.  Group numbering
 
-   The Group ID of the first Group published in a track at application
-   startup MUST be a unique integer that will not repeat in the future.
-   One approach to achieve this is to set the initial Group ID to the
-   creation time of the first Object in the group, represented as the
-   number of milliseconds since the Unix epoch, rounded to the nearest
-   millisecond.  This ensures that republishing the same track in the
-   future, such as after a loss of connectivity or an encoder restart,
-   will not result in smaller or duplicate Group IDs for the same track
-   name.  Note that this method does not prevent duplication if more
-   than 1000 Groups are published per second.
+   Group IDs for a track MUST be unique and MUST increase monotonically.
+   Within a continuous publishing session, each subsequent Group ID
+   SHOULD increase by 1.
 
-   Each subsequent Group ID MUST increase by 1.
+   When a publisher restarts (e.g., after connectivity loss or encoder
+   restart), it MUST ensure the new starting Group ID is greater than
+   any previously published Group ID for that track.  One approach is to
+   use the current wall clock time in milliseconds since the Unix epoch
+   as the starting Group ID.
 
-   If a publisher is able to maintain state across a republish, it MUST
-   signal the gap in Group IDs using the MOQT Prior Group ID Gap
-   Extension header.
+   If a publisher maintains state across a restart and knows the
+   previous Group ID, it SHOULD signal the gap using the MOQT Prior
+   Group ID Gap Extension header.
 
-6.2.  Zapping and Track Switching
+6.2.  Object Numbering
+
+   Object ID MUST be zero for the first Object within a Group and then
+   MUST increase monotonically by one within that Group.
+
+6.3.  Zapping and Track Switching
 
    Zapping refers to the act of quickly joining a track or switching
    between tracks, such as changing channels in a live broadcast.  When
@@ -2019,10 +2224,10 @@ Table of Contents
    When multiple tracks in an alternate group have different keyframe
    intervals, subscribers need to determine valid switch points -
    moments when a switch will land on a keyframe in the target track.
-   The keyframeSpacing Section 5.3.39 field enables subscribers to
+   The keyframeSpacing Section 5.2.41 field enables subscribers to
    calculate these valid switch points.
 
-6.2.1.  Calculating Valid Switch Points
+6.3.1.  Calculating Valid Switch Points
 
    The keyframeSpacing value represents the number of objects per
    keyframe interval.  Each group starts with a keyframe followed by
@@ -2050,7 +2255,7 @@ Table of Contents
 
    *  Object 8: 8/4 = 2 (integer result, valid switch point)
 
-6.2.2.  Example: Switching Between Tracks with Different GOP Sizes
+6.3.2.  Example: Switching Between Tracks with Different GOP Sizes
 
    Consider two video tracks in an alternate group:
 
@@ -2093,7 +2298,7 @@ Table of Contents
    the switch; switching from B to A has different valid points (objects
    divisible by 2).
 
-6.2.3.  Packaging Considerations
+6.3.3.  Packaging Considerations
 
    When packaging content with multiple tracks that have dissimilar
    keyframe intervals, publishers MUST ensure the following:
@@ -2133,8 +2338,10 @@ Table of Contents
 
    *  The first item holds the media presentation timestamp, expressed
       as a JSON Number.  This value MUST match the media presentation
-      timestamp, rounded to the nearest millisecond, of the first media
-      sample in the referenced Object
+      timestamp, expressed as the floor in integral milliseconds, of the
+      first media sample in the referenced Object.  Implementers who
+      require increased time precision can parse the retrieved media
+      object itself.
 
    *  The second item holds the MOQT Location of the entry, defined as a
       tuple of the MOQT Group ID and MOQT Object ID, and expressed as a
@@ -2190,7 +2397,7 @@ Table of Contents
 7.4.1.  Template Format
 
    A media timeline template is expressed as an inline track attribute
-   using the Section 5.3.14 field.  The template is a JSON Array
+   using the Section 5.2.15 field.  The template is a JSON Array
    containing six mandatory values in the following fixed order:
 
    1.  startMediaTime - The media presentation timestamp of the first
@@ -2276,21 +2483,21 @@ Table of Contents
       Array of Numbers, where the first item represents the MOQT GroupID
       and the second item the MOQT Object ID.
 
-   *  A 'data' Object, whose structure is defined by the Section 5.3.5
+   *  A 'data' Object, whose structure is defined by the Section 5.2.5
       value declared for this track in the Catalog.
 
 8.2.  Event Timeline Catalog requirements
 
    An event timeline track MUST carry:
 
-   *  a Section 5.3.4 attribute with a value of "eventtimeline".
+   *  a Section 5.2.4 attribute with a value of "eventtimeline".
 
-   *  a Section 5.3.13 attribute which contains an array of all track
+   *  a Section 5.2.14 attribute which contains an array of all track
       names to which the event timeline track applies.
 
-   *  a Section 5.3.18 attribute with a value of "application/json".
+   *  a Section 5.2.19 attribute with a value of "application/json".
 
-   *  an Section 5.3.5 attribute declaring the type & structure of data
+   *  an Section 5.2.5 attribute declaring the type & structure of data
       contained in the event timeline track.
 
 8.3.  Event Timeline track updating
@@ -2403,16 +2610,16 @@ Table of Contents
    A log track MUST be declared in the publishTracks array of the
    catalog with:
 
-   *  a Section 5.3.4 attribute with a value of "moqlog".
+   *  a Section 5.2.4 attribute with a value of "moqlog".
 
-   *  a Section 5.3.6 attribute with a value of "log".
+   *  a Section 5.2.6 attribute with a value of "log".
 
    A log track MAY include:
 
-   *  a Section 5.3.31 attribute if logs should be published to a
+   *  a Section 5.2.32 attribute if logs should be published to a
       different endpoint.
 
-   *  a Section 5.3.32 attribute for publish authorization.
+   *  a Section 5.2.33 attribute for publish authorization.
 
 10.  Metrics track
 
@@ -2473,16 +2680,46 @@ Table of Contents
    A metrics track MUST be declared in the publishTracks array of the
    catalog with:
 
-   *  a Section 5.3.4 attribute with a value of "moqmetrics".
+   *  a Section 5.2.4 attribute with a value of "moqmetrics".
 
-   *  a Section 5.3.6 attribute with a value of "metrics".
+   *  a Section 5.2.6 attribute with a value of "metrics".
 
    A metrics track MAY include:
 
-   *  a Section 5.3.31 attribute if metrics should be published to a
+   *  a Section 5.2.32 attribute if metrics should be published to a
       different endpoint.
 
-   *  a Section 5.3.32 attribute for publish authorization.
+   *  a Section 5.2.33 attribute for publish authorization.
+
+10.5.  Well-known event timeline types
+
+   Event timelines can carry various types of broadcast metadata
+   synchronized with media content.  The "MSF Event Timeline Types"
+   registry (Section 13.2) maintains a list of well-known event types.
+   Publishers SHOULD use registered types when applicable to ensure
+   interoperability.
+
+   Event timelines can carry data types including but not limited to:
+
+   *  Ad insertion signaling (e.g., SCTE-35 splice points) - see
+      [SCTE35-MSF]
+
+   *  Out-of-band timed-text cues (WebVTT, IMSC1) - see [WebVTT-MSF] and
+      [IMSC1-MSF]
+
+   *  Sports scores and game state
+
+   *  GPS coordinates and telemetry
+
+   *  Active speaker notifications
+
+   *  Custom application-specific metadata
+
+   The packaging format and data structure for each event type is
+   defined by the specification referenced in the registry.  Custom
+   event types not in the registry SHOULD use Reverse Domain Name
+   Notation (e.g., "com.example.myeventtype") to avoid naming
+   collisions.
 
 11.  Workflow
 
@@ -2580,7 +2817,7 @@ Table of Contents
 
 11.1.1.  Reserved fragment parameters
 
-   Table 5 defines reserved key names for the parameter portion of the
+   Table 8 defines reserved key names for the parameter portion of the
    msf-fragment.  Keynames are case-sensitive.
 
      +=================+=============================================+
@@ -2597,7 +2834,7 @@ Table of Contents
      | connection      | Mandates a connection type                  |
      +-----------------+---------------------------------------------+
 
-                                  Table 9
+                                  Table 10
 
    *  wallclock-range - a range defined by start and end wallclock
       times, each expressed as milliseconds since Unix Epoch and
@@ -2734,8 +2971,8 @@ Table of Contents
 
    *  If the live stream is being converted instantly to a VOD asset,
       then publish an independent (non-delta) catalog update which, for
-      each track, sets isLive Section 5.3.7 to FALSE and adds a track
-      duration Section 5.3.30 field.
+      each track, sets isLive Section 5.2.7 to FALSE and adds a track
+      duration Section 5.2.31 field.
 
    *  If the live stream is being terminated permanently without
       conversion to VOD, then publish an independent catalog update
@@ -2851,7 +3088,36 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
          | msf           | MOQT Streaming Format | this          |
          +---------------+-----------------------+---------------+
 
-                                  Table 10
+                                  Table 11
+
+13.2.  "MSF Event Timeline Types" registry
+
+   This document establishes the "MSF Event Timeline Types" registry.
+   This registry lists the event types that can be used with the
+   eventType field Section 5.2.5 in MSF catalogs.
+
+   New entries in this registry are subject to Expert Review policy as
+   defined in [RFC8126].
+
+   The initial contents of this registry are:
+
+    +==========================+=====================+===============+
+    | Event Type               | Description         | Specification |
+    +==========================+=====================+===============+
+    | urn:scte:scte35:2013:bin | SCTE-35 binary      | [SCTE35-MSF]  |
+    |                          | splice_info_section |               |
+    +--------------------------+---------------------+---------------+
+    | urn:scte:scte35:2013:xml | SCTE-35 XML         | [SCTE35-MSF]  |
+    |                          | representation      |               |
+    +--------------------------+---------------------+---------------+
+    | urn:msf:timedtext:webvtt | WebVTT timed text   | [WebVTT-MSF]  |
+    |                          | cues                |               |
+    +--------------------------+---------------------+---------------+
+    | urn:msf:timedtext:imsc1  | IMSC1 timed text    | [IMSC1-MSF]   |
+    |                          | cues                |               |
+    +--------------------------+---------------------+---------------+
+
+                                 Table 12
 
 14.  References
 
@@ -2887,9 +3153,9 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
 
    [LOC]      Zanaty, M., Nandakumar, S., and P. Thatcher, "Low Overhead
               Media Container", Work in Progress, Internet-Draft, draft-
-              mzanaty-moq-loc-05, 3 March 2025,
-              <https://datatracker.ietf.org/doc/html/draft-mzanaty-moq-
-              loc-05>.
+              ietf-moq-loc-02, 15 March 2026,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-moq-loc-
+              02>.
 
    [MIME]     Freed, N., Klensin, J., and T. Hansen, "Media Type
               Specifications and Registration Procedures", BCP 13,
@@ -2912,9 +3178,9 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
    [MoQTransport]
               Nandakumar, S., Vasiliev, V., Swett, I., and A. Frindell,
               "Media over QUIC Transport", Work in Progress, Internet-
-              Draft, draft-ietf-moq-transport-11, 28 April 2025,
+              Draft, draft-ietf-moq-transport-18, 12 May 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-moq-
-              transport-11>.
+              transport-18>.
 
    [PrivacyPassAuth]
               Nandakumar, S., Jennings, C. F., and T. Meunier, "Privacy
@@ -2943,6 +3209,11 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
               Specifications: ABNF", STD 68, RFC 5234,
               DOI 10.17487/RFC5234, January 2008,
               <https://www.rfc-editor.org/rfc/rfc5234>.
+
+   [RFC8126]  Cotton, M., Leiba, B., and T. Narten, "Guidelines for
+              Writing an IANA Considerations Section in RFCs", BCP 26,
+              RFC 8126, DOI 10.17487/RFC8126, June 2017,
+              <https://www.rfc-editor.org/rfc/rfc8126>.
 
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
@@ -2977,6 +3248,29 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
               2025, <https://datatracker.ietf.org/doc/html/draft-
               jennings-moq-e2ee-mls-03>.
 
+   [IMSC1-MSF]
+              "IMSC1 Packaging for MOQT Streaming Format", 2026,
+              <https://github.com/suhasHere/imsc1-msf>.
+
+   [SCTE214-1]
+              "SCTE 214-1: MPEG DASH for IP-Based Cable Services Part 1
+              - MPD Constraints and Extensions", 2022,
+              <https://www.scte.org/standards/library/catalog/scte-
+              214-1-mpeg-dash-for-ip-based-cable-services-part-1-mpd-
+              constraints-and-extensions/>.
+
+   [SCTE35]   "SCTE 35: Digital Program Insertion Cueing Message", 2022,
+              <https://www.scte.org/standards/library/catalog/scte-35-
+              digital-program-insertion-cueing-message/>.
+
+   [SCTE35-MSF]
+              "SCTE-35 over MSF Event Timeline", 2026,
+              <https://github.com/wilaw/SCTE35-over-MSF-Event-Timeline>.
+
+   [WebVTT-MSF]
+              "WebVTT Packaging for MOQT Streaming Format", 2026,
+              <https://github.com/suhasHere/webvtt-msf>.
+
 Acknowledgments
 
    *  the MoQ Workgroup and mailing lists.
@@ -2996,8 +3290,13 @@ Contributors
 
    *  Will Law
 
-Author's Address
+Authors' Addresses
 
    Will Law
    Akamai
    Email: wilaw@akamai.com
+
+
+   Suhas Nandakumar
+   Cisco
+   Email: snandaku@cisco.com
