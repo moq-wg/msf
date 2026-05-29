@@ -381,6 +381,7 @@ Table 3 lists the fields defined within each track object.
 | Parent name             | parentName             | {{parentname}}            |
 | Track duration          | trackDuration          | {{trackduration}}         |
 | Authorization Info      | authInfo               | {{authinfo}}              |
+| Stream mapping          | streamMapping          | {{streammapping}}         |
 
 ### Tracks object {#trackobject}
 
@@ -760,6 +761,30 @@ A catalog with:
 
 Would be resolved by the subscriber to include `"cat": "XYZ789"`, which is
 then presented in control messages as specified by the authorization scheme.
+
+### Stream mapping {#streammapping}
+Required: Optional    JSON Type: String    Location: Track Object
+
+A string defining how MOQT Objects in this track are mapped to MOQT Streams.
+When this field is absent, the default mapping is "stream-per-group".
+Allowed values are defined in Table 8.
+
+| Name                |  Value                |  Description                                          |
+|:====================|:======================|:======================================================|
+| Stream per object   | stream-per-object     | Each MOQT Object is mapped to a separate MOQT Stream |
+| Stream per subgroup | stream-per-subgroup   | All Objects within a Subgroup share a single MOQT Stream |
+| Stream per group    | stream-per-group      | All Objects within a Group share a single MOQT Stream |
+
+Table 8: Allowed stream mapping values
+
+All stream mapping values in Table 8 are valid for LOC packaged tracks. Other
+packaging specifications MAY define additional stream mapping values or restrict
+the set of allowed values for their packaging type.
+
+The choice of stream mapping affects latency and head-of-line blocking
+characteristics. For example, "stream-per-object" minimizes head-of-line blocking
+at the cost of more QUIC streams, while "stream-per-group" reduces stream overhead
+but may increase latency under packet loss.
 
 ## Delta updates {#deltaupdates}
 A catalog update might contain incremental changes. This is a useful property if
@@ -1569,12 +1594,13 @@ In this example:
 
 # Media transmission
 The {{mediapackaging}} defines how media samples are packaged into MOQT Objects.
-The mapping of MOQT Objects to MOQT Streams is implementation-specific. Examples
-of stream mapping strategies include:
+For LOC packaged tracks, each encoded media chunk (EncodedAudioChunk or
+EncodedVideoChunk) is mapped to a single MOQT Object as defined in {{mediapackaging}}.
 
-* Mapping each MOQT Object to a separate MOQT Stream
-* Mapping all Objects within a subgroup to a single MOQT Stream
-* Mapping Objects by temporal or spatial layer to separate MOQT Streams
+The mapping of MOQT Objects to MOQT Streams is signaled per-track in the catalog
+using the stream mapping field {{streammapping}}. Publishers MUST include the
+streamMapping field in the catalog for each media track. Subscribers MUST use
+the signaled stream mapping when consuming the track.
 
 ## Group numbering
 The Group ID of the first Group published in a track at application startup MUST be
