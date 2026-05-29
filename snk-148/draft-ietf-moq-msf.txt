@@ -1166,8 +1166,7 @@ Table of Contents
    blocking characteristics.  For example, "stream-per-object" minimizes
    head-of-line blocking at the cost of more QUIC streams, while
    "stream-per-group" reduces stream overhead but may increase latency
-   under packet loss.  See [MOQ-USAGES] for further discussion of stream
-   mapping tradeoffs.
+   under packet loss.
 
 5.4.  Delta updates
 
@@ -2850,13 +2849,6 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
               Internet-Draft, draft-jennings-moq-e2ee-mls-03, 30 June
               2025, <https://datatracker.ietf.org/doc/html/draft-
               jennings-moq-e2ee-mls-03>.
-
-   [MOQ-USAGES]
-              Jennings, C. F., Nandakumar, S., and M. Zanaty, "MOQ
-              Usages for audio and video applications", Work in
-              Progress, Internet-Draft, draft-jennings-moq-usages-00, 10
-              July 2023, <https://datatracker.ietf.org/doc/html/draft-
-              jennings-moq-usages-00>.
 
 Acknowledgments
 
