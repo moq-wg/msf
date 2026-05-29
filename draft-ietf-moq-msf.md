@@ -1778,8 +1778,7 @@ The explicit format contains an array of records. Each record consists of
 an array of three required items, whose ordinal position defines their type:
 
 * The first item holds the media presentation timestamp, expressed as a JSON Number.
-  This value MUST match the media presentation timestamp, rounded to the floor of the
-  nearest millisecond, of the first media sample in the referenced Object. Implementers
+  This value MUST match the media presentation timestamp, expressed as the floor in integral milliseconds, of the first media sample in the referenced Object. Implementers
   who require increased time precision can parse the retrieved media object itself.
 * The second item holds the MOQT Location of the entry, defined as a tuple of the MOQT
   Group ID and MOQT Object ID, and expressed as a JSON Array of Numbers, where the
