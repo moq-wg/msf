@@ -394,7 +394,7 @@ Table 2 lists the fields defined within each track object.
 | Display height          | displayHeight          | {{displayheight}}         |
 | Language                | lang                   | {{language}}              |
 | Parent name             | parentName             | {{parentname}}            |
-| Parent namespace        | parentNameSpace        | {{parentnamespace}}       |
+| Parent namespace        | parentNamespace        | {{parentnamespace}}       |
 | Track duration          | trackDuration          | {{trackduration}}         |
 | Authorization Info      | authInfo               | {{authinfo}}              |
 | Accessibility           | accessibility          | {{accessibility}}         |
@@ -1140,7 +1140,7 @@ the other is cloned from a previous track.
       "tracks": [
         {
           "parentName": "video-1080",
-          "parentNameSpace": "example.com/custom",
+          "parentNamespace": "example.com/custom",
           "name": "video-720",
           "width": 1280,
           "height": 720,
