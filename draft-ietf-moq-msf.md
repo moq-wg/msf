@@ -384,10 +384,10 @@ Table 2 lists the fields defined within each track object.
 | Mime type               | mimeType               | {{mimetype}}              |
 | Framerate               | framerate              | {{framerate}}             |
 | Timescale               | timescale              | {{timescale}}             |
-| Maximum bitrate         | bitrate                | {{bitrate}}               |
-| Average bitrate         | avgBitrate             | {{averagebitrate}}        |
-| Maximum GOP duration    | maxGopDuration         | {{maximumgopduration}}    |
-| Maximum group duration  | maxGroupDuration       | {{maximumgroupduration}}  |
+| Maximum Bitrate         | bitrate                | {{bitrate}}               |
+| Average Bitrate         | avgBitrate             | {{averagebitrate}}        |
+| Maximum GOP Duration    | maxGopDuration         | {{maximumgopduration}}    |
+| Maximum Group Duration  | maxGroupDuration       | {{maximumgroupduration}}  |
 | Width                   | width                  | {{width}}                 |
 | Height                  | height                 | {{height}}                |
 | Audio sample rate       | samplerate             | {{audiosamplerate}}       |
@@ -567,7 +567,8 @@ A string defining the codec used to encode the track.
 For LOC packaged content, the string codec registrations are defined in Sect 3
 and Section 4 of {{WEBCODECS-CODEC-REGISTRY}}.
 This property MUST be specified for tracks which have an inherent codec
-associated with them.
+associated with them (e.g., audio and video tracks). It is not required for
+raw data tracks or event streams.
 
 ### Mimetype {#mimetype}
 Required: Optional    JSON Type: String    Location: Track Object
@@ -586,9 +587,10 @@ Required: Optional    JSON Type: Number    Location: Track Object
 The number of time units that pass per second.
 
 ### Maximum Bitrate {#bitrate}
-Required: Yes    JSON Type: Number    Location: Track Object
+Required: Conditional    JSON Type: Number    Location: Track Object
 
 A number defining the maximum bitrate of the track, expressed in bits per second.
+This property MUST be specified for audio and video tracks.
 
 ### Average Bitrate {#averagebitrate}
 Required: Optional    JSON Type: Number    Location: Track Object
@@ -596,27 +598,27 @@ Required: Optional    JSON Type: Number    Location: Track Object
 A number defining the average bitrate of the track, over the lifetime of the track,
 expressed in bits per second.
 
-### Maximum GOP duration {#maximumgopduration}
+### Maximum GOP Duration {#maximumgopduration}
 Required: Optional    JSON Type: Number    Location: Track Object
 
 A number defining the maximum duration, expressed in milliseconds, between
-any independently coded sequence of media samples. This property SHOULD only
-accompany video tracks.
+successive independently decodable points (random access points) in the media
+track. This property SHOULD only accompany video tracks.
 
-### Maximum Group duration {#maximumgroupduration}
+### Maximum Group Duration {#maximumgroupduration}
 Required: Optional    JSON Type: Number    Location: Track Object
 
 A number defining the maximum duration, expressed in milliseconds, of any MOQT Group
-in this track.
+in this track. This value helps subscribers estimate buffer requirements for the track.
 
 ### Width {#width}
-Required: Optional  JSON Type: Number    Location: Track Object
+Required: Optional    JSON Type: Number    Location: Track Object
 
 A number expressing the maximum encoded width of the video frames in pixels.
 This property SHOULD accompany tracks which have a visual representation.
 
 ### Height {#height}
-Required: Optional  JSON Type: Number    Location: Track Object
+Required: Optional    JSON Type: Number    Location: Track Object
 
 A number expressing the maximum encoded height of the video frames in pixels.
 This property SHOULD accompany tracks which have a visual representation.
@@ -630,11 +632,10 @@ accompany tracks for which audio codecs are specified.
 ### Channel configuration {#channelconfiguration}
 Required: Conditional    JSON Type: String    Location: Track Object
 
-A string specifying the audio channel configuration. This property SHOULD only
-accompany audio codecs. A string is used in order to provide the flexibility to
-describe complex channel configurations for multi-channel and Next Generation
-Audio schemas. This property MUST accompany tracks for which audio codecs
-are specified.
+A string specifying the audio channel configuration. A string is used in order
+to provide the flexibility to describe complex channel configurations for
+multi-channel and Next Generation Audio schemas. This property MUST accompany
+tracks for which audio codecs are specified.
 
 ### Display width {#displaywidth}
 Required: Optional    JSON Type: Number    Location: Track Object
