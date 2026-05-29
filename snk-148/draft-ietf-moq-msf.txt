@@ -4,8 +4,8 @@
 
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
-Intended status: Informational                               11 May 2026
-Expires: 12 November 2026
+Intended status: Informational                               29 May 2026
+Expires: 30 November 2026
 
 
                          MOQT Streaming Format
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 12 November 2026.
+   This Internet-Draft will expire on 30 November 2026.
 
 Copyright Notice
 
@@ -128,6 +128,7 @@ Table of Contents
        5.3.36. Track Base Key
        5.3.37. Authorization Info
        5.3.38. Token Delivery via URI
+       5.3.39. Stream mapping
      5.4.  Delta updates
      5.5.  Variable Substitution
        5.5.1.  Variable Syntax
@@ -632,6 +633,8 @@ Table of Contents
         +-----------------------+---------------+----------------+
         | Authorization Info    | authInfo      | Section 5.3.37 |
         +-----------------------+---------------+----------------+
+        | Stream mapping        | streamMapping | Section 5.3.39 |
+        +-----------------------+---------------+----------------+
 
                                  Table 3
 
@@ -1128,6 +1131,43 @@ Table of Contents
    Would be resolved by the subscriber to include "cat": "XYZ789", which
    is then presented in control messages as specified by the
    authorization scheme.
+
+5.3.39.  Stream mapping
+
+   Required: Optional JSON Type: String Location: Track Object
+
+   A string defining how MOQT Objects in this track are mapped to MOQT
+   Streams.  When this field is absent, the default mapping is "stream-
+   per-group".  Allowed values are defined in Table 8.
+
+   +============+=====================+===============================+
+   | Name       | Value               | Description                   |
+   +============+=====================+===============================+
+   | Stream per | stream-per-object   | Each MOQT Object is mapped to |
+   | object     |                     | a separate MOQT Stream        |
+   +------------+---------------------+-------------------------------+
+   | Stream per | stream-per-subgroup | All Objects within a Subgroup |
+   | subgroup   |                     | share a single MOQT Stream    |
+   +------------+---------------------+-------------------------------+
+   | Stream per | stream-per-group    | All Objects within a Group    |
+   | group      |                     | share a single MOQT Stream    |
+   +------------+---------------------+-------------------------------+
+
+                                 Table 9
+
+   Table 8: Allowed stream mapping values
+
+   All stream mapping values in Table 8 are valid for LOC packaged
+   tracks.  Other packaging specifications MAY define additional stream
+   mapping values or restrict the set of allowed values for their
+   packaging type.
+
+   The choice of stream mapping affects latency and head-of-line
+   blocking characteristics.  For example, "stream-per-object" minimizes
+   head-of-line blocking at the cost of more QUIC streams, while
+   "stream-per-group" reduces stream overhead but may increase latency
+   under packet loss.  See [MOQ-USAGES] for further discussion of stream
+   mapping tradeoffs.
 
 5.4.  Delta updates
 
@@ -1914,16 +1954,15 @@ Table of Contents
 6.  Media transmission
 
    The Section 4 defines how media samples are packaged into MOQT
-   Objects.  The mapping of MOQT Objects to MOQT Streams is
-   implementation-specific.  Examples of stream mapping strategies
-   include:
+   Objects.  For LOC packaged tracks, each encoded media chunk
+   (EncodedAudioChunk or EncodedVideoChunk) is mapped to a single MOQT
+   Object as defined in Section 4.
 
-   *  Mapping each MOQT Object to a separate MOQT Stream
-
-   *  Mapping all Objects within a subgroup to a single MOQT Stream
-
-   *  Mapping Objects by temporal or spatial layer to separate MOQT
-      Streams
+   The mapping of MOQT Objects to MOQT Streams is signaled per-track in
+   the catalog using the stream mapping field Section 5.3.39.
+   Publishers MUST include the streamMapping field in the catalog for
+   each media track.  Subscribers MUST use the signaled stream mapping
+   when consuming the track.
 
 6.1.  Group numbering
 
@@ -2432,7 +2471,7 @@ Table of Contents
      | connection      | Mandates a connection type                  |
      +-----------------+---------------------------------------------+
 
-                                  Table 9
+                                  Table 10
 
    *  wallclock-range - a range defined by start and end wallclock
       times, each expressed as milliseconds since Unix Epoch and
@@ -2686,7 +2725,7 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
          | msf           | MOQT Streaming Format | this          |
          +---------------+-----------------------+---------------+
 
-                                  Table 10
+                                  Table 11
 
 14.  References
 
@@ -2811,6 +2850,13 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
               Internet-Draft, draft-jennings-moq-e2ee-mls-03, 30 June
               2025, <https://datatracker.ietf.org/doc/html/draft-
               jennings-moq-e2ee-mls-03>.
+
+   [MOQ-USAGES]
+              Jennings, C. F., Nandakumar, S., and M. Zanaty, "MOQ
+              Usages for audio and video applications", Work in
+              Progress, Internet-Draft, draft-jennings-moq-usages-00, 10
+              July 2023, <https://datatracker.ietf.org/doc/html/draft-
+              jennings-moq-usages-00>.
 
 Acknowledgments
 
