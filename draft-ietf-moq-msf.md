@@ -34,8 +34,8 @@ author:
     email: snandaku@cisco.com
 
 normative:
-  MoQTransport: I-D.draft-ietf-moq-transport-11
-  LOC: I-D.draft-mzanaty-moq-loc-05
+  MoQTransport: I-D.draft-ietf-moq-transport-18
+  LOC: I-D.draft-ietf-moq-loc-02
   SecureObjects: I-D.draft-jennings-moq-secure-objects
   C4M: I-D.draft-ietf-moq-c4m
   PrivacyPassAuth: I-D.draft-ietf-moq-privacy-pass-auth
