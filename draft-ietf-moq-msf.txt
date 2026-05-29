@@ -5,8 +5,8 @@
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
 Intended status: Informational                             S. Nandakumar
-Expires: 28 November 2026                                          Cisco
-                                                             27 May 2026
+Expires: 30 November 2026                                          Cisco
+                                                             29 May 2026
 
 
                          MOQT Streaming Format
@@ -49,7 +49,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 28 November 2026.
+   This Internet-Draft will expire on 30 November 2026.
 
 Copyright Notice
 
@@ -2978,9 +2978,9 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
 
    [LOC]      Zanaty, M., Nandakumar, S., and P. Thatcher, "Low Overhead
               Media Container", Work in Progress, Internet-Draft, draft-
-              mzanaty-moq-loc-05, 3 March 2025,
-              <https://datatracker.ietf.org/doc/html/draft-mzanaty-moq-
-              loc-05>.
+              ietf-moq-loc-02, 15 March 2026,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-moq-loc-
+              02>.
 
    [MIME]     Freed, N., Klensin, J., and T. Hansen, "Media Type
               Specifications and Registration Procedures", BCP 13,
@@ -3003,9 +3003,9 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
    [MoQTransport]
               Nandakumar, S., Vasiliev, V., Swett, I., and A. Frindell,
               "Media over QUIC Transport", Work in Progress, Internet-
-              Draft, draft-ietf-moq-transport-11, 28 April 2025,
+              Draft, draft-ietf-moq-transport-18, 12 May 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-moq-
-              transport-11>.
+              transport-18>.
 
    [PrivacyPassAuth]
               Nandakumar, S., Jennings, C. F., and T. Meunier, "Privacy
