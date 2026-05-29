@@ -5,8 +5,8 @@
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
 Intended status: Informational                             S. Nandakumar
-Expires: 28 November 2026                                          Cisco
-                                                             27 May 2026
+Expires: 30 November 2026                                          Cisco
+                                                             29 May 2026
 
 
                          MOQT Streaming Format
@@ -49,7 +49,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 28 November 2026.
+   This Internet-Draft will expire on 30 November 2026.
 
 Copyright Notice
 
@@ -2120,7 +2120,7 @@ Table of Contents
 
    *  The first item holds the media presentation timestamp, expressed
       as a JSON Number.  This value MUST match the media presentation
-      timestamp, rounded to the floor of the nearest millisecond, of the
+      timestamp, expressed as the floor in integral milliseconds, of the
       first media sample in the referenced Object.  Implementers who
       require increased time precision can parse the retrieved media
       object itself.
