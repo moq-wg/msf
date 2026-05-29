@@ -5,8 +5,8 @@
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
 Intended status: Informational                             S. Nandakumar
-Expires: 28 November 2026                                          Cisco
-                                                             27 May 2026
+Expires: 30 November 2026                                          Cisco
+                                                             29 May 2026
 
 
                          MOQT Streaming Format
@@ -49,7 +49,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 28 November 2026.
+   This Internet-Draft will expire on 30 November 2026.
 
 Copyright Notice
 
@@ -109,8 +109,8 @@ Table of Contents
        5.2.20. Timescale
        5.2.21. Maximum Bitrate
        5.2.22. Average Bitrate
-       5.2.23. Maximum GOP duration
-       5.2.24. Maximum Group duration
+       5.2.23. Maximum GOP Duration
+       5.2.24. Maximum Group Duration
        5.2.25. Width
        5.2.26. Height
        5.2.27. Audio sample rate
@@ -598,13 +598,13 @@ Table of Contents
       +------------------------+------------------+----------------+
       | Timescale              | timescale        | Section 5.2.20 |
       +------------------------+------------------+----------------+
-      | Maximum bitrate        | bitrate          | Section 5.2.21 |
+      | Maximum Bitrate        | bitrate          | Section 5.2.21 |
       +------------------------+------------------+----------------+
-      | Average bitrate        | avgBitrate       | Section 5.2.22 |
+      | Average Bitrate        | avgBitrate       | Section 5.2.22 |
       +------------------------+------------------+----------------+
-      | Maximum GOP duration   | maxGopDuration   | Section 5.2.23 |
+      | Maximum GOP Duration   | maxGopDuration   | Section 5.2.23 |
       +------------------------+------------------+----------------+
-      | Maximum group duration | maxGroupDuration | Section 5.2.24 |
+      | Maximum Group Duration | maxGroupDuration | Section 5.2.24 |
       +------------------------+------------------+----------------+
       | Width                  | width            | Section 5.2.25 |
       +------------------------+------------------+----------------+
@@ -855,7 +855,8 @@ Table of Contents
    packaged content, the string codec registrations are defined in Sect
    3 and Section 4 of [WEBCODECS-CODEC-REGISTRY].  This property MUST be
    specified for tracks which have an inherent codec associated with
-   them.
+   them (e.g., audio and video tracks).  It is not required for raw data
+   tracks or event streams.
 
 5.2.18.  Mimetype
 
@@ -879,10 +880,11 @@ Table of Contents
 
 5.2.21.  Maximum Bitrate
 
-   Required: Yes JSON Type: Number Location: Track Object
+   Required: Conditional JSON Type: Number Location: Track Object
 
    A number defining the maximum bitrate of the track, expressed in bits
-   per second.
+   per second.  This property MUST be specified for audio and video
+   tracks.
 
 5.2.22.  Average Bitrate
 
@@ -891,20 +893,22 @@ Table of Contents
    A number defining the average bitrate of the track, over the lifetime
    of the track, expressed in bits per second.
 
-5.2.23.  Maximum GOP duration
+5.2.23.  Maximum GOP Duration
 
    Required: Optional JSON Type: Number Location: Track Object
 
    A number defining the maximum duration, expressed in milliseconds,
-   between any independently coded sequence of media samples.  This
-   property SHOULD only accompany video tracks.
+   between successive independently decodable points (random access
+   points) in the media track.  This property SHOULD only accompany
+   video tracks.
 
-5.2.24.  Maximum Group duration
+5.2.24.  Maximum Group Duration
 
    Required: Optional JSON Type: Number Location: Track Object
 
    A number defining the maximum duration, expressed in milliseconds, of
-   any MOQT Group in this track.
+   any MOQT Group in this track.  This value helps subscribers estimate
+   buffer requirements for the track.
 
 5.2.25.  Width
 
@@ -933,11 +937,11 @@ Table of Contents
 
    Required: Conditional JSON Type: String Location: Track Object
 
-   A string specifying the audio channel configuration.  This property
-   SHOULD only accompany audio codecs.  A string is used in order to
-   provide the flexibility to describe complex channel configurations
-   for multi-channel and Next Generation Audio schemas.  This property
-   MUST accompany tracks for which audio codecs are specified.
+   A string specifying the audio channel configuration.  A string is
+   used in order to provide the flexibility to describe complex channel
+   configurations for multi-channel and Next Generation Audio schemas.
+   This property MUST accompany tracks for which audio codecs are
+   specified.
 
 5.2.29.  Display width
 

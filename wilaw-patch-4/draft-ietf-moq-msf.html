@@ -1050,7 +1050,7 @@ svg {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Law &amp; Nandakumar</td>
-<td class="center">Expires 28 November 2026</td>
+<td class="center">Expires 30 November 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1063,12 +1063,12 @@ svg {
 <dd class="internet-draft">draft-ietf-moq-msf-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-05-27" class="published">27 May 2026</time>
+<time datetime="2026-05-29" class="published">29 May 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-11-28">28 November 2026</time></dd>
+<dd class="expires"><time datetime="2026-11-30">30 November 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1122,7 +1122,7 @@ svg {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 28 November 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 30 November 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1284,10 +1284,10 @@ svg {
                     <p id="section-toc.1-1.5.2.2.2.22.1"><a href="#section-5.2.22" class="auto internal xref">5.2.22</a>. <a href="#name-average-bitrate" class="internal xref">Average Bitrate</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2.2.23">
-                    <p id="section-toc.1-1.5.2.2.2.23.1"><a href="#section-5.2.23" class="auto internal xref">5.2.23</a>. <a href="#name-maximum-gop-duration" class="internal xref">Maximum GOP duration</a></p>
+                    <p id="section-toc.1-1.5.2.2.2.23.1"><a href="#section-5.2.23" class="auto internal xref">5.2.23</a>. <a href="#name-maximum-gop-duration" class="internal xref">Maximum GOP Duration</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2.2.24">
-                    <p id="section-toc.1-1.5.2.2.2.24.1"><a href="#section-5.2.24" class="auto internal xref">5.2.24</a>. <a href="#name-maximum-group-duration" class="internal xref">Maximum Group duration</a></p>
+                    <p id="section-toc.1-1.5.2.2.2.24.1"><a href="#section-5.2.24" class="auto internal xref">5.2.24</a>. <a href="#name-maximum-group-duration" class="internal xref">Maximum Group Duration</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2.2.25">
                     <p id="section-toc.1-1.5.2.2.2.25.1"><a href="#section-5.2.25" class="auto internal xref">5.2.25</a>. <a href="#name-width" class="internal xref">Width</a></p>
@@ -2189,28 +2189,28 @@ be new. Attributes redefined in the track object override inherited values.<a hr
 </td>
             </tr>
             <tr>
-              <td class="text-left" rowspan="1" colspan="1">Maximum bitrate</td>
+              <td class="text-left" rowspan="1" colspan="1">Maximum Bitrate</td>
               <td class="text-left" rowspan="1" colspan="1">bitrate</td>
               <td class="text-left" rowspan="1" colspan="1">
                 <a href="#bitrate" class="auto internal xref">Section 5.2.21</a>
 </td>
             </tr>
             <tr>
-              <td class="text-left" rowspan="1" colspan="1">Average bitrate</td>
+              <td class="text-left" rowspan="1" colspan="1">Average Bitrate</td>
               <td class="text-left" rowspan="1" colspan="1">avgBitrate</td>
               <td class="text-left" rowspan="1" colspan="1">
                 <a href="#averagebitrate" class="auto internal xref">Section 5.2.22</a>
 </td>
             </tr>
             <tr>
-              <td class="text-left" rowspan="1" colspan="1">Maximum GOP duration</td>
+              <td class="text-left" rowspan="1" colspan="1">Maximum GOP Duration</td>
               <td class="text-left" rowspan="1" colspan="1">maxGopDuration</td>
               <td class="text-left" rowspan="1" colspan="1">
                 <a href="#maximumgopduration" class="auto internal xref">Section 5.2.23</a>
 </td>
             </tr>
             <tr>
-              <td class="text-left" rowspan="1" colspan="1">Maximum group duration</td>
+              <td class="text-left" rowspan="1" colspan="1">Maximum Group Duration</td>
               <td class="text-left" rowspan="1" colspan="1">maxGroupDuration</td>
               <td class="text-left" rowspan="1" colspan="1">
                 <a href="#maximumgroupduration" class="auto internal xref">Section 5.2.24</a>
@@ -2596,7 +2596,8 @@ for the base layer, and increasing by 1 for the next higher fidelity.<a href="#s
 For LOC packaged content, the string codec registrations are defined in Sect 3
 and Section 4 of <span>[<a href="#WEBCODECS-CODEC-REGISTRY" class="cite xref">WEBCODECS-CODEC-REGISTRY</a>]</span>.
 This property <span class="bcp14">MUST</span> be specified for tracks which have an inherent codec
-associated with them.<a href="#section-5.2.17-2" class="pilcrow">¶</a></p>
+associated with them (e.g., audio and video tracks). It is not required for
+raw data tracks or event streams.<a href="#section-5.2.17-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="mimetype">
@@ -2632,8 +2633,9 @@ This property <span class="bcp14">SHOULD</span> only accompany video or other fr
           <h4 id="name-maximum-bitrate">
 <a href="#section-5.2.21" class="section-number selfRef">5.2.21. </a><a href="#name-maximum-bitrate" class="section-name selfRef">Maximum Bitrate</a>
           </h4>
-<p id="section-5.2.21-1">Required: Yes    JSON Type: Number    Location: Track Object<a href="#section-5.2.21-1" class="pilcrow">¶</a></p>
-<p id="section-5.2.21-2">A number defining the maximum bitrate of the track, expressed in bits per second.<a href="#section-5.2.21-2" class="pilcrow">¶</a></p>
+<p id="section-5.2.21-1">Required: Conditional    JSON Type: Number    Location: Track Object<a href="#section-5.2.21-1" class="pilcrow">¶</a></p>
+<p id="section-5.2.21-2">A number defining the maximum bitrate of the track, expressed in bits per second.
+This property <span class="bcp14">MUST</span> be specified for audio and video tracks.<a href="#section-5.2.21-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="averagebitrate">
@@ -2649,22 +2651,22 @@ expressed in bits per second.<a href="#section-5.2.22-2" class="pilcrow">¶</a><
 <div id="maximumgopduration">
 <section id="section-5.2.23">
           <h4 id="name-maximum-gop-duration">
-<a href="#section-5.2.23" class="section-number selfRef">5.2.23. </a><a href="#name-maximum-gop-duration" class="section-name selfRef">Maximum GOP duration</a>
+<a href="#section-5.2.23" class="section-number selfRef">5.2.23. </a><a href="#name-maximum-gop-duration" class="section-name selfRef">Maximum GOP Duration</a>
           </h4>
 <p id="section-5.2.23-1">Required: Optional    JSON Type: Number    Location: Track Object<a href="#section-5.2.23-1" class="pilcrow">¶</a></p>
 <p id="section-5.2.23-2">A number defining the maximum duration, expressed in milliseconds, between
-any independently coded sequence of media samples. This property <span class="bcp14">SHOULD</span> only
-accompany video tracks.<a href="#section-5.2.23-2" class="pilcrow">¶</a></p>
+successive independently decodable points (random access points) in the media
+track. This property <span class="bcp14">SHOULD</span> only accompany video tracks.<a href="#section-5.2.23-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="maximumgroupduration">
 <section id="section-5.2.24">
           <h4 id="name-maximum-group-duration">
-<a href="#section-5.2.24" class="section-number selfRef">5.2.24. </a><a href="#name-maximum-group-duration" class="section-name selfRef">Maximum Group duration</a>
+<a href="#section-5.2.24" class="section-number selfRef">5.2.24. </a><a href="#name-maximum-group-duration" class="section-name selfRef">Maximum Group Duration</a>
           </h4>
 <p id="section-5.2.24-1">Required: Optional    JSON Type: Number    Location: Track Object<a href="#section-5.2.24-1" class="pilcrow">¶</a></p>
 <p id="section-5.2.24-2">A number defining the maximum duration, expressed in milliseconds, of any MOQT Group
-in this track.<a href="#section-5.2.24-2" class="pilcrow">¶</a></p>
+in this track. This value helps subscribers estimate buffer requirements for the track.<a href="#section-5.2.24-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="width">
@@ -2672,7 +2674,7 @@ in this track.<a href="#section-5.2.24-2" class="pilcrow">¶</a></p>
           <h4 id="name-width">
 <a href="#section-5.2.25" class="section-number selfRef">5.2.25. </a><a href="#name-width" class="section-name selfRef">Width</a>
           </h4>
-<p id="section-5.2.25-1">Required: Optional  JSON Type: Number    Location: Track Object<a href="#section-5.2.25-1" class="pilcrow">¶</a></p>
+<p id="section-5.2.25-1">Required: Optional    JSON Type: Number    Location: Track Object<a href="#section-5.2.25-1" class="pilcrow">¶</a></p>
 <p id="section-5.2.25-2">A number expressing the maximum encoded width of the video frames in pixels.
 This property <span class="bcp14">SHOULD</span> accompany tracks which have a visual representation.<a href="#section-5.2.25-2" class="pilcrow">¶</a></p>
 </section>
@@ -2682,7 +2684,7 @@ This property <span class="bcp14">SHOULD</span> accompany tracks which have a vi
           <h4 id="name-height">
 <a href="#section-5.2.26" class="section-number selfRef">5.2.26. </a><a href="#name-height" class="section-name selfRef">Height</a>
           </h4>
-<p id="section-5.2.26-1">Required: Optional  JSON Type: Number    Location: Track Object<a href="#section-5.2.26-1" class="pilcrow">¶</a></p>
+<p id="section-5.2.26-1">Required: Optional    JSON Type: Number    Location: Track Object<a href="#section-5.2.26-1" class="pilcrow">¶</a></p>
 <p id="section-5.2.26-2">A number expressing the maximum encoded height of the video frames in pixels.
 This property <span class="bcp14">SHOULD</span> accompany tracks which have a visual representation.<a href="#section-5.2.26-2" class="pilcrow">¶</a></p>
 </section>
@@ -2703,11 +2705,10 @@ accompany tracks for which audio codecs are specified.<a href="#section-5.2.27-2
 <a href="#section-5.2.28" class="section-number selfRef">5.2.28. </a><a href="#name-channel-configuration" class="section-name selfRef">Channel configuration</a>
           </h4>
 <p id="section-5.2.28-1">Required: Conditional    JSON Type: String    Location: Track Object<a href="#section-5.2.28-1" class="pilcrow">¶</a></p>
-<p id="section-5.2.28-2">A string specifying the audio channel configuration. This property <span class="bcp14">SHOULD</span> only
-accompany audio codecs. A string is used in order to provide the flexibility to
-describe complex channel configurations for multi-channel and Next Generation
-Audio schemas. This property <span class="bcp14">MUST</span> accompany tracks for which audio codecs
-are specified.<a href="#section-5.2.28-2" class="pilcrow">¶</a></p>
+<p id="section-5.2.28-2">A string specifying the audio channel configuration. A string is used in order
+to provide the flexibility to describe complex channel configurations for
+multi-channel and Next Generation Audio schemas. This property <span class="bcp14">MUST</span> accompany
+tracks for which audio codecs are specified.<a href="#section-5.2.28-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="displaywidth">
