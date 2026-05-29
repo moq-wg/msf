@@ -5,8 +5,8 @@
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
 Intended status: Informational                             S. Nandakumar
-Expires: 15 November 2026                                          Cisco
-                                                             14 May 2026
+Expires: 30 November 2026                                          Cisco
+                                                             29 May 2026
 
 
                          MOQT Streaming Format
@@ -49,7 +49,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 15 November 2026.
+   This Internet-Draft will expire on 30 November 2026.
 
 Copyright Notice
 
@@ -191,13 +191,16 @@ Table of Contents
        11.4.2.  Token Acquisition
        11.4.3.  Presenting Authorization
        11.4.4.  Handling Authorization Failures
-   12. MSF Track Properties
-     12.1.  MSF_COMPRESSION Track Property
+   12. MSF Properties
+     12.1.  Compression Signaling
+       12.1.1.  MSF_COMPRESSION Track Property
+       12.1.2.  MSF_COMPRESSION Object Property
    13. Security Considerations
    14. IANA Considerations
      14.1.  "MOQT URI Fragment Types" registry
      14.2.  "MSF Event Timeline Types" registry
      14.3.  MSF_COMPRESSION Track Property
+     14.4.  MSF_COMPRESSION Object Property
    15. References
      15.1.  Normative References
      15.2.  Informative References
@@ -1238,9 +1241,13 @@ Table of Contents
 5.5.  Catalog Compression
 
    Catalogs can contain significant redundancy, particularly when
-   initialization data is included.  To reduce payload size, the catalog
-   MAY be compressed using the MSF_COMPRESSION track property
-   (Section 12.1).
+   initialization data is included.  To reduce payload size, catalog
+   objects MAY be compressed using the MSF_COMPRESSION property
+   (Section 12.1).  If all catalog objects are compressed, the track
+   property (Section 12.1.1) is used.  If only some catalog objects are
+   compressed (for example, the complete catalog is compressed while
+   delta updates are not), the object property (Section 12.1.2) is used
+   on each compressed object.
 
 5.6.  Catalog Examples
 
@@ -2077,10 +2084,10 @@ Table of Contents
 7.1.  Media Timeline track payload
 
    A media timeline track is a JSON [JSON] document.  This document MAY
-   be compressed using the MSF_COMPRESSION track property
-   (Section 12.1).  The document supports two formats: an explicit entry
-   format and a template format.  Publishers MAY combine both formats in
-   a single document.
+   be compressed using the MSF_COMPRESSION property (Section 12.1).  The
+   document supports two formats: an explicit entry format and a
+   template format.  Publishers MAY combine both formats in a single
+   document.
 
 7.1.1.  Explicit entry format
 
@@ -2219,10 +2226,9 @@ Table of Contents
 8.1.  Event Timeline data format
 
    An event timeline track is a JSON [JSON] document.  This document MAY
-   be compressed using the MSF_COMPRESSION track property
-   (Section 12.1).  The document contains an array of records.  Each
-   record consists of a JSON Object containing the following required
-   fields:
+   be compressed using the MSF_COMPRESSION property (Section 12.1).  The
+   document contains an array of records.  Each record consists of a
+   JSON Object containing the following required fields:
 
    *  An index reference, which MUST be either 't' for wallclock time,
       'l' for Location or 'm' for Media PTS.  Only one of these index
@@ -2822,33 +2828,35 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
    authorization scheme specifications.  See [PrivacyPassAuth] for
    Privacy Pass error handling and [C4M] for CAT error handling.
 
-12.  MSF Track Properties
+12.  MSF Properties
 
-   MSF defines MOQT Track Properties (see [MoQTransport] Section 14.4)
-   to signal metadata about MSF tracks.  Track properties are carried in
-   MOQT control messages, allowing endpoints to learn track
-   characteristics before receiving any payload data.
+   MSF defines MOQT Track Properties and Object Properties (see
+   [MoQTransport]) to signal metadata about MSF tracks and objects.
+   These properties are carried in MOQT control messages and object
+   headers, allowing endpoints to learn track and object characteristics
+   before processing payload data.
 
-12.1.  MSF_COMPRESSION Track Property
+12.1.  Compression Signaling
 
-   The MSF_COMPRESSION track property signals the compression algorithm
-   applied to JSON-based MSF track payloads, including catalogs
-   (Section 5), media timeline tracks (Section 7), and event timeline
-   tracks (Section 8).
+   MSF provides two mutually exclusive mechanisms to signal compression
+   of JSON-based track payloads, including catalogs (Section 5), media
+   timeline tracks (Section 7), and event timeline tracks (Section 8).
+   Publishers MUST use one of the following approaches:
 
-   Publishers that compress a track payload MUST include the
-   MSF_COMPRESSION track property in the PUBLISH message (publisher-
-   initiated flow) or SUBSCRIBE_OK (subscriber-initiated flow).
+   *  *Track Property* (Section 12.1.1): Signals that ALL objects in the
+      track are compressed using the specified algorithm.
 
-   Subscribers MUST check for this property in the corresponding message
-   before processing the track payload.
+   *  *Object Property* (Section 12.1.2): Signals compression on
+      individual objects, allowing a mixture of compressed and
+      uncompressed objects within the same track.
 
-   If the property is absent, the subscriber MUST treat the payload as
-   uncompressed.  If the property is present with a value the subscriber
-   does not support, the subscriber MUST NOT attempt to process the
-   payload and SHOULD unsubscribe from the track.
+   A publisher MUST NOT use both mechanisms on the same track.  If the
+   track property is set, then every object in the track is compressed
+   and the object property MUST NOT be present.  If compression varies
+   between objects, then the track property MUST NOT be set and the
+   object property MUST be used on each compressed object.
 
-   The property value is a varint indicating the compression algorithm:
+   The compression algorithm values used by both mechanisms are:
 
                +=======+=======================+===========+
                | Value | Compression Algorithm | Reference |
@@ -2864,6 +2872,45 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
 
    All MSF implementations MUST support both uncompressed payloads
    (value 0 or property absent) and GZIP compressed payloads (value 1).
+
+12.1.1.  MSF_COMPRESSION Track Property
+
+   The MSF_COMPRESSION track property signals that ALL objects in the
+   track are compressed using the specified algorithm.  This mechanism
+   is appropriate when every object published on the track uses the same
+   compression.
+
+   Publishers MUST include the MSF_COMPRESSION track property in the
+   PUBLISH message (publisher-initiated flow) or SUBSCRIBE_OK
+   (subscriber-initiated flow).
+
+   Subscribers MUST check for this property in the corresponding message
+   before processing the track payload.
+
+   If the property is absent, and no per-object compression is signaled,
+   the subscriber MUST treat the payload as uncompressed.  If the
+   property is present with a value the subscriber does not support, the
+   subscriber MUST NOT attempt to process the payload and SHOULD
+   unsubscribe from the track.
+
+12.1.2.  MSF_COMPRESSION Object Property
+
+   The MSF_COMPRESSION object property signals that an individual object
+   is compressed.  This mechanism is appropriate when a track contains a
+   mixture of compressed and uncompressed objects.  For example, a
+   catalog track where the first object in a group (the complete
+   catalog) is compressed, but subsequent delta update objects within
+   the same group are uncompressed.
+
+   Publishers MUST include the MSF_COMPRESSION object property on each
+   compressed object.
+
+   Subscribers MUST check for this property on each received object
+   before processing its payload.  If the property is absent on an
+   object, the subscriber MUST treat that object's payload as
+   uncompressed.  If the property is present with a value the subscriber
+   does not support, the subscriber MUST NOT attempt to process that
+   object.
 
 13.  Security Considerations
 
@@ -2927,9 +2974,26 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
 
                                  Table 13
 
-   The MSF_COMPRESSION property indicates the compression algorithm
-   applied to JSON-based MSF track payloads.  See Section 12.1 for the
-   full specification.
+   The MSF_COMPRESSION track property indicates that ALL objects on the
+   track are compressed using the specified algorithm.  See
+   Section 12.1.1 for the full specification.
+
+14.4.  MSF_COMPRESSION Object Property
+
+   This document requests IANA to register the following entry in the
+   "Object Properties" registry established by [MoQTransport]:
+
+        +=================+=============+============+===========+
+        | Property Name   | Property ID | Value Type | Reference |
+        +=================+=============+============+===========+
+        | MSF_COMPRESSION | TBD         | varint     | RFC XXXX  |
+        +-----------------+-------------+------------+-----------+
+
+                                 Table 14
+
+   The MSF_COMPRESSION object property indicates that an individual
+   object is compressed using the specified algorithm.  See
+   Section 12.1.2 for the full specification.
 
    This document also requests IANA to create a new "MSF Compression
    Algorithms" registry with the following initial values:
@@ -2942,7 +3006,7 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
                | 1     | GZIP                  | [GZIP]    |
                +-------+-----------------------+-----------+
 
-                                  Table 14
+                                  Table 15
 
    Values 2-127 are available for registration via Standards Action.
    Values 128 and above are reserved for private use.
