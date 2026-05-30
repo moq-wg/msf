@@ -363,9 +363,10 @@ The following operation types are defined:
 
 * "clone" - Clone new tracks from previously declared tracks. The value of
   the "tracks" field is an Array of track objects {{trackobject}}. Each track
-  object MUST include a Parent Name {{parentname}} field. The cloned track
-  inherits all attributes from the parent except the Track Name which MUST
-  be new. Attributes redefined in the track object override inherited values.
+  object MUST include a Parent Name {{parentname}} field and MAY include a
+  Parent namespace {{parentnamespace}} field. The cloned track inherits all
+  attributes from the parent except the Track Name which MUST be new.
+  Attributes redefined in the track object override inherited values.
 
 ### Initialization Data List {#initdatalist}
 Required: Optional    JSON Type: Array    Location: Root Catalog
@@ -422,6 +423,7 @@ Table 2 lists the fields defined within each track object.
 | Display height          | displayHeight          | {{displayheight}}         |
 | Language                | lang                   | {{language}}              |
 | Parent name             | parentName             | {{parentname}}            |
+| Parent namespace        | parentNamespace        | {{parentnamespace}}       |
 | Track duration          | trackDuration          | {{trackduration}}         |
 | Authorization Info      | authInfo               | {{authinfo}}              |
 | Accessibility           | accessibility          | {{accessibility}}         |
@@ -693,6 +695,13 @@ Required: Optional    JSON Type: String    Location: Track Object
 
 A string defining the parent track name {{trackname}} to be cloned. This field
 MUST only be included inside a clone operation in a delta update {{deltaupdate}}.
+
+### Parent namespace {#parentnamespace}
+Required: Optional    JSON Type: String    Location: Track Object
+
+A string defining the parent track namespace {{tracknamespace}} to be cloned. This field
+MUST only be included inside a clone operation in a delta update {{deltaupdate}}. If this
+field is missing from a clone operation, then the namespace of the catalog is assumed.
 
 ### Track duration {#trackduration}
 Required: Optional    JSON Type: Number    Location: Track Object
@@ -1195,6 +1204,7 @@ the other is cloned from a previous track.
       "tracks": [
         {
           "parentName": "video-1080",
+          "parentNamespace": "example.com/custom",
           "name": "video-720",
           "width": 1280,
           "height": 720,
