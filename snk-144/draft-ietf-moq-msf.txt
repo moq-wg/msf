@@ -5,8 +5,8 @@
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
 Intended status: Informational                             S. Nandakumar
-Expires: 30 November 2026                                          Cisco
-                                                             29 May 2026
+Expires: 3 December 2026                                           Cisco
+                                                             1 June 2026
 
 
                          MOQT Streaming Format
@@ -49,7 +49,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 30 November 2026.
+   This Internet-Draft will expire on 3 December 2026.
 
 Copyright Notice
 
@@ -2980,22 +2980,7 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
 
 14.4.  MSF_COMPRESSION Object Property
 
-   This document requests IANA to register the following entry in the
-   "Object Properties" registry established by [MoQTransport]:
-
-        +=================+=============+============+===========+
-        | Property Name   | Property ID | Value Type | Reference |
-        +=================+=============+============+===========+
-        | MSF_COMPRESSION | TBD         | varint     | RFC XXXX  |
-        +-----------------+-------------+------------+-----------+
-
-                                 Table 14
-
-   The MSF_COMPRESSION object property indicates that an individual
-   object is compressed using the specified algorithm.  See
-   Section 12.1.2 for the full specification.
-
-   This document also requests IANA to create a new "MSF Compression
+   This document requests IANA to create a new "MSF Compression
    Algorithms" registry with the following initial values:
 
                +=======+=======================+===========+
@@ -3006,7 +2991,7 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
                | 1     | GZIP                  | [GZIP]    |
                +-------+-----------------------+-----------+
 
-                                  Table 15
+                                  Table 14
 
    Values 2-127 are available for registration via Standards Action.
    Values 128 and above are reserved for private use.
