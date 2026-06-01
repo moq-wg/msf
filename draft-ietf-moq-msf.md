@@ -28,10 +28,14 @@ author:
     fullname: Will Law
     organization: Akamai
     email: wilaw@akamai.com
+ -
+    fullname: Suhas Nandakumar
+    organization: Cisco
+    email: snandaku@cisco.com
 
 normative:
-  MoQTransport: I-D.draft-ietf-moq-transport-11
-  LOC: I-D.draft-mzanaty-moq-loc-05
+  MoQTransport: I-D.draft-ietf-moq-transport-18
+  LOC: I-D.draft-ietf-moq-loc-02
   SecureObjects: I-D.draft-jennings-moq-secure-objects
   C4M: I-D.draft-ietf-moq-c4m
   PrivacyPassAuth: I-D.draft-ietf-moq-privacy-pass-auth
@@ -61,6 +65,26 @@ normative:
 
 informative:
   E2EE-MLS: I-D.draft-jennings-moq-e2ee-mls
+  SCTE35:
+    title: "SCTE 35: Digital Program Insertion Cueing Message"
+    date: 2022
+    target: https://www.scte.org/standards/library/catalog/scte-35-digital-program-insertion-cueing-message/
+  SCTE214-1:
+    title: "SCTE 214-1: MPEG DASH for IP-Based Cable Services Part 1 - MPD Constraints and Extensions"
+    date: 2022
+    target: https://www.scte.org/standards/library/catalog/scte-214-1-mpeg-dash-for-ip-based-cable-services-part-1-mpd-constraints-and-extensions/
+  WebVTT-MSF:
+    title: "WebVTT Packaging for MOQT Streaming Format"
+    date: 2026
+    target: https://github.com/suhasHere/webvtt-msf
+  IMSC1-MSF:
+    title: "IMSC1 Packaging for MOQT Streaming Format"
+    date: 2026
+    target: https://github.com/suhasHere/imsc1-msf
+  SCTE35-MSF:
+    title: "SCTE-35 over MSF Event Timeline"
+    date: 2026
+    target: https://github.com/wilaw/SCTE35-over-MSF-Event-Timeline
 
 --- abstract
 
@@ -156,10 +180,15 @@ requirements:
 * Tracks advertised in the catalog as belonging to a common alternate group MUST
   be time-aligned.
 * The render duration of the first media object of each equally numbered MOQT
-  Group, after decoding, MUST have overlapping presentation time.
+  Group, after decoding, SHOULD have overlapping presentation time.
 
 A consequence of this restriction is that an MSF receiver SHOULD be able to
 cleanly switch between time-aligned media tracks at group boundaries.
+
+If time-aligned media tracks do not have overlapping presentation time at
+equally-numbered group boundaries, then an alternate mechanism, not defined by
+this specification, must be provided to the client to enable it to switch smoothly
+between time-aligned, but numerically dissimilar, Group IDs.
 
 ## Content protection and encryption {#contentprotection}
 
@@ -232,23 +261,29 @@ The catalog track MUST have a case-sensitive Track Name of "catalog".
 A catalog object MAY be independent of other catalog objects or it MAY represent
 a delta update of a prior catalog object. The first catalog object published
 within a new group MUST be independent and MUST provide a complete catalog that
-does not require any prior catalog object for interpretation. Any catalog objects
-that precede the first object of the latest group MUST be ignored.
+does not require any prior catalog object for interpretation. Any catalog updates
+that precede the first Object of the latest Group MUST be ignored.
 
-A catalog object SHOULD be
-published only when the availability of tracks changes.
+A catalog object SHOULD be published only when the availability of tracks changes, or
+after a period of time has passed such that the catalog object might fall out of cache
+in a delivery network.
 
-Each catalog update MUST be mapped to an MOQT Object.
+Each catalog update MUST be mapped to an MOQT Object. All catalog updates, both
+independent and delta, MUST be mapped to MOQT sub-group 0. The first Object (with
+Object ID 0) in any Group in a catalog track MUST hold an independent copy of the
+catalog. All subsequent Objects within that Group (i.e Objects IDs >= 1) MUST hold
+a delta update. As soon as an independent update is produced, it MUST be placed at the
+start of a new Group.
 
 Subscribers accessing the catalog MUST use SUBSCRIBE with a Joining FETCH
 (offset = 0) in order to obtain the latest complete catalog along with all subsequent
 catalog objects, including delta updates, that follow.
 
 A catalog is a JSON {{JSON}} document, comprised of a series of mandatory and
-optional fields. At a minimum, a catalog MUST provide all mandatory fields. A
-producer MAY add additional fields to the ones described in this draft. Custom
-field names MUST NOT collide with field names described in this draft. The order
-of field names within the JSON document is not important.
+optional fields. At a minimum, a catalog MUST provide all mandatory fields. Some
+fields are conditional depending on the type of content carried. A producer MAY add
+additional fields to the ones described in this draft. Custom field names MUST NOT
+collide with field names described in this draft.
 
 A parser MUST ignore fields it does not understand.
 
@@ -256,13 +291,15 @@ A parser MUST ignore fields it does not understand.
 
 Table 1 lists the fields defined at the root of the catalog JSON object.
 
-| Field                   |  Name                  |           Definition      |
-|:========================|:=======================|:==========================|
-| MSF version             | version                | {{msfversion}}            |
-| Generated at            | generatedAt            | {{generatedat}}           |
-| Is Complete             | isComplete             | {{iscomplete}}            |
-| Tracks                  | tracks                 | {{tracks}}                |
-| Publish tracks          | publishTracks          | {{publishtracks}}         |
+| Field                     |  Name                  |           Definition      |
+|:==========================|:=======================|:==========================|
+| MSF version               | version                | {{msfversion}}            |
+| Generated at              | generatedAt            | {{generatedat}}           |
+| Is Complete               | isComplete             | {{iscomplete}}            |
+| Tracks                    | tracks                 | {{tracks}}                |
+| Publish tracks            | publishTracks          | {{publishtracks}}         |
+| Delta update              | deltaUpdate            | {{deltaupdate}}           |
+| Initialization Data List  | initDataList           | {{initdatalist}}          |
 
 ### MSF version {#msfversion}
 Required: Yes    JSON Type: Number    Location: Root Catalog
@@ -303,52 +340,58 @@ bi-directional communication where the subscriber acts as a publisher for specif
 tracks. Each publish track object follows the same structure as a regular track
 object {{trackobject}} but is used for the reverse direction of data flow.
 
-## Delta Update Catalog Fields
-
-Table 2 lists the fields used for delta update operations at the root level.
-
-| Field                   |  Name                  |           Definition      |
-|:========================|:=======================|:==========================|
-| Delta update            | deltaUpdate            | {{deltaupdate}}           |
-| Add tracks              | addTracks              | {{addtracks}}             |
-| Remove tracks           | removeTracks           | {{removetracks}}          |
-| Clone tracks            | cloneTracks            | {{clonetracks}}           |
-
 ### Delta update {#deltaupdate}
-Required: Optional    JSON Type: Boolean    Location: Delta Update
+Required: Optional    JSON Type: Array    Location: Root Catalog
 
-A Boolean that if true indicates that this catalog object represents a delta
-(or partial) update. A delta update has a restricted set of fields and special
-processing rules - see {{deltaupdates}}. This value SHOULD NOT be added to a
-catalog if it is false.
+An ordered Array of operation objects that specify changes to apply to the catalog.
+If this field is present, the catalog represents a delta (or partial) update with
+a restricted set of fields and special processing rules - see {{deltaupdates}}.
+If this field is absent, the catalog is independent.
 
-### Add tracks {#addtracks}
-Required: Optional    JSON Type: Array    Location: Delta Update
+Operations are applied sequentially in the order they appear in the array.
+Each operation object MUST contain an "op" field indicating the operation type,
+and a "tracks" field containing an Array of track objects {{trackobject}}.
+The following operation types are defined:
 
-Indicates a delta processing instruction to add new tracks. The value of this
-field is an Array of track objects {{trackobject}}. This field MUST NOT be
-present when the deltaUpdate field is absent or false.
+* "add" - Add new tracks that have not previously been declared. The value of
+  the "tracks" field is an Array of track objects {{trackobject}}.
 
-### Remove tracks {#removetracks}
-Required: Optional    JSON Type: Array    Location: Delta Update
+* "remove" - Remove tracks that have been previously declared. The value of
+  the "tracks" field is an Array of track objects {{trackobject}}. Each track
+  object MUST include a Track Name {{trackname}} field, MAY include a Track
+  Namespace {{tracknamespace}} field, and MUST NOT hold any other fields.
 
-Indicates a delta processing instruction to remove new tracks. The value of this
-field is an Array of track objects {{trackobject}}. Each track object MUST include
-a Track Name {{trackname}} field, MAY include a Track Namespace {{tracknamespace}}
-field and MUST NOT hold any other fields. This field MUST NOT be present when
-the deltaUpdate field is absent or false.
+* "clone" - Clone new tracks from previously declared tracks. The value of
+  the "tracks" field is an Array of track objects {{trackobject}}. Each track
+  object MUST include a Parent Name {{parentname}} field and MAY include a
+  Parent namespace {{parentnamespace}} field. The cloned track inherits all
+  attributes from the parent except the Track Name which MUST be new.
+  Attributes redefined in the track object override inherited values.
 
-### Clone tracks {#clonetracks}
-Required: Optional    JSON Type: Array    Location: Delta Update
+### Initialization Data List {#initdatalist}
+Required: Optional    JSON Type: Array    Location: Root Catalog
 
-Indicates a delta processing instruction to clone new tracks from previously declared
-tracks. The value of this field is an Array of track objects {{trackobject}}. Each
-track object MUST include a Parent Name {{parentname}} field. This field MUST NOT
-be present when the deltaUpdate field is absent or false.
+An array of initialization reference objects. Each initialization reference
+object has the following fields:
+
+* id : a string defining a reference to this initialization data which is unique
+  within the scope of the catalog.
+* type: as string defining the type of reference. This version of the specification
+  defines a single allowed type, per the table below
+
+| Type          |   Data field definition                        |
+|:==============|:===============================================|
+| inline        |  Base64 {{BASE64}} encoded initialization data |
+
+* data: a string holding the init payload as defined by the type.
+
+The Initialization Data List, if present, MUST be located after the tracks array in
+the root of the JSON catalog. The purpose of this is to improve the human readability
+of the catalog tracks by moving the verbose init data towards the end of the document.
 
 ## Track Object Fields
 
-Table 3 lists the fields defined within each track object.
+Table 2 lists the fields defined within each track object.
 
 | Field                   |  Name                  |           Definition      |
 |:========================|:=======================|:==========================|
@@ -358,11 +401,12 @@ Table 3 lists the fields defined within each track object.
 | Event timeline type     | eventType              | {{eventtype}}             |
 | Is Live                 | isLive                 | {{islive}}                |
 | Target latency          | targetLatency          | {{targetlatency}}         |
+| Buffers                 | buffers                | {{buffers}}               |
 | Track role              | role                   | {{trackrole}}             |
 | Track label             | label                  | {{tracklabel}}            |
 | Render group            | renderGroup            | {{rendergroup}}           |
 | Alternate group         | altGroup               | {{altgroup}}              |
-| Initialization data     | initData               | {{initdata}}              |
+| Initialization ref      | initRef                | {{initref}}               |
 | Dependencies            | depends                | {{dependencies}}          |
 | Temporal ID             | temporalId             | {{temporalid}}            |
 | Spatial ID              | spatialId              | {{spatialid}}             |
@@ -370,7 +414,10 @@ Table 3 lists the fields defined within each track object.
 | Mime type               | mimeType               | {{mimetype}}              |
 | Framerate               | framerate              | {{framerate}}             |
 | Timescale               | timescale              | {{timescale}}             |
-| Bitrate                 | bitrate                | {{bitrate}}               |
+| Maximum Bitrate         | bitrate                | {{bitrate}}               |
+| Average Bitrate         | avgBitrate             | {{averagebitrate}}        |
+| Maximum GOP Duration    | maxGopDuration         | {{maximumgopduration}}    |
+| Maximum Group Duration  | maxGroupDuration       | {{maximumgroupduration}}  |
 | Width                   | width                  | {{width}}                 |
 | Height                  | height                 | {{height}}                |
 | Audio sample rate       | samplerate             | {{audiosamplerate}}       |
@@ -379,14 +426,16 @@ Table 3 lists the fields defined within each track object.
 | Display height          | displayHeight          | {{displayheight}}         |
 | Language                | lang                   | {{language}}              |
 | Parent name             | parentName             | {{parentname}}            |
+| Parent namespace        | parentNamespace        | {{parentnamespace}}       |
 | Track duration          | trackDuration          | {{trackduration}}         |
 | Authorization Info      | authInfo               | {{authinfo}}              |
 | Stream mapping          | streamMapping          | {{streammapping}}         |
+| Accessibility           | accessibility          | {{accessibility}}         |
 
 ### Tracks object {#trackobject}
 
 A track object is a JSON Object containing a collection of fields whose location
-is specified in Table 3.
+is specified in Table 2.
 
 ### Track namespace {#tracknamespace}
 Required: Optional    JSON Type: String    Location: Track Object
@@ -406,7 +455,7 @@ Within the catalog, track names MUST be unique per namespace.
 Required: Yes    JSON Type: String    Location: Track Object
 
 A string defining the type of payload encapsulation. Allowed values are strings
-as defined in Table 4.
+as defined in Table 3.
 
 | Name            |   Value        |      Reference             |
 |:================|:===============|:===========================|
@@ -416,7 +465,7 @@ as defined in Table 4.
 | MoQ Log         | moqlog         | See {{MOQLOG}}             |
 | MoQ Metrics     | moqmetrics     | See {{MOQMETRICS}}         |
 
-Table 4: Allowed packaging values
+Table 3: Allowed packaging values
 
 ### Event timeline type {#eventtype}
 Required: Optional    JSON Type: String    Location: Track Object
@@ -432,12 +481,12 @@ This field MUST NOT be used if the packaging value is not "eventtimeline".
 Required: Optional    JSON Type: String    Location: Track Object
 
 A string defining the role of content carried by the track. Specified roles
-are described in Table 5. These role values are case-sensitive.
+are described in Table 4. These role values are case-sensitive.
 
 This role field MAY be used in conjunction with the Mimetype {{mimetype}} to
 fully describe the content of the track.
 
-Table 5: Reserved track roles
+Table 4: Reserved track roles
 
 | Role             |   Description                                              |
 |:=================|:===========================================================|
@@ -479,6 +528,35 @@ belonging to the same alternate group MUST have identical target latencies. If t
 field is absent from the track definition, and isLive is TRUE, then the player
 MAY choose the latency with which it renders the content.
 
+This property MUST NOT be present if the buffers {{buffers}} property
+is present within a track definition.
+
+### Buffers {#buffers}
+Required: Optional    JSON Type: Object   Location: Track Object
+
+An object defining a set of target buffers. Buffer is defined as the duration of
+media data that MUST be buffered before decoding commences. This is typically known
+as a forward or jitter-buffer in a media player.Players with identical buffer lengths
+are likely to be synchronized. The target buffer object has these keys:
+
+* target : defines the target buffer in integer milliseconds. Players SHOULD attempt
+  to stabilize playback at this value.
+* min : defines the minimum buffer in milliseconds. Players SHOULD NOT operate below
+  this value.
+* max : defines the maximum buffer in milliseconds. Players SHOULD NOT operate above
+  this value.
+
+Keys are optional. Unknown keys in the target buffer object MUST be ignored.
+
+If isLive is FALSE, this target buffer property MUST be ignored. All tracks
+belonging to the same render group MUST have identical target buffers. All tracks
+belonging to the same alternate group MUST have identical target buffers. If this
+field is absent from the track definition, and isLive is TRUE, then the player
+MAY choose the buffers with which it conducts playback.
+
+This property MUST NOT be present if the target latency {{targetlatency}} property
+is present within a track definition.
+
 ### Track label {#tracklabel}
 Required: Optional    JSON Type: String    Location: Track Object
 
@@ -504,10 +582,11 @@ sequences. A subscriber typically subscribes to one track from a set of
 tracks specifying the same alternate group number. A common example would be
 a set video tracks of the same content offered in alternate bitrates.
 
-### Initialization data {#initdata}
+### Initialization reference {#initref}
 Required: Optional    JSON Type: String    Location: Track Object
 
-A string holding Base64 {{BASE64}} encoded initialization data for the track.
+A string pointing at the id field of an entry in the Initialization
+Data List {{initdatalist}}.
 
 ### Dependencies {#dependencies}
 Required: Optional    JSON Type: Array    Location: Track Object
@@ -518,7 +597,7 @@ Since only the track name is signaled, the namespace of the dependencies is
 assumed to match that of the track declaring the dependencies.
 
 ### Template {#template}
-Location: T    Required: Optional   JSON Type: Array
+Required: Optional   JSON Type: Array    Location: Track Object
 
 A media timeline template for tracks with fixed-duration segments. It specifies
 the relationship between media time, MOQT Location, and wallclock time through
@@ -544,11 +623,14 @@ A number identifying the spatial layer encoding of the track, starting with 0
 for the base layer, and increasing by 1 for the next higher fidelity.
 
 ### Codec {#codec}
-Required: Optional    JSON Type: String    Location: Track Object
+Required: Conditional    JSON Type: String    Location: Track Object
 
 A string defining the codec used to encode the track.
 For LOC packaged content, the string codec registrations are defined in Sect 3
 and Section 4 of {{WEBCODECS-CODEC-REGISTRY}}.
+This property MUST be specified for tracks which have an inherent codec
+associated with them (e.g., audio and video tracks). It is not required for
+raw data tracks or event streams.
 
 ### Mimetype {#mimetype}
 Required: Optional    JSON Type: String    Location: Track Object
@@ -566,36 +648,56 @@ Required: Optional    JSON Type: Number    Location: Track Object
 
 The number of time units that pass per second.
 
-### Bitrate {#bitrate}
+### Maximum Bitrate {#bitrate}
+Required: Conditional    JSON Type: Number    Location: Track Object
+
+A number defining the maximum bitrate of the track, expressed in bits per second.
+This property MUST be specified for audio and video tracks.
+
+### Average Bitrate {#averagebitrate}
 Required: Optional    JSON Type: Number    Location: Track Object
 
-A number defining the bitrate of the track, expressed in bits per second.
+A number defining the average bitrate of the track, over the lifetime of the track,
+expressed in bits per second.
+
+### Maximum GOP Duration {#maximumgopduration}
+Required: Optional    JSON Type: Number    Location: Track Object
+
+A number defining the maximum duration, expressed in milliseconds, between
+successive independently decodable points (random access points) in the media
+track. This property SHOULD only accompany video tracks.
+
+### Maximum Group Duration {#maximumgroupduration}
+Required: Optional    JSON Type: Number    Location: Track Object
+
+A number defining the maximum duration, expressed in milliseconds, of any MOQT Group
+in this track. This value helps subscribers estimate buffer requirements for the track.
 
 ### Width {#width}
 Required: Optional    JSON Type: Number    Location: Track Object
 
-A number expressing the encoded width of the video frames in pixels.
-This property SHOULD only accompany tracks which have a visual representation.
+A number expressing the maximum encoded width of the video frames in pixels.
+This property SHOULD accompany tracks which have a visual representation.
 
 ### Height {#height}
 Required: Optional    JSON Type: Number    Location: Track Object
 
-A number expressing the encoded height of the video frames in pixels.
-This property SHOULD only accompany tracks which have a visual representation.
+A number expressing the maximum encoded height of the video frames in pixels.
+This property SHOULD accompany tracks which have a visual representation.
 
 ### Audio sample rate {#audiosamplerate}
-Required: Optional    JSON Type: Number    Location: Track Object
+Required: Conditional  JSON Type: Number    Location: Track Object
 
-The number of audio frame samples per second. This property SHOULD only
-accompany audio codecs.
+The number of audio frame samples per second. This property MUST
+accompany tracks for which audio codecs are specified.
 
 ### Channel configuration {#channelconfiguration}
-Required: Optional    JSON Type: String    Location: Track Object
+Required: Conditional    JSON Type: String    Location: Track Object
 
-A string specifying the audio channel configuration. This property SHOULD only
-accompany audio codecs. A string is used in order to provide the flexibility to
-describe complex channel configurations for multi-channel and Next Generation
-Audio schemas.
+A string specifying the audio channel configuration. A string is used in order
+to provide the flexibility to describe complex channel configurations for
+multi-channel and Next Generation Audio schemas. This property MUST accompany
+tracks for which audio codecs are specified.
 
 ### Display width {#displaywidth}
 Required: Optional    JSON Type: Number    Location: Track Object
@@ -619,7 +721,14 @@ the standard Tags for Identifying Languages as defined by {{LANG}}.
 Required: Optional    JSON Type: String    Location: Track Object
 
 A string defining the parent track name {{trackname}} to be cloned. This field
-MUST only be included inside a Clone tracks {{clonetracks}} object.
+MUST only be included inside a clone operation in a delta update {{deltaupdate}}.
+
+### Parent namespace {#parentnamespace}
+Required: Optional    JSON Type: String    Location: Track Object
+
+A string defining the parent track namespace {{tracknamespace}} to be cloned. This field
+MUST only be included inside a clone operation in a delta update {{deltaupdate}}. If this
+field is missing from a clone operation, then the namespace of the catalog is assumed.
 
 ### Track duration {#trackduration}
 Required: Optional    JSON Type: Number    Location: Track Object
@@ -628,7 +737,7 @@ The duration of the track expressed in integer milliseconds. This field MUST NOT
 be included if the isLive {{islive}} field value is true.
 
 ### Connection URI {#connectionuri}
-Location: T    Required: Optional   JSON Type: String
+Required: Optional   JSON Type: String    Location: Track Object
 
 A string containing the MOQT connection endpoint URI for the publish track. When
 specified, the subscriber MUST establish a new MOQT connection to this URI for
@@ -640,14 +749,14 @@ The URI MUST be a valid MOQT endpoint URI as defined by {{MoQTransport}} (Sect 3
 "https://logs.example.com/moqt".
 
 ### Token {#token}
-Location: T    Required: Optional   JSON Type: String
+Required: Optional   JSON Type: String    Location: Track Object
 
 A string containing an authentication token or credential for the track. For
 publish tracks, this token authorizes the subscriber to publish data to the
 specified track. The format and validation of the token is application-specific.
 
 ### Encryption scheme {#encryptionscheme}
-Location: T    Required: Optional   JSON Type: String
+Required: Optional   JSON Type: String    Location: Track Object
 
 A string identifying the encryption scheme used to protect the track content.
 The default and RECOMMENDED value is "moq-secure-objects" as defined in
@@ -663,7 +772,7 @@ Custom encryption schemes MAY be used. Custom scheme names SHOULD use Reverse
 Domain Name Notation to avoid collisions (e.g., "com.example.custom-encryption").
 
 ### Cipher suite {#ciphersuite}
-Location: T    Required: Optional   JSON Type: String
+Required: Optional   JSON Type: String    Location: Track Object
 
 A string identifying the AEAD cipher suite used for encryption. This field
 MUST be present when encryptionScheme is specified. For the "moq-secure-objects"
@@ -682,7 +791,7 @@ support "aes-128-ctr-hmac-sha256-80" for scenarios requiring smaller
 authentication tags.
 
 ### Key ID {#keyid}
-Location: T    Required: Optional   JSON Type: String
+Required: Optional   JSON Type: String    Location: Track Object
 
 A string identifying the key material used for encryption. This value is
 transmitted in the Secure Object KID extension header as defined in
@@ -700,7 +809,7 @@ share the same base key material, though per-track keys are derived using
 the track name as defined in ({{SecureObjects, Section 5}}).
 
 ### Track Base Key {#trackbasekey}
-Location: T    Required: Optional   JSON Type: String
+Required: Optional   JSON Type: String    Location: Track Object
 
 A base64-encoded {{BASE64}} string containing the base key material for this
 track, as defined in ({{SecureObjects, Section 5}}). This field works in
@@ -714,7 +823,7 @@ is used to derive the actual encryption keys. Publishers and subscribers MUST
 use matching trackBaseKey values for successful decryption.
 
 ### Authorization Info {#authinfo}
-Location: T    Required: Optional    JSON Type: Object
+Required: Optional   JSON Type: Object    Location: Track Object
 
 An object indicating that authorization is required to access this track.
 The presence of this field signals to subscribers that they must obtain
@@ -786,6 +895,31 @@ characteristics. For example, "stream-per-object" minimizes head-of-line blockin
 at the cost of more QUIC streams, while "stream-per-group" reduces stream overhead
 but may increase latency under packet loss.
 
+### Accessibility {#accessibility}
+Required: Optional   JSON Type: Array  Location: Track Object
+
+An array of accessibility descriptors indicating accessibility features
+embedded within the track. Each descriptor is a JSON Object containing:
+
+* A required 'scheme' field (String) identifying the accessibility scheme.
+* A required 'value' field (String) specifying the accessibility channels
+  or features available.
+
+Table 6: Registered accessibility schemes
+
+| Scheme                             | Description                          |
+|:===================================|:=====================================|
+| urn:scte:dash:cc:cea-608:2015      | CEA-608 closed captions              |
+| urn:scte:dash:cc:cea-708:2015      | CEA-708 closed captions              |
+
+The 'value' field for CEA-608/708 schemes uses the format defined by
+{{SCTE214-1}}, where caption service channels are specified as
+semicolon-separated pairs of channel identifier and language code
+(e.g., "CC1=eng;CC3=spa").
+
+A subscriber MAY use this information to determine caption availability
+and configure an appropriate caption decoder.
+
 ## Delta updates {#deltaupdates}
 A catalog update might contain incremental changes. This is a useful property if
 many tracks may be initially declared but then there are small changes to a
@@ -800,18 +934,13 @@ A restricted set of operations are allowed with each delta update:
 
 The following rules are to be followed in constructing and processing delta updates:
 
-* A delta update MUST include the Delta Update {{deltaupdate}} field set to true.
-* A delta update catalog MUST contain at least one instance of Add tracks
-  {{addtracks}}, Remove tracks {{removetracks}} or Clone Tracks {{clonetracks}}
-  fields and MAY contain more. It MUST NOT contain an instance of a Tracks
-  {{tracks}} field or an MSF version {{msfversion}} field.
-* The Add, Delete and Clone operations are applied sequentially in the order they
-  are declared in the document. Each operation in the sequence is applied to the
-  target document; the resulting document becomes the target of the next operation.
-  Evaluation continues until all operations are successfully applied.
-* A Cloned track inherits all the attributes of the track defined by the Parent Name
-  {{parentname}}, except the Track Name which MUST be new. Attributes redefined
-  in the cloning Object override inherited values.
+* A delta update MUST include the Delta Update {{deltaupdate}} field with at
+  least one operation. It MUST NOT contain an instance of a Tracks {{tracks}}
+  field or an MSF version {{msfversion}} field.
+* Operations are applied sequentially in the order they appear in the deltaUpdate
+  array. Each operation is applied to the target document; the resulting document
+  becomes the target of the next operation. Evaluation continues until all
+  operations are successfully applied.
 * The tuple of Track Namespace and Track Name defines a fixed set of Track attributes
   which MUST NOT be modified after being declared. To modify any attribute, a new
   track with a different Namespace|Name tuple is created by Adding or Cloning and then
@@ -856,6 +985,16 @@ When a subscriber requests a catalog using a URI containing a fragment identifie
 the fragment is parsed as key-value pairs (using `&` as delimiter and `=` as
 separator). Each key becomes available as a variable name, and the variable
 is replaced with the corresponding value.
+
+## Catalog Compression {#catalog-compression}
+
+Catalogs can contain significant redundancy, particularly when initialization
+data is included. To reduce payload size, catalog objects MAY be compressed
+using the MSF_COMPRESSION property ({{compression-signaling}}). If all catalog
+objects are compressed, the track property ({{compression-track-property}}) is
+used. If only some catalog objects are compressed (for example, the complete
+catalog is compressed while delta updates are not), the object property
+({{compression-object-property}}) is used on each compressed object.
 
 ## Catalog Examples
 
@@ -1024,6 +1163,7 @@ express the track relationships.
       "renderGroup": 1,
       "packaging": "loc",
       "isLive": true,
+      "buffers": {"target":2000},
       "role": "video",
       "codec":"av01.0.01M.10.0.110.09",
       "width":640,
@@ -1037,6 +1177,7 @@ express the track relationships.
       "renderGroup": 1,
       "packaging": "loc",
       "isLive": true,
+      "buffers": {"target":2000},
       "role": "video",
       "codec":"av01.0.04M.10.0.110.09",
       "width":640,
@@ -1051,6 +1192,7 @@ express the track relationships.
       "renderGroup": 1,
       "packaging": "loc",
       "isLive": true,
+      "buffers": {"target":2000},
       "role": "video",
       "codec":"av01.0.05M.10.0.110.09",
       "width":1920,
@@ -1066,6 +1208,7 @@ express the track relationships.
       "renderGroup": 1,
       "packaging": "loc",
       "isLive": true,
+      "buffers": {"target":2000},
       "role": "video",
       "codec":"av01.0.08M.10.0.110.09",
       "width":1920,
@@ -1080,6 +1223,7 @@ express the track relationships.
       "renderGroup": 1,
       "packaging": "loc",
       "isLive": true,
+      "buffers": {"target":2000},
       "role": "audio",
       "codec":"opus",
       "samplerate":48000,
@@ -1098,30 +1242,38 @@ the other is cloned from a previous track.
 
 ~~~json
 {
-  "deltaUpdate": true,
   "generatedAt": 1746104606044,
-  "addTracks": [
-      {
-        "name": "slides",
-        "isLive": true,
-        "role": "video",
-        "codec": "av01.0.08M.10.0.110.09",
-        "width": 1920,
-        "height": 1080,
-        "framerate": 15,
-        "bitrate": 750000,
-        "renderGroup": 1
-      }
-   ],
-   "cloneTracks": [
-      {
-        "parentName": "video-1080",
-        "name": "video-720",
-        "width":1280,
-        "height":720,
-        "bitrate":600000
-      }
-   ]
+  "deltaUpdate": [
+    {
+      "op": "add",
+      "tracks": [
+        {
+          "name": "slides",
+          "isLive": true,
+          "role": "video",
+          "codec": "av01.0.08M.10.0.110.09",
+          "width": 1920,
+          "height": 1080,
+          "framerate": 15,
+          "bitrate": 750000,
+          "renderGroup": 1
+        }
+      ]
+    },
+    {
+      "op": "clone",
+      "tracks": [
+        {
+          "parentName": "video-1080",
+          "parentNamespace": "example.com/custom",
+          "name": "video-720",
+          "width": 1280,
+          "height": 720,
+          "bitrate": 600000
+        }
+      ]
+    }
+  ]
 }
 ~~~
 
@@ -1132,9 +1284,13 @@ from an established video conference.
 
 ~~~json
 {
-  "deltaUpdate": true,
   "generatedAt": 1746104606044,
-  "removeTracks": [{"name": "video"},{"name": "slides"}]
+  "deltaUpdate": [
+    {
+      "op": "remove",
+      "tracks": [{"name": "video"}, {"name": "slides"}]
+    }
+  ]
 }
 ~~~
 
@@ -1155,6 +1311,7 @@ description.
       "namespace": "conference.example.com/conference123/alice",
       "packaging": "loc",
       "isLive": true,
+      "buffers": {"target":2000, "min": 1500, "max": 5000},
       "role": "video",
       "renderGroup": 1,
       "codec":"av01.0.08M.10.0.110.09",
@@ -1171,6 +1328,7 @@ description.
       "namespace": "conference.example.com/conference123/alice",
       "packaging": "loc",
       "isLive": true,
+      "buffers": {"target":2000, "min": 1500, "max": 5000},
       "role": "audio",
       "renderGroup": 1,
       "codec":"opus",
@@ -1380,6 +1538,104 @@ template values to accommodate different group durations.
 
 ~~~
 
+### Video track with embedded captions and SCTE-35 events
+
+This example shows a live broadcast with CEA-608 closed captions embedded
+in the video track and a separate SCTE-35 event timeline for ad insertion.
+
+~~~json
+{
+  "version": 1,
+  "generatedAt": 1746104606044,
+  "tracks": [
+    {
+      "name": "video",
+      "packaging": "loc",
+      "isLive": true,
+      "targetLatency": 4000,
+      "role": "video",
+      "renderGroup": 1,
+      "codec": "avc1.4d401f",
+      "width": 1920,
+      "height": 1080,
+      "framerate": 30,
+      "bitrate": 5000000,
+      "accessibility": [
+        {
+          "scheme": "urn:scte:dash:cc:cea-608:2015",
+          "value": "CC1=eng;CC3=spa"
+        }
+      ]
+    },
+    {
+      "name": "audio",
+      "packaging": "loc",
+      "isLive": true,
+      "targetLatency": 4000,
+      "role": "audio",
+      "renderGroup": 1,
+      "codec": "opus",
+      "samplerate": 48000,
+      "channelConfig": "2",
+      "bitrate": 128000
+    },
+    {
+      "name": "scte35",
+      "packaging": "eventtimeline",
+      "eventType": "urn:scte:scte35:2013:bin",
+      "mimeType": "application/json",
+      "isLive": true,
+      "role": "eventtimeline",
+      "depends": ["video"]
+    }
+  ]
+}
+~~~
+
+### Video track with CEA-708 captions
+
+This example shows a live broadcast with CEA-708 closed captions embedded
+in the video track, demonstrating multiple caption services.
+
+~~~json
+{
+  "version": 1,
+  "generatedAt": 1746104606044,
+  "tracks": [
+    {
+      "name": "video",
+      "packaging": "loc",
+      "isLive": true,
+      "targetLatency": 4000,
+      "role": "video",
+      "renderGroup": 1,
+      "codec": "hev1.1.6.L93.B0",
+      "width": 1920,
+      "height": 1080,
+      "framerate": 30,
+      "bitrate": 4000000,
+      "accessibility": [
+        {
+          "scheme": "urn:scte:dash:cc:cea-708:2015",
+          "value": "1=lang:eng;2=lang:spa;3=lang:fra"
+        }
+      ]
+    },
+    {
+      "name": "audio",
+      "packaging": "loc",
+      "isLive": true,
+      "targetLatency": 4000,
+      "role": "audio",
+      "renderGroup": 1,
+      "codec": "mp4a.40.2",
+      "samplerate": 48000,
+      "channelConfig": "2",
+      "bitrate": 128000
+    }
+  ]
+}
+~~~
 
 ### Terminating a live broadcast
 
@@ -1603,19 +1859,20 @@ streamMapping field in the catalog for each media track. Subscribers MUST use
 the signaled stream mapping when consuming the track.
 
 ## Group numbering
-The Group ID of the first Group published in a track at application startup MUST be
-a unique integer that will not repeat in the future. One approach to achieve this
-is to set the initial Group ID to the creation time of the first Object in the
-group, represented as the number of milliseconds since the Unix epoch, rounded to
-the nearest millisecond. This ensures that republishing the same track in the
-future, such as after a loss of connectivity or an encoder restart, will not result
-in smaller or duplicate Group IDs for the same track name. Note that this method
-does not prevent duplication if more than 1000 Groups are published per second.
+Group IDs for a track MUST be unique and MUST increase monotonically. Within a
+continuous publishing session, each subsequent Group ID SHOULD increase by 1.
 
-Each subsequent Group ID MUST increase by 1.
+When a publisher restarts (e.g., after connectivity loss or encoder restart), it
+MUST ensure the new starting Group ID is greater than any previously published
+Group ID for that track. One approach is to use the current wall clock time in
+milliseconds since the Unix epoch as the starting Group ID.
 
-If a publisher is able to maintain state across a republish, it MUST signal the gap
-in Group IDs using the MOQT Prior Group ID Gap Extension header.
+If a publisher maintains state across a restart and knows the previous Group ID,
+it SHOULD signal the gap using the MOQT Prior Group ID Gap Extension header.
+
+## Object Numbering
+Object ID MUST be zero for the first Object within a Group and then MUST increase
+monotonically by one within that Group.
 
 # Media Timeline track {#mediatimelinetrack}
 The media timeline track provides data about the previously published Groups and their
@@ -1626,16 +1883,17 @@ can exist inside a catalog.
 
 ## Media Timeline track payload {#mediatimelinepayload}
 A media timeline track is a JSON {{JSON}} document. This document MAY be compressed
-using GZIP {{GZIP}}. The document supports two formats: an explicit entry format
-and a template format. Publishers MAY combine both formats in a single document.
+using the MSF_COMPRESSION property ({{compression-signaling}}). The document
+supports two formats: an explicit entry format and a template format. Publishers
+MAY combine both formats in a single document.
 
 ### Explicit entry format {#explicitentryformat}
 The explicit format contains an array of records. Each record consists of
 an array of three required items, whose ordinal position defines their type:
 
 * The first item holds the media presentation timestamp, expressed as a JSON Number.
-  This value MUST match the media presentation timestamp, rounded to the nearest
-  millisecond, of the first media sample in the referenced Object
+  This value MUST match the media presentation timestamp, expressed as the floor in integral milliseconds, of the first media sample in the referenced Object. Implementers
+  who require increased time precision can parse the retrieved media object itself.
 * The second item holds the MOQT Location of the entry, defined as a tuple of the MOQT
   Group ID and MOQT Object ID, and expressed as a JSON Array of Numbers, where the
   first number is the Group ID and the second number is the Object ID.
@@ -1742,8 +2000,9 @@ declared in the catalog, to facilitate client selection and parsing.
 
 ## Event Timeline data format {#eventtimelineformat}
 An event timeline track is a JSON {{JSON}} document. This document MAY be compressed
-using GZIP {{GZIP}}. The document contains an array of records. Each record consists of
-a JSON Object containing the following required fields:
+using the MSF_COMPRESSION property ({{compression-signaling}}). The document
+contains an array of records. Each record consists of a JSON Object containing
+the following required fields:
 
 * An index reference, which MUST be either 't' for wallclock time, 'l' for Location or
   'm' for Media PTS. Only one of these index values may be used within each record. Event
@@ -1939,6 +2198,28 @@ A metrics track MAY include:
 * a {{connectionuri}} attribute if metrics should be published to a different endpoint.
 * a {{token}} attribute for publish authorization.
 
+## Well-known event timeline types {#wellknowneventtypes}
+
+Event timelines can carry various types of broadcast metadata synchronized
+with media content. The "MSF Event Timeline Types" registry
+({{iana-event-timeline-types}}) maintains a list of well-known event types.
+Publishers SHOULD use registered types when applicable to ensure
+interoperability.
+
+Event timelines can carry data types including but not limited to:
+
+* Ad insertion signaling (e.g., SCTE-35 splice points) - see {{SCTE35-MSF}}
+* Out-of-band timed-text cues (WebVTT, IMSC1) - see {{WebVTT-MSF}} and {{IMSC1-MSF}}
+* Sports scores and game state
+* GPS coordinates and telemetry
+* Active speaker notifications
+* Custom application-specific metadata
+
+The packaging format and data structure for each event type is defined by
+the specification referenced in the registry. Custom event types not in
+the registry SHOULD use Reverse Domain Name Notation (e.g.,
+"com.example.myeventtype") to avoid naming collisions.
+
 # Workflow
 
 ## URL construction and interpretation
@@ -2027,7 +2308,7 @@ meaning, as defined by {{reservedfragmentparameters}}.
 
 ### Reserved fragment parameters {#reservedfragmentparameters}
 
-Table 5 defines reserved key names for the parameter portion of the msf-fragment. Keynames are
+Table 8 defines reserved key names for the parameter portion of the msf-fragment. Keynames are
 case-sensitive.
 
 | Name            |                Description                       |
@@ -2219,6 +2500,78 @@ The specific error codes and retry semantics are defined by the authorization
 scheme specifications. See {{PrivacyPassAuth}} for Privacy Pass error handling
 and {{C4M}} for CAT error handling.
 
+# MSF Properties {#track-properties}
+
+MSF defines MOQT Track Properties and Object Properties (see {{MoQTransport}})
+to signal metadata about MSF tracks and objects. These properties are carried in
+MOQT control messages and object headers, allowing endpoints to learn track and
+object characteristics before processing payload data.
+
+## Compression Signaling {#compression-signaling}
+
+MSF provides two mutually exclusive mechanisms to signal compression of
+track payloads, including catalogs ({{catalog}}), media timeline tracks
+({{mediatimelinetrack}}), and event timeline tracks ({{eventtimelinetrack}}).
+Publishers MUST use one of the following approaches:
+
+* **Track Property** ({{compression-track-property}}): Signals that ALL objects
+  in the track are compressed using the specified algorithm.
+* **Object Property** ({{compression-object-property}}): Signals compression on
+  individual objects, allowing a mixture of compressed and uncompressed objects
+  within the same track.
+
+A publisher MUST NOT use both mechanisms on the same track. If the track property
+is set, then every object in the track is compressed and the object property
+MUST NOT be present. If compression varies between objects, then the track
+property MUST NOT be set and the object property MUST be used on each
+compressed object.
+
+The compression algorithm values used by both mechanisms are:
+
+| Value | Compression Algorithm | Reference |
+|:======|:======================|:==========|
+| 0     | None (uncompressed)   | RFC XXXX  |
+| 1     | GZIP                  | {{GZIP}}  |
+
+Table: MSF Compression Values
+
+All MSF implementations MUST support both uncompressed payloads (value 0 or
+property absent) and GZIP compressed payloads (value 1).
+
+### MSF_COMPRESSION Track Property {#compression-track-property}
+
+The MSF_COMPRESSION track property signals that ALL objects in the track are
+compressed using the specified algorithm. This mechanism is appropriate when
+every object published on the track uses the same compression.
+
+Publishers MUST include the MSF_COMPRESSION track property in the PUBLISH
+message (publisher-initiated flow) or SUBSCRIBE_OK (subscriber-initiated flow).
+
+Subscribers MUST check for this property in the corresponding message before
+processing the track payload.
+
+If the property is absent, and no per-object compression is signaled, the
+subscriber MUST treat the payload as uncompressed. If the property is present
+with a value the subscriber does not support, the subscriber MUST NOT attempt
+to process the payload and SHOULD unsubscribe from the track.
+
+### MSF_COMPRESSION Object Property {#compression-object-property}
+
+The MSF_COMPRESSION object property signals that an individual object is
+compressed. This mechanism is appropriate when a track contains a mixture of
+compressed and uncompressed objects. For example, a catalog track where the
+first object in a group (the complete catalog) is compressed, but subsequent
+delta update objects within the same group are uncompressed.
+
+Publishers MUST include the MSF_COMPRESSION object property on each
+compressed object.
+
+Subscribers MUST check for this property on each received object before
+processing its payload. If the property is absent on an object, the subscriber
+MUST treat that object's payload as uncompressed. If the property is present
+with a value the subscriber does not support, the subscriber MUST NOT attempt
+to process that object.
+
 # Security Considerations
 
 ToDo
@@ -2232,6 +2585,50 @@ This document creates a new entry in the "MOQT URI Fragment Types" registry
 | Fragment Type   |  Description          | Specification  |
 |:================|:======================|:===============|
 | msf             | MOQT Streaming Format | this           |
+
+## "MSF Event Timeline Types" registry {#iana-event-timeline-types}
+
+This document establishes the "MSF Event Timeline Types" registry. This registry
+lists the event types that can be used with the eventType field {{eventtype}}
+in MSF catalogs.
+
+New entries in this registry are subject to Expert Review policy as defined in
+{{!RFC8126}}.
+
+The initial contents of this registry are:
+
+| Event Type                     | Description                        | Specification    |
+|:===============================|:===================================|:=================|
+| urn:scte:scte35:2013:bin       | SCTE-35 binary splice_info_section | {{SCTE35-MSF}}   |
+| urn:scte:scte35:2013:xml       | SCTE-35 XML representation         | {{SCTE35-MSF}}   |
+| urn:msf:timedtext:webvtt        | WebVTT timed text cues                | {{WebVTT-MSF}}   |
+| urn:msf:timedtext:imsc1         | IMSC1 timed text  cues                 | {{IMSC1-MSF}}    |
+
+## MSF_COMPRESSION Track Property {#iana-track-properties}
+
+This document requests IANA to register the following entry in the
+"Track Properties" registry established by {{MoQTransport}} (Section 14.4):
+
+| Property Name   | Property ID | Value Type | Reference |
+|:================|:============|:===========|:==========|
+| MSF_COMPRESSION | TBD         | varint     | RFC XXXX  |
+
+The MSF_COMPRESSION track property indicates that ALL objects on the track
+are compressed using the specified algorithm. See {{compression-track-property}}
+for the full specification.
+
+## MSF_COMPRESSION Object Property {#iana-object-properties}
+
+This document requests IANA to create a new "MSF Compression Algorithms"
+registry with the following initial values:
+
+| Value | Compression Algorithm | Reference |
+|:======|:======================|:==========|
+| 0     | None (uncompressed)   | RFC XXXX  |
+| 1     | GZIP                  | {{GZIP}}  |
+
+Values 2-127 are available for registration via Standards Action.
+Values 128 and above are reserved for private use.
 
 --- back
 
