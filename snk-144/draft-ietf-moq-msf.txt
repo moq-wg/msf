@@ -2839,8 +2839,8 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
 12.1.  Compression Signaling
 
    MSF provides two mutually exclusive mechanisms to signal compression
-   of JSON-based track payloads, including catalogs (Section 5), media
-   timeline tracks (Section 7), and event timeline tracks (Section 8).
+   of track payloads, including catalogs (Section 5), media timeline
+   tracks (Section 7), and event timeline tracks (Section 8).
    Publishers MUST use one of the following approaches:
 
    *  *Track Property* (Section 12.1.1): Signals that ALL objects in the
