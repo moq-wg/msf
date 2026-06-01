@@ -2486,18 +2486,7 @@ for the full specification.
 
 ## MSF_COMPRESSION Object Property {#iana-object-properties}
 
-This document requests IANA to register the following entry in the
-"Object Properties" registry established by {{MoQTransport}}:
-
-| Property Name   | Property ID | Value Type | Reference |
-|:================|:============|:===========|:==========|
-| MSF_COMPRESSION | TBD         | varint     | RFC XXXX  |
-
-The MSF_COMPRESSION object property indicates that an individual object
-is compressed using the specified algorithm. See {{compression-object-property}}
-for the full specification.
-
-This document also requests IANA to create a new "MSF Compression Algorithms"
+This document requests IANA to create a new "MSF Compression Algorithms"
 registry with the following initial values:
 
 | Value | Compression Algorithm | Reference |
