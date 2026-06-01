@@ -302,12 +302,15 @@ Table 1 lists the fields defined at the root of the catalog JSON object.
 | Initialization Data List  | initDataList           | {{initdatalist}}          |
 
 ### MSF version {#msfversion}
-Required: Yes    JSON Type: Number    Location: Root Catalog
+Required: Yes    JSON Type: String    Location: Root Catalog
 
 Specifies the version of MSF referenced by this catalog. There is no guarantee
 that future catalog versions are backwards compatible and field definitions and
 interpretation may change between versions. A subscriber MUST NOT attempt to
 parse a catalog version which it does not understand.
+
+For usage against IETF Internet-Draft releases, follow the convention of specifying
+the version as "draft-XX". For example "draft-03" refers to the -03 draft release.
 
 ### Generated at {#generatedat}
 Required: Optional    JSON Type: Number    Location: Root Catalog
@@ -984,7 +987,7 @@ packaged, time-aligned audio and video tracks.
 
 ~~~json
 {
-  "version": 1,
+  "version": "1",
   "generatedAt": 1746104606044,
   "tracks": [
     {
@@ -1031,7 +1034,7 @@ of the catalog.
 
 ~~~json
 {
-  "version": 1,
+  "version": "1",
   "generatedAt": 1746104606044,
   "tracks":[
     {
@@ -1129,7 +1132,7 @@ express the track relationships.
 
 ~~~json
 {
-  "version": 1,
+  "version": "1",
   "generatedAt": 1746104606044,
   "tracks":[
     {
@@ -1278,7 +1281,7 @@ description.
 
 ~~~json
 {
-  "version": 1,
+  "version": "1",
   "generatedAt": 1746104606044,
   "tracks": [
     {
@@ -1326,7 +1329,7 @@ and video tracks.
 
 ~~~json
 {
-  "version": 1,
+  "version": "1",
   "tracks": [
     {
       "name": "video",
@@ -1365,7 +1368,7 @@ tracks using MoQ Secure Objects with AES-128-GCM.
 
 ~~~json
 {
-  "version": 1,
+  "version": "1",
   "generatedAt": 1746104606044,
   "tracks": [
     {
@@ -1416,7 +1419,7 @@ synchronized data.
 
 ~~~json
 {
-  "version": 1,
+  "version": "1",
   "generatedAt": 1746104606044,
   "tracks": [
     {
@@ -1476,7 +1479,7 @@ template values to accommodate different group durations.
 
 ~~~json
 {
-  "version": 1,
+  "version": "1",
   "generatedAt": 1746104606044,
   "tracks": [
     {
@@ -1520,7 +1523,7 @@ in the video track and a separate SCTE-35 event timeline for ad insertion.
 
 ~~~json
 {
-  "version": 1,
+  "version": "1",
   "generatedAt": 1746104606044,
   "tracks": [
     {
@@ -1574,7 +1577,7 @@ in the video track, demonstrating multiple caption services.
 
 ~~~json
 {
-  "version": 1,
+  "version": "1",
   "generatedAt": 1746104606044,
   "tracks": [
     {
@@ -1619,7 +1622,7 @@ live broadcast containing a video and an audio track.
 
 ~~~json
 {
-  "version": 1,
+  "version": "1",
   "generatedAt": 1746104606044,
   "isComplete": true,
   "tracks": []
@@ -1640,7 +1643,7 @@ substitution. The following catalog template:
 
 ~~~json
 {
-  "version": 1,
+  "version": "1",
   "tracks": [
     {
       "name": "video",
@@ -1664,7 +1667,7 @@ Would be resolved by the subscriber as:
 
 ~~~json
 {
-  "version": 1,
+  "version": "1",
   "tracks": [
     {
       "name": "video",
@@ -1695,7 +1698,7 @@ specification.
 
 ~~~json
 {
-  "version": 1,
+  "version": "1",
   "generatedAt": 1746104606044,
   "tracks": [
     {
@@ -1759,7 +1762,7 @@ track name formats follow the conventions defined in {{MOQLOG}} and {{MOQMETRICS
 
 ~~~json
 {
-  "version": 1,
+  "version": "1",
   "generatedAt": 1746104606044,
   "tracks": [
     {
