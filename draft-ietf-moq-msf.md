@@ -2376,7 +2376,7 @@ object characteristics before processing payload data.
 
 ## Compression Signaling {#compression-signaling}
 
-MSF provides two mutually exclusive mechanisms to signal compression of JSON-based
+MSF provides two mutually exclusive mechanisms to signal compression of
 track payloads, including catalogs ({{catalog}}), media timeline tracks
 ({{mediatimelinetrack}}), and event timeline tracks ({{eventtimelinetrack}}).
 Publishers MUST use one of the following approaches:
