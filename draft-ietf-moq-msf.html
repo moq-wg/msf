@@ -2005,11 +2005,13 @@ collide with field names described in this draft.<a href="#section-5-7" class="p
           <h4 id="name-msf-version">
 <a href="#section-5.1.1" class="section-number selfRef">5.1.1. </a><a href="#name-msf-version" class="section-name selfRef">MSF version</a>
           </h4>
-<p id="section-5.1.1-1">Required: Yes    JSON Type: Number    Location: Root Catalog<a href="#section-5.1.1-1" class="pilcrow">¶</a></p>
+<p id="section-5.1.1-1">Required: Yes    JSON Type: String    Location: Root Catalog<a href="#section-5.1.1-1" class="pilcrow">¶</a></p>
 <p id="section-5.1.1-2">Specifies the version of MSF referenced by this catalog. There is no guarantee
 that future catalog versions are backwards compatible and field definitions and
 interpretation may change between versions. A subscriber <span class="bcp14">MUST NOT</span> attempt to
 parse a catalog version which it does not understand.<a href="#section-5.1.1-2" class="pilcrow">¶</a></p>
+<p id="section-5.1.1-3">For usage against IETF Internet-Draft releases, follow the convention of specifying
+the version as "draft-XX". For example "draft-03" refers to the -03 draft release.<a href="#section-5.1.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="generatedat">
@@ -3294,7 +3296,7 @@ packaged, time-aligned audio and video tracks.<a href="#section-5.6.1-1" class="
 <div class="lang-json sourcecode" id="section-5.6.1-2">
 <pre>
 {
-  "version": 1,
+  "version": "1",
   "generatedAt": 1746104606044,
   "tracks": [
     {
@@ -3344,7 +3346,7 @@ of the catalog.<a href="#section-5.6.2-1" class="pilcrow">¶</a></p>
 <div class="breakable lang-json sourcecode" id="section-5.6.2-2">
 <pre>
 {
-  "version": 1,
+  "version": "1",
   "generatedAt": 1746104606044,
   "tracks":[
     {
@@ -3442,7 +3444,7 @@ express the track relationships.<a href="#section-5.6.3-3" class="pilcrow">¶</a
 <div class="breakable lang-json sourcecode" id="section-5.6.3-4">
 <pre>
 {
-  "version": 1,
+  "version": "1",
   "generatedAt": 1746104606044,
   "tracks":[
     {
@@ -3605,7 +3607,7 @@ description.<a href="#section-5.6.6-1" class="pilcrow">¶</a></p>
 <div class="lang-json sourcecode" id="section-5.6.6-2">
 <pre>
 {
-  "version": 1,
+  "version": "1",
   "generatedAt": 1746104606044,
   "tracks": [
     {
@@ -3656,7 +3658,7 @@ and video tracks.<a href="#section-5.6.7-1" class="pilcrow">¶</a></p>
 <div class="lang-json sourcecode" id="section-5.6.7-2">
 <pre>
 {
-  "version": 1,
+  "version": "1",
   "tracks": [
     {
       "name": "video",
@@ -3700,7 +3702,7 @@ tracks using MoQ Secure Objects with AES-128-GCM.<a href="#section-5.6.8-1" clas
 <div class="lang-json sourcecode" id="section-5.6.8-2">
 <pre>
 {
-  "version": 1,
+  "version": "1",
   "generatedAt": 1746104606044,
   "tracks": [
     {
@@ -3756,7 +3758,7 @@ synchronized data.<a href="#section-5.6.9-1" class="pilcrow">¶</a></p>
 <div class="breakable lang-json sourcecode" id="section-5.6.9-2">
 <pre>
 {
-  "version": 1,
+  "version": "1",
   "generatedAt": 1746104606044,
   "tracks": [
     {
@@ -3821,7 +3823,7 @@ template values to accommodate different group durations.<a href="#section-5.6.1
 <div class="lang-json sourcecode" id="section-5.6.10-2">
 <pre>
 {
-  "version": 1,
+  "version": "1",
   "generatedAt": 1746104606044,
   "tracks": [
     {
@@ -3870,7 +3872,7 @@ in the video track and a separate SCTE-35 event timeline for ad insertion.<a hre
 <div class="lang-json sourcecode" id="section-5.6.11-2">
 <pre>
 {
-  "version": 1,
+  "version": "1",
   "generatedAt": 1746104606044,
   "tracks": [
     {
@@ -3929,7 +3931,7 @@ in the video track, demonstrating multiple caption services.<a href="#section-5.
 <div class="lang-json sourcecode" id="section-5.6.12-2">
 <pre>
 {
-  "version": 1,
+  "version": "1",
   "generatedAt": 1746104606044,
   "tracks": [
     {
@@ -3979,7 +3981,7 @@ live broadcast containing a video and an audio track.<a href="#section-5.6.13-1"
 <div class="lang-json sourcecode" id="section-5.6.13-2">
 <pre>
 {
-  "version": 1,
+  "version": "1",
   "generatedAt": 1746104606044,
   "isComplete": true,
   "tracks": []
@@ -4007,7 +4009,7 @@ substitution. The following catalog template:<a href="#section-5.6.14-3" class="
 <div class="lang-json sourcecode" id="section-5.6.14-4">
 <pre>
 {
-  "version": 1,
+  "version": "1",
   "tracks": [
     {
       "name": "video",
@@ -4031,7 +4033,7 @@ substitution. The following catalog template:<a href="#section-5.6.14-3" class="
 <div class="lang-json sourcecode" id="section-5.6.14-6">
 <pre>
 {
-  "version": 1,
+  "version": "1",
   "tracks": [
     {
       "name": "video",
@@ -4067,7 +4069,7 @@ specification.<a href="#section-5.6.15-1" class="pilcrow">¶</a></p>
 <div class="breakable lang-json sourcecode" id="section-5.6.15-2">
 <pre>
 {
-  "version": 1,
+  "version": "1",
   "generatedAt": 1746104606044,
   "tracks": [
     {
@@ -4135,7 +4137,7 @@ track name formats follow the conventions defined in <span>[<a href="#MOQLOG" cl
 <div class="breakable lang-json sourcecode" id="section-5.6.16-2">
 <pre>
 {
-  "version": 1,
+  "version": "1",
   "generatedAt": 1746104606044,
   "tracks": [
     {

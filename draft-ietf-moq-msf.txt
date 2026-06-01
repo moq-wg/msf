@@ -495,13 +495,17 @@ Table of Contents
 
 5.1.1.  MSF version
 
-   Required: Yes JSON Type: Number Location: Root Catalog
+   Required: Yes JSON Type: String Location: Root Catalog
 
    Specifies the version of MSF referenced by this catalog.  There is no
    guarantee that future catalog versions are backwards compatible and
    field definitions and interpretation may change between versions.  A
    subscriber MUST NOT attempt to parse a catalog version which it does
    not understand.
+
+   For usage against IETF Internet-Draft releases, follow the convention
+   of specifying the version as "draft-XX".  For example "draft-03"
+   refers to the -03 draft release.
 
 5.1.2.  Generated at
 
@@ -1389,7 +1393,7 @@ Table of Contents
    LOC packaged, time-aligned audio and video tracks.
 
    {
-     "version": 1,
+     "version": "1",
      "generatedAt": 1746104606044,
      "tracks": [
        {
@@ -1431,7 +1435,7 @@ Table of Contents
    must inherit the namespace of the catalog.
 
    {
-     "version": 1,
+     "version": "1",
      "generatedAt": 1746104606044,
      "tracks":[
        {
@@ -1520,7 +1524,7 @@ Table of Contents
    track relationships.
 
    {
-     "version": 1,
+     "version": "1",
      "generatedAt": 1746104606044,
      "tracks":[
        {
@@ -1662,7 +1666,7 @@ Table of Contents
    fields in each track description.
 
    {
-     "version": 1,
+     "version": "1",
      "generatedAt": 1746104606044,
      "tracks": [
        {
@@ -1705,7 +1709,7 @@ Table of Contents
    includes time-aligned audio and video tracks.
 
    {
-     "version": 1,
+     "version": "1",
      "tracks": [
        {
          "name": "video",
@@ -1741,7 +1745,7 @@ Table of Contents
    video tracks using MoQ Secure Objects with AES-128-GCM.
 
    {
-     "version": 1,
+     "version": "1",
      "generatedAt": 1746104606044,
      "tracks": [
        {
@@ -1790,7 +1794,7 @@ Table of Contents
    Timeline providing synchronized data.
 
    {
-     "version": 1,
+     "version": "1",
      "generatedAt": 1746104606044,
      "tracks": [
        {
@@ -1848,7 +1852,7 @@ Table of Contents
    values to accommodate different group durations.
 
    {
-     "version": 1,
+     "version": "1",
      "generatedAt": 1746104606044,
      "tracks": [
        {
@@ -1890,7 +1894,7 @@ Table of Contents
    ad insertion.
 
    {
-     "version": 1,
+     "version": "1",
      "generatedAt": 1746104606044,
      "tracks": [
        {
@@ -1942,7 +1946,7 @@ Table of Contents
    embedded in the video track, demonstrating multiple caption services.
 
    {
-     "version": 1,
+     "version": "1",
      "generatedAt": 1746104606044,
      "tracks": [
        {
@@ -1985,7 +1989,7 @@ Table of Contents
    previously live broadcast containing a video and an audio track.
 
    {
-     "version": 1,
+     "version": "1",
      "generatedAt": 1746104606044,
      "isComplete": true,
      "tracks": []
@@ -2003,7 +2007,7 @@ Table of Contents
    substitution.  The following catalog template:
 
    {
-     "version": 1,
+     "version": "1",
      "tracks": [
        {
          "name": "video",
@@ -2025,7 +2029,7 @@ Table of Contents
    Would be resolved by the subscriber as:
 
    {
-     "version": 1,
+     "version": "1",
      "tracks": [
        {
          "name": "video",
@@ -2054,7 +2058,7 @@ Table of Contents
    the authorization scheme specification.
 
    {
-     "version": 1,
+     "version": "1",
      "generatedAt": 1746104606044,
      "tracks": [
        {
@@ -2116,7 +2120,7 @@ Table of Contents
    conventions defined in [MOQLOG] and [MOQMETRICS].
 
    {
-     "version": 1,
+     "version": "1",
      "generatedAt": 1746104606044,
      "tracks": [
        {
