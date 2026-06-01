@@ -136,26 +136,27 @@ Table of Contents
      5.4.  Variable Substitution
        5.4.1.  Variable Syntax
        5.4.2.  Variable Resolution
-     5.5.  Catalog Examples
-       5.5.1.  Time-aligned Audio/Video Tracks with single quality
-       5.5.2.  Simulcast video tracks - 3 alternate qualities along
+     5.5.  Catalog Compression
+     5.6.  Catalog Examples
+       5.6.1.  Time-aligned Audio/Video Tracks with single quality
+       5.6.2.  Simulcast video tracks - 3 alternate qualities along
                with audio
-       5.5.3.  SVC video tracks with 2 spatial and 2 temporal
+       5.6.3.  SVC video tracks with 2 spatial and 2 temporal
                qualities
-       5.5.4.  Delta update - adding two tracks
-       5.5.5.  Delta update removing tracks
-       5.5.6.  Time-aligned Audio/Video Tracks with custom field
+       5.6.4.  Delta update - adding two tracks
+       5.6.5.  Delta update removing tracks
+       5.6.6.  Time-aligned Audio/Video Tracks with custom field
                values
-       5.5.7.  Time-aligned VOD Audio/Video Tracks
-       5.5.8.  Encrypted Audio/Video Tracks
-       5.5.9.  Media timeline and Event timeline
-       5.5.10. Media timeline template
-       5.5.11. Video track with embedded captions and SCTE-35 events
-       5.5.12. Video track with CEA-708 captions
-       5.5.13. Terminating a live broadcast
-       5.5.14. Variable Substitution for personalized delivery
-       5.5.15. Time-aligned Audio/Video Tracks with Authorization
-       5.5.16. Publish tracks for logs and metrics
+       5.6.7.  Time-aligned VOD Audio/Video Tracks
+       5.6.8.  Encrypted Audio/Video Tracks
+       5.6.9.  Media timeline and Event timeline
+       5.6.10. Media timeline template
+       5.6.11. Video track with embedded captions and SCTE-35 events
+       5.6.12. Video track with CEA-708 captions
+       5.6.13. Terminating a live broadcast
+       5.6.14. Variable Substitution for personalized delivery
+       5.6.15. Time-aligned Audio/Video Tracks with Authorization
+       5.6.16. Publish tracks for logs and metrics
    6.  Media transmission
      6.1.  Group numbering
      6.2.  Object Numbering
@@ -197,13 +198,19 @@ Table of Contents
        11.4.2.  Token Acquisition
        11.4.3.  Presenting Authorization
        11.4.4.  Handling Authorization Failures
-   12. Security Considerations
-   13. IANA Considerations
-     13.1.  "MOQT URI Fragment Types" registry
-     13.2.  "MSF Event Timeline Types" registry
-   14. References
-     14.1.  Normative References
-     14.2.  Informative References
+   12. MSF Properties
+     12.1.  Compression Signaling
+       12.1.1.  MSF_COMPRESSION Track Property
+       12.1.2.  MSF_COMPRESSION Object Property
+   13. Security Considerations
+   14. IANA Considerations
+     14.1.  "MOQT URI Fragment Types" registry
+     14.2.  "MSF Event Timeline Types" registry
+     14.3.  MSF_COMPRESSION Track Property
+     14.4.  MSF_COMPRESSION Object Property
+   15. References
+     15.1.  Normative References
+     15.2.  Informative References
    Acknowledgments
    Contributors
    Authors' Addresses
@@ -1360,12 +1367,23 @@ Table of Contents
    variable name, and the variable is replaced with the corresponding
    value.
 
-5.5.  Catalog Examples
+5.5.  Catalog Compression
+
+   Catalogs can contain significant redundancy, particularly when
+   initialization data is included.  To reduce payload size, catalog
+   objects MAY be compressed using the MSF_COMPRESSION property
+   (Section 12.1).  If all catalog objects are compressed, the track
+   property (Section 12.1.1) is used.  If only some catalog objects are
+   compressed (for example, the complete catalog is compressed while
+   delta updates are not), the object property (Section 12.1.2) is used
+   on each compressed object.
+
+5.6.  Catalog Examples
 
    The following section provides non-normative JSON examples of various
    catalogs compliant with this draft.
 
-5.5.1.  Time-aligned Audio/Video Tracks with single quality
+5.6.1.  Time-aligned Audio/Video Tracks with single quality
 
    This example shows a catalog for a media producer capable of sending
    LOC packaged, time-aligned audio and video tracks.
@@ -1404,7 +1422,7 @@ Table of Contents
       ]
    }
 
-5.5.2.  Simulcast video tracks - 3 alternate qualities along with audio
+5.6.2.  Simulcast video tracks - 3 alternate qualities along with audio
 
    This example shows a catalog for a media producer capable of sending
    3 time-aligned video tracks for high definition, low definition and
@@ -1473,7 +1491,7 @@ Table of Contents
       ]
    }
 
-5.5.3.  SVC video tracks with 2 spatial and 2 temporal qualities
+5.6.3.  SVC video tracks with 2 spatial and 2 temporal qualities
 
    This example shows a catalog for a media producer capable of sending
    scalable video codec with 2 spatial and 2 temporal layers with a
@@ -1581,7 +1599,7 @@ Table of Contents
       ]
    }
 
-5.5.4.  Delta update - adding two tracks
+5.6.4.  Delta update - adding two tracks
 
    This example shows the catalog delta update for a media producer
    adding two tracks to an established video conference.  One track is
@@ -1622,7 +1640,7 @@ Table of Contents
      ]
    }
 
-5.5.5.  Delta update removing tracks
+5.6.5.  Delta update removing tracks
 
    This example shows a delta update for a media producer removing two
    tracks from an established video conference.
@@ -1637,7 +1655,7 @@ Table of Contents
      ]
    }
 
-5.5.6.  Time-aligned Audio/Video Tracks with custom field values
+5.6.6.  Time-aligned Audio/Video Tracks with custom field values
 
    This example shows a catalog for a media producer capable of sending
    LOC packaged, time-aligned audio and video tracks along with custom
@@ -1680,7 +1698,7 @@ Table of Contents
       ]
    }
 
-5.5.7.  Time-aligned VOD Audio/Video Tracks
+5.6.7.  Time-aligned VOD Audio/Video Tracks
 
    This example shows a catalog for a media producer offering VOD (video
    on-demand) non-live content.  The content is LOC packaged, and
@@ -1717,7 +1735,7 @@ Table of Contents
       ]
    }
 
-5.5.8.  Encrypted Audio/Video Tracks
+5.6.8.  Encrypted Audio/Video Tracks
 
    This example shows a catalog for encrypted LOC-packaged audio and
    video tracks using MoQ Secure Objects with AES-128-GCM.
@@ -1764,7 +1782,7 @@ Table of Contents
      ]
    }
 
-5.5.9.  Media timeline and Event timeline
+5.6.9.  Media timeline and Event timeline
 
    This example shows a catalog for a media producer capable of sending
    LOC packaged, time-aligned audio and video tracks, along with a Media
@@ -1820,7 +1838,7 @@ Table of Contents
       ]
    }
 
-5.5.10.  Media timeline template
+5.6.10.  Media timeline template
 
    This example shows a catalog using inline media timeline templates
    instead of an explicit media timeline track.  The Section 5.2.15
@@ -1865,7 +1883,7 @@ Table of Contents
       ]
    }
 
-5.5.11.  Video track with embedded captions and SCTE-35 events
+5.6.11.  Video track with embedded captions and SCTE-35 events
 
    This example shows a live broadcast with CEA-608 closed captions
    embedded in the video track and a separate SCTE-35 event timeline for
@@ -1918,7 +1936,7 @@ Table of Contents
      ]
    }
 
-5.5.12.  Video track with CEA-708 captions
+5.6.12.  Video track with CEA-708 captions
 
    This example shows a live broadcast with CEA-708 closed captions
    embedded in the video track, demonstrating multiple caption services.
@@ -1961,7 +1979,7 @@ Table of Contents
      ]
    }
 
-5.5.13.  Terminating a live broadcast
+5.6.13.  Terminating a live broadcast
 
    This example shows a catalog for a media producer terminating a
    previously live broadcast containing a video and an audio track.
@@ -1973,7 +1991,7 @@ Table of Contents
      "tracks": []
    }
 
-5.5.14.  Variable Substitution for personalized delivery
+5.6.14.  Variable Substitution for personalized delivery
 
    This example shows a catalog using variable substitution to enable
    personalized advertising and reporting while maintaining
@@ -2026,7 +2044,7 @@ Table of Contents
      ]
    }
 
-5.5.15.  Time-aligned Audio/Video Tracks with Authorization
+5.6.15.  Time-aligned Audio/Video Tracks with Authorization
 
    This example shows a catalog for a media producer requiring
    authorization for premium content.  The premium 4K track uses CAT
@@ -2089,7 +2107,7 @@ Table of Contents
      ]
    }
 
-5.5.16.  Publish tracks for logs and metrics
+5.6.16.  Publish tracks for logs and metrics
 
    This example shows a catalog that includes publish tracks for client-
    side logging and metrics collection.  The subscriber can publish QoE
@@ -2205,9 +2223,10 @@ Table of Contents
 7.1.  Media Timeline track payload
 
    A media timeline track is a JSON [JSON] document.  This document MAY
-   be compressed using GZIP [GZIP].  The document supports two formats:
-   an explicit entry format and a template format.  Publishers MAY
-   combine both formats in a single document.
+   be compressed using the MSF_COMPRESSION property (Section 12.1).  The
+   document supports two formats: an explicit entry format and a
+   template format.  Publishers MAY combine both formats in a single
+   document.
 
 7.1.1.  Explicit entry format
 
@@ -2348,9 +2367,9 @@ Table of Contents
 8.1.  Event Timeline data format
 
    An event timeline track is a JSON [JSON] document.  This document MAY
-   be compressed using GZIP [GZIP].  The document contains an array of
-   records.  Each record consists of a JSON Object containing the
-   following required fields:
+   be compressed using the MSF_COMPRESSION property (Section 12.1).  The
+   document contains an array of records.  Each record consists of a
+   JSON Object containing the following required fields:
 
    *  An index reference, which MUST be either 't' for wallclock time,
       'l' for Location or 'm' for Media PTS.  Only one of these index
@@ -2574,7 +2593,7 @@ Table of Contents
 
    Event timelines can carry various types of broadcast metadata
    synchronized with media content.  The "MSF Event Timeline Types"
-   registry (Section 13.2) maintains a list of well-known event types.
+   registry (Section 14.2) maintains a list of well-known event types.
    Publishers SHOULD use registered types when applicable to ensure
    interoperability.
 
@@ -2644,7 +2663,7 @@ Table of Contents
 
    This specification registers a fragment type of "msf" in the "MOQT
    URI Fragment Types" registry established by [MoQTransport] (see
-   Section 13).  This type is required for any URL defining an MSF
+   Section 14).  This type is required for any URL defining an MSF
    resource.  The value of this type is the msf-fragment-value.
 
    The msf-fragment is defined by the following ABNF:
@@ -2950,13 +2969,97 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
    authorization scheme specifications.  See [PrivacyPassAuth] for
    Privacy Pass error handling and [C4M] for CAT error handling.
 
-12.  Security Considerations
+12.  MSF Properties
+
+   MSF defines MOQT Track Properties and Object Properties (see
+   [MoQTransport]) to signal metadata about MSF tracks and objects.
+   These properties are carried in MOQT control messages and object
+   headers, allowing endpoints to learn track and object characteristics
+   before processing payload data.
+
+12.1.  Compression Signaling
+
+   MSF provides two mutually exclusive mechanisms to signal compression
+   of track payloads, including catalogs (Section 5), media timeline
+   tracks (Section 7), and event timeline tracks (Section 8).
+   Publishers MUST use one of the following approaches:
+
+   *  *Track Property* (Section 12.1.1): Signals that ALL objects in the
+      track are compressed using the specified algorithm.
+
+   *  *Object Property* (Section 12.1.2): Signals compression on
+      individual objects, allowing a mixture of compressed and
+      uncompressed objects within the same track.
+
+   A publisher MUST NOT use both mechanisms on the same track.  If the
+   track property is set, then every object in the track is compressed
+   and the object property MUST NOT be present.  If compression varies
+   between objects, then the track property MUST NOT be set and the
+   object property MUST be used on each compressed object.
+
+   The compression algorithm values used by both mechanisms are:
+
+               +=======+=======================+===========+
+               | Value | Compression Algorithm | Reference |
+               +=======+=======================+===========+
+               | 0     | None (uncompressed)   | RFC XXXX  |
+               +-------+-----------------------+-----------+
+               | 1     | GZIP                  | [GZIP]    |
+               +-------+-----------------------+-----------+
+
+                                  Table 11
+
+   Table: MSF Compression Values
+
+   All MSF implementations MUST support both uncompressed payloads
+   (value 0 or property absent) and GZIP compressed payloads (value 1).
+
+12.1.1.  MSF_COMPRESSION Track Property
+
+   The MSF_COMPRESSION track property signals that ALL objects in the
+   track are compressed using the specified algorithm.  This mechanism
+   is appropriate when every object published on the track uses the same
+   compression.
+
+   Publishers MUST include the MSF_COMPRESSION track property in the
+   PUBLISH message (publisher-initiated flow) or SUBSCRIBE_OK
+   (subscriber-initiated flow).
+
+   Subscribers MUST check for this property in the corresponding message
+   before processing the track payload.
+
+   If the property is absent, and no per-object compression is signaled,
+   the subscriber MUST treat the payload as uncompressed.  If the
+   property is present with a value the subscriber does not support, the
+   subscriber MUST NOT attempt to process the payload and SHOULD
+   unsubscribe from the track.
+
+12.1.2.  MSF_COMPRESSION Object Property
+
+   The MSF_COMPRESSION object property signals that an individual object
+   is compressed.  This mechanism is appropriate when a track contains a
+   mixture of compressed and uncompressed objects.  For example, a
+   catalog track where the first object in a group (the complete
+   catalog) is compressed, but subsequent delta update objects within
+   the same group are uncompressed.
+
+   Publishers MUST include the MSF_COMPRESSION object property on each
+   compressed object.
+
+   Subscribers MUST check for this property on each received object
+   before processing its payload.  If the property is absent on an
+   object, the subscriber MUST treat that object's payload as
+   uncompressed.  If the property is present with a value the subscriber
+   does not support, the subscriber MUST NOT attempt to process that
+   object.
+
+13.  Security Considerations
 
    ToDo
 
-13.  IANA Considerations
+14.  IANA Considerations
 
-13.1.  "MOQT URI Fragment Types" registry
+14.1.  "MOQT URI Fragment Types" registry
 
    This document creates a new entry in the "MOQT URI Fragment Types"
    registry (see [MoQTransport] Sect 14.3).
@@ -2967,9 +3070,9 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
          | msf           | MOQT Streaming Format | this          |
          +---------------+-----------------------+---------------+
 
-                                  Table 11
+                                  Table 12
 
-13.2.  "MSF Event Timeline Types" registry
+14.2.  "MSF Event Timeline Types" registry
 
    This document establishes the "MSF Event Timeline Types" registry.
    This registry lists the event types that can be used with the
@@ -2996,11 +3099,47 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
     |                          | cues                |               |
     +--------------------------+---------------------+---------------+
 
-                                 Table 12
+                                 Table 13
 
-14.  References
+14.3.  MSF_COMPRESSION Track Property
 
-14.1.  Normative References
+   This document requests IANA to register the following entry in the
+   "Track Properties" registry established by [MoQTransport]
+   (Section 14.4):
+
+        +=================+=============+============+===========+
+        | Property Name   | Property ID | Value Type | Reference |
+        +=================+=============+============+===========+
+        | MSF_COMPRESSION | TBD         | varint     | RFC XXXX  |
+        +-----------------+-------------+------------+-----------+
+
+                                 Table 14
+
+   The MSF_COMPRESSION track property indicates that ALL objects on the
+   track are compressed using the specified algorithm.  See
+   Section 12.1.1 for the full specification.
+
+14.4.  MSF_COMPRESSION Object Property
+
+   This document requests IANA to create a new "MSF Compression
+   Algorithms" registry with the following initial values:
+
+               +=======+=======================+===========+
+               | Value | Compression Algorithm | Reference |
+               +=======+=======================+===========+
+               | 0     | None (uncompressed)   | RFC XXXX  |
+               +-------+-----------------------+-----------+
+               | 1     | GZIP                  | [GZIP]    |
+               +-------+-----------------------+-----------+
+
+                                  Table 15
+
+   Values 2-127 are available for registration via Standards Action.
+   Values 128 and above are reserved for private use.
+
+15.  References
+
+15.1.  Normative References
 
    [BASE64]   Josefsson, S., "The Base16, Base32, and Base64 Data
               Encodings", RFC 4648, DOI 10.17487/RFC4648, October 2006,
@@ -3119,7 +3258,7 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
               Text Tracks Format", April 2019,
               <https://www.w3.org/TR/webvtt1/>.
 
-14.2.  Informative References
+15.2.  Informative References
 
    [E2EE-MLS] Jennings, C. F., Nandakumar, S., and R. Barnes, "End-to-
               end Security for Media over QUIC", Work in Progress,
