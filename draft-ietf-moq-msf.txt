@@ -5,8 +5,8 @@
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
 Intended status: Informational                             S. Nandakumar
-Expires: 3 December 2026                                           Cisco
-                                                             1 June 2026
+Expires: 4 December 2026                                           Cisco
+                                                             2 June 2026
 
 
                          MOQT Streaming Format
@@ -49,7 +49,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 3 December 2026.
+   This Internet-Draft will expire on 4 December 2026.
 
 Copyright Notice
 
@@ -3217,21 +3217,6 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/rfc/rfc2119>.
 
-   [RFC3986]  Berners-Lee, T., Fielding, R., and L. Masinter, "Uniform
-              Resource Identifier (URI): Generic Syntax", STD 66,
-              RFC 3986, DOI 10.17487/RFC3986, January 2005,
-              <https://www.rfc-editor.org/rfc/rfc3986>.
-
-   [RFC4180]  Shafranovich, Y., "Common Format and MIME Type for Comma-
-              Separated Values (CSV) Files", RFC 4180,
-              DOI 10.17487/RFC4180, October 2005,
-              <https://www.rfc-editor.org/rfc/rfc4180>.
-
-   [RFC5234]  Crocker, D., Ed. and P. Overell, "Augmented BNF for Syntax
-              Specifications: ABNF", STD 68, RFC 5234,
-              DOI 10.17487/RFC5234, January 2008,
-              <https://www.rfc-editor.org/rfc/rfc5234>.
-
    [RFC8126]  Cotton, M., Leiba, B., and T. Narten, "Guidelines for
               Writing an IANA Considerations Section in RFCs", BCP 26,
               RFC 8126, DOI 10.17487/RFC8126, June 2017,
@@ -3280,10 +3265,6 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
               <https://www.scte.org/standards/library/catalog/scte-
               214-1-mpeg-dash-for-ip-based-cable-services-part-1-mpd-
               constraints-and-extensions/>.
-
-   [SCTE35]   "SCTE 35: Digital Program Insertion Cueing Message", 2022,
-              <https://www.scte.org/standards/library/catalog/scte-35-
-              digital-program-insertion-cueing-message/>.
 
    [SCTE35-MSF]
               "SCTE-35 over MSF Event Timeline", 2026,
