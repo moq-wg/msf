@@ -44,9 +44,6 @@ normative:
   LANG: RFC5646
   MIME: RFC6838
   RFC9000: RFC9000
-  RFC4180: RFC4180
-  RFC5234: RFC5234
-  RFC3986: RFC3986
   GZIP: RFC1952
   MOQLOG: I-D.draft-jennings-moq-log
   MOQMETRICS: I-D.draft-jennings-moq-metrics
@@ -65,10 +62,6 @@ normative:
 
 informative:
   E2EE-MLS: I-D.draft-jennings-moq-e2ee-mls
-  SCTE35:
-    title: "SCTE 35: Digital Program Insertion Cueing Message"
-    date: 2022
-    target: https://www.scte.org/standards/library/catalog/scte-35-digital-program-insertion-cueing-message/
   SCTE214-1:
     title: "SCTE 214-1: MPEG DASH for IP-Based Cable Services Part 1 - MPD Constraints and Extensions"
     date: 2022
