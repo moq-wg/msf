@@ -1419,7 +1419,7 @@ synchronized data.
       "name": "history",
       "namespace": "conference.example.com/conference123/alice",
       "packaging": "mediatimeline",
-      "mimetype": "application/json",
+      "mimeType": "application/json",
       "depends": ["1080p-video","audio"]
     },
     {
@@ -1427,7 +1427,7 @@ synchronized data.
       "namespace": "another-provider/time-synchronized-data",
       "packaging": "eventtimeline",
       "eventType": "com.ai-extraction/appID/v3",
-      "mimetype": "application/json",
+      "mimeType": "application/json",
       "depends": ["1080p-video"]
     },
     {
