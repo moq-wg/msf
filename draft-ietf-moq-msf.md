@@ -20,8 +20,7 @@ venue:
   mail: "moq@ietf.org"
   arch: "https://mailarchive.ietf.org/arch/browse/moq/"
   github: "moq-wg/msf"
-  latest: "https://moq-wg.github.io/msf/
-           draft-ietf-moq-msf.html"
+  latest: "https://moq-wg.github.io/msf/draft-ietf-moq-msf.html"
 
 author:
  -
@@ -328,7 +327,7 @@ Required: Yes    JSON Type: Array    Location: Root Catalog
 An array of track objects {{trackobject}}.
 
 ### Publish tracks {#publishtracks}
-Location: R    Required: Optional    JSON Type: Array
+Required: Optional    JSON Type: Array    Location: Root Catalog
 
 An array of publish track objects. Publish tracks define tracks to which the
 subscriber can publish data, such as logs, metrics, or other QoE data. This enables
@@ -621,7 +620,7 @@ for the base layer, and increasing by 1 for the next higher fidelity.
 Required: Conditional    JSON Type: String    Location: Track Object
 
 A string defining the codec used to encode the track.
-For LOC packaged content, the string codec registrations are defined in Sect 3
+For LOC packaged content, the string codec registrations are defined in Section 3
 and Section 4 of {{WEBCODECS-CODEC-REGISTRY}}.
 This property MUST be specified for tracks which have an inherent codec
 associated with them (e.g., audio and video tracks). It is not required for
@@ -739,7 +738,7 @@ specified, the subscriber MUST establish a new MOQT connection to this URI for
 publishing the track data. If this field is absent, the subscriber SHOULD reuse
 the existing MOQT connection that was used to receive the catalog.
 
-The URI MUST be a valid MOQT endpoint URI as defined by {{MoQTransport}} (Sect 3.1.1). Examples include
+The URI MUST be a valid MOQT endpoint URI as defined by {{MoQTransport}} (Section 3.1.1). Examples include
 "moqt://logs.example.com:4443", "moqt://metrics.example.com:8443", or
 "https://logs.example.com/moqt".
 
@@ -980,7 +979,7 @@ packaged, time-aligned audio and video tracks.
 
 ~~~json
 {
-  "version": "1",
+  "version": "draft-01",
   "generatedAt": 1746104606044,
   "tracks": [
     {
@@ -1027,7 +1026,7 @@ of the catalog.
 
 ~~~json
 {
-  "version": "1",
+  "version": "draft-01",
   "generatedAt": 1746104606044,
   "tracks":[
     {
@@ -1125,7 +1124,7 @@ express the track relationships.
 
 ~~~json
 {
-  "version": "1",
+  "version": "draft-01",
   "generatedAt": 1746104606044,
   "tracks":[
     {
@@ -1274,7 +1273,7 @@ description.
 
 ~~~json
 {
-  "version": "1",
+  "version": "draft-01",
   "generatedAt": 1746104606044,
   "tracks": [
     {
@@ -1322,7 +1321,7 @@ and video tracks.
 
 ~~~json
 {
-  "version": "1",
+  "version": "draft-01",
   "tracks": [
     {
       "name": "video",
@@ -1361,7 +1360,7 @@ tracks using MoQ Secure Objects with AES-128-GCM.
 
 ~~~json
 {
-  "version": "1",
+  "version": "draft-01",
   "generatedAt": 1746104606044,
   "tracks": [
     {
@@ -1412,7 +1411,7 @@ synchronized data.
 
 ~~~json
 {
-  "version": "1",
+  "version": "draft-01",
   "generatedAt": 1746104606044,
   "tracks": [
     {
@@ -1472,7 +1471,7 @@ template values to accommodate different group durations.
 
 ~~~json
 {
-  "version": "1",
+  "version": "draft-01",
   "generatedAt": 1746104606044,
   "tracks": [
     {
@@ -1516,7 +1515,7 @@ in the video track and a separate SCTE-35 event timeline for ad insertion.
 
 ~~~json
 {
-  "version": "1",
+  "version": "draft-01",
   "generatedAt": 1746104606044,
   "tracks": [
     {
@@ -1570,7 +1569,7 @@ in the video track, demonstrating multiple caption services.
 
 ~~~json
 {
-  "version": "1",
+  "version": "draft-01",
   "generatedAt": 1746104606044,
   "tracks": [
     {
@@ -1615,7 +1614,7 @@ live broadcast containing a video and an audio track.
 
 ~~~json
 {
-  "version": "1",
+  "version": "draft-01",
   "generatedAt": 1746104606044,
   "isComplete": true,
   "tracks": []
@@ -1636,7 +1635,7 @@ substitution. The following catalog template:
 
 ~~~json
 {
-  "version": "1",
+  "version": "draft-01",
   "tracks": [
     {
       "name": "video",
@@ -1660,7 +1659,7 @@ Would be resolved by the subscriber as:
 
 ~~~json
 {
-  "version": "1",
+  "version": "draft-01",
   "tracks": [
     {
       "name": "video",
@@ -1691,7 +1690,7 @@ specification.
 
 ~~~json
 {
-  "version": "1",
+  "version": "draft-01",
   "generatedAt": 1746104606044,
   "tracks": [
     {
@@ -1755,7 +1754,7 @@ track name formats follow the conventions defined in {{MOQLOG}} and {{MOQMETRICS
 
 ~~~json
 {
-  "version": "1",
+  "version": "draft-01",
   "generatedAt": 1746104606044,
   "tracks": [
     {
@@ -2375,7 +2374,7 @@ After publishing a catalog and defining tracks carrying live content, an origina
 publisher can deliver a deterministic signal to all subscribers that the broadcast
 is complete by taking the following steps:
 
-* Send a SUBSCRIBE_DONE (See MOQT Sect 8.1.2) message for all active tracks using
+* Send a SUBSCRIBE_DONE (See MOQT Section 8.1.2) message for all active tracks using
   status code 0x2 Track Ended.
 * If the live stream is being converted instantly to a VOD asset, then publish an
   independent (non-delta) catalog update which, for each track, sets isLive {{islive}}
@@ -2546,7 +2545,7 @@ ToDo
 
 ## "MOQT URI Fragment Types" registry
 This document creates a new entry in the "MOQT URI Fragment Types" registry
-(see {{MoQTransport}} Sect 14.3).
+(see {{MoQTransport}} Section 14.3).
 
 | Fragment Type   |  Description          | Specification  |
 |:================|:======================|:===============|
