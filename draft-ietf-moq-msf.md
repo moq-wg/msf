@@ -1219,6 +1219,7 @@ the other is cloned from a previous track.
       "tracks": [
         {
           "name": "slides",
+          "packaging": "loc",
           "isLive": true,
           "role": "video",
           "codec": "av01.0.08M.10.0.110.09",
