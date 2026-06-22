@@ -920,14 +920,10 @@ means each group contains a keyframe followed by one predicted frame (2 objects
 total). A value of 4 means each group contains a keyframe followed by three
 predicted frames (4 objects total).
 
-If any track within an alternate group specifies a keyframeSpacing value, then
-all tracks within that alternate group MUST specify a keyframeSpacing value.
-All tracks within the same alternate group that specify a keyframeSpacing value
-MUST be time-aligned at object boundaries, not only at group boundaries.
-
 This field is used by subscribers to calculate valid switch points when
 performing adaptive bitrate switching between tracks with different keyframe
-intervals. See {{zapping}} for details on how to use this field.
+intervals. See {{packagingforswitching}} for publisher requirements and
+{{zapping}} for details on how to use this field.
 
 ## Delta updates {#deltaupdates}
 A catalog update might contain incremental changes. This is a useful property if
