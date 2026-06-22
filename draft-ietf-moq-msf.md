@@ -429,7 +429,7 @@ Table 2 lists the fields defined within each track object.
 | Parent namespace        | parentNamespace        | {{parentnamespace}}       |
 | Track duration          | trackDuration          | {{trackduration}}         |
 | Authorization Info      | authInfo               | {{authinfo}}              |
-| Stream mapping          | streamMapping          | {{streammapping}}         |
+| Subgroup mapping        | subgroupMapping        | {{subgroupmapping}}       |
 | Accessibility           | accessibility          | {{accessibility}}         |
 
 ### Tracks object {#trackobject}
@@ -871,29 +871,30 @@ A catalog with:
 Would be resolved by the subscriber to include `"cat": "XYZ789"`, which is
 then presented in control messages as specified by the authorization scheme.
 
-### Stream mapping {#streammapping}
+### Subgroup mapping {#subgroupmapping}
 Required: Optional    JSON Type: String    Location: Track Object
 
-A string defining how MOQT Objects in this track are mapped to MOQT Streams.
-When this field is absent, the default mapping is "stream-per-group".
-Allowed values are defined in Table 8.
+A string defining how MOQT Objects in this track are organized into MOQT
+Subgroups. This signals to subscribers what content boundaries they can expect
+within each subgroup. When this field is absent, the default mapping is
+"subgroup-per-group". Allowed values are defined in Table 8.
 
-| Name                |  Value                |  Description                                          |
-|:====================|:======================|:======================================================|
-| Stream per object   | stream-per-object     | Each MOQT Object is mapped to a separate MOQT Stream |
-| Stream per subgroup | stream-per-subgroup   | All Objects within a Subgroup share a single MOQT Stream |
-| Stream per group    | stream-per-group      | All Objects within a Group share a single MOQT Stream |
+| Name                  |  Value                  |  Description                                                      |
+|:======================|:========================|:==================================================================|
+| Subgroup per object   | subgroup-per-object     | Each MOQT Object is placed in its own Subgroup                    |
+| Subgroup per GOP      | subgroup-per-gop        | All Objects belonging to a single GOP share a Subgroup            |
+| Subgroup per group    | subgroup-per-group      | All Objects within a Group share a single Subgroup                |
 
-Table 8: Allowed stream mapping values
+Table 8: Allowed subgroup mapping values
 
-All stream mapping values in Table 8 are valid for LOC packaged tracks. Other
-packaging specifications MAY define additional stream mapping values or restrict
-the set of allowed values for their packaging type.
+All subgroup mapping values in Table 8 are valid for LOC packaged tracks. Other
+packaging specifications (e.g., CMSF) MAY define additional subgroup mapping
+values or restrict the set of allowed values for their packaging type.
 
-The choice of stream mapping affects latency and head-of-line blocking
-characteristics. For example, "stream-per-object" minimizes head-of-line blocking
-at the cost of more QUIC streams, while "stream-per-group" reduces stream overhead
-but may increase latency under packet loss.
+The choice of subgroup mapping affects delivery characteristics. For example,
+"subgroup-per-object" allows independent forwarding of each object at the cost
+of additional subgroup overhead, while "subgroup-per-group" reduces overhead but
+may limit a relay's ability to drop or prioritize individual objects.
 
 ### Accessibility {#accessibility}
 Required: Optional   JSON Type: Array  Location: Track Object
@@ -1850,13 +1851,13 @@ In this example:
 
 # Media transmission
 The {{mediapackaging}} defines how media samples are packaged into MOQT Objects.
-For LOC packaged tracks, each encoded media chunk (EncodedAudioChunk or
-EncodedVideoChunk) is mapped to a single MOQT Object as defined in {{mediapackaging}}.
+The specific mapping of media frames to MOQT Objects is defined by each packaging
+specification (e.g., LOC, CMSF) and is outside the scope of MSF.
 
-The mapping of MOQT Objects to MOQT Streams is signaled per-track in the catalog
-using the stream mapping field {{streammapping}}. Publishers MUST include the
-streamMapping field in the catalog for each media track. Subscribers MUST use
-the signaled stream mapping when consuming the track.
+The organization of MOQT Objects into MOQT Subgroups is signaled per-track in the
+catalog using the subgroup mapping field {{subgroupmapping}}. Publishers MUST include
+the subgroupMapping field in the catalog for each media track. Subscribers MUST use
+the signaled subgroup mapping when consuming the track.
 
 ## Group numbering
 Group IDs for a track MUST be unique and MUST increase monotonically. Within a
