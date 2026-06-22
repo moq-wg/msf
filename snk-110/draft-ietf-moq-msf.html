@@ -10,24 +10,25 @@
 <meta content="
        This document specifies the MOQT Streaming Format, designed to operate on Media Over QUIC Transport. 
     " name="description">
-<meta content="xml2rfc 3.33.0" name="generator">
+<meta content="xml2rfc 3.34.0" name="generator">
 <meta content="MoQ" name="keyword">
 <meta content="MoQTransport" name="keyword">
 <meta content="MSF" name="keyword">
 <meta content="draft-ietf-moq-msf-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.33.0
-    Python 3.12.13
-    ConfigArgParse 1.7
+  xml2rfc 3.34.0
+    Python 3.14.5
+    ConfigArgParse 1.7.5
     google-i18n-address 3.1.1
     intervaltree 3.2.1
     Jinja2 3.1.6
-    lxml 6.0.2
-    platformdirs 4.9.6
+    lxml 6.1.1
+    natsort 8.4.0
+    platformdirs 4.10.0
     pycountry 24.6.1
     PyYAML 6.0.3
     requests 2.33.1
-    wcwidth 0.7.0
+    wcwidth 0.8.1
 -->
 <link href="draft-ietf-moq-msf.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -1046,11 +1047,11 @@ svg {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">MOQT Streaming Format</td>
-<td class="right">May 2026</td>
+<td class="right">June 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Law &amp; Nandakumar</td>
-<td class="center">Expires 30 November 2026</td>
+<td class="center">Expires 24 December 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1063,12 +1064,12 @@ svg {
 <dd class="internet-draft">draft-ietf-moq-msf-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-05-29" class="published">29 May 2026</time>
+<time datetime="2026-06-22" class="published">22 June 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-11-30">30 November 2026</time></dd>
+<dd class="expires"><time datetime="2026-12-24">24 December 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1122,7 +1123,7 @@ svg {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 30 November 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 24 December 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1430,13 +1431,10 @@ svg {
                 <p id="section-toc.1-1.6.2.3.1"><a href="#section-6.3" class="auto internal xref">6.3</a>.  <a href="#name-zapping-and-track-switching" class="internal xref">Zapping and Track Switching</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.3.2.1">
-                    <p id="section-toc.1-1.6.2.3.2.1.1"><a href="#section-6.3.1" class="auto internal xref">6.3.1</a>.  <a href="#name-calculating-valid-switch-po" class="internal xref">Calculating Valid Switch Points</a></p>
+                    <p id="section-toc.1-1.6.2.3.2.1.1"><a href="#section-6.3.1" class="auto internal xref">6.3.1</a>.  <a href="#name-zapping-procedure" class="internal xref">Zapping Procedure</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.3.2.2">
-                    <p id="section-toc.1-1.6.2.3.2.2.1"><a href="#section-6.3.2" class="auto internal xref">6.3.2</a>.  <a href="#name-example-switching-between-t" class="internal xref">Example: Switching Between Tracks with Different GOP Sizes</a></p>
-</li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.3.2.3">
-                    <p id="section-toc.1-1.6.2.3.2.3.1"><a href="#section-6.3.3" class="auto internal xref">6.3.3</a>.  <a href="#name-packaging-considerations" class="internal xref">Packaging Considerations</a></p>
+                    <p id="section-toc.1-1.6.2.3.2.2.1"><a href="#section-6.3.2" class="auto internal xref">6.3.2</a>.  <a href="#name-calculating-valid-switch-po" class="internal xref">Calculating Valid Switch Points</a></p>
 </li>
                 </ul>
 </li>
@@ -1791,8 +1789,7 @@ points from subscribers.<a href="#section-4.3-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-4.3-2.2">
             <p id="section-4.3-2.2.1">All tracks within an alternate group <span class="bcp14">MUST</span> be time-aligned at object
-boundaries, not only at group boundaries. This ensures that object N in
-Track A represents the same media time as object N in Track B.<a href="#section-4.3-2.2.1" class="pilcrow">¶</a></p>
+boundaries, not only at group boundaries.<a href="#section-4.3-2.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-4.3-2.3">
             <p id="section-4.3-2.3.1">The keyframeSpacing <a href="#keyframespacing" class="auto internal xref">Section 5.2.41</a> catalog field <span class="bcp14">MUST</span> be specified for
@@ -1804,23 +1801,8 @@ then all tracks within that alternate group <span class="bcp14">MUST</span> spec
 value.<a href="#section-4.3-2.4.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-4.3-3">For example, when packaging two tracks with different GOP sizes:<a href="#section-4.3-3" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-4.3-4.1">
-            <p id="section-4.3-4.1.1">Track A with 2 frames per GOP: each group contains 2 objects (1 keyframe +
-1 P-frame), keyframeSpacing = 2<a href="#section-4.3-4.1.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-4.3-4.2">
-            <p id="section-4.3-4.2.1">Track B with 4 frames per GOP: each group contains 4 objects (1 keyframe +
-3 P-frames), keyframeSpacing = 4<a href="#section-4.3-4.2.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<p id="section-4.3-5">In two seconds of content (assuming 30fps, 60 frames total):
-* Track A produces 30 groups of 2 objects each
-* Track B produces 15 groups of 4 objects each<a href="#section-4.3-5" class="pilcrow">¶</a></p>
-<p id="section-4.3-6">Both tracks have the same total number of objects (60) covering the same media
-duration, enabling object-level time alignment. See <a href="#zapping" class="auto internal xref">Section 6.3</a> for details on
-how subscribers use keyframeSpacing to calculate valid switch points.<a href="#section-4.3-6" class="pilcrow">¶</a></p>
+<p id="section-4.3-3">See <a href="#zapping" class="auto internal xref">Section 6.3</a> for details on how subscribers use keyframeSpacing to calculate
+valid switch points.<a href="#section-4.3-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="contentprotection">
@@ -4218,118 +4200,84 @@ monotonically by one within that Group.<a href="#section-6.2-1" class="pilcrow">
 <a href="#section-6.3" class="section-number selfRef">6.3. </a><a href="#name-zapping-and-track-switching" class="section-name selfRef">Zapping and Track Switching</a>
         </h3>
 <p id="section-6.3-1">Zapping refers to the act of quickly joining a track or switching between
-tracks, such as changing channels in a live broadcast. When a viewer joins or
-switches to a new track, playback cannot begin until the decoder receives a
-keyframe (an independently decodable frame, also known as an I-frame). Tracks
-with longer intervals between keyframes (longer GOPs) offer better compression
-efficiency but increase the delay before playback can start after a switch.<a href="#section-6.3-1" class="pilcrow">¶</a></p>
-<p id="section-6.3-2">When multiple tracks in an alternate group have different keyframe intervals,
-subscribers need to determine valid switch points - moments when a switch will
-land on a keyframe in the target track. The keyframeSpacing <a href="#keyframespacing" class="auto internal xref">Section 5.2.41</a>
-field enables subscribers to calculate these valid switch points.<a href="#section-6.3-2" class="pilcrow">¶</a></p>
-<div id="calculating-valid-switch-points">
+tracks, such as changing channels in a live broadcast. When a viewer switches
+to a new track, playback cannot begin until the decoder receives a keyframe.
+Tracks with longer keyframe intervals offer better compression but increase
+join latency.<a href="#section-6.3-1" class="pilcrow">¶</a></p>
+<div id="zapping-procedure">
 <section id="section-6.3.1">
-          <h4 id="name-calculating-valid-switch-po">
-<a href="#section-6.3.1" class="section-number selfRef">6.3.1. </a><a href="#name-calculating-valid-switch-po" class="section-name selfRef">Calculating Valid Switch Points</a>
+          <h4 id="name-zapping-procedure">
+<a href="#section-6.3.1" class="section-number selfRef">6.3.1. </a><a href="#name-zapping-procedure" class="section-name selfRef">Zapping Procedure</a>
           </h4>
-<p id="section-6.3.1-1">The keyframeSpacing value represents the number of objects per keyframe interval.
-Each group starts with a keyframe followed by (keyframeSpacing - 1) predicted
-frames. Publishers <span class="bcp14">MUST</span> place group boundaries at keyframe boundaries - each
-group <span class="bcp14">MUST</span> start with a keyframe.<a href="#section-6.3.1-1" class="pilcrow">¶</a></p>
-<p id="section-6.3.1-2">When switching from a source track to a target track, a valid switch point
-occurs at object boundaries where switching would land on a keyframe in the
-target track. Given a source track with keyframeSpacing S and a target track
-with keyframeSpacing T, a switch at object number N in the source track is
-valid if N is evenly divisible by T.<a href="#section-6.3.1-2" class="pilcrow">¶</a></p>
-<p id="section-6.3.1-3">For example, with source keyframeSpacing=2 and target keyframeSpacing=4:<a href="#section-6.3.1-3" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-6.3.1-4.1">
-              <p id="section-6.3.1-4.1.1">Object 0: 0/4 = 0 (integer result, valid switch point)<a href="#section-6.3.1-4.1.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="normal" id="section-6.3.1-4.2">
-              <p id="section-6.3.1-4.2.1">Object 2: 2/4 = 0.5 (not an integer, NOT a valid switch point)<a href="#section-6.3.1-4.2.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="normal" id="section-6.3.1-4.3">
-              <p id="section-6.3.1-4.3.1">Object 4: 4/4 = 1 (integer result, valid switch point)<a href="#section-6.3.1-4.3.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="normal" id="section-6.3.1-4.4">
-              <p id="section-6.3.1-4.4.1">Object 6: 6/4 = 1.5 (not an integer, NOT a valid switch point)<a href="#section-6.3.1-4.4.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="normal" id="section-6.3.1-4.5">
-              <p id="section-6.3.1-4.5.1">Object 8: 8/4 = 2 (integer result, valid switch point)<a href="#section-6.3.1-4.5.1" class="pilcrow">¶</a></p>
-</li>
-          </ul>
+<p id="section-6.3.1-1">To minimize join latency when switching to a new alternate group, a subscriber
+<span class="bcp14">SHOULD</span> first subscribe to the track with the lowest keyframeSpacing value. This
+provides the fastest join because keyframes occur more frequently. Once playback
+begins, the subscriber can switch to a higher quality track (with larger
+keyframeSpacing) at a valid switch point calculated using the formula below.<a href="#section-6.3.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="example-switching-between-tracks-with-different-gop-sizes">
+<div id="switchpoints">
 <section id="section-6.3.2">
-          <h4 id="name-example-switching-between-t">
-<a href="#section-6.3.2" class="section-number selfRef">6.3.2. </a><a href="#name-example-switching-between-t" class="section-name selfRef">Example: Switching Between Tracks with Different GOP Sizes</a>
+          <h4 id="name-calculating-valid-switch-po">
+<a href="#section-6.3.2" class="section-number selfRef">6.3.2. </a><a href="#name-calculating-valid-switch-po" class="section-name selfRef">Calculating Valid Switch Points</a>
           </h4>
-<p id="section-6.3.2-1">Consider two video tracks in an alternate group:<a href="#section-6.3.2-1" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-6.3.2-2.1">
-              <p id="section-6.3.2-2.1.1">Track A (HD): keyframeSpacing = 2 (2 objects per group: 1 keyframe + 1 P-frame)<a href="#section-6.3.2-2.1.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="normal" id="section-6.3.2-2.2">
-              <p id="section-6.3.2-2.2.1">Track B (SD): keyframeSpacing = 4 (4 objects per group: 1 keyframe + 3 P-frames)<a href="#section-6.3.2-2.2.1" class="pilcrow">¶</a></p>
-</li>
-          </ul>
-<p id="section-6.3.2-3">The following diagram shows the object structure and valid switch points:<a href="#section-6.3.2-3" class="pilcrow">¶</a></p>
-<div class="lang-ascii-figure sourcecode" id="section-6.3.2-4">
+<p id="section-6.3.2-1">Given a source track with keyframeSpacing S and a target track with
+keyframeSpacing T, a switch from Group ID G and Object N of the source track
+is valid if:<a href="#section-6.3.2-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-6.3.2-2">
+<pre>
+(G * S + N) / T
+</pre><a href="#section-6.3.2-2" class="pilcrow">¶</a>
+</div>
+<p id="section-6.3.2-3">yields an integer. That integer is the target Group ID to subscribe to.<a href="#section-6.3.2-3" class="pilcrow">¶</a></p>
+<p id="section-6.3.2-4">For example, consider three tracks: A (keyframeSpacing=2), B
+(keyframeSpacing=4), and C (keyframeSpacing=8):<a href="#section-6.3.2-4" class="pilcrow">¶</a></p>
+<div class="lang-ascii-figure sourcecode" id="section-6.3.2-5">
 <pre>
 Track A (keyframeSpacing=2):
-  Group:      1           2           3           4
-              |           |           |           |
-  Object:   0   1       2   3       4   5       6   7
-           [K] [P]     [K] [P]     [K] [P]     [K] [P]
+  Group:   0       1       2       3       4       5
+  Object: 0,0|0,1|1,0|1,1|2,0|2,1|3,0|3,1|4,0|4,1|5,0|5,1
+          [K] [P] [K] [P] [K] [P] [K] [P] [K] [P] [K] [P]
 
 Track B (keyframeSpacing=4):
-  Group:          1                       2
-                  |                       |
-  Object:   0   1   2   3           4   5   6   7
-           [K] [P] [P] [P]         [K] [P] [P] [P]
+  Group:   0               1               2
+  Object: 0,0|0,1|0,2|0,3|1,0|1,1|1,2|1,3|2,0|2,1|2,2|2,3
+          [K] [P] [P] [P] [K] [P] [P] [P] [K] [P] [P] [P]
 
-Valid switch points (A -&gt; B):
-  Target keyframeSpacing = 4, so valid at objects divisible by 4: 0, 4, 8, ...
-
-  - Object 0: 0/4 = 0 (valid switch point)
-  - Object 2: 2/4 = 0.5 (NOT valid - lands on P-frame in B)
-  - Object 4: 4/4 = 1 (valid switch point)
-  - Object 6: 6/4 = 1.5 (NOT valid - lands on P-frame in B)
-  - Object 8: 8/4 = 2 (valid switch point)
-
-  K = Keyframe (independently decodable)
-  P = Predicted frame (depends on previous keyframe)
-</pre><a href="#section-6.3.2-4" class="pilcrow">¶</a>
+Track C (keyframeSpacing=8):
+  Group:   0                               1
+  Object: 0,0|0,1|0,2|0,3|0,4|0,5|0,6|0,7|1,0|1,1|1,2|1,3
+          [K] [P] [P] [P] [P] [P] [P] [P] [K] [P] [P] [P]
+</pre><a href="#section-6.3.2-5" class="pilcrow">¶</a>
 </div>
-<p id="section-6.3.2-5">In this example, a subscriber can switch from Track A to Track B at objects
-0, 4, 8, etc. - points where the target track contains a keyframe. Note that
-valid switch points depend on the direction of the switch; switching from B
-to A has different valid points (objects divisible by 2).<a href="#section-6.3.2-5" class="pilcrow">¶</a></p>
-</section>
-</div>
-<div id="packaging-considerations">
-<section id="section-6.3.3">
-          <h4 id="name-packaging-considerations">
-<a href="#section-6.3.3" class="section-number selfRef">6.3.3. </a><a href="#name-packaging-considerations" class="section-name selfRef">Packaging Considerations</a>
-          </h4>
-<p id="section-6.3.3-1">When packaging content with multiple tracks that have dissimilar keyframe
-intervals, publishers <span class="bcp14">MUST</span> ensure the following:<a href="#section-6.3.3-1" class="pilcrow">¶</a></p>
+<p id="section-6.3.2-6">Switching from A to B (S=2, T=4):<a href="#section-6.3.2-6" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-6.3.3-2.1">
-              <p id="section-6.3.3-2.1.1">Group boundaries <span class="bcp14">MUST</span> align with keyframe positions. Each group <span class="bcp14">MUST</span> start
-with a keyframe. Placing multiple keyframes within a single group hides
-intermediate join points from subscribers.<a href="#section-6.3.3-2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-6.3.2-7.1">
+              <p id="section-6.3.2-7.1.1">Group 0, Object 0: (0*2 + 0)/4 = 0 (valid, target Group 0)<a href="#section-6.3.2-7.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-6.3.3-2.2">
-              <p id="section-6.3.3-2.2.1">All tracks within the same alternate group <span class="bcp14">MUST</span> be time-aligned at object
-boundaries, not only at group boundaries.<a href="#section-6.3.3-2.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-6.3.2-7.2">
+              <p id="section-6.3.2-7.2.1">Group 1, Object 0: (1*2 + 0)/4 = 0.5 (NOT valid)<a href="#section-6.3.2-7.2.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-6.3.3-2.3">
-              <p id="section-6.3.3-2.3.1">If any track within an alternate group specifies a keyframeSpacing value,
-then all tracks within that alternate group <span class="bcp14">MUST</span> specify a keyframeSpacing
-value.<a href="#section-6.3.3-2.3.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-6.3.2-7.3">
+              <p id="section-6.3.2-7.3.1">Group 2, Object 0: (2*2 + 0)/4 = 1 (valid, target Group 1)<a href="#section-6.3.2-7.3.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-6.3.2-7.4">
+              <p id="section-6.3.2-7.4.1">Group 3, Object 0: (3*2 + 0)/4 = 1.5 (NOT valid)<a href="#section-6.3.2-7.4.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-6.3.2-7.5">
+              <p id="section-6.3.2-7.5.1">Group 4, Object 0: (4*2 + 0)/4 = 2 (valid, target Group 2)<a href="#section-6.3.2-7.5.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+<p id="section-6.3.2-8">Switching from A to C (S=2, T=8):<a href="#section-6.3.2-8" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-6.3.2-9.1">
+              <p id="section-6.3.2-9.1.1">Group 0, Object 0: (0*2 + 0)/8 = 0 (valid, target Group 0)<a href="#section-6.3.2-9.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-6.3.2-9.2">
+              <p id="section-6.3.2-9.2.1">Group 2, Object 0: (2*2 + 0)/8 = 0.5 (NOT valid)<a href="#section-6.3.2-9.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-6.3.2-9.3">
+              <p id="section-6.3.2-9.3.1">Group 4, Object 0: (4*2 + 0)/8 = 1 (valid, target Group 1)<a href="#section-6.3.2-9.3.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 </section>
@@ -5405,7 +5353,7 @@ in MSF catalogs.<a href="#section-13.2-1" class="pilcrow">¶</a></p>
 <dd class="break"></dd>
 <dt id="C4M">[C4M]</dt>
         <dd>
-<span class="refAuthor">Law, W.</span>, <span class="refAuthor">Lemmons, C.</span>, <span class="refAuthor">Simon, G.</span>, and <span class="refAuthor">S. Nandakumar</span>, <span class="refTitle">"Authentication scheme for MOQT using Common Access Tokens"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-moq-c4m-00</span>, <time datetime="2025-09-19" class="refDate">19 September 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-c4m-00">https://datatracker.ietf.org/doc/html/draft-ietf-moq-c4m-00</a>&gt;</span>. </dd>
+<span class="refAuthor">Law, W.</span>, <span class="refAuthor">Lemmons, C.</span>, <span class="refAuthor">Simon, G.</span>, and <span class="refAuthor">S. Nandakumar</span>, <span class="refTitle">"Authorization scheme for MOQT using Common Access Tokens"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-moq-c4m-01</span>, <time datetime="2026-06-18" class="refDate">18 June 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-c4m-01">https://datatracker.ietf.org/doc/html/draft-ietf-moq-c4m-01</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="GZIP">[GZIP]</dt>
         <dd>
@@ -5504,10 +5452,6 @@ in MSF catalogs.<a href="#section-13.2-1" class="pilcrow">¶</a></p>
         <dd>
 <span class="refTitle">"IMSC1 Packaging for MOQT Streaming Format"</span>, <time datetime="2026" class="refDate">2026</time>, <span>&lt;<a href="https://github.com/suhasHere/imsc1-msf">https://github.com/suhasHere/imsc1-msf</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="SCTE214-1">[SCTE214-1]</dt>
-        <dd>
-<span class="refTitle">"SCTE 214-1: MPEG DASH for IP-Based Cable Services Part 1 - MPD Constraints and Extensions"</span>, <time datetime="2022" class="refDate">2022</time>, <span>&lt;<a href="https://www.scte.org/standards/library/catalog/scte-214-1-mpeg-dash-for-ip-based-cable-services-part-1-mpd-constraints-and-extensions/">https://www.scte.org/standards/library/catalog/scte-214-1-mpeg-dash-for-ip-based-cable-services-part-1-mpd-constraints-and-extensions/</a>&gt;</span>. </dd>
-<dd class="break"></dd>
 <dt id="SCTE35">[SCTE35]</dt>
         <dd>
 <span class="refTitle">"SCTE 35: Digital Program Insertion Cueing Message"</span>, <time datetime="2022" class="refDate">2022</time>, <span>&lt;<a href="https://www.scte.org/standards/library/catalog/scte-35-digital-program-insertion-cueing-message/">https://www.scte.org/standards/library/catalog/scte-35-digital-program-insertion-cueing-message/</a>&gt;</span>. </dd>
@@ -5515,6 +5459,10 @@ in MSF catalogs.<a href="#section-13.2-1" class="pilcrow">¶</a></p>
 <dt id="SCTE35-MSF">[SCTE35-MSF]</dt>
         <dd>
 <span class="refTitle">"SCTE-35 over MSF Event Timeline"</span>, <time datetime="2026" class="refDate">2026</time>, <span>&lt;<a href="https://github.com/wilaw/SCTE35-over-MSF-Event-Timeline">https://github.com/wilaw/SCTE35-over-MSF-Event-Timeline</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="SCTE214-1">[SCTE214-1]</dt>
+        <dd>
+<span class="refTitle">"SCTE 214-1: MPEG DASH for IP-Based Cable Services Part 1 - MPD Constraints and Extensions"</span>, <time datetime="2022" class="refDate">2022</time>, <span>&lt;<a href="https://www.scte.org/standards/library/catalog/scte-214-1-mpeg-dash-for-ip-based-cable-services-part-1-mpd-constraints-and-extensions/">https://www.scte.org/standards/library/catalog/scte-214-1-mpeg-dash-for-ip-based-cable-services-part-1-mpd-constraints-and-extensions/</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="WebVTT-MSF">[WebVTT-MSF]</dt>
       <dd>
