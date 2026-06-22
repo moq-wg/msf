@@ -5,8 +5,8 @@
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
 Intended status: Informational                             S. Nandakumar
-Expires: 3 December 2026                                           Cisco
-                                                             1 June 2026
+Expires: 24 December 2026                                          Cisco
+                                                            22 June 2026
 
 
                          MOQT Streaming Format
@@ -49,7 +49,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 3 December 2026.
+   This Internet-Draft will expire on 24 December 2026.
 
 Copyright Notice
 
@@ -131,7 +131,7 @@ Table of Contents
        5.2.41. Track Base Key
        5.2.42. Authorization Info
        5.2.43. Token Delivery via URI
-       5.2.44. Stream mapping
+       5.2.44. Subgroup mapping
        5.2.45. Accessibility
      5.3.  Delta updates
      5.4.  Variable Substitution
@@ -681,7 +681,7 @@ Table of Contents
       +------------------------+------------------+----------------+
       | Authorization Info     | authInfo         | Section 5.2.42 |
       +------------------------+------------------+----------------+
-      | Stream mapping         | streamMapping    | Section 5.2.44 |
+      | Subgroup mapping       | subgroupMapping  | Section 5.2.44 |
       +------------------------+------------------+----------------+
       | Accessibility          | accessibility    | Section 5.2.45 |
       +------------------------+------------------+----------------+
@@ -1255,41 +1255,43 @@ Table of Contents
    is then presented in control messages as specified by the
    authorization scheme.
 
-5.2.44.  Stream mapping
+5.2.44.  Subgroup mapping
 
    Required: Optional JSON Type: String Location: Track Object
 
-   A string defining how MOQT Objects in this track are mapped to MOQT
-   Streams.  When this field is absent, the default mapping is "stream-
-   per-group".  Allowed values are defined in Table 8.
+   A string defining how MOQT Objects in this track are organized into
+   MOQT Subgroups.  This signals to subscribers what content boundaries
+   they can expect within each subgroup.  When this field is absent, the
+   default mapping is "subgroup-per-group".  Allowed values are defined
+   in Table 8.
 
-   +============+=====================+===============================+
-   | Name       | Value               | Description                   |
-   +============+=====================+===============================+
-   | Stream per | stream-per-object   | Each MOQT Object is mapped to |
-   | object     |                     | a separate MOQT Stream        |
-   +------------+---------------------+-------------------------------+
-   | Stream per | stream-per-subgroup | All Objects within a Subgroup |
-   | subgroup   |                     | share a single MOQT Stream    |
-   +------------+---------------------+-------------------------------+
-   | Stream per | stream-per-group    | All Objects within a Group    |
-   | group      |                     | share a single MOQT Stream    |
-   +------------+---------------------+-------------------------------+
+    +============+=====================+=============================+
+    | Name       | Value               | Description                 |
+    +============+=====================+=============================+
+    | Subgroup   | subgroup-per-object | Each MOQT Object is placed  |
+    | per object |                     | in its own Subgroup         |
+    +------------+---------------------+-----------------------------+
+    | Subgroup   | subgroup-per-gop    | All Objects belonging to a  |
+    | per GOP    |                     | single GOP share a Subgroup |
+    +------------+---------------------+-----------------------------+
+    | Subgroup   | subgroup-per-group  | All Objects within a Group  |
+    | per group  |                     | share a single Subgroup     |
+    +------------+---------------------+-----------------------------+
 
                                  Table 9
 
-   Table 8: Allowed stream mapping values
+   Table 8: Allowed subgroup mapping values
 
-   All stream mapping values in Table 8 are valid for LOC packaged
-   tracks.  Other packaging specifications MAY define additional stream
-   mapping values or restrict the set of allowed values for their
-   packaging type.
+   All subgroup mapping values in Table 8 are valid for LOC packaged
+   tracks.  Other packaging specifications (e.g., CMSF) MAY define
+   additional subgroup mapping values or restrict the set of allowed
+   values for their packaging type.
 
-   The choice of stream mapping affects latency and head-of-line
-   blocking characteristics.  For example, "stream-per-object" minimizes
-   head-of-line blocking at the cost of more QUIC streams, while
-   "stream-per-group" reduces stream overhead but may increase latency
-   under packet loss.
+   The choice of subgroup mapping affects delivery characteristics.  For
+   example, "subgroup-per-object" allows independent forwarding of each
+   object at the cost of additional subgroup overhead, while "subgroup-
+   per-group" reduces overhead but may limit a relay's ability to drop
+   or prioritize individual objects.
 
 5.2.45.  Accessibility
 
@@ -2226,14 +2228,14 @@ Table of Contents
 6.  Media transmission
 
    The Section 4 defines how media samples are packaged into MOQT
-   Objects.  For LOC packaged tracks, each encoded media chunk
-   (EncodedAudioChunk or EncodedVideoChunk) is mapped to a single MOQT
-   Object as defined in Section 4.
+   Objects.  The specific mapping of media frames to MOQT Objects is
+   defined by each packaging specification (e.g., LOC, CMSF) and is
+   outside the scope of MSF.
 
-   The mapping of MOQT Objects to MOQT Streams is signaled per-track in
-   the catalog using the stream mapping field Section 5.2.44.
-   Publishers MUST include the streamMapping field in the catalog for
-   each media track.  Subscribers MUST use the signaled stream mapping
+   The organization of MOQT Objects into MOQT Subgroups is signaled per-
+   track in the catalog using the subgroup mapping field Section 5.2.44.
+   Publishers MUST include the subgroupMapping field in the catalog for
+   each media track.  Subscribers MUST use the signaled subgroup mapping
    when consuming the track.
 
 6.1.  Group numbering
@@ -3192,11 +3194,11 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
               <https://www.rfc-editor.org/rfc/rfc4648>.
 
    [C4M]      Law, W., Lemmons, C., Simon, G., and S. Nandakumar,
-              "Authentication scheme for MOQT using Common Access
+              "Authorization scheme for MOQT using Common Access
               Tokens", Work in Progress, Internet-Draft, draft-ietf-moq-
-              c4m-00, 19 September 2025,
+              c4m-01, 18 June 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-moq-c4m-
-              00>.
+              01>.
 
    [GZIP]     Deutsch, P., "GZIP file format specification version 4.3",
               RFC 1952, DOI 10.17487/RFC1952, May 1996,
@@ -3316,13 +3318,6 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
               "IMSC1 Packaging for MOQT Streaming Format", 2026,
               <https://github.com/suhasHere/imsc1-msf>.
 
-   [SCTE214-1]
-              "SCTE 214-1: MPEG DASH for IP-Based Cable Services Part 1
-              - MPD Constraints and Extensions", 2022,
-              <https://www.scte.org/standards/library/catalog/scte-
-              214-1-mpeg-dash-for-ip-based-cable-services-part-1-mpd-
-              constraints-and-extensions/>.
-
    [SCTE35]   "SCTE 35: Digital Program Insertion Cueing Message", 2022,
               <https://www.scte.org/standards/library/catalog/scte-35-
               digital-program-insertion-cueing-message/>.
@@ -3330,6 +3325,13 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
    [SCTE35-MSF]
               "SCTE-35 over MSF Event Timeline", 2026,
               <https://github.com/wilaw/SCTE35-over-MSF-Event-Timeline>.
+
+   [SCTE214-1]
+              "SCTE 214-1: MPEG DASH for IP-Based Cable Services Part 1
+              - MPD Constraints and Extensions", 2022,
+              <https://www.scte.org/standards/library/catalog/scte-
+              214-1-mpeg-dash-for-ip-based-cable-services-part-1-mpd-
+              constraints-and-extensions/>.
 
    [WebVTT-MSF]
               "WebVTT Packaging for MOQT Streaming Format", 2026,
