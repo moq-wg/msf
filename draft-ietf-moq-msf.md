@@ -372,13 +372,20 @@ object has the following fields:
 * id : a string defining a reference to this initialization data which is unique
   within the scope of the catalog.
 * type: as string defining the type of reference. This version of the specification
-  defines a single allowed type, per the table below
+  defines the following allowed types:
 
-| Type          |   Data field definition                        |
-|:==============|:===============================================|
-| inline        |  Base64 {{BASE64}} encoded initialization data |
+| Type             |   Data field definition                        |
+|:=================|:===============================================|
+| inline           |  Base64 {{BASE64}} encoded initialization data |
+| track-property   |  The Track property type in hex notation       |
+| object-property  |  An Object property type in hex notation       |
 
 * data: a string holding the init payload as defined by the type.
+
+For both the track-property and object-property types, the initialization
+data is serialized as raw binary data and carried in the value field of the
+MSF_INITIALIZATION Object property {#initialization-object-property} or the
+MSF_INITIALIZATION Track property {#initialization-track-property}.
 
 The Initialization Data List, if present, MUST be located after the tracks array in
 the root of the JSON catalog. The purpose of this is to improve the human readability
@@ -2506,11 +2513,13 @@ property absent) and GZIP compressed payloads (value 1).
 
 ### MSF_COMPRESSION Track Property {#compression-track-property}
 
+Track Property type: 0x78
+
 The MSF_COMPRESSION track property signals that ALL objects in the track are
 compressed using the specified algorithm. This mechanism is appropriate when
 every object published on the track uses the same compression.
 
-Publishers MUST include the MSF_COMPRESSION track property in the PUBLISH
+If used, publishers MUST include the MSF_COMPRESSION track property in the PUBLISH
 message (publisher-initiated flow) or SUBSCRIBE_OK (subscriber-initiated flow).
 
 Subscribers MUST check for this property in the corresponding message before
@@ -2523,13 +2532,15 @@ to process the payload and SHOULD unsubscribe from the track.
 
 ### MSF_COMPRESSION Object Property {#compression-object-property}
 
+Object Property type: 0x78
+
 The MSF_COMPRESSION object property signals that an individual object is
 compressed. This mechanism is appropriate when a track contains a mixture of
 compressed and uncompressed objects. For example, a catalog track where the
 first object in a group (the complete catalog) is compressed, but subsequent
 delta update objects within the same group are uncompressed.
 
-Publishers MUST include the MSF_COMPRESSION object property on each
+If used, publishers MUST include the MSF_COMPRESSION object property on each
 compressed object.
 
 Subscribers MUST check for this property on each received object before
@@ -2537,6 +2548,37 @@ processing its payload. If the property is absent on an object, the subscriber
 MUST treat that object's payload as uncompressed. If the property is present
 with a value the subscriber does not support, the subscriber MUST NOT attempt
 to process that object.
+
+## Initialization properties
+
+MSF provides two mechanisms for signalling initialization data using properties.
+
+### MSF_INITIALIZATION Track property {#initialization-track-property}
+
+Track Property type: 0x79
+
+The MSF_INITIALIZATION Track property carries the initilization data for the track.
+This initilization data is immutable over the life of the track.
+
+Tracks which choose to transmit initialization data using this property MUST include
+an initRef {{initref}} field referencing an Initialization Data List {{initdatalist}}
+entry with a type of 'track-property'.
+
+If used, publishers MUST include the MSF_INITIALIZATION  track property in the PUBLISH
+message (publisher-initiated flow) or SUBSCRIBE_OK message (subscriber-initiated flow).
+
+### MSF_INITIALIZATION Object property {#initialization-object-property}
+
+Object Property type: 0x79
+
+The MSF_INITIALIZATION Object property carries initialization data for the track, when
+that initializaiton data might change over the life of the track. Since subscription
+might occur at any time, this property needs to be repeated. Publishers SHOULD add this
+property to the first Object in each Group.
+
+Tracks which choose to transmit initialization data using this property MUST include
+an initRef {{initref}} field referencing an Initialization Data List {{initdatalist}}
+entry with a type of 'object-property'.
 
 # Security Considerations
 
@@ -2567,21 +2609,9 @@ The initial contents of this registry are:
 |:===============================|:===================================|:=================|
 | urn:scte:scte35:2013:bin       | SCTE-35 binary splice_info_section | {{SCTE35-MSF}}   |
 | urn:scte:scte35:2013:xml       | SCTE-35 XML representation         | {{SCTE35-MSF}}   |
-| urn:msf:timedtext:webvtt        | WebVTT timed text cues                | {{WebVTT-MSF}}   |
-| urn:msf:timedtext:imsc1         | IMSC1 timed text  cues                 | {{IMSC1-MSF}}    |
+| urn:msf:timedtext:webvtt       | WebVTT timed text cues             | {{WebVTT-MSF}}   |
+| urn:msf:timedtext:imsc1        | IMSC1 timed text  cues             | {{IMSC1-MSF}}    |
 
-## MSF_COMPRESSION Track Property {#iana-track-properties}
-
-This document requests IANA to register the following entry in the
-"Track Properties" registry established by {{MoQTransport}} (Section 14.4):
-
-| Property Name   | Property ID | Value Type | Reference |
-|:================|:============|:===========|:==========|
-| MSF_COMPRESSION | TBD         | varint     | RFC XXXX  |
-
-The MSF_COMPRESSION track property indicates that ALL objects on the track
-are compressed using the specified algorithm. See {{compression-track-property}}
-for the full specification.
 
 ## MSF_COMPRESSION Object Property {#iana-object-properties}
 
