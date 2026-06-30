@@ -10,24 +10,25 @@
 <meta content="
        This document specifies the MOQT Streaming Format, designed to operate on Media Over QUIC Transport. 
     " name="description">
-<meta content="xml2rfc 3.33.0" name="generator">
+<meta content="xml2rfc 3.34.0" name="generator">
 <meta content="MoQ" name="keyword">
 <meta content="MoQTransport" name="keyword">
 <meta content="MSF" name="keyword">
 <meta content="draft-ietf-moq-msf-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.33.0
-    Python 3.12.13
-    ConfigArgParse 1.7
+  xml2rfc 3.34.0
+    Python 3.14.5
+    ConfigArgParse 1.7.5
     google-i18n-address 3.1.1
     intervaltree 3.2.1
     Jinja2 3.1.6
-    lxml 6.0.2
-    platformdirs 4.9.6
+    lxml 6.1.1
+    natsort 8.4.0
+    platformdirs 4.10.0
     pycountry 24.6.1
     PyYAML 6.0.3
     requests 2.33.1
-    wcwidth 0.7.0
+    wcwidth 0.8.1
 -->
 <link href="draft-ietf-moq-msf.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -1050,7 +1051,7 @@ svg {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Law &amp; Nandakumar</td>
-<td class="center">Expires 4 December 2026</td>
+<td class="center">Expires 1 January 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1063,12 +1064,12 @@ svg {
 <dd class="internet-draft">draft-ietf-moq-msf-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-06-02" class="published">2 June 2026</time>
+<time datetime="2026-06-30" class="published">30 June 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-12-04">4 December 2026</time></dd>
+<dd class="expires"><time datetime="2027-01-01">1 January 2027</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1093,7 +1094,7 @@ svg {
       </h2>
 <p id="section-note.1-1">This note is to be removed before publishing as an RFC.<a href="#section-note.1-1" class="pilcrow">¶</a></p>
 <p id="section-note.1-2">
-        The latest revision of this draft can be found at <span><a href="https://moq-wg.github.io/msf/%20draft-ietf-moq-msf.html">https://moq-wg.github.io/msf/ draft-ietf-moq-msf.html</a></span>.
+        The latest revision of this draft can be found at <span><a href="https://moq-wg.github.io/msf/draft-ietf-moq-msf.html">https://moq-wg.github.io/msf/draft-ietf-moq-msf.html</a></span>.
         Status information for this document may be found at <span><a href="https://datatracker.ietf.org/doc/draft-ietf-moq-msf/">https://datatracker.ietf.org/doc/draft-ietf-moq-msf/</a></span>.<a href="#section-note.1-2" class="pilcrow">¶</a></p>
 <p id="section-note.1-3">
         Discussion of this document takes place on the
@@ -1122,7 +1123,7 @@ svg {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 4 December 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 1 January 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1585,6 +1586,17 @@ svg {
 </li>
                 </ul>
 </li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.2">
+                <p id="section-toc.1-1.12.2.2.1"><a href="#section-12.2" class="auto internal xref">12.2</a>.  <a href="#name-initialization-properties" class="internal xref">Initialization properties</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.2.2.1">
+                    <p id="section-toc.1-1.12.2.2.2.1.1"><a href="#section-12.2.1" class="auto internal xref">12.2.1</a>.  <a href="#name-msf_initialization-track-pr" class="internal xref">MSF_INITIALIZATION Track property</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.2.2.2">
+                    <p id="section-toc.1-1.12.2.2.2.2.1"><a href="#section-12.2.2" class="auto internal xref">12.2.2</a>.  <a href="#name-msf_initialization-object-p" class="internal xref">MSF_INITIALIZATION Object property</a></p>
+</li>
+                </ul>
+</li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13">
@@ -1600,10 +1612,7 @@ svg {
                 <p id="section-toc.1-1.14.2.2.1"><a href="#section-14.2" class="auto internal xref">14.2</a>.  <a href="#name-msf-event-timeline-types-re" class="internal xref">"MSF Event Timeline Types" registry</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14.2.3">
-                <p id="section-toc.1-1.14.2.3.1"><a href="#section-14.3" class="auto internal xref">14.3</a>.  <a href="#name-msf_compression-track-proper" class="internal xref">MSF_COMPRESSION Track Property</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14.2.4">
-                <p id="section-toc.1-1.14.2.4.1"><a href="#section-14.4" class="auto internal xref">14.4</a>.  <a href="#name-msf_compression-object-prope" class="internal xref">MSF_COMPRESSION Object Property</a></p>
+                <p id="section-toc.1-1.14.2.3.1"><a href="#section-14.3" class="auto internal xref">14.3</a>.  <a href="#name-msf_compression-object-prope" class="internal xref">MSF_COMPRESSION Object Property</a></p>
 </li>
             </ul>
 </li>
@@ -2053,7 +2062,7 @@ isComplete is set to TRUE. This field <span class="bcp14">MUST NOT</span> be inc
           <h4 id="name-publish-tracks">
 <a href="#section-5.1.5" class="section-number selfRef">5.1.5. </a><a href="#name-publish-tracks" class="section-name selfRef">Publish tracks</a>
           </h4>
-<p id="section-5.1.5-1">Location: R    Required: Optional    JSON Type: Array<a href="#section-5.1.5-1" class="pilcrow">¶</a></p>
+<p id="section-5.1.5-1">Required: Optional    JSON Type: Array    Location: Root Catalog<a href="#section-5.1.5-1" class="pilcrow">¶</a></p>
 <p id="section-5.1.5-2">An array of publish track objects. Publish tracks define tracks to which the
 subscriber can publish data, such as logs, metrics, or other QoE data. This enables
 bi-directional communication where the subscriber acts as a publisher for specific
@@ -2112,7 +2121,7 @@ within the scope of the catalog.<a href="#section-5.1.7-3.1.1" class="pilcrow">�
 </li>
             <li class="normal" id="section-5.1.7-3.2">
               <p id="section-5.1.7-3.2.1">type: as string defining the type of reference. This version of the specification
-defines a single allowed type, per the table below<a href="#section-5.1.7-3.2.1" class="pilcrow">¶</a></p>
+defines the following allowed types:<a href="#section-5.1.7-3.2.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 <table class="center" id="table-2">
@@ -2128,6 +2137,14 @@ defines a single allowed type, per the table below<a href="#section-5.1.7-3.2.1"
                 <td class="text-left" rowspan="1" colspan="1">inline</td>
                 <td class="text-left" rowspan="1" colspan="1">Base64 <span>[<a href="#BASE64" class="cite xref">BASE64</a>]</span> encoded initialization data</td>
               </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">track-property</td>
+                <td class="text-left" rowspan="1" colspan="1">The Track property type in hex notation</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">object-property</td>
+                <td class="text-left" rowspan="1" colspan="1">An Object property type in hex notation</td>
+              </tr>
             </tbody>
           </table>
 <ul class="normal">
@@ -2135,9 +2152,13 @@ defines a single allowed type, per the table below<a href="#section-5.1.7-3.2.1"
               <p id="section-5.1.7-5.1.1">data: a string holding the init payload as defined by the type.<a href="#section-5.1.7-5.1.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-5.1.7-6">The Initialization Data List, if present, <span class="bcp14">MUST</span> be located after the tracks array in
+<p id="section-5.1.7-6">For both the track-property and object-property types, the initialization
+data is serialized as raw binary data and carried in the value field of the
+MSF_INITIALIZATION Object property {#initialization-object-property} or the
+MSF_INITIALIZATION Track property {#initialization-track-property}.<a href="#section-5.1.7-6" class="pilcrow">¶</a></p>
+<p id="section-5.1.7-7">The Initialization Data List, if present, <span class="bcp14">MUST</span> be located after the tracks array in
 the root of the JSON catalog. The purpose of this is to improve the human readability
-of the catalog tracks by moving the verbose init data towards the end of the document.<a href="#section-5.1.7-6" class="pilcrow">¶</a></p>
+of the catalog tracks by moving the verbose init data towards the end of the document.<a href="#section-5.1.7-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2740,7 +2761,7 @@ for the base layer, and increasing by 1 for the next higher fidelity.<a href="#s
           </h4>
 <p id="section-5.2.18-1">Required: Conditional    JSON Type: String    Location: Track Object<a href="#section-5.2.18-1" class="pilcrow">¶</a></p>
 <p id="section-5.2.18-2">A string defining the codec used to encode the track.
-For LOC packaged content, the string codec registrations are defined in Sect 3
+For LOC packaged content, the string codec registrations are defined in Section 3
 and Section 4 of <span>[<a href="#WEBCODECS-CODEC-REGISTRY" class="cite xref">WEBCODECS-CODEC-REGISTRY</a>]</span>.
 This property <span class="bcp14">MUST</span> be specified for tracks which have an inherent codec
 associated with them (e.g., audio and video tracks). It is not required for
@@ -2929,7 +2950,7 @@ be included if the isLive <a href="#islive" class="auto internal xref">Section 5
 specified, the subscriber <span class="bcp14">MUST</span> establish a new MOQT connection to this URI for
 publishing the track data. If this field is absent, the subscriber <span class="bcp14">SHOULD</span> reuse
 the existing MOQT connection that was used to receive the catalog.<a href="#section-5.2.36-2" class="pilcrow">¶</a></p>
-<p id="section-5.2.36-3">The URI <span class="bcp14">MUST</span> be a valid MOQT endpoint URI as defined by <span>[<a href="#MoQTransport" class="cite xref">MoQTransport</a>]</span> (Sect 3.1.1). Examples include
+<p id="section-5.2.36-3">The URI <span class="bcp14">MUST</span> be a valid MOQT endpoint URI as defined by <span>[<a href="#MoQTransport" class="cite xref">MoQTransport</a>]</span> (Section 3.1.1). Examples include
 "moqt://logs.example.com:4443", "moqt://metrics.example.com:8443", or
 "https://logs.example.com/moqt".<a href="#section-5.2.36-3" class="pilcrow">¶</a></p>
 </section>
@@ -3296,7 +3317,7 @@ packaged, time-aligned audio and video tracks.<a href="#section-5.6.1-1" class="
 <div class="lang-json sourcecode" id="section-5.6.1-2">
 <pre>
 {
-  "version": "1",
+  "version": "draft-01",
   "generatedAt": 1746104606044,
   "tracks": [
     {
@@ -3346,7 +3367,7 @@ of the catalog.<a href="#section-5.6.2-1" class="pilcrow">¶</a></p>
 <div class="breakable lang-json sourcecode" id="section-5.6.2-2">
 <pre>
 {
-  "version": "1",
+  "version": "draft-01",
   "generatedAt": 1746104606044,
   "tracks":[
     {
@@ -3444,7 +3465,7 @@ express the track relationships.<a href="#section-5.6.3-3" class="pilcrow">¶</a
 <div class="breakable lang-json sourcecode" id="section-5.6.3-4">
 <pre>
 {
-  "version": "1",
+  "version": "draft-01",
   "generatedAt": 1746104606044,
   "tracks":[
     {
@@ -3544,6 +3565,7 @@ the other is cloned from a previous track.<a href="#section-5.6.4-1" class="pilc
       "tracks": [
         {
           "name": "slides",
+          "packaging": "loc",
           "isLive": true,
           "role": "video",
           "codec": "av01.0.08M.10.0.110.09",
@@ -3607,7 +3629,7 @@ description.<a href="#section-5.6.6-1" class="pilcrow">¶</a></p>
 <div class="lang-json sourcecode" id="section-5.6.6-2">
 <pre>
 {
-  "version": "1",
+  "version": "draft-01",
   "generatedAt": 1746104606044,
   "tracks": [
     {
@@ -3658,7 +3680,7 @@ and video tracks.<a href="#section-5.6.7-1" class="pilcrow">¶</a></p>
 <div class="lang-json sourcecode" id="section-5.6.7-2">
 <pre>
 {
-  "version": "1",
+  "version": "draft-01",
   "tracks": [
     {
       "name": "video",
@@ -3702,7 +3724,7 @@ tracks using MoQ Secure Objects with AES-128-GCM.<a href="#section-5.6.8-1" clas
 <div class="lang-json sourcecode" id="section-5.6.8-2">
 <pre>
 {
-  "version": "1",
+  "version": "draft-01",
   "generatedAt": 1746104606044,
   "tracks": [
     {
@@ -3758,14 +3780,14 @@ synchronized data.<a href="#section-5.6.9-1" class="pilcrow">¶</a></p>
 <div class="breakable lang-json sourcecode" id="section-5.6.9-2">
 <pre>
 {
-  "version": "1",
+  "version": "draft-01",
   "generatedAt": 1746104606044,
   "tracks": [
     {
       "name": "history",
       "namespace": "conference.example.com/conference123/alice",
       "packaging": "mediatimeline",
-      "mimetype": "application/json",
+      "mimeType": "application/json",
       "depends": ["1080p-video","audio"]
     },
     {
@@ -3773,7 +3795,7 @@ synchronized data.<a href="#section-5.6.9-1" class="pilcrow">¶</a></p>
       "namespace": "another-provider/time-synchronized-data",
       "packaging": "eventtimeline",
       "eventType": "com.ai-extraction/appID/v3",
-      "mimetype": "application/json",
+      "mimeType": "application/json",
       "depends": ["1080p-video"]
     },
     {
@@ -3823,7 +3845,7 @@ template values to accommodate different group durations.<a href="#section-5.6.1
 <div class="lang-json sourcecode" id="section-5.6.10-2">
 <pre>
 {
-  "version": "1",
+  "version": "draft-01",
   "generatedAt": 1746104606044,
   "tracks": [
     {
@@ -3872,7 +3894,7 @@ in the video track and a separate SCTE-35 event timeline for ad insertion.<a hre
 <div class="lang-json sourcecode" id="section-5.6.11-2">
 <pre>
 {
-  "version": "1",
+  "version": "draft-01",
   "generatedAt": 1746104606044,
   "tracks": [
     {
@@ -3931,7 +3953,7 @@ in the video track, demonstrating multiple caption services.<a href="#section-5.
 <div class="lang-json sourcecode" id="section-5.6.12-2">
 <pre>
 {
-  "version": "1",
+  "version": "draft-01",
   "generatedAt": 1746104606044,
   "tracks": [
     {
@@ -3981,7 +4003,7 @@ live broadcast containing a video and an audio track.<a href="#section-5.6.13-1"
 <div class="lang-json sourcecode" id="section-5.6.13-2">
 <pre>
 {
-  "version": "1",
+  "version": "draft-01",
   "generatedAt": 1746104606044,
   "isComplete": true,
   "tracks": []
@@ -4009,7 +4031,7 @@ substitution. The following catalog template:<a href="#section-5.6.14-3" class="
 <div class="lang-json sourcecode" id="section-5.6.14-4">
 <pre>
 {
-  "version": "1",
+  "version": "draft-01",
   "tracks": [
     {
       "name": "video",
@@ -4033,7 +4055,7 @@ substitution. The following catalog template:<a href="#section-5.6.14-3" class="
 <div class="lang-json sourcecode" id="section-5.6.14-6">
 <pre>
 {
-  "version": "1",
+  "version": "draft-01",
   "tracks": [
     {
       "name": "video",
@@ -4069,7 +4091,7 @@ specification.<a href="#section-5.6.15-1" class="pilcrow">¶</a></p>
 <div class="breakable lang-json sourcecode" id="section-5.6.15-2">
 <pre>
 {
-  "version": "1",
+  "version": "draft-01",
   "generatedAt": 1746104606044,
   "tracks": [
     {
@@ -4137,7 +4159,7 @@ track name formats follow the conventions defined in <span>[<a href="#MOQLOG" cl
 <div class="breakable lang-json sourcecode" id="section-5.6.16-2">
 <pre>
 {
-  "version": "1",
+  "version": "draft-01",
   "generatedAt": 1746104606044,
   "tracks": [
     {
@@ -5080,7 +5102,7 @@ publisher can deliver a deterministic signal to all subscribers that the broadca
 is complete by taking the following steps:<a href="#section-11.3-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-11.3-2.1">
-            <p id="section-11.3-2.1.1">Send a SUBSCRIBE_DONE (See MOQT Sect 8.1.2) message for all active tracks using
+            <p id="section-11.3-2.1.1">Send a SUBSCRIBE_DONE (See MOQT Section 8.1.2) message for all active tracks using
 status code 0x2 Track Ended.<a href="#section-11.3-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-11.3-2.2">
@@ -5274,17 +5296,18 @@ property absent) and GZIP compressed payloads (value 1).<a href="#section-12.1-7
           <h4 id="name-msf_compression-track-prope">
 <a href="#section-12.1.1" class="section-number selfRef">12.1.1. </a><a href="#name-msf_compression-track-prope" class="section-name selfRef">MSF_COMPRESSION Track Property</a>
           </h4>
-<p id="section-12.1.1-1">The MSF_COMPRESSION track property signals that ALL objects in the track are
+<p id="section-12.1.1-1">Track Property type: 0x78<a href="#section-12.1.1-1" class="pilcrow">¶</a></p>
+<p id="section-12.1.1-2">The MSF_COMPRESSION track property signals that ALL objects in the track are
 compressed using the specified algorithm. This mechanism is appropriate when
-every object published on the track uses the same compression.<a href="#section-12.1.1-1" class="pilcrow">¶</a></p>
-<p id="section-12.1.1-2">Publishers <span class="bcp14">MUST</span> include the MSF_COMPRESSION track property in the PUBLISH
-message (publisher-initiated flow) or SUBSCRIBE_OK (subscriber-initiated flow).<a href="#section-12.1.1-2" class="pilcrow">¶</a></p>
-<p id="section-12.1.1-3">Subscribers <span class="bcp14">MUST</span> check for this property in the corresponding message before
-processing the track payload.<a href="#section-12.1.1-3" class="pilcrow">¶</a></p>
-<p id="section-12.1.1-4">If the property is absent, and no per-object compression is signaled, the
+every object published on the track uses the same compression.<a href="#section-12.1.1-2" class="pilcrow">¶</a></p>
+<p id="section-12.1.1-3">If used, publishers <span class="bcp14">MUST</span> include the MSF_COMPRESSION track property in the PUBLISH
+message (publisher-initiated flow) or SUBSCRIBE_OK (subscriber-initiated flow).<a href="#section-12.1.1-3" class="pilcrow">¶</a></p>
+<p id="section-12.1.1-4">Subscribers <span class="bcp14">MUST</span> check for this property in the corresponding message before
+processing the track payload.<a href="#section-12.1.1-4" class="pilcrow">¶</a></p>
+<p id="section-12.1.1-5">If the property is absent, and no per-object compression is signaled, the
 subscriber <span class="bcp14">MUST</span> treat the payload as uncompressed. If the property is present
 with a value the subscriber does not support, the subscriber <span class="bcp14">MUST NOT</span> attempt
-to process the payload and <span class="bcp14">SHOULD</span> unsubscribe from the track.<a href="#section-12.1.1-4" class="pilcrow">¶</a></p>
+to process the payload and <span class="bcp14">SHOULD</span> unsubscribe from the track.<a href="#section-12.1.1-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="compression-object-property">
@@ -5292,18 +5315,57 @@ to process the payload and <span class="bcp14">SHOULD</span> unsubscribe from th
           <h4 id="name-msf_compression-object-prop">
 <a href="#section-12.1.2" class="section-number selfRef">12.1.2. </a><a href="#name-msf_compression-object-prop" class="section-name selfRef">MSF_COMPRESSION Object Property</a>
           </h4>
-<p id="section-12.1.2-1">The MSF_COMPRESSION object property signals that an individual object is
+<p id="section-12.1.2-1">Object Property type: 0x78<a href="#section-12.1.2-1" class="pilcrow">¶</a></p>
+<p id="section-12.1.2-2">The MSF_COMPRESSION object property signals that an individual object is
 compressed. This mechanism is appropriate when a track contains a mixture of
 compressed and uncompressed objects. For example, a catalog track where the
 first object in a group (the complete catalog) is compressed, but subsequent
-delta update objects within the same group are uncompressed.<a href="#section-12.1.2-1" class="pilcrow">¶</a></p>
-<p id="section-12.1.2-2">Publishers <span class="bcp14">MUST</span> include the MSF_COMPRESSION object property on each
-compressed object.<a href="#section-12.1.2-2" class="pilcrow">¶</a></p>
-<p id="section-12.1.2-3">Subscribers <span class="bcp14">MUST</span> check for this property on each received object before
+delta update objects within the same group are uncompressed.<a href="#section-12.1.2-2" class="pilcrow">¶</a></p>
+<p id="section-12.1.2-3">If used, publishers <span class="bcp14">MUST</span> include the MSF_COMPRESSION object property on each
+compressed object.<a href="#section-12.1.2-3" class="pilcrow">¶</a></p>
+<p id="section-12.1.2-4">Subscribers <span class="bcp14">MUST</span> check for this property on each received object before
 processing its payload. If the property is absent on an object, the subscriber
 <span class="bcp14">MUST</span> treat that object's payload as uncompressed. If the property is present
 with a value the subscriber does not support, the subscriber <span class="bcp14">MUST NOT</span> attempt
-to process that object.<a href="#section-12.1.2-3" class="pilcrow">¶</a></p>
+to process that object.<a href="#section-12.1.2-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="initialization-properties">
+<section id="section-12.2">
+        <h3 id="name-initialization-properties">
+<a href="#section-12.2" class="section-number selfRef">12.2. </a><a href="#name-initialization-properties" class="section-name selfRef">Initialization properties</a>
+        </h3>
+<p id="section-12.2-1">MSF provides two mechanisms for signalling initialization data using properties.<a href="#section-12.2-1" class="pilcrow">¶</a></p>
+<div id="initialization-track-property">
+<section id="section-12.2.1">
+          <h4 id="name-msf_initialization-track-pr">
+<a href="#section-12.2.1" class="section-number selfRef">12.2.1. </a><a href="#name-msf_initialization-track-pr" class="section-name selfRef">MSF_INITIALIZATION Track property</a>
+          </h4>
+<p id="section-12.2.1-1">Track Property type: 0x79<a href="#section-12.2.1-1" class="pilcrow">¶</a></p>
+<p id="section-12.2.1-2">The MSF_INITIALIZATION Track property carries the initilization data for the track.
+This initilization data is immutable over the life of the track.<a href="#section-12.2.1-2" class="pilcrow">¶</a></p>
+<p id="section-12.2.1-3">Tracks which choose to transmit initialization data using this property <span class="bcp14">MUST</span> include
+an initRef <a href="#initref" class="auto internal xref">Section 5.2.13</a> field referencing an Initialization Data List <a href="#initdatalist" class="auto internal xref">Section 5.1.7</a>
+entry with a type of 'track-property'.<a href="#section-12.2.1-3" class="pilcrow">¶</a></p>
+<p id="section-12.2.1-4">If used, publishers <span class="bcp14">MUST</span> include the MSF_INITIALIZATION  track property in the PUBLISH
+message (publisher-initiated flow) or SUBSCRIBE_OK message (subscriber-initiated flow).<a href="#section-12.2.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="initialization-object-property">
+<section id="section-12.2.2">
+          <h4 id="name-msf_initialization-object-p">
+<a href="#section-12.2.2" class="section-number selfRef">12.2.2. </a><a href="#name-msf_initialization-object-p" class="section-name selfRef">MSF_INITIALIZATION Object property</a>
+          </h4>
+<p id="section-12.2.2-1">Object Property type: 0x79<a href="#section-12.2.2-1" class="pilcrow">¶</a></p>
+<p id="section-12.2.2-2">The MSF_INITIALIZATION Object property carries initialization data for the track, when
+that initializaiton data might change over the life of the track. Since subscription
+might occur at any time, this property needs to be repeated. Publishers <span class="bcp14">SHOULD</span> add this
+property to the first Object in each Group.<a href="#section-12.2.2-2" class="pilcrow">¶</a></p>
+<p id="section-12.2.2-3">Tracks which choose to transmit initialization data using this property <span class="bcp14">MUST</span> include
+an initRef <a href="#initref" class="auto internal xref">Section 5.2.13</a> field referencing an Initialization Data List <a href="#initdatalist" class="auto internal xref">Section 5.1.7</a>
+entry with a type of 'object-property'.<a href="#section-12.2.2-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -5329,7 +5391,7 @@ to process that object.<a href="#section-12.1.2-3" class="pilcrow">¶</a></p>
 <a href="#section-14.1" class="section-number selfRef">14.1. </a><a href="#name-moqt-uri-fragment-types-reg" class="section-name selfRef">"MOQT URI Fragment Types" registry</a>
         </h3>
 <p id="section-14.1-1">This document creates a new entry in the "MOQT URI Fragment Types" registry
-(see <span>[<a href="#MoQTransport" class="cite xref">MoQTransport</a>]</span> Sect 14.3).<a href="#section-14.1-1" class="pilcrow">¶</a></p>
+(see <span>[<a href="#MoQTransport" class="cite xref">MoQTransport</a>]</span> Section 14.3).<a href="#section-14.1-1" class="pilcrow">¶</a></p>
 <table class="center" id="table-12">
           <caption><a href="#table-12" class="selfRef">Table 12</a></caption>
 <thead>
@@ -5402,46 +5464,15 @@ in MSF catalogs.<a href="#section-14.2-1" class="pilcrow">¶</a></p>
         </table>
 </section>
 </div>
-<div id="iana-track-properties">
+<div id="iana-object-properties">
 <section id="section-14.3">
-        <h3 id="name-msf_compression-track-proper">
-<a href="#section-14.3" class="section-number selfRef">14.3. </a><a href="#name-msf_compression-track-proper" class="section-name selfRef">MSF_COMPRESSION Track Property</a>
+        <h3 id="name-msf_compression-object-prope">
+<a href="#section-14.3" class="section-number selfRef">14.3. </a><a href="#name-msf_compression-object-prope" class="section-name selfRef">MSF_COMPRESSION Object Property</a>
         </h3>
-<p id="section-14.3-1">This document requests IANA to register the following entry in the
-"Track Properties" registry established by <span>[<a href="#MoQTransport" class="cite xref">MoQTransport</a>]</span> (Section 14.4):<a href="#section-14.3-1" class="pilcrow">¶</a></p>
+<p id="section-14.3-1">This document requests IANA to create a new "MSF Compression Algorithms"
+registry with the following initial values:<a href="#section-14.3-1" class="pilcrow">¶</a></p>
 <table class="center" id="table-14">
           <caption><a href="#table-14" class="selfRef">Table 14</a></caption>
-<thead>
-            <tr>
-              <th class="text-left" rowspan="1" colspan="1">Property Name</th>
-              <th class="text-left" rowspan="1" colspan="1">Property ID</th>
-              <th class="text-left" rowspan="1" colspan="1">Value Type</th>
-              <th class="text-left" rowspan="1" colspan="1">Reference</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="text-left" rowspan="1" colspan="1">MSF_COMPRESSION</td>
-              <td class="text-left" rowspan="1" colspan="1">TBD</td>
-              <td class="text-left" rowspan="1" colspan="1">varint</td>
-              <td class="text-left" rowspan="1" colspan="1">RFC XXXX</td>
-            </tr>
-          </tbody>
-        </table>
-<p id="section-14.3-3">The MSF_COMPRESSION track property indicates that ALL objects on the track
-are compressed using the specified algorithm. See <a href="#compression-track-property" class="auto internal xref">Section 12.1.1</a>
-for the full specification.<a href="#section-14.3-3" class="pilcrow">¶</a></p>
-</section>
-</div>
-<div id="iana-object-properties">
-<section id="section-14.4">
-        <h3 id="name-msf_compression-object-prope">
-<a href="#section-14.4" class="section-number selfRef">14.4. </a><a href="#name-msf_compression-object-prope" class="section-name selfRef">MSF_COMPRESSION Object Property</a>
-        </h3>
-<p id="section-14.4-1">This document requests IANA to create a new "MSF Compression Algorithms"
-registry with the following initial values:<a href="#section-14.4-1" class="pilcrow">¶</a></p>
-<table class="center" id="table-15">
-          <caption><a href="#table-15" class="selfRef">Table 15</a></caption>
 <thead>
             <tr>
               <th class="text-left" rowspan="1" colspan="1">Value</th>
@@ -5464,8 +5495,8 @@ registry with the following initial values:<a href="#section-14.4-1" class="pilc
             </tr>
           </tbody>
         </table>
-<p id="section-14.4-3">Values 2-127 are available for registration via Standards Action.
-Values 128 and above are reserved for private use.<a href="#section-14.4-3" class="pilcrow">¶</a></p>
+<p id="section-14.3-3">Values 2-127 are available for registration via Standards Action.
+Values 128 and above are reserved for private use.<a href="#section-14.3-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -5487,7 +5518,7 @@ Values 128 and above are reserved for private use.<a href="#section-14.4-3" clas
 <dd class="break"></dd>
 <dt id="C4M">[C4M]</dt>
         <dd>
-<span class="refAuthor">Law, W.</span>, <span class="refAuthor">Lemmons, C.</span>, <span class="refAuthor">Simon, G.</span>, and <span class="refAuthor">S. Nandakumar</span>, <span class="refTitle">"Authentication scheme for MOQT using Common Access Tokens"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-moq-c4m-00</span>, <time datetime="2025-09-19" class="refDate">19 September 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-c4m-00">https://datatracker.ietf.org/doc/html/draft-ietf-moq-c4m-00</a>&gt;</span>. </dd>
+<span class="refAuthor">Law, W.</span>, <span class="refAuthor">Lemmons, C.</span>, <span class="refAuthor">Simon, G.</span>, and <span class="refAuthor">S. Nandakumar</span>, <span class="refTitle">"Authorization scheme for MOQT using Common Access Tokens"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-moq-c4m-01</span>, <time datetime="2026-06-18" class="refDate">18 June 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-c4m-01">https://datatracker.ietf.org/doc/html/draft-ietf-moq-c4m-01</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="GZIP">[GZIP]</dt>
         <dd>
@@ -5574,13 +5605,13 @@ Values 128 and above are reserved for private use.<a href="#section-14.4-3" clas
         <dd>
 <span class="refTitle">"IMSC1 Packaging for MOQT Streaming Format"</span>, <time datetime="2026" class="refDate">2026</time>, <span>&lt;<a href="https://github.com/suhasHere/imsc1-msf">https://github.com/suhasHere/imsc1-msf</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="SCTE214-1">[SCTE214-1]</dt>
-        <dd>
-<span class="refTitle">"SCTE 214-1: MPEG DASH for IP-Based Cable Services Part 1 - MPD Constraints and Extensions"</span>, <time datetime="2022" class="refDate">2022</time>, <span>&lt;<a href="https://www.scte.org/standards/library/catalog/scte-214-1-mpeg-dash-for-ip-based-cable-services-part-1-mpd-constraints-and-extensions/">https://www.scte.org/standards/library/catalog/scte-214-1-mpeg-dash-for-ip-based-cable-services-part-1-mpd-constraints-and-extensions/</a>&gt;</span>. </dd>
-<dd class="break"></dd>
 <dt id="SCTE35-MSF">[SCTE35-MSF]</dt>
         <dd>
 <span class="refTitle">"SCTE-35 over MSF Event Timeline"</span>, <time datetime="2026" class="refDate">2026</time>, <span>&lt;<a href="https://github.com/wilaw/SCTE35-over-MSF-Event-Timeline">https://github.com/wilaw/SCTE35-over-MSF-Event-Timeline</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="SCTE214-1">[SCTE214-1]</dt>
+        <dd>
+<span class="refTitle">"SCTE 214-1: MPEG DASH for IP-Based Cable Services Part 1 - MPD Constraints and Extensions"</span>, <time datetime="2022" class="refDate">2022</time>, <span>&lt;<a href="https://www.scte.org/standards/library/catalog/scte-214-1-mpeg-dash-for-ip-based-cable-services-part-1-mpd-constraints-and-extensions/">https://www.scte.org/standards/library/catalog/scte-214-1-mpeg-dash-for-ip-based-cable-services-part-1-mpd-constraints-and-extensions/</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="WebVTT-MSF">[WebVTT-MSF]</dt>
       <dd>
