@@ -279,7 +279,7 @@ collide with field names described in this draft.
 
 A parser MUST ignore fields it does not understand.
 
-## Root Catalog Fields
+## Root Catalog Fields {#rootcatalogfield}
 
 Table 1 lists the fields defined at the root of the catalog JSON object.
 
@@ -362,6 +362,12 @@ The following operation types are defined:
   Parent namespace {{parentnamespace}} field. The cloned track inherits all
   attributes from the parent except the Track Name which MUST be new.
   Attributes redefined in the track object override inherited values.
+
+* "update" - update a subset of fields within an existing track. The value of
+  the "tracks" field is an Array of track objects {{trackobject}}. Each track
+  object MUST include a Parent Name {{parentname}} field and MAY include a
+  Parent namespace {{parentnamespace}} field. Attributes declared in the track
+  object override existing values.
 
 ### Initialization Data List {#initdatalist}
 Required: Optional    JSON Type: Array    Location: Root Catalog
@@ -714,15 +720,16 @@ the standard Tags for Identifying Languages as defined by {{LANG}}.
 ### Parent name {#parentname}
 Required: Optional    JSON Type: String    Location: Track Object
 
-A string defining the parent track name {{trackname}} to be cloned. This field
-MUST only be included inside a clone operation in a delta update {{deltaupdate}}.
+A string defining the parent track name {{trackname}} to be cloned or updated.
+This field MUST only be included inside a 'clone' or 'update' operation in a
+delta update {{deltaupdate}}.
 
 ### Parent namespace {#parentnamespace}
 Required: Optional    JSON Type: String    Location: Track Object
 
 A string defining the parent track namespace {{tracknamespace}} to be cloned. This field
-MUST only be included inside a clone operation in a delta update {{deltaupdate}}. If this
-field is missing from a clone operation, then the namespace of the catalog is assumed.
+MUST only be included inside a 'clone' or 'update' operation in a delta update {{deltaupdate}}.
+If this field is missing from a clone operation, then the namespace of the catalog is assumed.
 
 ### Track duration {#trackduration}
 Required: Optional    JSON Type: Number    Location: Track Object
@@ -901,20 +908,17 @@ A restricted set of operations are allowed with each delta update:
 * Add a new track that has not previously been declared.
 * Add a new track by cloning a previously declared track.
 * Remove a track that has been previously declared.
+* Update properties of a previously declared track.
 
 The following rules are to be followed in constructing and processing delta updates:
 
 * A delta update MUST include the Delta Update {{deltaupdate}} field with at
-  least one operation. It MUST NOT contain an instance of a Tracks {{tracks}}
-  field or an MSF version {{msfversion}} field.
+  least one operation and the generatedAt field {{generatedat}}. It MUST NOT
+  include any other Root Catalog fields {{rootcatalogfield}}.
 * Operations are applied sequentially in the order they appear in the deltaUpdate
   array. Each operation is applied to the target document; the resulting document
   becomes the target of the next operation. Evaluation continues until all
   operations are successfully applied.
-* The tuple of Track Namespace and Track Name defines a fixed set of Track attributes
-  which MUST NOT be modified after being declared. To modify any attribute, a new
-  track with a different Namespace|Name tuple is created by Adding or Cloning and then
-  the old track is removed.
 * Producers that publish frequent delta updates SHOULD periodically publish a new
   independent catalog in a new MOQT Group in order to bound the amount of delta
   processing required for joining subscribers.
@@ -1207,14 +1211,24 @@ express the track relationships.
 ### Delta update  - adding two tracks
 
 This example shows the catalog delta update for a media producer adding
-two tracks to an established video conference. One track is newly declared,
-the other is cloned from a previous track.
+two tracks to an established video conference and modifying a property
+of an existing track. Of the tracks added, one track is newly declared,
+the other is cloned from an existing track.
 
 ~~~json
 {
   "generatedAt": 1746104606044,
   "deltaUpdate": [
-    {
+     {
+      "op": "update",
+      "tracks": [
+        {
+          "name": "video-1080",
+          "bitrate": 4000000
+        }
+      ]
+     },
+     {
       "op": "add",
       "tracks": [
         {
