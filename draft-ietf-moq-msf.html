@@ -2161,8 +2161,8 @@ defines the following allowed types:<a href="#section-5.1.7-3.2.1" class="pilcro
           </ul>
 <p id="section-5.1.7-6">For both the track-property and object-property types, the initialization
 data is serialized as raw binary data and carried in the value field of the
-MSF_INITIALIZATION Object property {#initialization-object-property} or the
-MSF_INITIALIZATION Track property {#initialization-track-property}.<a href="#section-5.1.7-6" class="pilcrow">¶</a></p>
+MSF_INITIALIZATION Object property <a href="#initialization-object-property" class="auto internal xref">Section 12.2.2</a> or the
+MSF_INITIALIZATION Track property <a href="#initialization-track-property" class="auto internal xref">Section 12.2.1</a>.<a href="#section-5.1.7-6" class="pilcrow">¶</a></p>
 <p id="section-5.1.7-7">The Initialization Data List, if present, <span class="bcp14">MUST</span> be located after the tracks array in
 the root of the JSON catalog. The purpose of this is to improve the human readability
 of the catalog tracks by moving the verbose init data towards the end of the document.<a href="#section-5.1.7-7" class="pilcrow">¶</a></p>
@@ -5357,8 +5357,8 @@ to process that object.<a href="#section-12.1.2-4" class="pilcrow">¶</a></p>
 <a href="#section-12.2.1" class="section-number selfRef">12.2.1. </a><a href="#name-msf_initialization-track-pr" class="section-name selfRef">MSF_INITIALIZATION Track property</a>
           </h4>
 <p id="section-12.2.1-1">Track Property type: 0x79<a href="#section-12.2.1-1" class="pilcrow">¶</a></p>
-<p id="section-12.2.1-2">The MSF_INITIALIZATION Track property carries the initilization data for the track.
-This initilization data is immutable over the life of the track.<a href="#section-12.2.1-2" class="pilcrow">¶</a></p>
+<p id="section-12.2.1-2">The MSF_INITIALIZATION Track property carries the initialization data for the track.
+This initialization data is immutable over the life of the track.<a href="#section-12.2.1-2" class="pilcrow">¶</a></p>
 <p id="section-12.2.1-3">Tracks which choose to transmit initialization data using this property <span class="bcp14">MUST</span> include
 an initRef <a href="#initref" class="auto internal xref">Section 5.2.13</a> field referencing an Initialization Data List <a href="#initdatalist" class="auto internal xref">Section 5.1.7</a>
 entry with a type of 'track-property'.<a href="#section-12.2.1-3" class="pilcrow">¶</a></p>
