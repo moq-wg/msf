@@ -390,8 +390,8 @@ object has the following fields:
 
 For both the track-property and object-property types, the initialization
 data is serialized as raw binary data and carried in the value field of the
-MSF_INITIALIZATION Object property {#initialization-object-property} or the
-MSF_INITIALIZATION Track property {#initialization-track-property}.
+MSF_INITIALIZATION Object property {{initialization-object-property}} or the
+MSF_INITIALIZATION Track property {{initialization-track-property}}.
 
 The Initialization Data List, if present, MUST be located after the tracks array in
 the root of the JSON catalog. The purpose of this is to improve the human readability
@@ -2571,8 +2571,8 @@ MSF provides two mechanisms for signalling initialization data using properties.
 
 Track Property type: 0x79
 
-The MSF_INITIALIZATION Track property carries the initilization data for the track.
-This initilization data is immutable over the life of the track.
+The MSF_INITIALIZATION Track property carries the initialization data for the track.
+This initialization data is immutable over the life of the track.
 
 Tracks which choose to transmit initialization data using this property MUST include
 an initRef {{initref}} field referencing an Initialization Data List {{initdatalist}}
