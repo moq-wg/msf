@@ -202,12 +202,14 @@ Table of Contents
      12.1.  Compression Signaling
        12.1.1.  MSF_COMPRESSION Track Property
        12.1.2.  MSF_COMPRESSION Object Property
+     12.2.  Initialization properties
+       12.2.1.  MSF_INITIALIZATION Track property
+       12.2.2.  MSF_INITIALIZATION Object property
    13. Security Considerations
    14. IANA Considerations
      14.1.  "MOQT URI Fragment Types" registry
      14.2.  "MSF Event Timeline Types" registry
-     14.3.  MSF_COMPRESSION Track Property
-     14.4.  MSF_COMPRESSION Object Property
+     14.3.  MSF_COMPRESSION Object Property
    15. References
      15.1.  Normative References
      15.2.  Informative References
@@ -598,18 +600,27 @@ Table of Contents
       which is unique within the scope of the catalog.
 
    *  type: as string defining the type of reference.  This version of
-      the specification defines a single allowed type, per the table
-      below
+      the specification defines the following allowed types:
 
-         +========+=============================================+
-         | Type   | Data field definition                       |
-         +========+=============================================+
-         | inline | Base64 [BASE64] encoded initialization data |
-         +--------+---------------------------------------------+
+     +=================+=============================================+
+     | Type            | Data field definition                       |
+     +=================+=============================================+
+     | inline          | Base64 [BASE64] encoded initialization data |
+     +-----------------+---------------------------------------------+
+     | track-property  | The Track property type in hex notation     |
+     +-----------------+---------------------------------------------+
+     | object-property | An Object property type in hex notation     |
+     +-----------------+---------------------------------------------+
 
-                                 Table 2
+                                  Table 2
 
    *  data: a string holding the init payload as defined by the type.
+
+   For both the track-property and object-property types, the
+   initialization data is serialized as raw binary data and carried in
+   the value field of the MSF_INITIALIZATION Object property
+   {#initialization-object-property} or the MSF_INITIALIZATION Track
+   property {#initialization-track-property}.
 
    The Initialization Data List, if present, MUST be located after the
    tracks array in the root of the JSON catalog.  The purpose of this is
@@ -3035,13 +3046,15 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
 
 12.1.1.  MSF_COMPRESSION Track Property
 
+   Track Property type: 0x78
+
    The MSF_COMPRESSION track property signals that ALL objects in the
    track are compressed using the specified algorithm.  This mechanism
    is appropriate when every object published on the track uses the same
    compression.
 
-   Publishers MUST include the MSF_COMPRESSION track property in the
-   PUBLISH message (publisher-initiated flow) or SUBSCRIBE_OK
+   If used, publishers MUST include the MSF_COMPRESSION track property
+   in the PUBLISH message (publisher-initiated flow) or SUBSCRIBE_OK
    (subscriber-initiated flow).
 
    Subscribers MUST check for this property in the corresponding message
@@ -3055,6 +3068,8 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
 
 12.1.2.  MSF_COMPRESSION Object Property
 
+   Object Property type: 0x78
+
    The MSF_COMPRESSION object property signals that an individual object
    is compressed.  This mechanism is appropriate when a track contains a
    mixture of compressed and uncompressed objects.  For example, a
@@ -3062,8 +3077,8 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
    catalog) is compressed, but subsequent delta update objects within
    the same group are uncompressed.
 
-   Publishers MUST include the MSF_COMPRESSION object property on each
-   compressed object.
+   If used, publishers MUST include the MSF_COMPRESSION object property
+   on each compressed object.
 
    Subscribers MUST check for this property on each received object
    before processing its payload.  If the property is absent on an
@@ -3071,6 +3086,43 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
    uncompressed.  If the property is present with a value the subscriber
    does not support, the subscriber MUST NOT attempt to process that
    object.
+
+12.2.  Initialization properties
+
+   MSF provides two mechanisms for signalling initialization data using
+   properties.
+
+12.2.1.  MSF_INITIALIZATION Track property
+
+   Track Property type: 0x79
+
+   The MSF_INITIALIZATION Track property carries the initilization data
+   for the track.  This initilization data is immutable over the life of
+   the track.
+
+   Tracks which choose to transmit initialization data using this
+   property MUST include an initRef Section 5.2.13 field referencing an
+   Initialization Data List Section 5.1.7 entry with a type of 'track-
+   property'.
+
+   If used, publishers MUST include the MSF_INITIALIZATION track
+   property in the PUBLISH message (publisher-initiated flow) or
+   SUBSCRIBE_OK message (subscriber-initiated flow).
+
+12.2.2.  MSF_INITIALIZATION Object property
+
+   Object Property type: 0x79
+
+   The MSF_INITIALIZATION Object property carries initialization data
+   for the track, when that initializaiton data might change over the
+   life of the track.  Since subscription might occur at any time, this
+   property needs to be repeated.  Publishers SHOULD add this property
+   to the first Object in each Group.
+
+   Tracks which choose to transmit initialization data using this
+   property MUST include an initRef Section 5.2.13 field referencing an
+   Initialization Data List Section 5.1.7 entry with a type of 'object-
+   property'.
 
 13.  Security Considerations
 
@@ -3120,25 +3172,7 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
 
                                  Table 13
 
-14.3.  MSF_COMPRESSION Track Property
-
-   This document requests IANA to register the following entry in the
-   "Track Properties" registry established by [MoQTransport]
-   (Section 14.4):
-
-        +=================+=============+============+===========+
-        | Property Name   | Property ID | Value Type | Reference |
-        +=================+=============+============+===========+
-        | MSF_COMPRESSION | TBD         | varint     | RFC XXXX  |
-        +-----------------+-------------+------------+-----------+
-
-                                 Table 14
-
-   The MSF_COMPRESSION track property indicates that ALL objects on the
-   track are compressed using the specified algorithm.  See
-   Section 12.1.1 for the full specification.
-
-14.4.  MSF_COMPRESSION Object Property
+14.3.  MSF_COMPRESSION Object Property
 
    This document requests IANA to create a new "MSF Compression
    Algorithms" registry with the following initial values:
@@ -3151,7 +3185,7 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
                | 1     | GZIP                  | [GZIP]    |
                +-------+-----------------------+-----------+
 
-                                  Table 15
+                                  Table 14
 
    Values 2-127 are available for registration via Standards Action.
    Values 128 and above are reserved for private use.
