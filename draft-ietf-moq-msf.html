@@ -28,7 +28,7 @@
     pycountry 24.6.1
     PyYAML 6.0.3
     requests 2.33.1
-    wcwidth 0.8.1
+    wcwidth 0.8.2
 -->
 <link href="draft-ietf-moq-msf.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -1047,11 +1047,11 @@ svg {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">MOQT Streaming Format</td>
-<td class="right">June 2026</td>
+<td class="right">July 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Law &amp; Nandakumar</td>
-<td class="center">Expires 1 January 2027</td>
+<td class="center">Expires 15 January 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1064,12 +1064,12 @@ svg {
 <dd class="internet-draft">draft-ietf-moq-msf-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-06-30" class="published">30 June 2026</time>
+<time datetime="2026-07-14" class="published">14 July 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-01-01">1 January 2027</time></dd>
+<dd class="expires"><time datetime="2027-01-15">15 January 2027</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1123,7 +1123,7 @@ svg {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 1 January 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 15 January 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1934,7 +1934,7 @@ fields are conditional depending on the type of content carried. A producer <spa
 additional fields to the ones described in this draft. Custom field names <span class="bcp14">MUST NOT</span>
 collide with field names described in this draft.<a href="#section-5-7" class="pilcrow">¶</a></p>
 <p id="section-5-8">A parser <span class="bcp14">MUST</span> ignore fields it does not understand.<a href="#section-5-8" class="pilcrow">¶</a></p>
-<div id="root-catalog-fields">
+<div id="rootcatalogfield">
 <section id="section-5.1">
         <h3 id="name-root-catalog-fields">
 <a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-root-catalog-fields" class="section-name selfRef">Root Catalog Fields</a>
@@ -2094,6 +2094,13 @@ object <span class="bcp14">MUST</span> include a Parent Name <a href="#parentnam
 Parent namespace <a href="#parentnamespace" class="auto internal xref">Section 5.2.34</a> field. The cloned track inherits all
 attributes from the parent except the Track Name which <span class="bcp14">MUST</span> be new.
 Attributes redefined in the track object override inherited values.<a href="#section-5.1.6-4.3.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-5.1.6-4.4">
+              <p id="section-5.1.6-4.4.1">"update" - update a subset of fields within an existing track. The value of
+the "tracks" field is an Array of track objects <a href="#trackobject" class="auto internal xref">Section 5.2.1</a>. Each track
+object <span class="bcp14">MUST</span> include a Parent Name <a href="#parentname" class="auto internal xref">Section 5.2.33</a> field and <span class="bcp14">MAY</span> include a
+Parent namespace <a href="#parentnamespace" class="auto internal xref">Section 5.2.34</a> field. Attributes declared in the track
+object override existing values.<a href="#section-5.1.6-4.4.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 </section>
@@ -2895,8 +2902,9 @@ the standard Tags for Identifying Languages as defined by <span>[<a href="#LANG"
 <a href="#section-5.2.33" class="section-number selfRef">5.2.33. </a><a href="#name-parent-name" class="section-name selfRef">Parent name</a>
           </h4>
 <p id="section-5.2.33-1">Required: Optional    JSON Type: String    Location: Track Object<a href="#section-5.2.33-1" class="pilcrow">¶</a></p>
-<p id="section-5.2.33-2">A string defining the parent track name <a href="#trackname" class="auto internal xref">Section 5.2.3</a> to be cloned. This field
-<span class="bcp14">MUST</span> only be included inside a clone operation in a delta update <a href="#deltaupdate" class="auto internal xref">Section 5.1.6</a>.<a href="#section-5.2.33-2" class="pilcrow">¶</a></p>
+<p id="section-5.2.33-2">A string defining the parent track name <a href="#trackname" class="auto internal xref">Section 5.2.3</a> to be cloned or updated.
+This field <span class="bcp14">MUST</span> only be included inside a 'clone' or 'update' operation in a
+delta update <a href="#deltaupdate" class="auto internal xref">Section 5.1.6</a>.<a href="#section-5.2.33-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="parentnamespace">
@@ -2906,8 +2914,8 @@ the standard Tags for Identifying Languages as defined by <span>[<a href="#LANG"
           </h4>
 <p id="section-5.2.34-1">Required: Optional    JSON Type: String    Location: Track Object<a href="#section-5.2.34-1" class="pilcrow">¶</a></p>
 <p id="section-5.2.34-2">A string defining the parent track namespace <a href="#tracknamespace" class="auto internal xref">Section 5.2.2</a> to be cloned. This field
-<span class="bcp14">MUST</span> only be included inside a clone operation in a delta update <a href="#deltaupdate" class="auto internal xref">Section 5.1.6</a>. If this
-field is missing from a clone operation, then the namespace of the catalog is assumed.<a href="#section-5.2.34-2" class="pilcrow">¶</a></p>
+<span class="bcp14">MUST</span> only be included inside a 'clone' or 'update' operation in a delta update <a href="#deltaupdate" class="auto internal xref">Section 5.1.6</a>.
+If this field is missing from a clone operation, then the namespace of the catalog is assumed.<a href="#section-5.2.34-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="trackduration">
@@ -3193,13 +3201,14 @@ a prior delta update.<a href="#section-5.3-1" class="pilcrow">¶</a></p>
 <p id="section-5.3-2">A restricted set of operations are allowed with each delta update:
 * Add a new track that has not previously been declared.
 * Add a new track by cloning a previously declared track.
-* Remove a track that has been previously declared.<a href="#section-5.3-2" class="pilcrow">¶</a></p>
+* Remove a track that has been previously declared.
+* Update properties of a previously declared track.<a href="#section-5.3-2" class="pilcrow">¶</a></p>
 <p id="section-5.3-3">The following rules are to be followed in constructing and processing delta updates:<a href="#section-5.3-3" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-5.3-4.1">
             <p id="section-5.3-4.1.1">A delta update <span class="bcp14">MUST</span> include the Delta Update <a href="#deltaupdate" class="auto internal xref">Section 5.1.6</a> field with at
-least one operation. It <span class="bcp14">MUST NOT</span> contain an instance of a Tracks <a href="#tracks" class="auto internal xref">Section 5.1.4</a>
-field or an MSF version <a href="#msfversion" class="auto internal xref">Section 5.1.1</a> field.<a href="#section-5.3-4.1.1" class="pilcrow">¶</a></p>
+least one operation and the generatedAt field <a href="#generatedat" class="auto internal xref">Section 5.1.2</a>. It <span class="bcp14">MUST NOT</span>
+include any other Root Catalog fields <a href="#rootcatalogfield" class="auto internal xref">Section 5.1</a>.<a href="#section-5.3-4.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.3-4.2">
             <p id="section-5.3-4.2.1">Operations are applied sequentially in the order they appear in the deltaUpdate
@@ -3208,15 +3217,9 @@ becomes the target of the next operation. Evaluation continues until all
 operations are successfully applied.<a href="#section-5.3-4.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.3-4.3">
-            <p id="section-5.3-4.3.1">The tuple of Track Namespace and Track Name defines a fixed set of Track attributes
-which <span class="bcp14">MUST NOT</span> be modified after being declared. To modify any attribute, a new
-track with a different Namespace|Name tuple is created by Adding or Cloning and then
-the old track is removed.<a href="#section-5.3-4.3.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.3-4.4">
-            <p id="section-5.3-4.4.1">Producers that publish frequent delta updates <span class="bcp14">SHOULD</span> periodically publish a new
+            <p id="section-5.3-4.3.1">Producers that publish frequent delta updates <span class="bcp14">SHOULD</span> periodically publish a new
 independent catalog in a new MOQT Group in order to bound the amount of delta
-processing required for joining subscribers.<a href="#section-5.3-4.4.1" class="pilcrow">¶</a></p>
+processing required for joining subscribers.<a href="#section-5.3-4.3.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
@@ -3533,14 +3536,24 @@ express the track relationships.<a href="#section-5.6.3-3" class="pilcrow">¶</a
 <a href="#section-5.6.4" class="section-number selfRef">5.6.4. </a><a href="#name-delta-update-adding-two-tra" class="section-name selfRef">Delta update  - adding two tracks</a>
           </h4>
 <p id="section-5.6.4-1">This example shows the catalog delta update for a media producer adding
-two tracks to an established video conference. One track is newly declared,
-the other is cloned from a previous track.<a href="#section-5.6.4-1" class="pilcrow">¶</a></p>
+two tracks to an established video conference and modifying a property
+of an existing track. Of the tracks added, one track is newly declared,
+the other is cloned from an existing track.<a href="#section-5.6.4-1" class="pilcrow">¶</a></p>
 <div class="lang-json sourcecode" id="section-5.6.4-2">
 <pre>
 {
   "generatedAt": 1746104606044,
   "deltaUpdate": [
-    {
+     {
+      "op": "update",
+      "tracks": [
+        {
+          "name": "video-1080",
+          "bitrate": 4000000
+        }
+      ]
+     },
+     {
       "op": "add",
       "tracks": [
         {
@@ -5529,7 +5542,7 @@ Values 128 and above are reserved for private use.<a href="#section-14.4-3" clas
 <dd class="break"></dd>
 <dt id="PrivacyPassAuth">[PrivacyPassAuth]</dt>
         <dd>
-<span class="refAuthor">Nandakumar, S.</span>, <span class="refAuthor">Jennings, C. F.</span>, and <span class="refAuthor">T. Meunier</span>, <span class="refTitle">"Privacy Pass Authentication for Media over QUIC (MoQ)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-moq-privacy-pass-auth-02</span>, <time datetime="2026-03-02" class="refDate">2 March 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-privacy-pass-auth-02">https://datatracker.ietf.org/doc/html/draft-ietf-moq-privacy-pass-auth-02</a>&gt;</span>. </dd>
+<span class="refAuthor">Nandakumar, S.</span>, <span class="refAuthor">Jennings, C. F.</span>, and <span class="refAuthor">T. Meunier</span>, <span class="refTitle">"Privacy Pass Authentication for Media over QUIC (MoQ)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-moq-privacy-pass-auth-03</span>, <time datetime="2026-07-06" class="refDate">6 July 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-privacy-pass-auth-03">https://datatracker.ietf.org/doc/html/draft-ietf-moq-privacy-pass-auth-03</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC2119">[RFC2119]</dt>
         <dd>

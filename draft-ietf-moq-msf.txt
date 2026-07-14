@@ -5,8 +5,8 @@
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
 Intended status: Informational                             S. Nandakumar
-Expires: 1 January 2027                                            Cisco
-                                                            30 June 2026
+Expires: 15 January 2027                                           Cisco
+                                                            14 July 2026
 
 
                          MOQT Streaming Format
@@ -49,7 +49,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 1 January 2027.
+   This Internet-Draft will expire on 15 January 2027.
 
 Copyright Notice
 
@@ -580,6 +580,13 @@ Table of Contents
       Attributes redefined in the track object override inherited
       values.
 
+   *  "update" - update a subset of fields within an existing track.
+      The value of the "tracks" field is an Array of track objects
+      Section 5.2.1.  Each track object MUST include a Parent Name
+      Section 5.2.33 field and MAY include a Parent namespace
+      Section 5.2.34 field.  Attributes declared in the track object
+      override existing values.
+
 5.1.7.  Initialization Data List
 
    Required: Optional JSON Type: Array Location: Root Catalog
@@ -1064,18 +1071,19 @@ Table of Contents
 
    Required: Optional JSON Type: String Location: Track Object
 
-   A string defining the parent track name Section 5.2.3 to be cloned.
-   This field MUST only be included inside a clone operation in a delta
-   update Section 5.1.6.
+   A string defining the parent track name Section 5.2.3 to be cloned or
+   updated.  This field MUST only be included inside a 'clone' or
+   'update' operation in a delta update Section 5.1.6.
 
 5.2.34.  Parent namespace
 
    Required: Optional JSON Type: String Location: Track Object
 
    A string defining the parent track namespace Section 5.2.2 to be
-   cloned.  This field MUST only be included inside a clone operation in
-   a delta update Section 5.1.6.  If this field is missing from a clone
-   operation, then the namespace of the catalog is assumed.
+   cloned.  This field MUST only be included inside a 'clone' or
+   'update' operation in a delta update Section 5.1.6.  If this field is
+   missing from a clone operation, then the namespace of the catalog is
+   assumed.
 
 5.2.35.  Track duration
 
@@ -1302,26 +1310,22 @@ Table of Contents
    A restricted set of operations are allowed with each delta update: *
    Add a new track that has not previously been declared. * Add a new
    track by cloning a previously declared track. * Remove a track that
-   has been previously declared.
+   has been previously declared. * Update properties of a previously
+   declared track.
 
    The following rules are to be followed in constructing and processing
    delta updates:
 
    *  A delta update MUST include the Delta Update Section 5.1.6 field
-      with at least one operation.  It MUST NOT contain an instance of a
-      Tracks Section 5.1.4 field or an MSF version Section 5.1.1 field.
+      with at least one operation and the generatedAt field
+      Section 5.1.2.  It MUST NOT include any other Root Catalog fields
+      Section 5.1.
 
    *  Operations are applied sequentially in the order they appear in
       the deltaUpdate array.  Each operation is applied to the target
       document; the resulting document becomes the target of the next
       operation.  Evaluation continues until all operations are
       successfully applied.
-
-   *  The tuple of Track Namespace and Track Name defines a fixed set of
-      Track attributes which MUST NOT be modified after being declared.
-      To modify any attribute, a new track with a different
-      Namespace|Name tuple is created by Adding or Cloning and then the
-      old track is removed.
 
    *  Producers that publish frequent delta updates SHOULD periodically
       publish a new independent catalog in a new MOQT Group in order to
@@ -1606,13 +1610,23 @@ Table of Contents
 5.6.4.  Delta update - adding two tracks
 
    This example shows the catalog delta update for a media producer
-   adding two tracks to an established video conference.  One track is
-   newly declared, the other is cloned from a previous track.
+   adding two tracks to an established video conference and modifying a
+   property of an existing track.  Of the tracks added, one track is
+   newly declared, the other is cloned from an existing track.
 
    {
      "generatedAt": 1746104606044,
      "deltaUpdate": [
-       {
+        {
+         "op": "update",
+         "tracks": [
+           {
+             "name": "video-1080",
+             "bitrate": 4000000
+           }
+         ]
+        },
+        {
          "op": "add",
          "tracks": [
            {
@@ -3209,9 +3223,9 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
               Nandakumar, S., Jennings, C. F., and T. Meunier, "Privacy
               Pass Authentication for Media over QUIC (MoQ)", Work in
               Progress, Internet-Draft, draft-ietf-moq-privacy-pass-
-              auth-02, 2 March 2026,
+              auth-03, 6 July 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-moq-
-              privacy-pass-auth-02>.
+              privacy-pass-auth-03>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
