@@ -1985,6 +1985,20 @@ Event timeline tracks are optional. Multiple event timeline tracks can exist ins
 catalog. The type & structure of the data contained within each event timeline track is
 declared in the catalog, to facilitate client selection and parsing.
 
+## Event Timeline header data {#eventtimelineheader}
+Certain event payloads require header data to help initialize or give context to the
+payload data, which consists solely of an array of records. This header data is typically
+invariant over the life of the track.
+
+This header data is communicated by the MSF_EVENT_TIMELINE_HEADER Track property
+{{eventtimeline-header-track-property}}.
+
+Subscribers to an Event Timeline Track MUST check for the presence of this track property
+before parsing the payload of the event timeline track.
+
+Usage of this track property is optional. Absence of the MSF_EVENT_TIMELINE_HEADER Track
+property indicates that no header data is provided for the Event Timeline Track.
+
 ## Event Timeline data format {#eventtimelineformat}
 An event timeline track is a JSON {{JSON}} document. This document MAY be compressed
 using the MSF_COMPRESSION property ({{compression-signaling}}). The document
@@ -2490,9 +2504,8 @@ and {{C4M}} for CAT error handling.
 # MSF Properties {#track-properties}
 
 MSF defines MOQT Track Properties and Object Properties (see {{MoQTransport}})
-to signal metadata about MSF tracks and objects. These properties are carried in
-MOQT control messages and object headers, allowing endpoints to learn track and
-object characteristics before processing payload data.
+to signal metadata about MSF tracks and objects. These properties allow endpoints
+to learn track and object characteristics before processing payload data.
 
 ## Compression Signaling {#compression-signaling}
 
@@ -2593,6 +2606,21 @@ property to the first Object in each Group.
 Tracks which choose to transmit initialization data using this property MUST include
 an initRef {{initref}} field referencing an Initialization Data List {{initdatalist}}
 entry with a type of 'object-property'.
+
+## Event Timeline Track properties
+
+### MSF_EVENT_TIMELINE_HEADER Track property {#eventtimeline-header-track-property}
+
+Track Property type: 0x7B
+
+The MSF_EVENT_TIMELINE_HEADER Track property carries header data for an Event Timeline track.
+This initialization data is immutable over the life of the track.
+
+The serialization of the value of the property is defined by the Event timeline type {{eventtype}}.
+
+If used, publishers MUST include the MSF_EVENT_TIMELINE_HEADER track property in the PUBLISH
+message (publisher-initiated flow) or SUBSCRIBE_OK message (subscriber-initiated flow).
+
 
 # Security Considerations
 
