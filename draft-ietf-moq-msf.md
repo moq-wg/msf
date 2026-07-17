@@ -495,19 +495,20 @@ fully describe the content of the track.
 
 Table 4: Reserved track roles
 
-| Role             |   Description                                              |
-|:=================|:===========================================================|
-| audiodescription | An audio description for visually impaired users           |
-| video            | Visual content                                             |
-| audio            | Audio content                                              |
-| mediatimeline    | An MSF media timeline {{mediatimelinetrack}}               |
-| eventtimeline    | An MSF event timeline {{eventtimelinetrack}}               |
-| caption          | A textual representation of the audio track                |
-| subtitle         | A transcription of the spoken dialogue                     |
-| signlanguage     | A visual track for hearing impaired users.                 |
-| log              | A log publishing track per {{MOQLOG}}.                     |
-| metrics          | A metrics publishing track per {{MOQMETRICS}}.             |
-|------------------|------------------------------------------------------------|
+| Role             |   Description                                                     |
+|:=================|:==================================================================|
+| audiodescription | An audio description for visually impaired users                  |
+| video            | Visual content                                                    |
+| audio            | Audio content                                                     |
+| mediatimeline    | An MSF media timeline {{mediatimelinetrack}}                      |
+| eventtimeline    | An MSF event timeline {{eventtimelinetrack}}                      |
+| caption          | A textual representation of the audio track                       |
+| subtitle         | A transcription of the spoken dialogue                            |
+| signlanguage     | A visual track for hearing impaired users.                        |
+| log              | A log publishing track per {{MOQLOG}}.                            |
+| metrics          | A metrics publishing track per {{MOQMETRICS}}.                    |
+| data             | A generic descriptor for tracks carrying application-defined data |
+|------------------|-------------------------------------------------------------------|
 
 Custom roles MAY be used as long as they do not collide with the specified roles.
 
