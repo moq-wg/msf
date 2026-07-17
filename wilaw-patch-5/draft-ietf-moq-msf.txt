@@ -5,8 +5,8 @@
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
 Intended status: Informational                             S. Nandakumar
-Expires: 1 January 2027                                            Cisco
-                                                            30 June 2026
+Expires: 18 January 2027                                           Cisco
+                                                            17 July 2026
 
 
                          MOQT Streaming Format
@@ -49,7 +49,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 1 January 2027.
+   This Internet-Draft will expire on 18 January 2027.
 
 Copyright Notice
 
@@ -202,12 +202,16 @@ Table of Contents
      12.1.  Compression Signaling
        12.1.1.  MSF_COMPRESSION Track Property
        12.1.2.  MSF_COMPRESSION Object Property
+     12.2.  Initialization properties
+       12.2.1.  MSF_INITIALIZATION Track property
+       12.2.2.  MSF_INITIALIZATION Object property
    13. Security Considerations
    14. IANA Considerations
      14.1.  "MOQT URI Fragment Types" registry
      14.2.  "MSF Event Timeline Types" registry
-     14.3.  MSF_COMPRESSION Track Property
-     14.4.  MSF_COMPRESSION Object Property
+       14.2.1.  Guidance for Designated Experts
+     14.3.  MSF Property Type values
+     14.4.  "MSF Compression Algorithms" registry
    15. References
      15.1.  Normative References
      15.2.  Informative References
@@ -598,18 +602,27 @@ Table of Contents
       which is unique within the scope of the catalog.
 
    *  type: as string defining the type of reference.  This version of
-      the specification defines a single allowed type, per the table
-      below
+      the specification defines the following allowed types:
 
-         +========+=============================================+
-         | Type   | Data field definition                       |
-         +========+=============================================+
-         | inline | Base64 [BASE64] encoded initialization data |
-         +--------+---------------------------------------------+
+     +=================+=============================================+
+     | Type            | Data field definition                       |
+     +=================+=============================================+
+     | inline          | Base64 [BASE64] encoded initialization data |
+     +-----------------+---------------------------------------------+
+     | track-property  | The Track property type in hex notation     |
+     +-----------------+---------------------------------------------+
+     | object-property | An Object property type in hex notation     |
+     +-----------------+---------------------------------------------+
 
-                                 Table 2
+                                  Table 2
 
    *  data: a string holding the init payload as defined by the type.
+
+   For both the track-property and object-property types, the
+   initialization data is serialized as raw binary data and carried in
+   the value field of the MSF_INITIALIZATION Object property
+   Section 12.2.2 or the MSF_INITIALIZATION Track property
+   Section 12.2.1.
 
    The Initialization Data List, if present, MUST be located after the
    tracks array in the root of the JSON catalog.  The purpose of this is
@@ -2612,11 +2625,9 @@ Table of Contents
 
    Event timelines can carry various types of broadcast metadata
    synchronized with media content.  The "MSF Event Timeline Types"
-   registry (Section 14.2) maintains a list of well-known event types.
-   Publishers SHOULD use registered types when applicable to ensure
-   interoperability.
-
-   Event timelines can carry data types including but not limited to:
+   registry (Section 14.2) is established by this document but has no
+   initial entries; entries are registered by the specifications that
+   define each event type, which are expected to include:
 
    *  Ad insertion signaling (e.g., SCTE-35 splice points) - see
       [SCTE35-MSF]
@@ -2624,18 +2635,16 @@ Table of Contents
    *  Out-of-band timed-text cues (WebVTT, IMSC1) - see [WebVTT-MSF] and
       [IMSC1-MSF]
 
-   *  Sports scores and game state
-
-   *  GPS coordinates and telemetry
-
-   *  Active speaker notifications
-
-   *  Custom application-specific metadata
+   Other data types, for example sports scores and game state, GPS
+   coordinates and telemetry, active speaker notifications, and custom
+   application-specific metadata, MAY also be carried on event timeline
+   tracks, defined by their own specifications and registered
+   accordingly.
 
    The packaging format and data structure for each event type is
    defined by the specification referenced in the registry.  Custom
-   event types not in the registry SHOULD use Reverse Domain Name
-   Notation (e.g., "com.example.myeventtype") to avoid naming
+   event types not intended for registration SHOULD use Reverse Domain
+   Name Notation (e.g., "com.example.myeventtype") to avoid naming
    collisions.
 
 11.  Workflow
@@ -3035,13 +3044,15 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
 
 12.1.1.  MSF_COMPRESSION Track Property
 
+   Track Property type: 0x78
+
    The MSF_COMPRESSION track property signals that ALL objects in the
    track are compressed using the specified algorithm.  This mechanism
    is appropriate when every object published on the track uses the same
    compression.
 
-   Publishers MUST include the MSF_COMPRESSION track property in the
-   PUBLISH message (publisher-initiated flow) or SUBSCRIBE_OK
+   If used, publishers MUST include the MSF_COMPRESSION track property
+   in the PUBLISH message (publisher-initiated flow) or SUBSCRIBE_OK
    (subscriber-initiated flow).
 
    Subscribers MUST check for this property in the corresponding message
@@ -3055,6 +3066,8 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
 
 12.1.2.  MSF_COMPRESSION Object Property
 
+   Object Property type: 0x78
+
    The MSF_COMPRESSION object property signals that an individual object
    is compressed.  This mechanism is appropriate when a track contains a
    mixture of compressed and uncompressed objects.  For example, a
@@ -3062,8 +3075,8 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
    catalog) is compressed, but subsequent delta update objects within
    the same group are uncompressed.
 
-   Publishers MUST include the MSF_COMPRESSION object property on each
-   compressed object.
+   If used, publishers MUST include the MSF_COMPRESSION object property
+   on each compressed object.
 
    Subscribers MUST check for this property on each received object
    before processing its payload.  If the property is absent on an
@@ -3072,16 +3085,60 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
    does not support, the subscriber MUST NOT attempt to process that
    object.
 
+12.2.  Initialization properties
+
+   MSF provides two mechanisms for signalling initialization data using
+   properties.
+
+12.2.1.  MSF_INITIALIZATION Track property
+
+   Track Property type: 0x79
+
+   The MSF_INITIALIZATION Track property carries the initialization data
+   for the track.  This initialization data is immutable over the life
+   of the track.
+
+   Tracks which choose to transmit initialization data using this
+   property MUST include an initRef Section 5.2.13 field referencing an
+   Initialization Data List Section 5.1.7 entry with a type of 'track-
+   property'.
+
+   If used, publishers MUST include the MSF_INITIALIZATION track
+   property in the PUBLISH message (publisher-initiated flow) or
+   SUBSCRIBE_OK message (subscriber-initiated flow).
+
+12.2.2.  MSF_INITIALIZATION Object property
+
+   Object Property type: 0x79
+
+   The MSF_INITIALIZATION Object property carries initialization data
+   for the track, when that initializaiton data might change over the
+   life of the track.  Since subscription might occur at any time, this
+   property needs to be repeated.  Publishers SHOULD add this property
+   to the first Object in each Group.
+
+   Tracks which choose to transmit initialization data using this
+   property MUST include an initRef Section 5.2.13 field referencing an
+   Initialization Data List Section 5.1.7 entry with a type of 'object-
+   property'.
+
 13.  Security Considerations
 
    ToDo
 
 14.  IANA Considerations
 
+   This document requests IANA to create a new registry group titled
+   "MOQT Streaming Format (MSF) Parameters," containing the "MSF Event
+   Timeline Types" registry (Section 14.2) and the "MSF Compression
+   Algorithms" registry (Section 14.4) defined below.  It also registers
+   one entry in the existing "MOQT URI Fragment Types" registry and
+   documents two Property Type values that require no IANA action.
+
 14.1.  "MOQT URI Fragment Types" registry
 
-   This document creates a new entry in the "MOQT URI Fragment Types"
-   registry (see [MoQTransport] Section 14.3).
+   This document registers the following entry in the "MOQT URI Fragment
+   Types" registry established by [MoQTransport], Section 15.3:
 
          +===============+=======================+===============+
          | Fragment Type | Description           | Specification |
@@ -3093,68 +3150,99 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
 
 14.2.  "MSF Event Timeline Types" registry
 
-   This document establishes the "MSF Event Timeline Types" registry.
+   This document establishes the "MSF Event Timeline Types" registry,
+   part of the "MOQT Streaming Format (MSF) Parameters" registry group.
    This registry lists the event types that can be used with the
-   eventType field Section 5.2.5 in MSF catalogs.
+   eventType field (Section 5.2.5) in MSF catalogs.
 
    New entries in this registry are subject to Expert Review policy as
-   defined in [RFC8126].
+   defined in [RFC8126].  Each entry contains the following fields:
+
+   *  Event Type: the string identifier used in the eventType field.
+
+   *  Description: a short human-readable summary of the event type.
+
+   *  Change Controller: the entity authorized to modify the entry.  For
+      registrations made via an IETF-stream document, this is "IETF".
+      For other registrations, this is the name and contact information
+      of the registrant.
+
+   *  Specification: a stable reference to a publicly available document
+      defining the format and semantics of the data carried under this
+      event type.
+
+   The initial contents of this registry are empty.  Entries are added
+   by the specifications that define each event type; see Section 10.5
+   for known examples.
+
+14.2.1.  Guidance for Designated Experts
+
+   Designated experts should evaluate registration requests against the
+   following criteria, per [RFC8126], Section 4.5:
+
+   *  The requested Event Type string is unique within the registry and
+      does not collide with, or create ambiguity against, an existing
+      entry.
+
+   *  Requests using the "urn:" scheme conform to an appropriate URN
+      namespace ([RFC8141]).  Requests intended for narrow or vendor-
+      specific use should instead use Reverse Domain Name Notation and
+      do not need to be registered at all.
+
+   *  The referenced specification is stable, publicly available, and
+      describes the data format and semantics carried in the Event
+      Timeline track in enough detail to support independent,
+      interoperable implementations.
+
+   *  The registration does not duplicate the function of an existing
+      registered type without adequate justification, such as a
+      materially different encoding or use case.
+
+   Experts should reject requests that lack a public specification, that
+   reuse an existing Event Type string with different semantics, or that
+   leave the data format ambiguous.  Registrations are expected to be
+   infrequent, and experts MAY consult the MoQ working group mailing
+   list (moq@ietf.org) when in doubt.
+
+14.3.  MSF Property Type values
+
+   The MSF_COMPRESSION and MSF_INITIALIZATION Track and Object
+   properties (Section 12.1, Section 12.2.1) use Property Type values
+   0x78 and 0x79 respectively.  These values fall within the range that
+   [MoQTransport], Section 15.8 reserves for application-specific use,
+   for which IANA registration is not permitted.  Accordingly, this
+   document requests no IANA action for these Property Type values; they
+   are defined directly by this specification and require no
+   coordination with IANA.
+
+   Implementers should note the caveat in [MoQTransport], Section 15.8
+   regarding this range: because application-specific codepoints are not
+   coordinated across independently developed extensions, an endpoint
+   processing tracks from uncoordinated sources could encounter the same
+   Property Type value used with different semantics.
+
+14.4.  "MSF Compression Algorithms" registry
+
+   This document establishes the "MSF Compression Algorithms" registry,
+   part of the "MOQT Streaming Format (MSF) Parameters" registry group.
+   This registry lists the values used by the MSF_COMPRESSION Track and
+   Object properties (Section 12.1) to identify a compression algorithm.
+
+   New entries with values 2-127 are registered via Standards Action.
+   Values 128 and above are reserved for private use and MUST NOT be
+   registered.
 
    The initial contents of this registry are:
-
-    +==========================+=====================+===============+
-    | Event Type               | Description         | Specification |
-    +==========================+=====================+===============+
-    | urn:scte:scte35:2013:bin | SCTE-35 binary      | [SCTE35-MSF]  |
-    |                          | splice_info_section |               |
-    +--------------------------+---------------------+---------------+
-    | urn:scte:scte35:2013:xml | SCTE-35 XML         | [SCTE35-MSF]  |
-    |                          | representation      |               |
-    +--------------------------+---------------------+---------------+
-    | urn:msf:timedtext:webvtt | WebVTT timed text   | [WebVTT-MSF]  |
-    |                          | cues                |               |
-    +--------------------------+---------------------+---------------+
-    | urn:msf:timedtext:imsc1  | IMSC1 timed text    | [IMSC1-MSF]   |
-    |                          | cues                |               |
-    +--------------------------+---------------------+---------------+
-
-                                 Table 13
-
-14.3.  MSF_COMPRESSION Track Property
-
-   This document requests IANA to register the following entry in the
-   "Track Properties" registry established by [MoQTransport]
-   (Section 14.4):
-
-        +=================+=============+============+===========+
-        | Property Name   | Property ID | Value Type | Reference |
-        +=================+=============+============+===========+
-        | MSF_COMPRESSION | TBD         | varint     | RFC XXXX  |
-        +-----------------+-------------+------------+-----------+
-
-                                 Table 14
-
-   The MSF_COMPRESSION track property indicates that ALL objects on the
-   track are compressed using the specified algorithm.  See
-   Section 12.1.1 for the full specification.
-
-14.4.  MSF_COMPRESSION Object Property
-
-   This document requests IANA to create a new "MSF Compression
-   Algorithms" registry with the following initial values:
 
                +=======+=======================+===========+
                | Value | Compression Algorithm | Reference |
                +=======+=======================+===========+
-               | 0     | None (uncompressed)   | RFC XXXX  |
+               | 0     | None (uncompressed)   | this      |
                +-------+-----------------------+-----------+
                | 1     | GZIP                  | [GZIP]    |
                +-------+-----------------------+-----------+
 
-                                  Table 15
-
-   Values 2-127 are available for registration via Standards Action.
-   Values 128 and above are reserved for private use.
+                                  Table 13
 
 15.  References
 
@@ -3215,17 +3303,17 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
    [MoQTransport]
               Nandakumar, S., Vasiliev, V., Swett, I., and A. Frindell,
               "Media over QUIC Transport", Work in Progress, Internet-
-              Draft, draft-ietf-moq-transport-18, 12 May 2026,
+              Draft, draft-ietf-moq-transport-19, 6 July 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-moq-
-              transport-18>.
+              transport-19>.
 
    [PrivacyPassAuth]
               Nandakumar, S., Jennings, C. F., and T. Meunier, "Privacy
               Pass Authentication for Media over QUIC (MoQ)", Work in
               Progress, Internet-Draft, draft-ietf-moq-privacy-pass-
-              auth-02, 2 March 2026,
+              auth-03, 6 July 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-moq-
-              privacy-pass-auth-02>.
+              privacy-pass-auth-03>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -3271,12 +3359,22 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
               jennings-moq-e2ee-mls-03>.
 
    [IMSC1-MSF]
-              "IMSC1 Packaging for MOQT Streaming Format", 2026,
-              <https://github.com/suhasHere/imsc1-msf>.
+              Law, W. and S. Nandakumar, "IMSC1 Packaging for MOQT
+              Streaming Format", Work in Progress, Internet-Draft,
+              draft-law-moq-imsc1-msf-00, 6 July 2026,
+              <https://datatracker.ietf.org/doc/html/draft-law-moq-
+              imsc1-msf-00>.
+
+   [RFC8141]  Saint-Andre, P. and J. Klensin, "Uniform Resource Names
+              (URNs)", RFC 8141, DOI 10.17487/RFC8141, April 2017,
+              <https://www.rfc-editor.org/rfc/rfc8141>.
 
    [SCTE35-MSF]
-              "SCTE-35 over MSF Event Timeline", 2026,
-              <https://github.com/wilaw/SCTE35-over-MSF-Event-Timeline>.
+              Law, W. and S. Nandakumar, "SCTE35 transmission over MSF
+              Event Timeline", Work in Progress, Internet-Draft, draft-
+              wilaw-moq-scte35-event-timeline-00, 6 July 2026,
+              <https://datatracker.ietf.org/doc/html/draft-wilaw-moq-
+              scte35-event-timeline-00>.
 
    [SCTE214-1]
               "SCTE 214-1: MPEG DASH for IP-Based Cable Services Part 1
@@ -3286,8 +3384,11 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
               constraints-and-extensions/>.
 
    [WebVTT-MSF]
-              "WebVTT Packaging for MOQT Streaming Format", 2026,
-              <https://github.com/suhasHere/webvtt-msf>.
+              Law, W. and S. Nandakumar, "WebVTT Packaging for MOQT
+              Streaming Format", Work in Progress, Internet-Draft,
+              draft-wilaw-moq-webvtt-msf-00, 6 July 2026,
+              <https://datatracker.ietf.org/doc/html/draft-wilaw-moq-
+              webvtt-msf-00>.
 
 Acknowledgments
 
