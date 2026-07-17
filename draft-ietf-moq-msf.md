@@ -64,6 +64,10 @@ informative:
   WebVTT-MSF: I-D.draft-wilaw-moq-webvtt-msf
   IMSC1-MSF: I-D.draft-law-moq-imsc1-msf
   SCTE35-MSF: I-D.draft-wilaw-moq-scte35-event-timeline
+  SCTE214-1:
+    title: "SCTE 214-1: MPEG DASH for IP-Based Cable Services Part 1 - MPD Constraints and Extensions"
+    date: 2022
+    target: https://www.scte.org/standards/library/catalog/scte-214-1-mpeg-dash-for-ip-based-cable-services-part-1-mpd-constraints-and-extensions/
 
 --- abstract
 
