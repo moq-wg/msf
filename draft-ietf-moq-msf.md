@@ -33,7 +33,7 @@ author:
     email: snandaku@cisco.com
 
 normative:
-  MoQTransport: I-D.draft-ietf-moq-transport-18
+  MoQTransport: I-D.draft-ietf-moq-transport-19
   LOC: I-D.draft-ietf-moq-loc-02
   SecureObjects: I-D.draft-jennings-moq-secure-objects
   C4M: I-D.draft-ietf-moq-c4m
@@ -61,22 +61,9 @@ normative:
 
 informative:
   E2EE-MLS: I-D.draft-jennings-moq-e2ee-mls
-  SCTE214-1:
-    title: "SCTE 214-1: MPEG DASH for IP-Based Cable Services Part 1 - MPD Constraints and Extensions"
-    date: 2022
-    target: https://www.scte.org/standards/library/catalog/scte-214-1-mpeg-dash-for-ip-based-cable-services-part-1-mpd-constraints-and-extensions/
-  WebVTT-MSF:
-    title: "WebVTT Packaging for MOQT Streaming Format"
-    date: 2026
-    target: https://github.com/suhasHere/webvtt-msf
-  IMSC1-MSF:
-    title: "IMSC1 Packaging for MOQT Streaming Format"
-    date: 2026
-    target: https://github.com/suhasHere/imsc1-msf
-  SCTE35-MSF:
-    title: "SCTE-35 over MSF Event Timeline"
-    date: 2026
-    target: https://github.com/wilaw/SCTE35-over-MSF-Event-Timeline
+  WebVTT-MSF: I-D.draft-wilaw-moq-webvtt-msf
+  IMSC1-MSF: I-D.draft-law-moq-imsc1-msf
+  SCTE35-MSF: I-D.draft-wilaw-moq-scte35-event-timeline
 
 --- abstract
 
@@ -2187,25 +2174,26 @@ A metrics track MAY include:
 
 ## Well-known event timeline types {#wellknowneventtypes}
 
-Event timelines can carry various types of broadcast metadata synchronized
-with media content. The "MSF Event Timeline Types" registry
-({{iana-event-timeline-types}}) maintains a list of well-known event types.
-Publishers SHOULD use registered types when applicable to ensure
-interoperability.
-
-Event timelines can carry data types including but not limited to:
+Event timelines can carry various types of broadcast metadata
+synchronized with media content. The "MSF Event Timeline Types"
+registry ({{iana-event-timeline-types}}) is established by this
+document but has no initial entries; entries are registered by the
+specifications that define each event type, which are expected to
+include:
 
 * Ad insertion signaling (e.g., SCTE-35 splice points) - see {{SCTE35-MSF}}
 * Out-of-band timed-text cues (WebVTT, IMSC1) - see {{WebVTT-MSF}} and {{IMSC1-MSF}}
-* Sports scores and game state
-* GPS coordinates and telemetry
-* Active speaker notifications
-* Custom application-specific metadata
 
-The packaging format and data structure for each event type is defined by
-the specification referenced in the registry. Custom event types not in
-the registry SHOULD use Reverse Domain Name Notation (e.g.,
-"com.example.myeventtype") to avoid naming collisions.
+Other data types, for example sports scores and game state, GPS
+coordinates and telemetry, active speaker notifications, and custom
+application-specific metadata, MAY also be carried on event timeline
+tracks, defined by their own specifications and registered
+accordingly.
+
+The packaging format and data structure for each event type is
+defined by the specification referenced in the registry. Custom event
+types not intended for registration SHOULD use Reverse Domain Name
+Notation (e.g., "com.example.myeventtype") to avoid naming collisions.
 
 # Workflow
 
@@ -2600,9 +2588,18 @@ ToDo
 
 # IANA Considerations {#IANA}
 
+This document requests IANA to create a new registry group titled
+"MOQT Streaming Format (MSF) Parameters," containing the "MSF Event
+Timeline Types" registry ({{iana-event-timeline-types}}) and the "MSF
+Compression Algorithms" registry ({{iana-compression-algorithms}})
+defined below. It also registers one entry in the existing "MOQT URI
+Fragment Types" registry and documents two Property Type values that
+require no IANA action.
+
 ## "MOQT URI Fragment Types" registry
-This document creates a new entry in the "MOQT URI Fragment Types" registry
-(see {{MoQTransport}} Section 14.3).
+
+This document registers the following entry in the "MOQT URI Fragment
+Types" registry established by {{MoQTransport, Section 15.3}}:
 
 | Fragment Type   |  Description          | Specification  |
 |:================|:======================|:===============|
@@ -2610,35 +2607,89 @@ This document creates a new entry in the "MOQT URI Fragment Types" registry
 
 ## "MSF Event Timeline Types" registry {#iana-event-timeline-types}
 
-This document establishes the "MSF Event Timeline Types" registry. This registry
-lists the event types that can be used with the eventType field {{eventtype}}
-in MSF catalogs.
+This document establishes the "MSF Event Timeline Types" registry,
+part of the "MOQT Streaming Format (MSF) Parameters" registry group.
+This registry lists the event types that can be used with the
+eventType field ({{eventtype}}) in MSF catalogs.
 
-New entries in this registry are subject to Expert Review policy as defined in
-{{!RFC8126}}.
+New entries in this registry are subject to Expert Review policy as
+defined in {{!RFC8126}}. Each entry contains the following fields:
+
+* Event Type: the string identifier used in the eventType field.
+* Description: a short human-readable summary of the event type.
+* Change Controller: the entity authorized to modify the entry. For
+  registrations made via an IETF-stream document, this is "IETF". For
+  other registrations, this is the name and contact information of the
+  registrant.
+* Specification: a stable reference to a publicly available document
+  defining the format and semantics of the data carried under this
+  event type.
+
+The initial contents of this registry are empty. Entries are added by
+the specifications that define each event type; see {{wellknowneventtypes}}
+for known examples.
+
+### Guidance for Designated Experts {#iana-event-timeline-experts}
+
+Designated experts should evaluate registration requests against the
+following criteria, per {{!RFC8126}}, Section 4.5:
+
+* The requested Event Type string is unique within the registry and
+  does not collide with, or create ambiguity against, an existing
+  entry.
+* Requests using the "urn:" scheme conform to an appropriate URN
+  namespace ({{?RFC8141}}). Requests intended for narrow or
+  vendor-specific use should instead use Reverse Domain Name Notation
+  and do not need to be registered at all.
+* The referenced specification is stable, publicly available, and
+  describes the data format and semantics carried in the Event
+  Timeline track in enough detail to support independent,
+  interoperable implementations.
+* The registration does not duplicate the function of an existing
+  registered type without adequate justification, such as a
+  materially different encoding or use case.
+
+Experts should reject requests that lack a public specification, that
+reuse an existing Event Type string with different semantics, or that
+leave the data format ambiguous. Registrations are expected to be
+infrequent, and experts MAY consult the MoQ working group mailing list
+(moq@ietf.org) when in doubt.
+
+## MSF Property Type values {#iana-properties}
+
+The MSF_COMPRESSION and MSF_INITIALIZATION Track and Object properties
+({{compression-signaling}}, {{initialization-track-property}}) use
+Property Type values 0x78 and 0x79 respectively. These values fall
+within the range that {{MoQTransport, Section 15.8}} reserves for
+application-specific use, for which IANA registration is not
+permitted. Accordingly, this document requests no IANA action for
+these Property Type values; they are defined directly by this
+specification and require no coordination with IANA.
+
+Implementers should note the caveat in {{MoQTransport, Section 15.8}}
+regarding this range: because application-specific codepoints are not
+coordinated across independently developed extensions, an endpoint
+processing tracks from uncoordinated sources could encounter the same
+Property Type value used with different semantics.
+
+## "MSF Compression Algorithms" registry {#iana-compression-algorithms}
+
+This document establishes the "MSF Compression Algorithms" registry,
+part of the "MOQT Streaming Format (MSF) Parameters" registry group.
+This registry lists the values used by the MSF_COMPRESSION Track and
+Object properties ({{compression-signaling}}) to identify a
+compression algorithm.
+
+New entries with values 2-127 are registered via Standards Action.
+Values 128 and above are reserved for private use and MUST NOT be
+registered.
 
 The initial contents of this registry are:
 
-| Event Type                     | Description                        | Specification    |
-|:===============================|:===================================|:=================|
-| urn:scte:scte35:2013:bin       | SCTE-35 binary splice_info_section | {{SCTE35-MSF}}   |
-| urn:scte:scte35:2013:xml       | SCTE-35 XML representation         | {{SCTE35-MSF}}   |
-| urn:msf:timedtext:webvtt       | WebVTT timed text cues             | {{WebVTT-MSF}}   |
-| urn:msf:timedtext:imsc1        | IMSC1 timed text  cues             | {{IMSC1-MSF}}    |
-
-
-## MSF_COMPRESSION Object Property {#iana-object-properties}
-
-This document requests IANA to create a new "MSF Compression Algorithms"
-registry with the following initial values:
-
 | Value | Compression Algorithm | Reference |
 |:======|:======================|:==========|
-| 0     | None (uncompressed)   | RFC XXXX  |
+| 0     | None (uncompressed)   | this      |
 | 1     | GZIP                  | {{GZIP}}  |
-
-Values 2-127 are available for registration via Standards Action.
-Values 128 and above are reserved for private use.
 
 --- back
 
