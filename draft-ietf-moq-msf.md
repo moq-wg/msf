@@ -246,9 +246,10 @@ advertising their output and for subscribers in consuming that output. The
 payload of the Catalog object is opaque to Relays and can be end-to-end
 encrypted. The Catalog provides the names and namespaces of the tracks being
 produced, along with the relationship between tracks, properties of the tracks
-that consumers may use for selection and any relevant initialization data.
+that consumers may use for selection and any relevant initialization data. A
+catalog track MAY reference other catalog tracks. 
 
-The catalog track MUST have a case-sensitive Track Name of "catalog".
+The top-level catalog track MUST have a case-sensitive Track Name of "catalog".
 
 A catalog object MAY be independent of other catalog objects or it MAY represent
 a delta update of a prior catalog object. The first catalog object published
@@ -471,6 +472,7 @@ as defined in Table 3.
 | Event Timeline  | eventtimeline  | See {{eventtimelinetrack}} |
 | MoQ Log         | moqlog         | See {{MOQLOG}}             |
 | MoQ Metrics     | moqmetrics     | See {{MOQMETRICS}}         |
+| Catalog         | catalog        | See {{catalog}}            |
 
 Table 3: Allowed packaging values
 
@@ -1766,6 +1768,34 @@ specification.
 }
 ~~~
 
+### A catalog referencing other catalogs
+
+This example shows a catalog referencing three other catalogs, one of which is in
+a different namesapce. 
+
+~~~json
+{
+  "version": "1",
+  "generatedAt": 1746104606044,
+  "tracks": [
+    {
+      "name": "premium-catalog",
+      "packaging": "catalog"
+    },
+    {
+      "name": "free-catalog",
+      "packaging": "catalog"
+    },
+    {
+      "name": "video-from-above",
+      "namespace": "example.com/blimps-R-us",
+      "packaging": "catalog",
+      "label": "Eye From the Sky video feeds"
+    }
+   ]
+}
+
+~~~
 
 ### Publish tracks for logs and metrics
 
