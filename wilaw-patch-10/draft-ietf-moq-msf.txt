@@ -5,8 +5,8 @@
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
 Intended status: Informational                             S. Nandakumar
-Expires: 24 December 2026                                          Cisco
-                                                            22 June 2026
+Expires: 25 January 2027                                           Cisco
+                                                            24 July 2026
 
 
                          MOQT Streaming Format
@@ -22,7 +22,7 @@ About This Document
    This note is to be removed before publishing as an RFC.
 
    The latest revision of this draft can be found at https://moq-
-   wg.github.io/msf/ draft-ietf-moq-msf.html.  Status information for
+   wg.github.io/msf/draft-ietf-moq-msf.html.  Status information for
    this document may be found at https://datatracker.ietf.org/doc/draft-
    ietf-moq-msf/.
 
@@ -49,7 +49,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 24 December 2026.
+   This Internet-Draft will expire on 25 January 2027.
 
 Copyright Notice
 
@@ -73,12 +73,11 @@ Table of Contents
    4.  Media packaging
      4.1.  LOC packaging
      4.2.  Time-alignment
-     4.3.  Packaging for track switching
-     4.4.  Content protection and encryption
-       4.4.1.  Encryption scheme signaling
-       4.4.2.  Key management
-       4.4.3.  Recommended encryption scheme
-       4.4.4.  Encrypted object structure
+     4.3.  Content protection and encryption
+       4.3.1.  Encryption scheme signaling
+       4.3.2.  Key management
+       4.3.3.  Recommended encryption scheme
+       4.3.4.  Encrypted object structure
    5.  Catalog
      5.1.  Root Catalog Fields
        5.1.1.  MSF version
@@ -133,7 +132,6 @@ Table of Contents
        5.2.42. Authorization Info
        5.2.43. Token Delivery via URI
        5.2.44. Accessibility
-       5.2.45. Keyframe spacing
      5.3.  Delta updates
      5.4.  Variable Substitution
        5.4.1.  Variable Syntax
@@ -158,13 +156,11 @@ Table of Contents
        5.6.13. Terminating a live broadcast
        5.6.14. Variable Substitution for personalized delivery
        5.6.15. Time-aligned Audio/Video Tracks with Authorization
-       5.6.16. Publish tracks for logs and metrics
+       5.6.16. A catalog referencing other catalogs
+       5.6.17. Publish tracks for logs and metrics
    6.  Media transmission
      6.1.  Group numbering
      6.2.  Object Numbering
-     6.3.  Zapping and Track Switching
-       6.3.1.  Zapping Procedure
-       6.3.2.  Calculating Valid Switch Points
    7.  Media Timeline track
      7.1.  Media Timeline track payload
        7.1.1.  Explicit entry format
@@ -207,12 +203,14 @@ Table of Contents
      12.1.  Compression Signaling
        12.1.1.  MSF_COMPRESSION Track Property
        12.1.2.  MSF_COMPRESSION Object Property
+     12.2.  Initialization properties
+       12.2.1.  MSF_INITIALIZATION Track property
+       12.2.2.  MSF_INITIALIZATION Object property
    13. Security Considerations
    14. IANA Considerations
      14.1.  "MOQT URI Fragment Types" registry
      14.2.  "MSF Event Timeline Types" registry
-     14.3.  MSF_COMPRESSION Track Property
-     14.4.  MSF_COMPRESSION Object Property
+     14.3.  MSF_COMPRESSION Object Property
    15. References
      15.1.  Normative References
      15.2.  Informative References
@@ -351,31 +349,7 @@ Table of Contents
    client to enable it to switch smoothly between time-aligned, but
    numerically dissimilar, Group IDs.
 
-4.3.  Packaging for track switching
-
-   When publishing multiple tracks within an alternate group that have
-   dissimilar keyframe intervals (different GOP sizes), publishers MUST
-   follow these requirements to enable seamless track switching:
-
-   *  Each MOQT Group MUST start with a keyframe.  Publishers MUST NOT
-      place multiple keyframes within a single group, as this hides
-      intermediate join points from subscribers.
-
-   *  All tracks within an alternate group MUST be time-aligned at
-      object boundaries, not only at group boundaries.
-
-   *  The keyframeSpacing Section 5.2.45 catalog field MUST be specified
-      for each track, indicating the number of objects per keyframe
-      interval.
-
-   *  If any track within an alternate group specifies a keyframeSpacing
-      value, then all tracks within that alternate group MUST specify a
-      keyframeSpacing value.
-
-   See Section 6.3 for details on how subscribers use keyframeSpacing to
-   calculate valid switch points.
-
-4.4.  Content protection and encryption
+4.3.  Content protection and encryption
 
    MSF supports end-to-end encryption of media content using MoQ Secure
    Objects [SecureObjects].  When encryption is enabled, the payload of
@@ -383,7 +357,7 @@ Table of Contents
    relays can still route content based on unencrypted header
    information.
 
-4.4.1.  Encryption scheme signaling
+4.3.1.  Encryption scheme signaling
 
    The encryption scheme and parameters are signaled in the catalog
    using the following track-level fields:
@@ -401,7 +375,7 @@ Table of Contents
    subscribers MUST decrypt the object payload using the specified
    scheme before processing.
 
-4.4.2.  Key management
+4.3.2.  Key management
 
    The keyId and trackBaseKey values are obtained from an external key
    management system and the mechanism for obtaining these values is out
@@ -421,7 +395,7 @@ Table of Contents
    Publishers and subscribers MUST use the same key management system
    and agree on the keyId scope semantics for interoperable operation.
 
-4.4.3.  Recommended encryption scheme
+4.3.3.  Recommended encryption scheme
 
    The RECOMMENDED encryption scheme for MSF is "moq-secure-objects".
    Implementations supporting content encryption MUST implement the
@@ -437,7 +411,7 @@ Table of Contents
    *  The trackBaseKey field MUST be present to provide the base key
       material
 
-4.4.4.  Encrypted object structure
+4.3.4.  Encrypted object structure
 
    For LOC-packaged tracks with encryption enabled (see [SecureObjects],
    Section 4):
@@ -460,9 +434,11 @@ Table of Contents
    to Relays and can be end-to-end encrypted.  The Catalog provides the
    names and namespaces of the tracks being produced, along with the
    relationship between tracks, properties of the tracks that consumers
-   may use for selection and any relevant initialization data.
+   may use for selection and any relevant initialization data.  A
+   catalog track MAY reference other catalog tracks.
 
-   The catalog track MUST have a case-sensitive Track Name of "catalog".
+   The top-level catalog track MUST have a case-sensitive Track Name of
+   "catalog".
 
    A catalog object MAY be independent of other catalog objects or it
    MAY represent a delta update of a prior catalog object.  The first
@@ -566,7 +542,7 @@ Table of Contents
 
 5.1.5.  Publish tracks
 
-   Location: R Required: Optional JSON Type: Array
+   Required: Optional JSON Type: Array Location: Root Catalog
 
    An array of publish track objects.  Publish tracks define tracks to
    which the subscriber can publish data, such as logs, metrics, or
@@ -609,6 +585,13 @@ Table of Contents
       Attributes redefined in the track object override inherited
       values.
 
+   *  "update" - update a subset of fields within an existing track.
+      The value of the "tracks" field is an Array of track objects
+      Section 5.2.1.  Each track object MUST include a Parent Name
+      Section 5.2.33 field and MAY include a Parent namespace
+      Section 5.2.34 field.  Attributes declared in the track object
+      override existing values.
+
 5.1.7.  Initialization Data List
 
    Required: Optional JSON Type: Array Location: Root Catalog
@@ -620,18 +603,27 @@ Table of Contents
       which is unique within the scope of the catalog.
 
    *  type: as string defining the type of reference.  This version of
-      the specification defines a single allowed type, per the table
-      below
+      the specification defines the following allowed types:
 
-         +========+=============================================+
-         | Type   | Data field definition                       |
-         +========+=============================================+
-         | inline | Base64 [BASE64] encoded initialization data |
-         +--------+---------------------------------------------+
+     +=================+=============================================+
+     | Type            | Data field definition                       |
+     +=================+=============================================+
+     | inline          | Base64 [BASE64] encoded initialization data |
+     +-----------------+---------------------------------------------+
+     | track-property  | The Track property type in hex notation     |
+     +-----------------+---------------------------------------------+
+     | object-property | An Object property type in hex notation     |
+     +-----------------+---------------------------------------------+
 
-                                 Table 2
+                                  Table 2
 
    *  data: a string holding the init payload as defined by the type.
+
+   For both the track-property and object-property types, the
+   initialization data is serialized as raw binary data and carried in
+   the value field of the MSF_INITIALIZATION Object property
+   Section 12.2.2 or the MSF_INITIALIZATION Track property
+   Section 12.2.1.
 
    The Initialization Data List, if present, MUST be located after the
    tracks array in the root of the JSON catalog.  The purpose of this is
@@ -715,8 +707,6 @@ Table of Contents
       +------------------------+------------------+----------------+
       | Accessibility          | accessibility    | Section 5.2.44 |
       +------------------------+------------------+----------------+
-      | Keyframe spacing       | keyframeSpacing  | Section 5.2.45 |
-      +------------------------+------------------+----------------+
 
                                  Table 3
 
@@ -762,6 +752,8 @@ Table of Contents
            | MoQ Log        | moqlog        | See [MOQLOG]     |
            +----------------+---------------+------------------+
            | MoQ Metrics    | moqmetrics    | See [MOQMETRICS] |
+           +----------------+---------------+------------------+
+           | Catalog        | catalog       | See Section 5    |
            +----------------+---------------+------------------+
 
                                   Table 4
@@ -976,11 +968,11 @@ Table of Contents
    Required: Conditional JSON Type: String Location: Track Object
 
    A string defining the codec used to encode the track.  For LOC
-   packaged content, the string codec registrations are defined in Sect
-   3 and Section 4 of [WEBCODECS-CODEC-REGISTRY].  This property MUST be
-   specified for tracks which have an inherent codec associated with
-   them (e.g., audio and video tracks).  It is not required for raw data
-   tracks or event streams.
+   packaged content, the string codec registrations are defined in
+   Section 3 and Section 4 of [WEBCODECS-CODEC-REGISTRY].  This property
+   MUST be specified for tracks which have an inherent codec associated
+   with them (e.g., audio and video tracks).  It is not required for raw
+   data tracks or event streams.
 
 5.2.19.  Mimetype
 
@@ -1095,18 +1087,19 @@ Table of Contents
 
    Required: Optional JSON Type: String Location: Track Object
 
-   A string defining the parent track name Section 5.2.3 to be cloned.
-   This field MUST only be included inside a clone operation in a delta
-   update Section 5.1.6.
+   A string defining the parent track name Section 5.2.3 to be cloned or
+   updated.  This field MUST only be included inside a 'clone' or
+   'update' operation in a delta update Section 5.1.6.
 
 5.2.34.  Parent namespace
 
    Required: Optional JSON Type: String Location: Track Object
 
    A string defining the parent track namespace Section 5.2.2 to be
-   cloned.  This field MUST only be included inside a clone operation in
-   a delta update Section 5.1.6.  If this field is missing from a clone
-   operation, then the namespace of the catalog is assumed.
+   cloned.  This field MUST only be included inside a 'clone' or
+   'update' operation in a delta update Section 5.1.6.  If this field is
+   missing from a clone operation, then the namespace of the catalog is
+   assumed.
 
 5.2.35.  Track duration
 
@@ -1127,7 +1120,7 @@ Table of Contents
    that was used to receive the catalog.
 
    The URI MUST be a valid MOQT endpoint URI as defined by
-   [MoQTransport] (Sect 3.1.1).  Examples include
+   [MoQTransport] (Section 3.1.1).  Examples include
    "moqt://logs.example.com:4443", "moqt://metrics.example.com:8443", or
    "https://logs.example.com/moqt".
 
@@ -1321,21 +1314,6 @@ Table of Contents
    A subscriber MAY use this information to determine caption
    availability and configure an appropriate caption decoder.
 
-5.2.45.  Keyframe spacing
-
-   Location: T Required: Optional JSON Type: Number
-
-   A number defining the number of objects per keyframe interval.  A
-   value of 2 means each group contains a keyframe followed by one
-   predicted frame (2 objects total).  A value of 4 means each group
-   contains a keyframe followed by three predicted frames (4 objects
-   total).
-
-   This field is used by subscribers to calculate valid switch points
-   when performing adaptive bitrate switching between tracks with
-   different keyframe intervals.  See Section 4.3 for publisher
-   requirements and Section 6.3 for details on how to use this field.
-
 5.3.  Delta updates
 
    A catalog update might contain incremental changes.  This is a useful
@@ -1348,26 +1326,22 @@ Table of Contents
    A restricted set of operations are allowed with each delta update: *
    Add a new track that has not previously been declared. * Add a new
    track by cloning a previously declared track. * Remove a track that
-   has been previously declared.
+   has been previously declared. * Update properties of a previously
+   declared track.
 
    The following rules are to be followed in constructing and processing
    delta updates:
 
    *  A delta update MUST include the Delta Update Section 5.1.6 field
-      with at least one operation.  It MUST NOT contain an instance of a
-      Tracks Section 5.1.4 field or an MSF version Section 5.1.1 field.
+      with at least one operation and the generatedAt field
+      Section 5.1.2.  It MUST NOT include any other Root Catalog fields
+      Section 5.1.
 
    *  Operations are applied sequentially in the order they appear in
       the deltaUpdate array.  Each operation is applied to the target
       document; the resulting document becomes the target of the next
       operation.  Evaluation continues until all operations are
       successfully applied.
-
-   *  The tuple of Track Namespace and Track Name defines a fixed set of
-      Track attributes which MUST NOT be modified after being declared.
-      To modify any attribute, a new track with a different
-      Namespace|Name tuple is created by Adding or Cloning and then the
-      old track is removed.
 
    *  Producers that publish frequent delta updates SHOULD periodically
       publish a new independent catalog in a new MOQT Group in order to
@@ -1439,7 +1413,7 @@ Table of Contents
    LOC packaged, time-aligned audio and video tracks.
 
    {
-     "version": "1",
+     "version": "draft-01",
      "generatedAt": 1746104606044,
      "tracks": [
        {
@@ -1481,7 +1455,7 @@ Table of Contents
    must inherit the namespace of the catalog.
 
    {
-     "version": "1",
+     "version": "draft-01",
      "generatedAt": 1746104606044,
      "tracks":[
        {
@@ -1570,7 +1544,7 @@ Table of Contents
    track relationships.
 
    {
-     "version": "1",
+     "version": "draft-01",
      "generatedAt": 1746104606044,
      "tracks":[
        {
@@ -1652,17 +1626,28 @@ Table of Contents
 5.6.4.  Delta update - adding two tracks
 
    This example shows the catalog delta update for a media producer
-   adding two tracks to an established video conference.  One track is
-   newly declared, the other is cloned from a previous track.
+   adding two tracks to an established video conference and modifying a
+   property of an existing track.  Of the tracks added, one track is
+   newly declared, the other is cloned from an existing track.
 
    {
      "generatedAt": 1746104606044,
      "deltaUpdate": [
-       {
+        {
+         "op": "update",
+         "tracks": [
+           {
+             "name": "video-1080",
+             "bitrate": 4000000
+           }
+         ]
+        },
+        {
          "op": "add",
          "tracks": [
            {
              "name": "slides",
+             "packaging": "loc",
              "isLive": true,
              "role": "video",
              "codec": "av01.0.08M.10.0.110.09",
@@ -1712,7 +1697,7 @@ Table of Contents
    fields in each track description.
 
    {
-     "version": "1",
+     "version": "draft-01",
      "generatedAt": 1746104606044,
      "tracks": [
        {
@@ -1755,7 +1740,7 @@ Table of Contents
    includes time-aligned audio and video tracks.
 
    {
-     "version": "1",
+     "version": "draft-01",
      "tracks": [
        {
          "name": "video",
@@ -1791,7 +1776,7 @@ Table of Contents
    video tracks using MoQ Secure Objects with AES-128-GCM.
 
    {
-     "version": "1",
+     "version": "draft-01",
      "generatedAt": 1746104606044,
      "tracks": [
        {
@@ -1840,14 +1825,14 @@ Table of Contents
    Timeline providing synchronized data.
 
    {
-     "version": "1",
+     "version": "draft-01",
      "generatedAt": 1746104606044,
      "tracks": [
        {
          "name": "history",
          "namespace": "conference.example.com/conference123/alice",
          "packaging": "mediatimeline",
-         "mimetype": "application/json",
+         "mimeType": "application/json",
          "depends": ["1080p-video","audio"]
        },
        {
@@ -1855,7 +1840,7 @@ Table of Contents
          "namespace": "another-provider/time-synchronized-data",
          "packaging": "eventtimeline",
          "eventType": "com.ai-extraction/appID/v3",
-         "mimetype": "application/json",
+         "mimeType": "application/json",
          "depends": ["1080p-video"]
        },
        {
@@ -1898,7 +1883,7 @@ Table of Contents
    values to accommodate different group durations.
 
    {
-     "version": "1",
+     "version": "draft-01",
      "generatedAt": 1746104606044,
      "tracks": [
        {
@@ -1940,7 +1925,7 @@ Table of Contents
    ad insertion.
 
    {
-     "version": "1",
+     "version": "draft-01",
      "generatedAt": 1746104606044,
      "tracks": [
        {
@@ -1992,7 +1977,7 @@ Table of Contents
    embedded in the video track, demonstrating multiple caption services.
 
    {
-     "version": "1",
+     "version": "draft-01",
      "generatedAt": 1746104606044,
      "tracks": [
        {
@@ -2035,7 +2020,7 @@ Table of Contents
    previously live broadcast containing a video and an audio track.
 
    {
-     "version": "1",
+     "version": "draft-01",
      "generatedAt": 1746104606044,
      "isComplete": true,
      "tracks": []
@@ -2053,7 +2038,7 @@ Table of Contents
    substitution.  The following catalog template:
 
    {
-     "version": "1",
+     "version": "draft-01",
      "tracks": [
        {
          "name": "video",
@@ -2075,7 +2060,7 @@ Table of Contents
    Would be resolved by the subscriber as:
 
    {
-     "version": "1",
+     "version": "draft-01",
      "tracks": [
        {
          "name": "video",
@@ -2104,7 +2089,7 @@ Table of Contents
    the authorization scheme specification.
 
    {
-     "version": "1",
+     "version": "draft-01",
      "generatedAt": 1746104606044,
      "tracks": [
        {
@@ -2157,7 +2142,33 @@ Table of Contents
      ]
    }
 
-5.6.16.  Publish tracks for logs and metrics
+5.6.16.  A catalog referencing other catalogs
+
+   This example shows a catalog referencing three other catalogs, one of
+   which is in a different namespace.
+
+   {
+     "version": "1",
+     "generatedAt": 1746104606044,
+     "tracks": [
+       {
+         "name": "premium-catalog",
+         "packaging": "catalog"
+       },
+       {
+         "name": "free-catalog",
+         "packaging": "catalog"
+       },
+       {
+         "name": "camera33-catalog",
+         "namespace": "example.com/blimps-R-us",
+         "packaging": "catalog",
+         "label": "Eye From the Sky video feeds"
+       }
+      ]
+   }
+
+5.6.17.  Publish tracks for logs and metrics
 
    This example shows a catalog that includes publish tracks for client-
    side logging and metrics collection.  The subscriber can publish QoE
@@ -2166,7 +2177,7 @@ Table of Contents
    conventions defined in [MOQLOG] and [MOQMETRICS].
 
    {
-     "version": "1",
+     "version": "draft-01",
      "generatedAt": 1746104606044,
      "tracks": [
        {
@@ -2260,73 +2271,6 @@ Table of Contents
 
    Object ID MUST be zero for the first Object within a Group and then
    MUST increase monotonically by one within that Group.
-
-6.3.  Zapping and Track Switching
-
-   Zapping refers to the act of quickly joining a track or switching
-   between tracks, such as changing channels in a live broadcast.  When
-   a viewer switches to a new track, playback cannot begin until the
-   decoder receives a keyframe.  Tracks with longer keyframe intervals
-   offer better compression but increase join latency.
-
-6.3.1.  Zapping Procedure
-
-   To minimize join latency when switching to a new alternate group, a
-   subscriber SHOULD first subscribe to the track with the lowest
-   keyframeSpacing value.  This provides the fastest join because
-   keyframes occur more frequently.  Once playback begins, the
-   subscriber can switch to a higher quality track (with larger
-   keyframeSpacing) at a valid switch point calculated using the formula
-   below.
-
-6.3.2.  Calculating Valid Switch Points
-
-   Given a source track with keyframeSpacing S and a target track with
-   keyframeSpacing T, a switch from Group ID G and Object N of the
-   source track is valid if:
-
-   (G * S + N) / T
-
-   yields an integer.  That integer is the target Group ID to subscribe
-   to.
-
-   For example, consider three tracks: A (keyframeSpacing=2), B
-   (keyframeSpacing=4), and C (keyframeSpacing=8):
-
-   Track A (keyframeSpacing=2):
-     Group:   0       1       2       3       4       5
-     Object: 0,0|0,1|1,0|1,1|2,0|2,1|3,0|3,1|4,0|4,1|5,0|5,1
-             [K] [P] [K] [P] [K] [P] [K] [P] [K] [P] [K] [P]
-
-   Track B (keyframeSpacing=4):
-     Group:   0               1               2
-     Object: 0,0|0,1|0,2|0,3|1,0|1,1|1,2|1,3|2,0|2,1|2,2|2,3
-             [K] [P] [P] [P] [K] [P] [P] [P] [K] [P] [P] [P]
-
-   Track C (keyframeSpacing=8):
-     Group:   0                               1
-     Object: 0,0|0,1|0,2|0,3|0,4|0,5|0,6|0,7|1,0|1,1|1,2|1,3
-             [K] [P] [P] [P] [P] [P] [P] [P] [K] [P] [P] [P]
-
-   Switching from A to B (S=2, T=4):
-
-   *  Group 0, Object 0: (0*2 + 0)/4 = 0 (valid, target Group 0)
-
-   *  Group 1, Object 0: (1*2 + 0)/4 = 0.5 (NOT valid)
-
-   *  Group 2, Object 0: (2*2 + 0)/4 = 1 (valid, target Group 1)
-
-   *  Group 3, Object 0: (3*2 + 0)/4 = 1.5 (NOT valid)
-
-   *  Group 4, Object 0: (4*2 + 0)/4 = 2 (valid, target Group 2)
-
-   Switching from A to C (S=2, T=8):
-
-   *  Group 0, Object 0: (0*2 + 0)/8 = 0 (valid, target Group 0)
-
-   *  Group 2, Object 0: (2*2 + 0)/8 = 0.5 (NOT valid)
-
-   *  Group 4, Object 0: (4*2 + 0)/8 = 1 (valid, target Group 1)
 
 7.  Media Timeline track
 
@@ -2981,8 +2925,8 @@ Table of Contents
    subscribers that the broadcast is complete by taking the following
    steps:
 
-   *  Send a SUBSCRIBE_DONE (See MOQT Sect 8.1.2) message for all active
-      tracks using status code 0x2 Track Ended.
+   *  Send a SUBSCRIBE_DONE (See MOQT Section 8.1.2) message for all
+      active tracks using status code 0x2 Track Ended.
 
    *  If the live stream is being converted instantly to a VOD asset,
       then publish an independent (non-delta) catalog update which, for
@@ -3133,13 +3077,15 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
 
 12.1.1.  MSF_COMPRESSION Track Property
 
+   Track Property type: 0x78
+
    The MSF_COMPRESSION track property signals that ALL objects in the
    track are compressed using the specified algorithm.  This mechanism
    is appropriate when every object published on the track uses the same
    compression.
 
-   Publishers MUST include the MSF_COMPRESSION track property in the
-   PUBLISH message (publisher-initiated flow) or SUBSCRIBE_OK
+   If used, publishers MUST include the MSF_COMPRESSION track property
+   in the PUBLISH message (publisher-initiated flow) or SUBSCRIBE_OK
    (subscriber-initiated flow).
 
    Subscribers MUST check for this property in the corresponding message
@@ -3153,6 +3099,8 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
 
 12.1.2.  MSF_COMPRESSION Object Property
 
+   Object Property type: 0x78
+
    The MSF_COMPRESSION object property signals that an individual object
    is compressed.  This mechanism is appropriate when a track contains a
    mixture of compressed and uncompressed objects.  For example, a
@@ -3160,8 +3108,8 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
    catalog) is compressed, but subsequent delta update objects within
    the same group are uncompressed.
 
-   Publishers MUST include the MSF_COMPRESSION object property on each
-   compressed object.
+   If used, publishers MUST include the MSF_COMPRESSION object property
+   on each compressed object.
 
    Subscribers MUST check for this property on each received object
    before processing its payload.  If the property is absent on an
@@ -3169,6 +3117,43 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
    uncompressed.  If the property is present with a value the subscriber
    does not support, the subscriber MUST NOT attempt to process that
    object.
+
+12.2.  Initialization properties
+
+   MSF provides two mechanisms for signalling initialization data using
+   properties.
+
+12.2.1.  MSF_INITIALIZATION Track property
+
+   Track Property type: 0x79
+
+   The MSF_INITIALIZATION Track property carries the initialization data
+   for the track.  This initialization data is immutable over the life
+   of the track.
+
+   Tracks which choose to transmit initialization data using this
+   property MUST include an initRef Section 5.2.13 field referencing an
+   Initialization Data List Section 5.1.7 entry with a type of 'track-
+   property'.
+
+   If used, publishers MUST include the MSF_INITIALIZATION track
+   property in the PUBLISH message (publisher-initiated flow) or
+   SUBSCRIBE_OK message (subscriber-initiated flow).
+
+12.2.2.  MSF_INITIALIZATION Object property
+
+   Object Property type: 0x79
+
+   The MSF_INITIALIZATION Object property carries initialization data
+   for the track, when that initializaiton data might change over the
+   life of the track.  Since subscription might occur at any time, this
+   property needs to be repeated.  Publishers SHOULD add this property
+   to the first Object in each Group.
+
+   Tracks which choose to transmit initialization data using this
+   property MUST include an initRef Section 5.2.13 field referencing an
+   Initialization Data List Section 5.1.7 entry with a type of 'object-
+   property'.
 
 13.  Security Considerations
 
@@ -3179,7 +3164,7 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
 14.1.  "MOQT URI Fragment Types" registry
 
    This document creates a new entry in the "MOQT URI Fragment Types"
-   registry (see [MoQTransport] Sect 14.3).
+   registry (see [MoQTransport] Section 14.3).
 
          +===============+=======================+===============+
          | Fragment Type | Description           | Specification |
@@ -3218,25 +3203,7 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
 
                                  Table 13
 
-14.3.  MSF_COMPRESSION Track Property
-
-   This document requests IANA to register the following entry in the
-   "Track Properties" registry established by [MoQTransport]
-   (Section 14.4):
-
-        +=================+=============+============+===========+
-        | Property Name   | Property ID | Value Type | Reference |
-        +=================+=============+============+===========+
-        | MSF_COMPRESSION | TBD         | varint     | RFC XXXX  |
-        +-----------------+-------------+------------+-----------+
-
-                                 Table 14
-
-   The MSF_COMPRESSION track property indicates that ALL objects on the
-   track are compressed using the specified algorithm.  See
-   Section 12.1.1 for the full specification.
-
-14.4.  MSF_COMPRESSION Object Property
+14.3.  MSF_COMPRESSION Object Property
 
    This document requests IANA to create a new "MSF Compression
    Algorithms" registry with the following initial values:
@@ -3249,7 +3216,7 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
                | 1     | GZIP                  | [GZIP]    |
                +-------+-----------------------+-----------+
 
-                                  Table 15
+                                  Table 14
 
    Values 2-127 are available for registration via Standards Action.
    Values 128 and above are reserved for private use.
@@ -3321,9 +3288,9 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
               Nandakumar, S., Jennings, C. F., and T. Meunier, "Privacy
               Pass Authentication for Media over QUIC (MoQ)", Work in
               Progress, Internet-Draft, draft-ietf-moq-privacy-pass-
-              auth-02, 2 March 2026,
+              auth-03, 6 July 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-moq-
-              privacy-pass-auth-02>.
+              privacy-pass-auth-03>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
