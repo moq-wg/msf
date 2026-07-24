@@ -247,7 +247,7 @@ payload of the Catalog object is opaque to Relays and can be end-to-end
 encrypted. The Catalog provides the names and namespaces of the tracks being
 produced, along with the relationship between tracks, properties of the tracks
 that consumers may use for selection and any relevant initialization data. A
-catalog track MAY reference other catalog tracks. 
+catalog track MAY reference other catalog tracks.
 
 The top-level catalog track MUST have a case-sensitive Track Name of "catalog".
 
@@ -1771,7 +1771,7 @@ specification.
 ### A catalog referencing other catalogs
 
 This example shows a catalog referencing three other catalogs, one of which is in
-a different namesapce. 
+a different namespace.
 
 ~~~json
 {
@@ -1787,7 +1787,7 @@ a different namesapce.
       "packaging": "catalog"
     },
     {
-      "name": "video-from-above",
+      "name": "camera33-catalog",
       "namespace": "example.com/blimps-R-us",
       "packaging": "catalog",
       "label": "Eye From the Sky video feeds"
