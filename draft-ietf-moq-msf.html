@@ -24,7 +24,7 @@
     Jinja2 3.1.6
     lxml 6.1.1
     natsort 8.4.0
-    platformdirs 4.10.0
+    platformdirs 4.10.1
     pycountry 24.6.1
     PyYAML 6.0.3
     requests 2.33.1
@@ -1051,7 +1051,7 @@ svg {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Law &amp; Nandakumar</td>
-<td class="center">Expires 15 January 2027</td>
+<td class="center">Expires 29 January 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1064,12 +1064,12 @@ svg {
 <dd class="internet-draft">draft-ietf-moq-msf-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-07-14" class="published">14 July 2026</time>
+<time datetime="2026-07-28" class="published">28 July 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-01-15">15 January 2027</time></dd>
+<dd class="expires"><time datetime="2027-01-29">29 January 2027</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1123,7 +1123,7 @@ svg {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 15 January 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 29 January 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1924,24 +1924,28 @@ a delta update of a prior catalog object. The first catalog object published
 within a new group <span class="bcp14">MUST</span> be independent and <span class="bcp14">MUST</span> provide a complete catalog that
 does not require any prior catalog object for interpretation. Any catalog updates
 that precede the first Object of the latest Group <span class="bcp14">MUST</span> be ignored.<a href="#section-5-3" class="pilcrow">¶</a></p>
-<p id="section-5-4">A catalog object <span class="bcp14">SHOULD</span> be published only when the availability of tracks changes, or
-after a period of time has passed such that the catalog object might fall out of cache
+<p id="section-5-4">A catalog object <span class="bcp14">SHOULD</span> be published only when the content of the catalog has changed,
+or after a period of time has passed such that the catalog object might fall out of cache
 in a delivery network.<a href="#section-5-4" class="pilcrow">¶</a></p>
-<p id="section-5-5">Each catalog update <span class="bcp14">MUST</span> be mapped to an MOQT Object. All catalog updates, both
+<p id="section-5-5">The catalog track <span class="bcp14">SHOULD</span> have a higher publisher priority than all tracks described
+within the catalog.<a href="#section-5-5" class="pilcrow">¶</a></p>
+<p id="section-5-6">A subscriber to a catalog track <span class="bcp14">SHOULD</span> use a higher subscriber priority for the catalog
+subscription than for any other concurrent subscriptions.<a href="#section-5-6" class="pilcrow">¶</a></p>
+<p id="section-5-7">Each catalog update <span class="bcp14">MUST</span> be mapped to an MOQT Object. All catalog updates, both
 independent and delta, <span class="bcp14">MUST</span> be mapped to MOQT sub-group 0. The first Object (with
 Object ID 0) in any Group in a catalog track <span class="bcp14">MUST</span> hold an independent copy of the
 catalog. All subsequent Objects within that Group (i.e Objects IDs &gt;= 1) <span class="bcp14">MUST</span> hold
 a delta update. As soon as an independent update is produced, it <span class="bcp14">MUST</span> be placed at the
-start of a new Group.<a href="#section-5-5" class="pilcrow">¶</a></p>
-<p id="section-5-6">Subscribers accessing the catalog <span class="bcp14">MUST</span> use SUBSCRIBE with a Joining FETCH
+start of a new Group.<a href="#section-5-7" class="pilcrow">¶</a></p>
+<p id="section-5-8">Subscribers accessing the catalog <span class="bcp14">MUST</span> use SUBSCRIBE with a Joining FETCH
 (offset = 0) in order to obtain the latest complete catalog along with all subsequent
-catalog objects, including delta updates, that follow.<a href="#section-5-6" class="pilcrow">¶</a></p>
-<p id="section-5-7">A catalog is a JSON <span>[<a href="#JSON" class="cite xref">JSON</a>]</span> document, comprised of a series of mandatory and
+catalog objects, including delta updates, that follow.<a href="#section-5-8" class="pilcrow">¶</a></p>
+<p id="section-5-9">A catalog is a JSON <span>[<a href="#JSON" class="cite xref">JSON</a>]</span> document, comprised of a series of mandatory and
 optional fields. At a minimum, a catalog <span class="bcp14">MUST</span> provide all mandatory fields. Some
 fields are conditional depending on the type of content carried. A producer <span class="bcp14">MAY</span> add
 additional fields to the ones described in this draft. Custom field names <span class="bcp14">MUST NOT</span>
-collide with field names described in this draft.<a href="#section-5-7" class="pilcrow">¶</a></p>
-<p id="section-5-8">A parser <span class="bcp14">MUST</span> ignore fields it does not understand.<a href="#section-5-8" class="pilcrow">¶</a></p>
+collide with field names described in this draft.<a href="#section-5-9" class="pilcrow">¶</a></p>
+<p id="section-5-10">A parser <span class="bcp14">MUST</span> ignore fields it does not understand.<a href="#section-5-10" class="pilcrow">¶</a></p>
 <div id="rootcatalogfield">
 <section id="section-5.1">
         <h3 id="name-root-catalog-fields">

@@ -5,8 +5,8 @@
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
 Intended status: Informational                             S. Nandakumar
-Expires: 15 January 2027                                           Cisco
-                                                            14 July 2026
+Expires: 29 January 2027                                           Cisco
+                                                            28 July 2026
 
 
                          MOQT Streaming Format
@@ -49,7 +49,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 15 January 2027.
+   This Internet-Draft will expire on 29 January 2027.
 
 Copyright Notice
 
@@ -444,9 +444,16 @@ Table of Contents
    catalog object for interpretation.  Any catalog updates that precede
    the first Object of the latest Group MUST be ignored.
 
-   A catalog object SHOULD be published only when the availability of
-   tracks changes, or after a period of time has passed such that the
-   catalog object might fall out of cache in a delivery network.
+   A catalog object SHOULD be published only when the content of the
+   catalog has changed, or after a period of time has passed such that
+   the catalog object might fall out of cache in a delivery network.
+
+   The catalog track SHOULD have a higher publisher priority than all
+   tracks described within the catalog.
+
+   A subscriber to a catalog track SHOULD use a higher subscriber
+   priority for the catalog subscription than for any other concurrent
+   subscriptions.
 
    Each catalog update MUST be mapped to an MOQT Object.  All catalog
    updates, both independent and delta, MUST be mapped to MOQT sub-group
