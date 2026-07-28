@@ -256,9 +256,15 @@ within a new group MUST be independent and MUST provide a complete catalog that
 does not require any prior catalog object for interpretation. Any catalog updates
 that precede the first Object of the latest Group MUST be ignored.
 
-A catalog object SHOULD be published only when the availability of tracks changes, or
-after a period of time has passed such that the catalog object might fall out of cache
+A catalog object SHOULD be published only when the content of the catalog has changed,
+or after a period of time has passed such that the catalog object might fall out of cache
 in a delivery network.
+
+The catalog track SHOULD have a higher publisher priority than all tracks described
+within the catalog.
+
+A subscriber to a catalog track SHOULD use a higher subscriber priority for the catalog
+subscription than for any other concurrent subscriptions.
 
 Each catalog update MUST be mapped to an MOQT Object. All catalog updates, both
 independent and delta, MUST be mapped to MOQT sub-group 0. The first Object (with
