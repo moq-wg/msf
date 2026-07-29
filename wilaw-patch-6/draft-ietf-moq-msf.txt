@@ -5,8 +5,8 @@
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
 Intended status: Informational                             S. Nandakumar
-Expires: 18 January 2027                                           Cisco
-                                                            17 July 2026
+Expires: 30 January 2027                                           Cisco
+                                                            29 July 2026
 
 
                          MOQT Streaming Format
@@ -49,7 +49,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 18 January 2027.
+   This Internet-Draft will expire on 30 January 2027.
 
 Copyright Notice
 
@@ -203,8 +203,6 @@ Table of Contents
        12.1.1.  MSF_COMPRESSION Track Property
        12.1.2.  MSF_COMPRESSION Object Property
      12.2.  Initialization properties
-       12.2.1.  MSF_INITIALIZATION Track property
-       12.2.2.  MSF_INITIALIZATION Object property
    13. Security Considerations
    14. IANA Considerations
      14.1.  "MOQT URI Fragment Types" registry
@@ -625,9 +623,8 @@ Table of Contents
 
    For both the track-property and object-property types, the
    initialization data is serialized as raw binary data and carried in
-   the value field of the MSF_INITIALIZATION Object property
-   Section 12.2.2 or the MSF_INITIALIZATION Track property
-   Section 12.2.1.
+   the value field of the initialization properties, see
+   {#initialization-properties}.
 
    The Initialization Data List, if present, MUST be located after the
    tracks array in the root of the JSON catalog.  The purpose of this is
@@ -789,39 +786,40 @@ Table of Contents
 
    Table 4: Reserved track roles
 
-              +==================+==========================+
-              | Role             | Description              |
-              +==================+==========================+
-              | audiodescription | An audio description for |
-              |                  | visually impaired users  |
-              +------------------+--------------------------+
-              | video            | Visual content           |
-              +------------------+--------------------------+
-              | audio            | Audio content            |
-              +------------------+--------------------------+
-              | mediatimeline    | An MSF media timeline    |
-              |                  | Section 7                |
-              +------------------+--------------------------+
-              | eventtimeline    | An MSF event timeline    |
-              |                  | Section 8                |
-              +------------------+--------------------------+
-              | caption          | A textual representation |
-              |                  | of the audio track       |
-              +------------------+--------------------------+
-              | subtitle         | A transcription of the   |
-              |                  | spoken dialogue          |
-              +------------------+--------------------------+
-              | signlanguage     | A visual track for       |
-              |                  | hearing impaired users.  |
-              +------------------+--------------------------+
-              | log              | A log publishing track   |
-              |                  | per [MOQLOG].            |
-              +------------------+--------------------------+
-              | metrics          | A metrics publishing     |
-              |                  | track per [MOQMETRICS].  |
-              +------------------+--------------------------+
+         +==================+===================================+
+         | Role             | Description                       |
+         +==================+===================================+
+         | audiodescription | An audio description for visually |
+         |                  | impaired users                    |
+         +------------------+-----------------------------------+
+         | video            | Visual content                    |
+         +------------------+-----------------------------------+
+         | audio            | Audio content                     |
+         +------------------+-----------------------------------+
+         | mediatimeline    | An MSF media timeline Section 7   |
+         +------------------+-----------------------------------+
+         | eventtimeline    | An MSF event timeline Section 8   |
+         +------------------+-----------------------------------+
+         | caption          | A textual representation of the   |
+         |                  | audio track                       |
+         +------------------+-----------------------------------+
+         | subtitle         | A transcription of the spoken     |
+         |                  | dialogue                          |
+         +------------------+-----------------------------------+
+         | signlanguage     | A visual track for hearing        |
+         |                  | impaired users.                   |
+         +------------------+-----------------------------------+
+         | log              | A log publishing track per        |
+         |                  | [MOQLOG].                         |
+         +------------------+-----------------------------------+
+         | metrics          | A metrics publishing track per    |
+         |                  | [MOQMETRICS].                     |
+         +------------------+-----------------------------------+
+         | data             | A generic descriptor for tracks   |
+         |                  | carrying application-defined data |
+         +------------------+-----------------------------------+
 
-                                  Table 5
+                                 Table 5
 
    Custom roles MAY be used as long as they do not collide with the
    specified roles.
@@ -3008,7 +3006,7 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
 
 12.  MSF Properties
 
-   MSF defines MOQT Track Properties and Object Properties (see
+   MSF uses MOQT Track Properties and Object Properties (see
    [MoQTransport]) to signal metadata about MSF tracks and objects.
    These properties are carried in MOQT control messages and object
    headers, allowing endpoints to learn track and object characteristics
@@ -3096,40 +3094,34 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
 
 12.2.  Initialization properties
 
-   MSF provides two mechanisms for signalling initialization data using
-   properties.
+   MSF leverages Track properties and Object properties to carry media
+   initialization data.  These properties are registered in the
+   [MoQTransport] Sect 15.8.
 
-12.2.1.  MSF_INITIALIZATION Track property
+   VIDEO_CONFIG type 0x0D AUIDO_CONFIG type 0x0F
 
-   Track Property type: 0x79
+   The VIDEO_CONFIG Track & Object property carries the initialization
+   data for a track with a track role type of "video".
 
-   The MSF_INITIALIZATION Track property carries the initialization data
-   for the track.  This initialization data is immutable over the life
-   of the track.
+   The AUDIO_CONFIG Track & Object property carries the initialization
+   data for a track with a track role type of "audio".
 
-   Tracks which choose to transmit initialization data using this
-   property MUST include an initRef Section 5.2.13 field referencing an
-   Initialization Data List Section 5.1.7 entry with a type of 'track-
-   property'.
+   If this initialization data is immutable over the life of the track,
+   then the property MUST be added as a Track property and there MUST be
+   an initRef Section 5.2.13 Track field referencing an Initialization
+   Data List Section 5.1.7 entry with a type of 'track-property'.  If
+   used, publishers MUST include the Track property in the PUBLISH
+   message (publisher-initiated flow) or SUBSCRIBE_OK message
+   (subscriber-initiated flow).
 
-   If used, publishers MUST include the MSF_INITIALIZATION track
-   property in the PUBLISH message (publisher-initiated flow) or
-   SUBSCRIBE_OK message (subscriber-initiated flow).
-
-12.2.2.  MSF_INITIALIZATION Object property
-
-   Object Property type: 0x79
-
-   The MSF_INITIALIZATION Object property carries initialization data
-   for the track, when that initializaiton data might change over the
-   life of the track.  Since subscription might occur at any time, this
-   property needs to be repeated.  Publishers SHOULD add this property
-   to the first Object in each Group.
-
-   Tracks which choose to transmit initialization data using this
-   property MUST include an initRef Section 5.2.13 field referencing an
-   Initialization Data List Section 5.1.7 entry with a type of 'object-
-   property'.
+   If this initialization data might change over the life of the track,
+   then the property MUST be added as an Object property.  Since
+   subscription might occur at any time, this Object property needs to
+   be repeated.  Publishers SHOULD add this Object property to the first
+   Object in each Group.  Tracks which choose to transmit initialization
+   data using this Object property MUST include an initRef
+   Section 5.2.13 field referencing an Initialization Data List
+   Section 5.1.7 entry with a type of 'object-property'.
 
 13.  Security Considerations
 
