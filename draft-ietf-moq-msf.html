@@ -64,7 +64,6 @@
   src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-latin-ext.woff2') format('woff2');
   unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
-
 @font-face {
   font-family: 'Lora';
   font-style: italic;
@@ -113,7 +112,6 @@
   src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-latin.woff2') format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
-
 @font-face {
   font-family: 'Lora';
   font-style: normal;
@@ -178,7 +176,6 @@
   font-display: swap;
   src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin.woff2') format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
 }
 
 @font-face {
@@ -1051,7 +1048,7 @@ svg {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Law &amp; Nandakumar</td>
-<td class="center">Expires 29 January 2027</td>
+<td class="center">Expires 31 January 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1064,12 +1061,12 @@ svg {
 <dd class="internet-draft">draft-ietf-moq-msf-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-07-28" class="published">28 July 2026</time>
+<time datetime="2026-07-30" class="published">30 July 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-01-29">29 January 2027</time></dd>
+<dd class="expires"><time datetime="2027-01-31">31 January 2027</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1123,7 +1120,7 @@ svg {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 29 January 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 31 January 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1421,7 +1418,10 @@ svg {
                     <p id="section-toc.1-1.5.2.6.2.15.1"><a href="#section-5.6.15" class="auto internal xref">5.6.15</a>. <a href="#name-time-aligned-audio-video-trac" class="internal xref">Time-aligned Audio/Video Tracks with Authorization</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.6.2.16">
-                    <p id="section-toc.1-1.5.2.6.2.16.1"><a href="#section-5.6.16" class="auto internal xref">5.6.16</a>. <a href="#name-publish-tracks-for-logs-and" class="internal xref">Publish tracks for logs and metrics</a></p>
+                    <p id="section-toc.1-1.5.2.6.2.16.1"><a href="#section-5.6.16" class="auto internal xref">5.6.16</a>. <a href="#name-a-catalog-referencing-other" class="internal xref">A catalog referencing other catalogs</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.6.2.17">
+                    <p id="section-toc.1-1.5.2.6.2.17.1"><a href="#section-5.6.17" class="auto internal xref">5.6.17</a>. <a href="#name-publish-tracks-for-logs-and" class="internal xref">Publish tracks for logs and metrics</a></p>
 </li>
                 </ul>
 </li>
@@ -1917,8 +1917,9 @@ advertising their output and for subscribers in consuming that output. The
 payload of the Catalog object is opaque to Relays and can be end-to-end
 encrypted. The Catalog provides the names and namespaces of the tracks being
 produced, along with the relationship between tracks, properties of the tracks
-that consumers may use for selection and any relevant initialization data.<a href="#section-5-1" class="pilcrow">¶</a></p>
-<p id="section-5-2">The catalog track <span class="bcp14">MUST</span> have a case-sensitive Track Name of "catalog".<a href="#section-5-2" class="pilcrow">¶</a></p>
+that consumers may use for selection and any relevant initialization data. A
+catalog track <span class="bcp14">MAY</span> reference other catalog tracks.<a href="#section-5-1" class="pilcrow">¶</a></p>
+<p id="section-5-2">The top-level catalog track <span class="bcp14">MUST</span> have a case-sensitive Track Name of "catalog".<a href="#section-5-2" class="pilcrow">¶</a></p>
 <p id="section-5-3">A catalog object <span class="bcp14">MAY</span> be independent of other catalog objects or it <span class="bcp14">MAY</span> represent
 a delta update of a prior catalog object. The first catalog object published
 within a new group <span class="bcp14">MUST</span> be independent and <span class="bcp14">MUST</span> provide a complete catalog that
@@ -2513,6 +2514,12 @@ as defined in Table 3.<a href="#section-5.2.4-2" class="pilcrow">¶</a></p>
                 <td class="text-left" rowspan="1" colspan="1">MoQ Metrics</td>
                 <td class="text-left" rowspan="1" colspan="1">moqmetrics</td>
                 <td class="text-left" rowspan="1" colspan="1">See <span>[<a href="#MOQMETRICS" class="cite xref">MOQMETRICS</a>]</span>
+</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">Catalog</td>
+                <td class="text-left" rowspan="1" colspan="1">catalog</td>
+                <td class="text-left" rowspan="1" colspan="1">See <a href="#catalog" class="auto internal xref">Section 5</a>
 </td>
               </tr>
             </tbody>
@@ -4168,16 +4175,50 @@ specification.<a href="#section-5.6.15-1" class="pilcrow">¶</a></p>
 </div>
 </section>
 </div>
-<div id="publish-tracks-for-logs-and-metrics">
+<div id="a-catalog-referencing-other-catalogs">
 <section id="section-5.6.16">
-          <h4 id="name-publish-tracks-for-logs-and">
-<a href="#section-5.6.16" class="section-number selfRef">5.6.16. </a><a href="#name-publish-tracks-for-logs-and" class="section-name selfRef">Publish tracks for logs and metrics</a>
+          <h4 id="name-a-catalog-referencing-other">
+<a href="#section-5.6.16" class="section-number selfRef">5.6.16. </a><a href="#name-a-catalog-referencing-other" class="section-name selfRef">A catalog referencing other catalogs</a>
           </h4>
-<p id="section-5.6.16-1">This example shows a catalog that includes publish tracks for client-side
+<p id="section-5.6.16-1">This example shows a catalog referencing three other catalogs, one of which is in
+a different namespace.<a href="#section-5.6.16-1" class="pilcrow">¶</a></p>
+<div class="lang-json sourcecode" id="section-5.6.16-2">
+<pre>
+{
+  "version": "1",
+  "generatedAt": 1746104606044,
+  "tracks": [
+    {
+      "name": "premium-catalog",
+      "packaging": "catalog"
+    },
+    {
+      "name": "free-catalog",
+      "packaging": "catalog"
+    },
+    {
+      "name": "camera33-catalog",
+      "namespace": "example.com/blimps-R-us",
+      "packaging": "catalog",
+      "label": "Eye From the Sky video feeds"
+    }
+   ]
+}
+
+</pre><a href="#section-5.6.16-2" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="publish-tracks-for-logs-and-metrics">
+<section id="section-5.6.17">
+          <h4 id="name-publish-tracks-for-logs-and">
+<a href="#section-5.6.17" class="section-number selfRef">5.6.17. </a><a href="#name-publish-tracks-for-logs-and" class="section-name selfRef">Publish tracks for logs and metrics</a>
+          </h4>
+<p id="section-5.6.17-1">This example shows a catalog that includes publish tracks for client-side
 logging and metrics collection. The subscriber can publish QoE data and logs
 back to the delivery system using these track definitions. The namespace and
-track name formats follow the conventions defined in <span>[<a href="#MOQLOG" class="cite xref">MOQLOG</a>]</span> and <span>[<a href="#MOQMETRICS" class="cite xref">MOQMETRICS</a>]</span>.<a href="#section-5.6.16-1" class="pilcrow">¶</a></p>
-<div class="breakable lang-json sourcecode" id="section-5.6.16-2">
+track name formats follow the conventions defined in <span>[<a href="#MOQLOG" class="cite xref">MOQLOG</a>]</span> and <span>[<a href="#MOQMETRICS" class="cite xref">MOQMETRICS</a>]</span>.<a href="#section-5.6.17-1" class="pilcrow">¶</a></p>
+<div class="breakable lang-json sourcecode" id="section-5.6.17-2">
 <pre>
 {
   "version": "draft-01",
@@ -4230,26 +4271,26 @@ track name formats follow the conventions defined in <span>[<a href="#MOQLOG" cl
   ]
 }
 
-</pre><a href="#section-5.6.16-2" class="pilcrow">¶</a>
+</pre><a href="#section-5.6.17-2" class="pilcrow">¶</a>
 </div>
-<p id="section-5.6.16-3">In this example:<a href="#section-5.6.16-3" class="pilcrow">¶</a></p>
+<p id="section-5.6.17-3">In this example:<a href="#section-5.6.17-3" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-5.6.16-4.1">
-              <p id="section-5.6.16-4.1.1">The metrics track uses the namespace format defined in <span>[<a href="#MOQMETRICS" class="cite xref">MOQMETRICS</a>]</span> with
+<li class="normal" id="section-5.6.17-4.1">
+              <p id="section-5.6.17-4.1.1">The metrics track uses the namespace format defined in <span>[<a href="#MOQMETRICS" class="cite xref">MOQMETRICS</a>]</span> with
 %resourceId% as a placeholder for the subscriber's unique resource identifier.
-The track name "4" indicates Warning level granularity.<a href="#section-5.6.16-4.1.1" class="pilcrow">¶</a></p>
+The track name "4" indicates Warning level granularity.<a href="#section-5.6.17-4.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-5.6.16-4.2">
-              <p id="section-5.6.16-4.2.1">The log track uses the namespace format defined in <span>[<a href="#MOQLOG" class="cite xref">MOQLOG</a>]</span> with %resourceId%
+            <li class="normal" id="section-5.6.17-4.2">
+              <p id="section-5.6.17-4.2.1">The log track uses the namespace format defined in <span>[<a href="#MOQLOG" class="cite xref">MOQLOG</a>]</span> with %resourceId%
 as a placeholder. The track name "6" indicates Informational level priority.
-This track establishes a separate connection to logs.example.com.<a href="#section-5.6.16-4.2.1" class="pilcrow">¶</a></p>
+This track establishes a separate connection to logs.example.com.<a href="#section-5.6.17-4.2.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-5.6.16-4.3">
-              <p id="section-5.6.16-4.3.1">Both tracks include authentication tokens for publishing authorization.<a href="#section-5.6.16-4.3.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-5.6.17-4.3">
+              <p id="section-5.6.17-4.3.1">Both tracks include authentication tokens for publishing authorization.<a href="#section-5.6.17-4.3.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-5.6.16-4.4">
-              <p id="section-5.6.16-4.4.1">The subscriber <span class="bcp14">MUST</span> replace %resourceId% with their actual resource identifier
-as defined in the respective specifications.<a href="#section-5.6.16-4.4.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-5.6.17-4.4">
+              <p id="section-5.6.17-4.4.1">The subscriber <span class="bcp14">MUST</span> replace %resourceId% with their actual resource identifier
+as defined in the respective specifications.<a href="#section-5.6.17-4.4.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 </section>

@@ -5,8 +5,8 @@
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
 Intended status: Informational                             S. Nandakumar
-Expires: 29 January 2027                                           Cisco
-                                                            28 July 2026
+Expires: 31 January 2027                                           Cisco
+                                                            30 July 2026
 
 
                          MOQT Streaming Format
@@ -49,7 +49,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 29 January 2027.
+   This Internet-Draft will expire on 31 January 2027.
 
 Copyright Notice
 
@@ -156,7 +156,8 @@ Table of Contents
        5.6.13. Terminating a live broadcast
        5.6.14. Variable Substitution for personalized delivery
        5.6.15. Time-aligned Audio/Video Tracks with Authorization
-       5.6.16. Publish tracks for logs and metrics
+       5.6.16. A catalog referencing other catalogs
+       5.6.17. Publish tracks for logs and metrics
    6.  Media transmission
      6.1.  Group numbering
      6.2.  Object Numbering
@@ -433,9 +434,11 @@ Table of Contents
    to Relays and can be end-to-end encrypted.  The Catalog provides the
    names and namespaces of the tracks being produced, along with the
    relationship between tracks, properties of the tracks that consumers
-   may use for selection and any relevant initialization data.
+   may use for selection and any relevant initialization data.  A
+   catalog track MAY reference other catalog tracks.
 
-   The catalog track MUST have a case-sensitive Track Name of "catalog".
+   The top-level catalog track MUST have a case-sensitive Track Name of
+   "catalog".
 
    A catalog object MAY be independent of other catalog objects or it
    MAY represent a delta update of a prior catalog object.  The first
@@ -756,6 +759,8 @@ Table of Contents
            | MoQ Log        | moqlog        | See [MOQLOG]     |
            +----------------+---------------+------------------+
            | MoQ Metrics    | moqmetrics    | See [MOQMETRICS] |
+           +----------------+---------------+------------------+
+           | Catalog        | catalog       | See Section 5    |
            +----------------+---------------+------------------+
 
                                   Table 4
@@ -2145,7 +2150,33 @@ Table of Contents
      ]
    }
 
-5.6.16.  Publish tracks for logs and metrics
+5.6.16.  A catalog referencing other catalogs
+
+   This example shows a catalog referencing three other catalogs, one of
+   which is in a different namespace.
+
+   {
+     "version": "1",
+     "generatedAt": 1746104606044,
+     "tracks": [
+       {
+         "name": "premium-catalog",
+         "packaging": "catalog"
+       },
+       {
+         "name": "free-catalog",
+         "packaging": "catalog"
+       },
+       {
+         "name": "camera33-catalog",
+         "namespace": "example.com/blimps-R-us",
+         "packaging": "catalog",
+         "label": "Eye From the Sky video feeds"
+       }
+      ]
+   }
+
+5.6.17.  Publish tracks for logs and metrics
 
    This example shows a catalog that includes publish tracks for client-
    side logging and metrics collection.  The subscriber can publish QoE
