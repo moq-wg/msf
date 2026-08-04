@@ -24,7 +24,7 @@
     Jinja2 3.1.6
     lxml 6.1.1
     natsort 8.4.0
-    platformdirs 4.10.1
+    platformdirs 4.11.0
     pycountry 24.6.1
     PyYAML 6.0.3
     requests 2.33.1
@@ -1044,11 +1044,11 @@ svg {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">MOQT Streaming Format</td>
-<td class="right">July 2026</td>
+<td class="right">August 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Law &amp; Nandakumar</td>
-<td class="center">Expires 31 January 2027</td>
+<td class="center">Expires 5 February 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1061,12 +1061,12 @@ svg {
 <dd class="internet-draft">draft-ietf-moq-msf-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-07-30" class="published">30 July 2026</time>
+<time datetime="2026-08-04" class="published">4 August 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-01-31">31 January 2027</time></dd>
+<dd class="expires"><time datetime="2027-02-05">5 February 2027</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1120,7 +1120,7 @@ svg {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 31 January 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 5 February 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1488,6 +1488,9 @@ svg {
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.4.2.2">
                     <p id="section-toc.1-1.8.2.4.2.2.1"><a href="#section-8.4.2" class="auto internal xref">8.4.2</a>.  <a href="#name-event-timeline-track-with-m" class="internal xref">Event timeline track with MOQT Location indexing</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.4.2.3">
+                    <p id="section-toc.1-1.8.2.4.2.3.1"><a href="#section-8.4.3" class="auto internal xref">8.4.3</a>.  <a href="#name-event-timeline-track-with-me" class="internal xref">Event timeline track with media time indexing</a></p>
 </li>
                 </ul>
 </li>
@@ -4527,8 +4530,8 @@ contains an array of records. Each record consists of a JSON Object containing
 the following required fields:<a href="#section-8.1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-8.1-2.1">
-            <p id="section-8.1-2.1.1">An index reference, which <span class="bcp14">MUST</span> be either 't' for wallclock time, 'l' for Location or
-'m' for Media PTS. Only one of these index values may be used within each record. Event
+            <p id="section-8.1-2.1.1">An index reference, which <span class="bcp14">MUST</span> be either 'T' for wallclock time, 'L' for Location or
+'M' for Media PTS. Only one of these index values may be used within each record. Event
 timelines <span class="bcp14">SHOULD</span> use the same index reference type for each record. The definitions for
 wallclock time, Location and Media PTS are identical to those defined for media timeline
 payload <a href="#mediatimelinepayload" class="auto internal xref">Section 7.1</a>. Wallclock time and media PTS values are JSON Number,
@@ -4596,7 +4599,7 @@ sports broadcast.<a href="#section-8.4.1-1" class="pilcrow">¶</a></p>
 <pre>
 [
     {
-        "t": 1756885678361,
+        "T": 1756885678361,
         "data": {
             "status": "in_progress",
             "period": 1,
@@ -4607,7 +4610,7 @@ sports broadcast.<a href="#section-8.4.1-1" class="pilcrow">¶</a></p>
         }
     },
     {
-        "t": 1756885981542,
+        "T": 1756885981542,
         "data": {
             "status": "in_progress",
             "period": 1,
@@ -4633,16 +4636,57 @@ sports broadcast.<a href="#section-8.4.1-1" class="pilcrow">¶</a></p>
 <pre>
 [
     {
-        "l": [0,0],
+        "L": [0,0],
         "data": [47.1812,8.4592]
     },
     {
-        "l": [1,0],
+        "L": [1,0],
         "data": [47.1662,8.5155]
     }
 ]
 
 </pre><a href="#section-8.4.2-2" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="event-timeline-track-with-media-time-indexing">
+<section id="section-8.4.3">
+          <h4 id="name-event-timeline-track-with-me">
+<a href="#section-8.4.3" class="section-number selfRef">8.4.3. </a><a href="#name-event-timeline-track-with-me" class="section-name selfRef">Event timeline track with media time indexing</a>
+          </h4>
+<p id="section-8.4.3-1">This example shows an object identification track from a hypothetical video
+indexing system.<a href="#section-8.4.3-1" class="pilcrow">¶</a></p>
+<div class="lang-json sourcecode" id="section-8.4.3-2">
+<pre>
+[
+    {
+        "M": 23051,
+        "data": {
+            "object_id": "obj_00123",
+            "class": "human",
+            "attributes": {
+                "sex": "male",
+                "action": "eating dinner"
+            },
+            "bounding_box": { "x": 312, "y": 140, "width": 180, "height": 260 },
+            "confidence": 0.94
+        }
+    },
+    {
+        "M": 43796,
+        "data": {
+            "object_id": "obj_00124",
+            "class": "object",
+            "attributes": {
+                "type": "dog",
+                "action": "sitting"
+            },
+            "bounding_box": { "x": 20, "y": 300, "width": 120, "height": 90 },
+            "confidence": 0.88
+        }
+    }
+]
+</pre><a href="#section-8.4.3-2" class="pilcrow">¶</a>
 </div>
 </section>
 </div>

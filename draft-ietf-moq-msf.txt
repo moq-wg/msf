@@ -5,8 +5,8 @@
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
 Intended status: Informational                             S. Nandakumar
-Expires: 31 January 2027                                           Cisco
-                                                            30 July 2026
+Expires: 5 February 2027                                           Cisco
+                                                           4 August 2026
 
 
                          MOQT Streaming Format
@@ -49,7 +49,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 31 January 2027.
+   This Internet-Draft will expire on 5 February 2027.
 
 Copyright Notice
 
@@ -176,6 +176,7 @@ Table of Contents
      8.4.  Event timeline track examples
        8.4.1.  Event timeline track with wallclock time indexing
        8.4.2.  Event timeline track with MOQT Location indexing
+       8.4.3.  Event timeline track with media time indexing
    9.  Log track
      9.1.  Log track payload
      9.2.  Log track namespace and name
@@ -2440,8 +2441,8 @@ Table of Contents
    document contains an array of records.  Each record consists of a
    JSON Object containing the following required fields:
 
-   *  An index reference, which MUST be either 't' for wallclock time,
-      'l' for Location or 'm' for Media PTS.  Only one of these index
+   *  An index reference, which MUST be either 'T' for wallclock time,
+      'L' for Location or 'M' for Media PTS.  Only one of these index
       values may be used within each record.  Event timelines SHOULD use
       the same index reference type for each record.  The definitions
       for wallclock time, Location and Media PTS are identical to those
@@ -2488,7 +2489,7 @@ Table of Contents
 
    [
        {
-           "t": 1756885678361,
+           "T": 1756885678361,
            "data": {
                "status": "in_progress",
                "period": 1,
@@ -2499,7 +2500,7 @@ Table of Contents
            }
        },
        {
-           "t": 1756885981542,
+           "T": 1756885981542,
            "data": {
                "status": "in_progress",
                "period": 1,
@@ -2518,12 +2519,46 @@ Table of Contents
 
    [
        {
-           "l": [0,0],
+           "L": [0,0],
            "data": [47.1812,8.4592]
        },
        {
-           "l": [1,0],
+           "L": [1,0],
            "data": [47.1662,8.5155]
+       }
+   ]
+
+8.4.3.  Event timeline track with media time indexing
+
+   This example shows an object identification track from a hypothetical
+   video indexing system.
+
+   [
+       {
+           "M": 23051,
+           "data": {
+               "object_id": "obj_00123",
+               "class": "human",
+               "attributes": {
+                   "sex": "male",
+                   "action": "eating dinner"
+               },
+               "bounding_box": { "x": 312, "y": 140, "width": 180, "height": 260 },
+               "confidence": 0.94
+           }
+       },
+       {
+           "M": 43796,
+           "data": {
+               "object_id": "obj_00124",
+               "class": "object",
+               "attributes": {
+                   "type": "dog",
+                   "action": "sitting"
+               },
+               "bounding_box": { "x": 20, "y": 300, "width": 120, "height": 90 },
+               "confidence": 0.88
+           }
        }
    ]
 
