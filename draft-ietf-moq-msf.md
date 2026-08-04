@@ -2028,8 +2028,8 @@ using the MSF_COMPRESSION property ({{compression-signaling}}). The document
 contains an array of records. Each record consists of a JSON Object containing
 the following required fields:
 
-* An index reference, which MUST be either 't' for wallclock time, 'l' for Location or
-  'm' for Media PTS. Only one of these index values may be used within each record. Event
+* An index reference, which MUST be either 'T' for wallclock time, 'L' for Location or
+  'M' for Media PTS. Only one of these index values may be used within each record. Event
   timelines SHOULD use the same index reference type for each record. The definitions for
   wallclock time, Location and Media PTS are identical to those defined for media timeline
   payload {{mediatimelinepayload}}. Wallclock time and media PTS values are JSON Number,
@@ -2066,7 +2066,7 @@ sports broadcast.
 ~~~json
 [
     {
-        "t": 1756885678361,
+        "T": 1756885678361,
         "data": {
             "status": "in_progress",
             "period": 1,
@@ -2077,7 +2077,7 @@ sports broadcast.
         }
     },
     {
-        "t": 1756885981542,
+        "T": 1756885981542,
         "data": {
             "status": "in_progress",
             "period": 1,
@@ -2097,15 +2097,50 @@ This example shows drone GPS coordinates synched with the start of each Group.
 ~~~json
 [
     {
-        "l": [0,0],
+        "L": [0,0],
         "data": [47.1812,8.4592]
     },
     {
-        "l": [1,0],
+        "L": [1,0],
         "data": [47.1662,8.5155]
     }
 ]
 
+~~~
+
+### Event timeline track with media time indexing
+This example shows an object identification track from a hypothetical video
+indexing system.
+
+~~~json
+[
+    {
+        "M": 23051,
+        "data": {
+            "object_id": "obj_00123",
+            "class": "human",
+            "attributes": {
+                "sex": "male",
+                "action": "eating dinner"
+            },
+            "bounding_box": { "x": 312, "y": 140, "width": 180, "height": 260 },
+            "confidence": 0.94
+        }
+    },
+    {
+        "M": 43796,
+        "data": {
+            "object_id": "obj_00124",
+            "class": "object",
+            "attributes": {
+                "type": "dog",
+                "action": "sitting"
+            },
+            "bounding_box": { "x": 20, "y": 300, "width": 120, "height": 90 },
+            "confidence": 0.88
+        }
+    }
+]
 ~~~
 
 # Log track {#logtrack}
