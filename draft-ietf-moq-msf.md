@@ -182,6 +182,26 @@ equally-numbered group boundaries, then an alternate mechanism, not defined by
 this specification, must be provided to the client to enable it to switch smoothly
 between time-aligned, but numerically dissimilar, Group IDs.
 
+## Packaging for track switching {#packagingforswitching}
+
+When publishing multiple tracks within an alternate group that have dissimilar
+keyframe intervals (different GOP sizes), publishers MUST follow these
+requirements to enable seamless track switching:
+
+* Each MOQT Group MUST start with a keyframe. Publishers MUST NOT place
+  multiple keyframes within a single group, as this hides intermediate join
+  points from subscribers.
+* All tracks within an alternate group MUST be time-aligned at object
+  boundaries, not only at group boundaries.
+* The keyframeSpacing {{keyframespacing}} catalog field MUST be specified for
+  each track, indicating the number of objects per keyframe interval.
+* If any track within an alternate group specifies a keyframeSpacing value,
+  then all tracks within that alternate group MUST specify a keyframeSpacing
+  value.
+
+See {{zapping}} for details on how subscribers use keyframeSpacing to calculate
+valid switch points.
+
 ## Content protection and encryption {#contentprotection}
 
 MSF supports end-to-end encryption of media content using MoQ Secure Objects
@@ -445,6 +465,7 @@ Table 2 lists the fields defined within each track object.
 | Track duration          | trackDuration          | {{trackduration}}         |
 | Authorization Info      | authInfo               | {{authinfo}}              |
 | Accessibility           | accessibility          | {{accessibility}}         |
+| Keyframe spacing        | keyframeSpacing        | {{keyframespacing}}       |
 
 ### Tracks object {#trackobject}
 
@@ -912,6 +933,19 @@ semicolon-separated pairs of channel identifier and language code
 
 A subscriber MAY use this information to determine caption availability
 and configure an appropriate caption decoder.
+
+### Keyframe spacing {#keyframespacing}
+Location: T    Required: Optional   JSON Type: Number
+
+A number defining the number of objects per keyframe interval. A value of 2
+means each group contains a keyframe followed by one predicted frame (2 objects
+total). A value of 4 means each group contains a keyframe followed by three
+predicted frames (4 objects total).
+
+This field is used by subscribers to calculate valid switch points when
+performing adaptive bitrate switching between tracks with different keyframe
+intervals. See {{packagingforswitching}} for publisher requirements and
+{{zapping}} for details on how to use this field.
 
 ## Delta updates {#deltaupdates}
 A catalog update might contain incremental changes. This is a useful property if
@@ -1897,6 +1931,66 @@ it SHOULD signal the gap using the MOQT Prior Group ID Gap Extension header.
 ## Object Numbering
 Object ID MUST be zero for the first Object within a Group and then MUST increase
 monotonically by one within that Group.
+
+## Zapping and Track Switching {#zapping}
+
+Zapping refers to the act of quickly joining a track or switching between
+tracks, such as changing channels in a live broadcast. When a viewer switches
+to a new track, playback cannot begin until the decoder receives a keyframe.
+Tracks with longer keyframe intervals offer better compression but increase
+join latency.
+
+### Zapping Procedure
+
+To minimize join latency when switching to a new alternate group, a subscriber
+SHOULD first subscribe to the track with the lowest keyframeSpacing value. This
+provides the fastest join because keyframes occur more frequently. Once playback
+begins, the subscriber can switch to a higher quality track (with larger
+keyframeSpacing) at a valid switch point calculated using the formula below.
+
+### Calculating Valid Switch Points {#switchpoints}
+
+Given a source track with keyframeSpacing S and a target track with
+keyframeSpacing T, a switch from Group ID G and Object N of the source track
+is valid if:
+
+    (G * S + N) / T
+
+yields an integer. That integer is the target Group ID to subscribe to.
+
+For example, consider three tracks: A (keyframeSpacing=2), B
+(keyframeSpacing=4), and C (keyframeSpacing=8):
+
+~~~ascii-figure
+Track A (keyframeSpacing=2):
+  Group:   0       1       2       3       4       5
+  Object: 0,0|0,1|1,0|1,1|2,0|2,1|3,0|3,1|4,0|4,1|5,0|5,1
+          [K] [P] [K] [P] [K] [P] [K] [P] [K] [P] [K] [P]
+
+Track B (keyframeSpacing=4):
+  Group:   0               1               2
+  Object: 0,0|0,1|0,2|0,3|1,0|1,1|1,2|1,3|2,0|2,1|2,2|2,3
+          [K] [P] [P] [P] [K] [P] [P] [P] [K] [P] [P] [P]
+
+Track C (keyframeSpacing=8):
+  Group:   0                               1
+  Object: 0,0|0,1|0,2|0,3|0,4|0,5|0,6|0,7|1,0|1,1|1,2|1,3
+          [K] [P] [P] [P] [P] [P] [P] [P] [K] [P] [P] [P]
+~~~
+
+Switching from A to B (S=2, T=4):
+
+* Group 0, Object 0: (0\*2 + 0)/4 = 0 (valid, target Group 0)
+* Group 1, Object 0: (1\*2 + 0)/4 = 0.5 (NOT valid)
+* Group 2, Object 0: (2\*2 + 0)/4 = 1 (valid, target Group 1)
+* Group 3, Object 0: (3\*2 + 0)/4 = 1.5 (NOT valid)
+* Group 4, Object 0: (4\*2 + 0)/4 = 2 (valid, target Group 2)
+
+Switching from A to C (S=2, T=8):
+
+* Group 0, Object 0: (0\*2 + 0)/8 = 0 (valid, target Group 0)
+* Group 2, Object 0: (2\*2 + 0)/8 = 0.5 (NOT valid)
+* Group 4, Object 0: (4\*2 + 0)/8 = 1 (valid, target Group 1)
 
 # Media Timeline track {#mediatimelinetrack}
 The media timeline track provides data about the previously published Groups and their
