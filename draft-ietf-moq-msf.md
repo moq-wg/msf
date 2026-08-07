@@ -2692,7 +2692,7 @@ The initial contents of this registry are:
 
 | Value | Compression Algorithm | Reference |
 |:======|:======================|:==========|
-| 0     | None (uncompressed)   | this      |
+| 0     | None (uncompressed)   | This  document    |
 | 1     | GZIP                  | {{GZIP}}  |
 
 --- back
