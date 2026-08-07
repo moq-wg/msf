@@ -3234,13 +3234,13 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
 
    The initial contents of this registry are:
 
-               +=======+=======================+===========+
-               | Value | Compression Algorithm | Reference |
-               +=======+=======================+===========+
-               | 0     | None (uncompressed)   | this      |
-               +-------+-----------------------+-----------+
-               | 1     | GZIP                  | [GZIP]    |
-               +-------+-----------------------+-----------+
+             +=======+=======================+===============+
+             | Value | Compression Algorithm | Reference     |
+             +=======+=======================+===============+
+             | 0     | None (uncompressed)   | This document |
+             +-------+-----------------------+---------------+
+             | 1     | GZIP                  | [GZIP]        |
+             +-------+-----------------------+---------------+
 
                                   Table 13
 
