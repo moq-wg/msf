@@ -1878,9 +1878,9 @@ In this example:
   as defined in the respective specifications.
 
 # Media transmission
-The MOQT Groups and MOQT Objects need to be mapped to MOQT Streams. Irrespective
-of the {{mediapackaging}} in place, each MOQT Object MUST be mapped to a new
-MOQT Stream.
+The MOQT Groups and MOQT Objects need to be mapped to MOQT Streams. This mapping is
+defined by the packaging {{mediapackaging}} type of each track. Irrespective of the
+packaging type in place, each MOQT Object MUST be placed on MOQT sub-group 0.
 
 ## Group numbering
 Group IDs for a track MUST be unique and MUST increase monotonically. Within a
