@@ -2607,7 +2607,7 @@ Types" registry established by {{MoQTransport, Section 15.3}}:
 
 | Fragment Type   |  Description          | Specification  |
 |:================|:======================|:===============|
-| msf             | MOQT Streaming Format | this           |
+| msf             | MOQT Streaming Format | This document        |
 
 ## "MSF Event Timeline Types" registry {#iana-event-timeline-types}
 
