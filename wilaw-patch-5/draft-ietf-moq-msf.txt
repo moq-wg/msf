@@ -3143,7 +3143,7 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
          +===============+=======================+===============+
          | Fragment Type | Description           | Specification |
          +===============+=======================+===============+
-         | msf           | MOQT Streaming Format | this          |
+         | msf           | MOQT Streaming Format | This document |
          +---------------+-----------------------+---------------+
 
                                   Table 12
