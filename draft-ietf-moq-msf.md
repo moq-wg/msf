@@ -2593,7 +2593,7 @@ ToDo
 # IANA Considerations {#IANA}
 
 This document requests IANA to create a new registry group titled
-"MOQT Streaming Format (MSF) Parameters," containing the "MSF Event
+"MOQT Streaming Format (MSF) Parameters", containing the "MSF Event
 Timeline Types" registry ({{iana-event-timeline-types}}) and the "MSF
 Compression Algorithms" registry ({{iana-compression-algorithms}})
 defined below. It also registers one entry in the existing "MOQT URI
