@@ -397,8 +397,7 @@ object has the following fields:
 
 For both the track-property and object-property types, the initialization
 data is serialized as raw binary data and carried in the value field of the
-MSF_INITIALIZATION Object property {{initialization-object-property}} or the
-MSF_INITIALIZATION Track property {{initialization-track-property}}.
+initialization properties, see {#initialization-properties}.
 
 The Initialization Data List, if present, MUST be located after the tracks array in
 the root of the JSON catalog. The purpose of this is to improve the human readability
@@ -2559,9 +2558,9 @@ The specific error codes and retry semantics are defined by the authorization
 scheme specifications. See {{PrivacyPassAuth}} for Privacy Pass error handling
 and {{C4M}} for CAT error handling.
 
-# MSF Properties {#track-properties}
+# MSF Properties {#properties}
 
-MSF defines MOQT Track Properties and Object Properties (see {{MoQTransport}})
+MSF uses MOQT Track Properties and Object Properties (see {{MoQTransport}})
 to signal metadata about MSF tracks and objects. These properties are carried in
 MOQT control messages and object headers, allowing endpoints to learn track and
 object characteristics before processing payload data.
@@ -2635,35 +2634,32 @@ MUST treat that object's payload as uncompressed. If the property is present
 with a value the subscriber does not support, the subscriber MUST NOT attempt
 to process that object.
 
-## Initialization properties
+## Initialization properties {#initialization-properties}
 
-MSF provides two mechanisms for signalling initialization data using properties.
+MSF leverages Track properties and Object properties to carry media
+initialization data. These properties are registered in the {{MoQTransport}}
+Sect 15.8.
 
-### MSF_INITIALIZATION Track property {#initialization-track-property}
+VIDEO_CONFIG type 0x0D
+AUIDO_CONFIG type 0x0F
 
-Track Property type: 0x79
+The VIDEO_CONFIG Track & Object property carries the initialization data for a track
+with a track role type of "video".
 
-The MSF_INITIALIZATION Track property carries the initialization data for the track.
-This initialization data is immutable over the life of the track.
+The AUDIO_CONFIG Track & Object property carries the initialization data for a track
+with a track role type of "audio".
 
-Tracks which choose to transmit initialization data using this property MUST include
-an initRef {{initref}} field referencing an Initialization Data List {{initdatalist}}
-entry with a type of 'track-property'.
-
-If used, publishers MUST include the MSF_INITIALIZATION  track property in the PUBLISH
+If this initialization data is immutable over the life of the track, then the property
+MUST be added as a Track property and there MUST be an initRef {{initref}} Track field
+referencing an Initialization Data List {{initdatalist}} entry with a type of
+'track-property'. If used, publishers MUST include the Track property in the PUBLISH
 message (publisher-initiated flow) or SUBSCRIBE_OK message (subscriber-initiated flow).
 
-### MSF_INITIALIZATION Object property {#initialization-object-property}
-
-Object Property type: 0x79
-
-The MSF_INITIALIZATION Object property carries initialization data for the track, when
-that initializaiton data might change over the life of the track. Since subscription
-might occur at any time, this property needs to be repeated. Publishers SHOULD add this
-property to the first Object in each Group.
-
-Tracks which choose to transmit initialization data using this property MUST include
-an initRef {{initref}} field referencing an Initialization Data List {{initdatalist}}
+If this initialization data might change over the life of the track, then the property
+MUST be added as an Object property. Since subscription might occur at any time, this Object
+property needs to be repeated. Publishers SHOULD add this Object property to the first Object
+in each Group. Tracks which choose to transmit initialization data using this Object property
+MUST include an initRef {{initref}} field referencing an Initialization Data List {{initdatalist}}
 entry with a type of 'object-property'.
 
 # Security Considerations
