@@ -1840,7 +1840,7 @@ track name formats follow the conventions defined in {{MOQLOG}} and {{MOQMETRICS
   "tracks": [
     {
       "name": "video",
-      "namespace": ["broadcast.example.com/","live","stream1"],
+      "namespace": ["broadcast.example.com","live","stream1"],
       "packaging": "loc",
       "isLive": true,
       "targetLatency": 2000,
