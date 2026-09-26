@@ -781,17 +781,14 @@ Table of Contents
 
    Required: Optional JSON Type: String Location: Track Object
 
-   A string carrying packaging-specific parameters that further qualify
-   how the track's payload is mapped to MOQT constructs.  The value is a
-   semicolon-separated list of key=value pairs.  Keys and values are
-   case-sensitive.  Whitespace around keys, values, and separators is
-   not permitted.
+   Additional parameters for the Section 5.2.4 value in use, encoded as
+   a semicolon-separated list of key=value pairs (e.g. key1=v1;key2=v2).
+   Keys and values are case-sensitive and MUST NOT contain whitespace.
 
-   The set of permitted keys, their allowed values, and their semantics
-   are defined by the specification referenced from the Section 5.2.4
-   value in use.  Keys that are not defined for the current packaging
-   value MUST be ignored by subscribers.  When the same key appears more
-   than once, the first occurrence takes precedence.
+   The permitted keys and their meaning are defined by the specification
+   for the packaging value in use.  Subscribers MUST ignore any key that
+   is not defined for the current packaging value.  If the same key
+   appears more than once, the first occurrence is used.
 
    For packaging value "loc", the following keys are defined:
 

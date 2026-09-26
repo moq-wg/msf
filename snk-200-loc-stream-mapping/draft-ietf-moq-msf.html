@@ -2548,15 +2548,13 @@ as defined in Table 3.<a href="#section-5.2.4-2" class="pilcrow">¶</a></p>
 <a href="#section-5.2.5" class="section-number selfRef">5.2.5. </a><a href="#name-packaging-metadata" class="section-name selfRef">Packaging metadata</a>
           </h4>
 <p id="section-5.2.5-1">Required: Optional    JSON Type: String    Location: Track Object<a href="#section-5.2.5-1" class="pilcrow">¶</a></p>
-<p id="section-5.2.5-2">A string carrying packaging-specific parameters that further qualify how the
-track's payload is mapped to MOQT constructs. The value is a semicolon-separated
-list of <code>key=value</code> pairs. Keys and values are case-sensitive. Whitespace
-around keys, values, and separators is not permitted.<a href="#section-5.2.5-2" class="pilcrow">¶</a></p>
-<p id="section-5.2.5-3">The set of permitted keys, their allowed values, and their semantics are
-defined by the specification referenced from the <a href="#packaging" class="auto internal xref">Section 5.2.4</a> value in use.
-Keys that are not defined for the current packaging value <span class="bcp14">MUST</span> be ignored by
-subscribers. When the same key appears more than once, the first occurrence
-takes precedence.<a href="#section-5.2.5-3" class="pilcrow">¶</a></p>
+<p id="section-5.2.5-2">Additional parameters for the <a href="#packaging" class="auto internal xref">Section 5.2.4</a> value in use, encoded as a
+semicolon-separated list of <code>key=value</code> pairs (e.g. <code>key1=v1;key2=v2</code>).
+Keys and values are case-sensitive and <span class="bcp14">MUST NOT</span> contain whitespace.<a href="#section-5.2.5-2" class="pilcrow">¶</a></p>
+<p id="section-5.2.5-3">The permitted keys and their meaning are defined by the specification
+for the packaging value in use. Subscribers <span class="bcp14">MUST</span> ignore any key that
+is not defined for the current packaging value. If the same key appears
+more than once, the first occurrence is used.<a href="#section-5.2.5-3" class="pilcrow">¶</a></p>
 <p id="section-5.2.5-4">For <code>packaging</code> value "loc", the following keys are defined:<a href="#section-5.2.5-4" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-5.2.5-5.1">
