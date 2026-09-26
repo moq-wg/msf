@@ -44,6 +44,7 @@ normative:
   MIME: RFC6838
   RFC9000: RFC9000
   GZIP: RFC1952
+  UTF8: RFC3629
   MOQLOG: I-D.draft-jennings-moq-log
   MOQMETRICS: I-D.draft-jennings-moq-metrics
   WEBCODECS-CODEC-REGISTRY:
@@ -444,16 +445,37 @@ is specified in Table 2.
 ### Track namespace {#tracknamespace}
 Required: Optional    JSON Type: String    Location: Track Object
 
-The name space under which the track name is defined. See section 2.3 of
-{{MoQTransport}}. The track namespace is optional. If it is not declared within
-a track, then each track MUST inherit the namespace of the catalog track. A
-namespace declared in a track object overrides any inherited name space.
+The Track Namespace under which the track name is defined. See Section 2.4.1 of
+{{MoQTransport}}. The value is a JSON array in which each element is a JSON
+string corresponding, in order, to one Track Namespace Field of the MOQT Track
+Namespace. Each element is converted to the bytes of its Track Namespace Field
+using the rules in {{namemapping}}.
+
+The array MUST contain between 1 and 32 elements, and every element MUST be a
+non-empty JSON string, so that the resulting Track Namespace satisfies the
+constraints of Section 2.4.1 of {{MoQTransport}}. A parser that encounters an
+empty array, more than 32 elements, an empty string element, or a non-string
+element MUST treat the catalog as invalid.
+
+The track namespace is optional. If it is not declared within a track object,
+then the track MUST inherit the Track Namespace of the catalog track, that is,
+the Track Namespace under which the catalog itself was subscribed. A namespace
+declared in a track object replaces (and does not extend) any inherited
+namespace.
 
 ### Track name {#trackname}
 Required: Yes    JSON Type: String    Location: Track Object
 
-A string defining the name of the track. See section 2.3 of {{MoQTransport}}.
-Within the catalog, track names MUST be unique per namespace.
+A JSON string defining the MOQT Track Name of the track. See Section 2.4.1 of
+{{MoQTransport}}. The string is converted to the bytes of the Track Name using
+the rules in {{namemapping}}. A Track Name MAY be the empty string.
+
+Within a catalog, the combination of Track Namespace and Track Name (the Full
+Track Name) MUST be unique. Uniqueness, and every other comparison of track
+names or namespaces required by this document (for example in {{dependencies}},
+{{parentname}}, {{parentnamespace}} and {{deltaupdate}}), is determined by exact
+comparison of the mapped bytes as described in {{namemapping}}, never by
+comparison of the JSON source text.
 
 ### Packaging {#packaging}
 Required: Yes    JSON Type: String    Location: Track Object
@@ -598,9 +620,12 @@ Data List {{initdatalist}}.
 Required: Optional    JSON Type: Array    Location: Track Object
 
 Certain tracks may depend on other tracks for decoding. Dependencies holds an
-array of track names {{trackname}} on which the current track is dependent.
+array of track names {{trackname}} on which the current track is dependent. Each
+element is a JSON string mapped and compared as defined in {{namemapping}}.
 Since only the track name is signaled, the namespace of the dependencies is
-assumed to match that of the track declaring the dependencies.
+assumed to match that of the track declaring the dependencies. Each element MUST
+match the Track Name of exactly one other track object in the same namespace
+within the catalog; a catalog in which a dependency does not resolve is invalid.
 
 ### Template {#template}
 Required: Optional   JSON Type: Array    Location: Track Object
@@ -728,14 +753,17 @@ Required: Optional    JSON Type: String    Location: Track Object
 
 A string defining the parent track name {{trackname}} to be cloned or updated.
 This field MUST only be included inside a 'clone' or 'update' operation in a
-delta update {{deltaupdate}}.
+delta update {{deltaupdate}}. The value is mapped and compared as defined in
+{{namemapping}}.
 
 ### Parent namespace {#parentnamespace}
-Required: Optional    JSON Type: String    Location: Track Object
+Required: Optional    JSON Type: Array of String    Location: Track Object
 
-A string defining the parent track namespace {{tracknamespace}} to be cloned. This field
-MUST only be included inside a 'clone' or 'update' operation in a delta update {{deltaupdate}}.
-If this field is missing from a clone operation, then the namespace of the catalog is assumed.
+An array of strings defining the parent track namespace {{tracknamespace}} to be
+cloned, with the same syntax and constraints as {{tracknamespace}}, mapped and
+compared as defined in {{namemapping}}. This field MUST only be included inside
+a 'clone' or 'update' operation in a delta update {{deltaupdate}}. If this field
+is missing from a clone operation, then the namespace of the catalog is assumed.
 
 ### Track duration {#trackduration}
 Required: Optional    JSON Type: Number    Location: Track Object
@@ -994,7 +1022,7 @@ packaged, time-aligned audio and video tracks.
   "tracks": [
     {
       "name": "1080p-video",
-      "namespace": "conference.example.com/conference123/alice",
+      "namespace": ["conference.example.com", "conference123", "alice"],
       "packaging": "loc",
       "isLive": true,
       "targetLatency": 2000,
@@ -1008,7 +1036,7 @@ packaged, time-aligned audio and video tracks.
     },
     {
       "name": "audio",
-      "namespace": "conference.example.com/conference123/alice",
+      "namespace": ["conference.example.com", "conference123", "alice"],
       "packaging": "loc",
       "isLive": true,
       "targetLatency": 2000,
@@ -1139,7 +1167,7 @@ express the track relationships.
   "tracks":[
     {
       "name": "480p15",
-      "namespace": "conference.example.com/conference123/alice",
+      "namespace": ["conference.example.com", "conference123", "alice"],
       "renderGroup": 1,
       "packaging": "loc",
       "isLive": true,
@@ -1153,7 +1181,7 @@ express the track relationships.
     },
     {
       "name": "480p30",
-      "namespace": "conference.example.com/conference123/alice",
+      "namespace": ["conference.example.com", "conference123", "alice"],
       "renderGroup": 1,
       "packaging": "loc",
       "isLive": true,
@@ -1168,7 +1196,7 @@ express the track relationships.
     },
     {
       "name": "1080p15",
-      "namespace": "conference.example.com/conference123/alice",
+      "namespace": ["conference.example.com", "conference123", "alice"],
       "renderGroup": 1,
       "packaging": "loc",
       "isLive": true,
@@ -1184,7 +1212,7 @@ express the track relationships.
 
     {
       "name": "1080p30",
-      "namespace": "conference.example.com/conference123/alice",
+      "namespace": ["conference.example.com", "conference123", "alice"],
       "renderGroup": 1,
       "packaging": "loc",
       "isLive": true,
@@ -1199,7 +1227,7 @@ express the track relationships.
     },
     {
       "name": "audio",
-      "namespace": "conference.example.com/conference123/alice",
+      "namespace": ["conference.example.com", "conference123", "alice"],
       "renderGroup": 1,
       "packaging": "loc",
       "isLive": true,
@@ -1256,7 +1284,7 @@ the other is cloned from an existing track.
       "tracks": [
         {
           "parentName": "video-1080",
-          "parentNamespace": "example.com/custom",
+          "parentNamespace": ["example.com","custom"],
           "name": "video-720",
           "width": 1280,
           "height": 720,
@@ -1299,7 +1327,7 @@ description.
   "tracks": [
     {
       "name": "1080p-video",
-      "namespace": "conference.example.com/conference123/alice",
+      "namespace": ["conference.example.com", "conference123", "alice"],
       "packaging": "loc",
       "isLive": true,
       "buffers": {"target":2000, "min": 1500, "max": 5000},
@@ -1316,7 +1344,7 @@ description.
     },
     {
       "name": "audio",
-      "namespace": "conference.example.com/conference123/alice",
+      "namespace": ["conference.example.com", "conference123", "alice"],
       "packaging": "loc",
       "isLive": true,
       "buffers": {"target":2000, "min": 1500, "max": 5000},
@@ -1346,7 +1374,7 @@ and video tracks.
   "tracks": [
     {
       "name": "video",
-      "namespace": "movies.example.com/assets/boy-meets-girl-season3/episode5",
+      "namespace": ["movies.example.com", "assets", "boy-meets-girl-season3", "episode5"],
       "packaging": "loc",
       "isLive": false,
       "trackDuration": 8072340,
@@ -1359,7 +1387,7 @@ and video tracks.
     },
     {
       "name": "audio",
-      "namespace": "movies.example.com/assets/boy-meets-girl-season3/episode5",
+      "namespace": ["movies.example.com", "assets", "boy-meets-girl-season3", "episode5"],
       "packaging": "loc",
       "isLive": false,
       "trackDuration": 8072340,
@@ -1386,7 +1414,7 @@ tracks using MoQ Secure Objects with AES-128-GCM.
   "tracks": [
     {
       "name": "1080p-video",
-      "namespace": "conference.example.com/conference123/alice",
+      "namespace": ["conference.example.com", "conference123", "alice"],
       "packaging": "loc",
       "isLive": true,
       "targetLatency": 2000,
@@ -1404,7 +1432,7 @@ tracks using MoQ Secure Objects with AES-128-GCM.
     },
     {
       "name": "audio",
-      "namespace": "conference.example.com/conference123/alice",
+      "namespace": ["conference.example.com", "conference123", "alice"],
       "packaging": "loc",
       "isLive": true,
       "targetLatency": 2000,
@@ -1437,21 +1465,21 @@ synchronized data.
   "tracks": [
     {
       "name": "history",
-      "namespace": "conference.example.com/conference123/alice",
+      "namespace": ["conference.example.com", "conference123", "alice"],
       "packaging": "mediatimeline",
       "mimeType": "application/json",
       "depends": ["1080p-video","audio"]
     },
     {
       "name": "identified-objects",
-      "namespace": "another-provider/time-synchronized-data",
+      "namespace": ["another-provider", "time-synchronized-data"],
       "packaging": "eventtimeline",
       "eventType": "com.ai-extraction/appID/v3",
       "depends": ["history"]
     },
     {
       "name": "1080p-video",
-      "namespace": "conference.example.com/conference123/alice",
+      "namespace": ["conference.example.com", "conference123", "alice"],
       "packaging": "loc",
       "isLive": true,
       "targetLatency": 2000,
@@ -1465,7 +1493,7 @@ synchronized data.
     },
     {
       "name": "audio",
-      "namespace": "conference.example.com/conference123/alice",
+      "namespace": ["conference.example.com", "conference123", "alice"],
       "packaging": "loc",
       "isLive": true,
       "targetLatency": 2000,
@@ -1496,7 +1524,7 @@ template values to accommodate different group durations.
   "tracks": [
     {
       "name": "1080p-video",
-      "namespace": "conference.example.com/conference123/alice",
+      "namespace": ["conference.example.com", "conference123", "alice"],
       "packaging": "loc",
       "isLive": true,
       "targetLatency": 2000,
@@ -1511,7 +1539,7 @@ template values to accommodate different group durations.
     },
     {
       "name": "audio",
-      "namespace": "conference.example.com/conference123/alice",
+      "namespace": ["conference.example.com", "conference123", "alice"],
       "packaging": "loc",
       "isLive": true,
       "targetLatency": 2000,
@@ -1671,7 +1699,7 @@ substitution. The following catalog template:
     },
     {
       "name": "tracking-%id%",
-      "namespace": "advertising-decisions/live-sports/%event%",
+      "namespace": ["advertising-decisions", "live-sports", "%event%"],
       "packaging": "eventtimeline",
       "eventType": "com.example.iab.vast",
       "c4m": "%token%"
@@ -1695,7 +1723,7 @@ would be resolved by the subscriber as:
     },
     {
       "name": "tracking-bob",
-      "namespace": "advertising-decisions/live-sports/xyz",
+      "namespace": ["advertising-decisions", "live-sports", "xyz"],
       "packaging": "eventtimeline",
       "eventType": "com.example.iab.vast",
       "c4m": "1234"
@@ -1720,7 +1748,7 @@ specification.
   "tracks": [
     {
       "name": "premium-4k-video",
-      "namespace": "streaming.example.com/live/sports",
+      "namespace": ["streaming.example.com","live","sports"],
       "packaging": "loc",
       "isLive": true,
       "targetLatency": 2000,
@@ -1737,7 +1765,7 @@ specification.
     },
     {
       "name": "standard-720p-video",
-      "namespace": "streaming.example.com/live/sports",
+      "namespace": ["streaming.example.com","live","sports"],
       "packaging": "loc",
       "isLive": true,
       "targetLatency": 2000,
@@ -1754,7 +1782,7 @@ specification.
     },
     {
       "name": "audio",
-      "namespace": "streaming.example.com/live/sports",
+      "namespace": ["streaming.example.com","live","sports"],
       "packaging": "loc",
       "isLive": true,
       "targetLatency": 2000,
@@ -1789,7 +1817,7 @@ a different namespace.
     },
     {
       "name": "camera33-catalog",
-      "namespace": "example.com/blimps-R-us",
+      "namespace": ["example.com","blimps-R-us"],
       "packaging": "catalog",
       "label": "Eye From the Sky video feeds"
     }
@@ -1812,7 +1840,7 @@ track name formats follow the conventions defined in {{MOQLOG}} and {{MOQMETRICS
   "tracks": [
     {
       "name": "video",
-      "namespace": "broadcast.example.com/live/stream1",
+      "namespace": ["broadcast.example.com","live","stream1"],
       "packaging": "loc",
       "isLive": true,
       "targetLatency": 2000,
@@ -1826,7 +1854,7 @@ track name formats follow the conventions defined in {{MOQLOG}} and {{MOQMETRICS
     },
     {
       "name": "audio",
-      "namespace": "broadcast.example.com/live/stream1",
+      "namespace": ["broadcast.example.com","live","stream1"],
       "packaging": "loc",
       "isLive": true,
       "targetLatency": 2000,
@@ -1840,14 +1868,14 @@ track name formats follow the conventions defined in {{MOQLOG}} and {{MOQMETRICS
   ],
   "publishTracks": [
     {
-      "namespace": "moq://metrics.moq.arpa/v1/%resourceId%",
+      "namespace": ["metrics.moq.arpa","v1","%resourceId%"],
       "name": "4",
       "packaging": "moqmetrics",
       "role": "metrics",
       "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
     },
     {
-      "namespace": "moq://moq-syslog.arpa/logs-v1/%resourceId%",
+      "namespace": ["metrics.moq.arpa","v1","%resourceId%"],
       "name": "6",
       "packaging": "moqlog",
       "role": "log",
@@ -1910,7 +1938,8 @@ The explicit format contains an array of records. Each record consists of
 an array of three required items, whose ordinal position defines their type:
 
 * The first item holds the media presentation timestamp, expressed as a JSON Number.
-  This value MUST match the media presentation timestamp, expressed as the floor in integral milliseconds, of the first media sample in the referenced Object. Implementers
+  This value MUST match the media presentation timestamp, expressed as the floor in
+  integral milliseconds, of the first media sample in the referenced Object. Implementers
   who require increased time precision can parse the retrieved media object itself.
 * The second item holds the MOQT Location of the entry, defined as a tuple of the MOQT
   Group ID and MOQT Object ID, and expressed as a JSON Array of Numbers, where the
@@ -2166,16 +2195,13 @@ format specified in Section 4 of {{MOQLOG}}.
 
 ## Log track namespace and name {#logtrackname}
 
-TODO: Finalize on track naming
+The log track's namespace is defined by the {{tracknamespace}} field and converted to bytes
+according to {{namemapping}}.
 
-Log tracks MUST use the namespace and track name format defined in Section 3
-of {{MOQLOG}}. The Track Namespace consists of the tuples:
-`(moq://moq-syslog.arpa/logs-v1/),(resourceID)` where resourceID is a unique
-identifier for the publishing resource.
-
-The Track Name is a single byte containing the log priority level in binary.
-Priority levels range from 0 (Emergency) to 7 (Debug), following syslog severity
-conventions.
+The Track Name is the ASCII decimal representation of the log priority level
+(for example, "6" for Informational), mapped to bytes as defined in
+{{namemapping}}. Priority levels range from 0 (Emergency) to 7 (Debug), following syslog
+severity conventions.
 
 ## Log track Group ID and Object ID {#loggroupobject}
 
@@ -2221,15 +2247,11 @@ of {{MOQMETRICS}}.
 
 ## Metrics track namespace and name {#metricstrackname}
 
-TODO: Finalize the track naming.
-
-Metrics tracks MUST use the namespace and track name format defined in Section 3
- of {{MOQMETRICS}}. The Track Namespace consists of the tuples:
-`(moq://metrics.moq.arpa/v1/),(resourceID)` where resourceID is a unique identifier
-for the publishing resource.
+The metric track's namespace is defined by the {{tracknamespace}} field and converted
+to bytes according to {{namemapping}}.
 
 The Track Name identifies the granularity level for the metrics being published,
-specified as a single tuple `(<granularity-level>)` where granularity-level is a
+specified as a ASCII decimal representation,  where granularity-level is a
 value from 0 (Emergency) to 7 (Debug). Higher priority levels (lower numbers)
 indicate more critical metrics that should always be reported.
 
@@ -2434,6 +2456,17 @@ MOQT {{MoQTransport}} and repeated here for convenience:
 
 Note: This encoding ensures that the structural delimiters (- and --) remain unambiguous.
 
+The byte values that are serialized by this encoding are those produced from
+the catalog's namespace and name strings by {{namemapping}}. For example, the
+track object
+
+~~~json
+{ "namespace": ["customer", "livestream", "123"], "name": "catalog" }
+~~~
+
+is rendered as `customer-livestream-123--catalog`, and a track named `"café"`
+in the same namespace is rendered as `customer-livestream-123--caf.c3.a9`.
+
 ### Example MSF URLs
 
 * URL pointing at a catalog track (either WebTransport or native QUIC may be used):
@@ -2463,6 +2496,100 @@ Note: This encoding ensures that the structural delimiters (- and --) remain una
   SW56HKKneH2Dbyq6NHBI2#msf:customerID-broadcastID--catalog&c4m=gqh
   kYWxnIGVzaGFyqGR0eXBNhdZ9hdWQAY3VybGZlbWlzcwZleWV2aW5uZWlhdGVwQWN
   yZW5lYnJmcmVqMTIzNDU2NzgwMHZpc3VlZF9hdD0xNzMwNDM
+
+## Mapping catalog strings to MOQT byte values {#namemapping}
+
+MOQT Track Namespace Fields and Track Names are sequences of bytes, compared
+byte-for-byte, and Section 2.4.1 of {{MoQTransport}} requires any specification
+that constrains them to define the canonical mapping into those bytes. This
+section defines that mapping for every catalog field that carries a Track
+Namespace Field or a Track Name: {{tracknamespace}}, {{trackname}},
+{{dependencies}}, {{parentname}} and {{parentnamespace}}. Extension fields that
+carry track names or namespaces MUST use the same mapping.
+
+### Producing bytes from a JSON string
+
+The MOQT byte value corresponding to a JSON string is the UTF-8 {{UTF8}}
+encoding of the sequence of Unicode scalar values obtained by parsing the JSON
+string per Section 7 of {{JSON}}. In particular:
+
+* JSON escape sequences are resolved before encoding. The string `"café"`
+  and the string `"café"` denote the same sequence of scalar values and
+  therefore map to the same bytes (`63 61 66 c3 a9`). Whether a producer writes
+  a character literally or escaped has no effect on the resulting Track Name.
+
+* No Unicode normalization (NFC, NFD, NFKC, NFKD), case folding, or other
+  transformation is applied, either by the producer when serializing or by the
+  consumer when parsing. The scalar values in the catalog are encoded exactly
+  as given. Consequently, "é" written as U+00E9 and "é" written as U+0065
+  U+0301 are different Track Names. Producers that need two catalogs, or a
+  catalog and an out-of-band reference, to agree on a name, are responsible for
+  emitting identical scalar value sequences.
+
+* Producers MUST NOT emit a JSON string in any of the fields listed above that,
+  after resolving escapes, contains a code point that is not a Unicode scalar
+  value; that is, an unpaired surrogate code point in the range U+D800 to
+  U+DFFF (for example `"\uDEAD"`) is not permitted. Such a value has no UTF-8
+  encoding. A consumer that encounters one MUST treat the catalog as invalid.
+
+* Producers MUST NOT emit a U+0000 (NUL) code point in these fields. (This
+  restriction is a conservative interoperability measure; NUL is valid UTF-8
+  but is rejected or truncated by many string libraries.)
+
+The catalog document itself MUST be encoded in UTF-8, as required by Section 8.1
+of {{JSON}}, and MUST NOT begin with a byte order mark.
+
+### Comparing names
+
+Two Track Names, or two Track Namespace Fields, are equal if and only if their
+mapped byte sequences are identical. Two Track Namespaces are equal if and only
+if they have the same number of fields and each corresponding field is equal.
+Implementations MUST NOT use locale-aware, case-insensitive, or
+normalization-aware string comparison when matching track names or namespaces
+within a catalog, between a catalog and a delta update, or between a catalog and
+the names carried in MOQT control messages. Note that the JSON string comparison
+guidance in Section 8.3 of {{JSON}} yields the same result as byte comparison
+for strings that satisfy the constraints above.
+
+### Consuming names received from MOQT
+
+The mapping in this section is a partial function from JSON strings to bytes, not
+a bijection from bytes to JSON strings: a Track Name or Track Namespace Field
+that is not valid UTF-8 cannot be expressed in an MSF catalog. When an
+implementation needs to compare a name obtained from an MOQT control message
+(for example the Track Namespace of a PUBLISH_NAMESPACE, or the Full Track Name
+in a SUBSCRIBE) against a catalog, it MUST compare the raw MOQT bytes against
+the mapped bytes of the catalog string; it MUST NOT decode the MOQT bytes as
+UTF-8 and compare the result as text. A name received from MOQT that is not
+valid UTF-8 can never match an entry in a catalog.
+
+Consequently, an MSF publisher MUST only publish tracks whose Track Namespace
+Fields and Track Names are valid UTF-8 and satisfy the constraints of this
+section. Tracks that use names outside this space (for example, names defined by
+other specifications as raw binary values) cannot be described in a catalog
+track object.
+
+### Relationship to the serialized form
+
+The hyphen-and-percent style serialization defined in Section 1.5 of
+{{MoQTransport}} and used in MSF URL fragments ({{namespacenameencoding}}) is an encoding
+of the byte values produced by this section, not of the JSON source text. To
+render a catalog Full Track Name in that form, an implementation first maps each
+namespace element and the track name to bytes as defined above, then applies
+the MOQT Section 1.5 encoding to those bytes.
+
+### Examples of string-to-byte mappings
+
+| JSON value      | Mapped bytes (hex)   | Note                                          |
+|:----------------|:---------------------|:----------------------------------------------|
+| `"video"`       | `76 69 64 65 6f`     |                                               |
+| `"café"`        | `63 61 66 c3 a9`     | U+00E9 (precomposed), written literally       |
+| `"caf\u00e9"`   | `63 61 66 c3 a9`     | same JSON escape rules: same track as above   |
+| `"cafe\u0301"`  | `63 61 66 65 cc 81`  | U+0065 + U+0301 (decomposed); different track |
+| `"Video"`       | `56 69 64 65 6f`     | different track from `"video"`                |
+| `""`            | (empty)              | valid Track Name; invalid namespace field     |
+| `"\uDEAD"`      | none                 | invalid; catalog MUST be rejected             |
+{: #namemapping-examples title="Example string-to-byte mappings"}
 
 ## Initiating a broadcast
 An MSF publisher MUST publish a catalog track object before publishing any media
@@ -2670,7 +2797,13 @@ entry with a type of 'object-property'.
 
 # Security Considerations
 
-ToDo
+Track names and namespaces are compared as raw bytes ({{namemapping}}). Because
+no Unicode normalization or case folding is applied, visually confusable names
+(for example, names differing only in composed versus decomposed accents, or in
+characters from different scripts that render identically) are distinct tracks.
+Catalog producers SHOULD avoid emitting distinct tracks whose names are
+confusable to a human reader, and applications that display track names to
+users SHOULD NOT rely on visual inspection to establish identity.
 
 # IANA Considerations {#IANA}
 
