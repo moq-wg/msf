@@ -472,6 +472,37 @@ as defined in Table 3.
 
 Table 3: Allowed packaging values
 
+Which additional track fields are required depends on the pair
+(`packaging`, `role`) - see {{requiredfields}}.
+
+### Required fields per packaging and role {#requiredfields}
+
+{{tracknamespace}}, {{trackname}}, {{packaging}}, and {{islive}} are
+required on every track. Table 5 lists the fields that MUST also be
+present for each (`packaging`, `role`) pair. Fields not listed remain
+OPTIONAL. Where an individual field definition sets a stricter constraint
+(e.g. `Conditional`), that constraint wins.
+
+Fields with no meaning for a given pair SHOULD NOT be included; parsers
+ignore fields they do not understand.
+
+| Packaging       | Role             | Also required                          |
+|:================|:=================|:=======================================|
+| loc             | audio            | codec, samplerate, channelConfig       |
+| loc             | video            | codec, framerate                       |
+| loc             | audiodescription | codec, samplerate, channelConfig, lang |
+| loc             | signlanguage     | codec, framerate                       |
+| eventtimeline   | eventtimeline    | eventType                              |
+| mediatimeline   | mediatimeline    | -                                      |
+| moqlog          | log              | -                                      |
+| moqmetrics      | metrics          | -                                      |
+| catalog         | any              | -                                      |
+
+Table 5: Required track fields per (packaging, role)
+
+Specifications defining new packaging values extend this table with
+their own per-role rows.
+
 ### Event timeline type {#eventtype}
 Required: Optional    JSON Type: String    Location: Track Object
 
@@ -490,6 +521,9 @@ are described in Table 4. These role values are case-sensitive.
 
 This role field MAY be used in conjunction with the Mimetype {{mimetype}} to
 fully describe the content of the track.
+
+See {{requiredfields}} for the fields that MUST accompany each role under a
+given {{packaging}}.
 
 Table 4: Reserved track roles
 
