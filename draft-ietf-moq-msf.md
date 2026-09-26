@@ -2032,6 +2032,36 @@ before parsing the payload of the event timeline track.
 Usage of this track property is optional. Absence of the MSF_EVENT_TIMELINE_HEADER Track
 property indicates that no header data is provided for the Event Timeline Track.
 
+### Example of Event Timeline header data
+Consider an example of drone telemetry. The catalog defines the track as an event timeline.
+
+~~~json
+{
+  "name": "telemetry",
+  "namespace": "live.example.com/flight/1",
+  "packaging": "eventtimeline",
+  "eventType": "com.example.dronetelemetry",
+  "depends": ["1080p-video"]
+}
+~~~
+
+The publisher sends contextual metadata in the MSF_EVENT_TIMELINE_HEADER property, serialized
+as the following JSON object.
+
+~~~json
+{"crs": "WGS84", "fields": ["latitude", "longitude", "altitude"], "altitudeUnit": "meter"}
+~~~
+
+This data is used by the subscriber to correctly interpret the event timeline records. Transmitting this
+data once in the property is more efficient than repeating it in each record.
+
+~~~json
+[
+  {"L": [0,0], "data": [47.1812, 8.4592, 488.2]},
+  {"L": [1,0], "data": [47.1662, 8.5155, 502.7]}
+]
+~~~
+
 ## Event Timeline data format {#eventtimelineformat}
 An event timeline track is a JSON {{JSON}} document. This document MAY be compressed
 using the MSF_COMPRESSION property ({{compression-signaling}}). The document
