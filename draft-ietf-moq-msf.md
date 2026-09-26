@@ -156,6 +156,29 @@ within the same MOQT Group.
 When LOC packaging is used for a track, the catalog packaging attribute
 ({{packaging}}) MUST be present and it MUST be populated with a value of "loc".
 
+### LOC to MOQT Stream mapping {#loc-stream-mapping}
+
+LOC {{LOC}} defines only the payload container carried in each MOQT Object; it
+does not specify how those Objects are mapped onto MOQT Streams. MSF publishers
+using LOC packaging MUST select one of the mapping modes listed below, and
+subscribers MUST be prepared to consume any of them. The chosen mode is
+signaled per-track via the {{packagingmetadata}} field using the
+`streamMapping` key.
+
+| streamMapping value | Description                                                                                          |
+|:====================|:=====================================================================================================|
+| object              | Each MOQT Object is sent on its own MOQT Stream. Default; RECOMMENDED for the lowest latency.        |
+| subgroup            | All MOQT Objects within a single MOQT Subgroup are sent on the same MOQT Stream, in Object ID order. |
+| group               | All MOQT Objects within a single MOQT Group are sent on the same MOQT Stream, in Object ID order.    |
+
+Table: LOC stream-mapping modes signaled via `packagingMetadata`
+
+If `packagingMetadata` is absent, or if it is present but does not carry a
+`streamMapping` key, the mode `object` MUST be assumed.
+
+Regardless of the selected mode, the mapping of samples to Objects and Groups
+defined above (one sample per Object, one GOP per Group) is unchanged.
+
 ## Time-alignment {#timealignment}
 MSF Tracks MAY be time-aligned. Those that are, are subject to the following
 requirements:
@@ -403,6 +426,7 @@ Table 2 lists the fields defined within each track object.
 | Track namespace         | namespace              | {{tracknamespace}}        |
 | Track name              | name                   | {{trackname}}             |
 | Packaging               | packaging              | {{packaging}}             |
+| Packaging metadata      | packagingMetadata      | {{packagingmetadata}}     |
 | Event timeline type     | eventType              | {{eventtype}}             |
 | Is Live                 | isLive                 | {{islive}}                |
 | Target latency          | targetLatency          | {{targetlatency}}         |
@@ -471,6 +495,31 @@ as defined in Table 3.
 | Catalog         | catalog        | See {{catalog}}            |
 
 Table 3: Allowed packaging values
+
+### Packaging metadata {#packagingmetadata}
+Required: Optional    JSON Type: String    Location: Track Object
+
+Additional parameters for the {{packaging}} value in use, encoded as a
+semicolon-separated list of `key=value` pairs (e.g. `key1=v1;key2=v2`).
+Keys and values are case-sensitive and MUST NOT contain whitespace.
+
+The permitted keys and their meaning are defined by the specification
+for the packaging value in use. Subscribers MUST ignore any key that
+is not defined for the current packaging value. If the same key appears
+more than once, the first occurrence is used.
+
+For `packaging` value "loc", the following keys are defined:
+
+* `streamMapping` - the LOC to MOQT Stream mapping mode. Permitted values are
+  listed in {{loc-stream-mapping}}. If this key is absent, the value `object`
+  is assumed.
+
+Example:
+
+~~~
+"packaging": "loc",
+"packagingMetadata": "streamMapping=subgroup"
+~~~
 
 ### Event timeline type {#eventtype}
 Required: Optional    JSON Type: String    Location: Track Object
@@ -1872,9 +1921,12 @@ In this example:
   as defined in the respective specifications.
 
 # Media transmission
-The MOQT Groups and MOQT Objects need to be mapped to MOQT Streams. Irrespective
-of the {{mediapackaging}} in place, each MOQT Object MUST be mapped to a new
-MOQT Stream.
+The MOQT Groups and MOQT Objects of a track need to be mapped to MOQT Streams.
+The mapping is determined by the {{mediapackaging}} in use for that track.
+For LOC-packaged tracks, the mapping is signaled per-track via
+{{packagingmetadata}} as defined in {{loc-stream-mapping}}. Other packaging
+formats defined by this document, or by referencing specifications, MUST
+specify their own Object-to-Stream mapping rules.
 
 ## Group numbering
 Group IDs for a track MUST be unique and MUST increase monotonically. Within a
