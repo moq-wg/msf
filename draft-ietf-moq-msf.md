@@ -1817,7 +1817,7 @@ a different namespace.
     },
     {
       "name": "camera33-catalog",
-      "namespace": ["example.com',"blimps-R-us"],
+      "namespace": ["example.com","blimps-R-us"],
       "packaging": "catalog",
       "label": "Eye From the Sky video feeds"
     }
