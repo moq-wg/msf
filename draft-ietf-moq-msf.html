@@ -1798,8 +1798,8 @@ necessary features.<a href="#section-3-5" class="pilcrow">¶</a></p>
 <p id="section-4.1-1">This specification references Low Overhead Container (LOC) <span>[<a href="#LOC" class="cite xref">LOC</a>]</span> to define how
 audio and video content is packaged. With this packaging mode, each
 EncodedAudioChunk or EncodedVideoChunk sample is placed in a separate MOQT
-Object. Samples that belong to the same Group of Pictures (GOP) <span class="bcp14">MUST</span> be placed
-within the same MOQT Group.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
+Object. All MOQT Objects <span class="bcp14">SHOULD</span> be placed on MOQT Sub-Group 0. Samples that belong to
+the same Group of Pictures (GOP) <span class="bcp14">MUST</span> be placed within the same MOQT Group.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
 <p id="section-4.1-2">When LOC packaging is used for a track, the catalog packaging attribute
 (<a href="#packaging" class="auto internal xref">Section 5.2.4</a>) <span class="bcp14">MUST</span> be present and it <span class="bcp14">MUST</span> be populated with a value of "loc".<a href="#section-4.1-2" class="pilcrow">¶</a></p>
 </section>
@@ -4366,9 +4366,9 @@ as defined in the respective specifications.<a href="#section-5.6.17-4.4.1" clas
       <h2 id="name-media-transmission">
 <a href="#section-6" class="section-number selfRef">6. </a><a href="#name-media-transmission" class="section-name selfRef">Media transmission</a>
       </h2>
-<p id="section-6-1">The MOQT Groups and MOQT Objects need to be mapped to MOQT Streams. Irrespective
-of the <a href="#mediapackaging" class="auto internal xref">Section 4</a> in place, each MOQT Object <span class="bcp14">MUST</span> be mapped to a new
-MOQT Stream.<a href="#section-6-1" class="pilcrow">¶</a></p>
+<p id="section-6-1">The MOQT Groups and MOQT Objects need to be mapped to MOQT Streams. This mapping is
+defined by the packaging <a href="#mediapackaging" class="auto internal xref">Section 4</a> type of each track. Each MOQT Object <span class="bcp14">SHOULD</span>
+be placed on MOQT sub-group 0, unless otherwise defined by the packaging type.<a href="#section-6-1" class="pilcrow">¶</a></p>
 <div id="group-numbering">
 <section id="section-6.1">
         <h3 id="name-group-numbering">

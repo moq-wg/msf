@@ -328,8 +328,9 @@ Table of Contents
    This specification references Low Overhead Container (LOC) [LOC] to
    define how audio and video content is packaged.  With this packaging
    mode, each EncodedAudioChunk or EncodedVideoChunk sample is placed in
-   a separate MOQT Object.  Samples that belong to the same Group of
-   Pictures (GOP) MUST be placed within the same MOQT Group.
+   a separate MOQT Object.  All MOQT Objects SHOULD be placed on MOQT
+   Sub-Group 0.  Samples that belong to the same Group of Pictures (GOP)
+   MUST be placed within the same MOQT Group.
 
    When LOC packaging is used for a track, the catalog packaging
    attribute (Section 5.2.4) MUST be present and it MUST be populated
@@ -2306,8 +2307,9 @@ Table of Contents
 6.  Media transmission
 
    The MOQT Groups and MOQT Objects need to be mapped to MOQT Streams.
-   Irrespective of the Section 4 in place, each MOQT Object MUST be
-   mapped to a new MOQT Stream.
+   This mapping is defined by the packaging Section 4 type of each
+   track.  Each MOQT Object SHOULD be placed on MOQT sub-group 0, unless
+   otherwise defined by the packaging type.
 
 6.1.  Group numbering
 
