@@ -10,25 +10,25 @@
 <meta content="
        This document specifies the MOQT Streaming Format, designed to operate on Media Over QUIC Transport. 
     " name="description">
-<meta content="xml2rfc 3.34.0" name="generator">
+<meta content="xml2rfc 3.34.1" name="generator">
 <meta content="MoQ" name="keyword">
 <meta content="MoQTransport" name="keyword">
 <meta content="MSF" name="keyword">
 <meta content="draft-ietf-moq-msf-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.34.0
-    Python 3.14.7
-    ConfigArgParse 1.7.5
+  xml2rfc 3.34.1
+    Python 3.14.8
+    ConfigArgParse 1.8.0
     google-i18n-address 3.1.1
     intervaltree 3.2.1
     Jinja2 3.1.6
     lxml 6.1.1
     natsort 8.4.0
-    platformdirs 4.11.3
+    platformdirs 4.13.4
     pycountry 24.6.1
     PyYAML 6.0.3
     requests 2.33.1
-    wcwidth 0.8.2
+    wcwidth 0.9.2
 -->
 <link href="draft-ietf-moq-msf.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -1044,11 +1044,11 @@ svg {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">MOQT Streaming Format</td>
-<td class="right">August 2026</td>
+<td class="right">October 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Law &amp; Nandakumar</td>
-<td class="center">Expires 26 February 2027</td>
+<td class="center">Expires 1 May 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1061,12 +1061,12 @@ svg {
 <dd class="internet-draft">draft-ietf-moq-msf-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-08-25" class="published">25 August 2026</time>
+<time datetime="2026-10-28" class="published">28 October 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-02-26">26 February 2027</time></dd>
+<dd class="expires"><time datetime="2027-05-01">1 May 2027</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1120,7 +1120,7 @@ svg {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 26 February 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 1 May 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1551,25 +1551,45 @@ svg {
                 </ul>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.2">
-                <p id="section-toc.1-1.11.2.2.1"><a href="#section-11.2" class="auto internal xref">11.2</a>.  <a href="#name-initiating-a-broadcast" class="internal xref">Initiating a broadcast</a></p>
+                <p id="section-toc.1-1.11.2.2.1"><a href="#section-11.2" class="auto internal xref">11.2</a>.  <a href="#name-mapping-catalog-strings-to-" class="internal xref">Mapping catalog strings to MOQT byte values</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.2.2.1">
+                    <p id="section-toc.1-1.11.2.2.2.1.1"><a href="#section-11.2.1" class="auto internal xref">11.2.1</a>.  <a href="#name-producing-bytes-from-a-json" class="internal xref">Producing bytes from a JSON string</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.2.2.2">
+                    <p id="section-toc.1-1.11.2.2.2.2.1"><a href="#section-11.2.2" class="auto internal xref">11.2.2</a>.  <a href="#name-comparing-names" class="internal xref">Comparing names</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.2.2.3">
+                    <p id="section-toc.1-1.11.2.2.2.3.1"><a href="#section-11.2.3" class="auto internal xref">11.2.3</a>.  <a href="#name-consuming-names-received-fr" class="internal xref">Consuming names received from MOQT</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.2.2.4">
+                    <p id="section-toc.1-1.11.2.2.2.4.1"><a href="#section-11.2.4" class="auto internal xref">11.2.4</a>.  <a href="#name-relationship-to-the-seriali" class="internal xref">Relationship to the serialized form</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.2.2.5">
+                    <p id="section-toc.1-1.11.2.2.2.5.1"><a href="#section-11.2.5" class="auto internal xref">11.2.5</a>.  <a href="#name-examples-of-string-to-byte-" class="internal xref">Examples of string-to-byte mappings</a></p>
+</li>
+                </ul>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.3">
-                <p id="section-toc.1-1.11.2.3.1"><a href="#section-11.3" class="auto internal xref">11.3</a>.  <a href="#name-ending-a-live-broadcast" class="internal xref">Ending a live broadcast</a></p>
+                <p id="section-toc.1-1.11.2.3.1"><a href="#section-11.3" class="auto internal xref">11.3</a>.  <a href="#name-initiating-a-broadcast" class="internal xref">Initiating a broadcast</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.4">
-                <p id="section-toc.1-1.11.2.4.1"><a href="#section-11.4" class="auto internal xref">11.4</a>.  <a href="#name-authorization" class="internal xref">Authorization</a></p>
+                <p id="section-toc.1-1.11.2.4.1"><a href="#section-11.4" class="auto internal xref">11.4</a>.  <a href="#name-ending-a-live-broadcast" class="internal xref">Ending a live broadcast</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.5">
+                <p id="section-toc.1-1.11.2.5.1"><a href="#section-11.5" class="auto internal xref">11.5</a>.  <a href="#name-authorization" class="internal xref">Authorization</a></p>
 <ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.4.2.1">
-                    <p id="section-toc.1-1.11.2.4.2.1.1"><a href="#section-11.4.1" class="auto internal xref">11.4.1</a>.  <a href="#name-discovering-authorization-r" class="internal xref">Discovering Authorization Requirements</a></p>
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.5.2.1">
+                    <p id="section-toc.1-1.11.2.5.2.1.1"><a href="#section-11.5.1" class="auto internal xref">11.5.1</a>.  <a href="#name-discovering-authorization-r" class="internal xref">Discovering Authorization Requirements</a></p>
 </li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.4.2.2">
-                    <p id="section-toc.1-1.11.2.4.2.2.1"><a href="#section-11.4.2" class="auto internal xref">11.4.2</a>.  <a href="#name-token-acquisition" class="internal xref">Token Acquisition</a></p>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.5.2.2">
+                    <p id="section-toc.1-1.11.2.5.2.2.1"><a href="#section-11.5.2" class="auto internal xref">11.5.2</a>.  <a href="#name-token-acquisition" class="internal xref">Token Acquisition</a></p>
 </li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.4.2.3">
-                    <p id="section-toc.1-1.11.2.4.2.3.1"><a href="#section-11.4.3" class="auto internal xref">11.4.3</a>.  <a href="#name-presenting-authorization" class="internal xref">Presenting Authorization</a></p>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.5.2.3">
+                    <p id="section-toc.1-1.11.2.5.2.3.1"><a href="#section-11.5.3" class="auto internal xref">11.5.3</a>.  <a href="#name-presenting-authorization" class="internal xref">Presenting Authorization</a></p>
 </li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.4.2.4">
-                    <p id="section-toc.1-1.11.2.4.2.4.1"><a href="#section-11.4.4" class="auto internal xref">11.4.4</a>.  <a href="#name-handling-authorization-fail" class="internal xref">Handling Authorization Failures</a></p>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.5.2.4">
+                    <p id="section-toc.1-1.11.2.5.2.4.1"><a href="#section-11.5.4" class="auto internal xref">11.5.4</a>.  <a href="#name-handling-authorization-fail" class="internal xref">Handling Authorization Failures</a></p>
 </li>
                 </ul>
 </li>
@@ -1596,6 +1616,11 @@ svg {
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13">
             <p id="section-toc.1-1.13.1"><a href="#section-13" class="auto internal xref">13</a>. <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.1">
+                <p id="section-toc.1-1.13.2.1.1"><a href="#section-13.1" class="auto internal xref">13.1</a>.  <a href="#name-track-naming" class="internal xref">Track naming</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14">
             <p id="section-toc.1-1.14.1"><a href="#section-14" class="auto internal xref">14</a>. <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
@@ -2455,10 +2480,30 @@ is specified in Table 2.<a href="#section-5.2.1-1" class="pilcrow">¶</a></p>
 <a href="#section-5.2.2" class="section-number selfRef">5.2.2. </a><a href="#name-track-namespace" class="section-name selfRef">Track namespace</a>
           </h4>
 <p id="section-5.2.2-1">Required: Optional    JSON Type: String    Location: Track Object<a href="#section-5.2.2-1" class="pilcrow">¶</a></p>
-<p id="section-5.2.2-2">The name space under which the track name is defined. See section 2.3 of
-<span>[<a href="#MoQTransport" class="cite xref">MoQTransport</a>]</span>. The track namespace is optional. If it is not declared within
-a track, then each track <span class="bcp14">MUST</span> inherit the namespace of the catalog track. A
-namespace declared in a track object overrides any inherited name space.<a href="#section-5.2.2-2" class="pilcrow">¶</a></p>
+<p id="section-5.2.2-2">The Track Namespace under which the track name is defined. See Section 2.4.1 of
+<span>[<a href="#MoQTransport" class="cite xref">MoQTransport</a>]</span>. The value is a single JSON string in which the '/' character
+(U+002F SOLIDUS) delimits the boundaries between Track Namespace Fields. The
+string is split at each '/' character, and the resulting substrings correspond,
+in order, to the Track Namespace Fields of the MOQT Track Namespace. Each substring
+is converted to the bytes of its Track Namespace Field using the rules in <a href="#namemapping" class="auto internal xref">Section 11.2</a>.
+The split is performed on the string value after JSON decoding (Section 7 of <span>[<a href="#RFC8259" class="cite xref">RFC8259</a>]</span>).
+Any U+002F character in the decoded value is a field delimiter, regardless of whether
+it appeared in the JSON text as "/", "\/" or "\u002F". A U+002F character <span class="bcp14">MUST NOT</span> be
+part of a field value and is always interpreted as a field boundary.<a href="#section-5.2.2-2" class="pilcrow">¶</a></p>
+<p id="section-5.2.2-3">For example, the value "example.com/live/channel1" represents a Track
+Namespace with three fields: "example.com", "live" and "channel1".<a href="#section-5.2.2-3" class="pilcrow">¶</a></p>
+<p id="section-5.2.2-4">The string <span class="bcp14">MUST</span> yield between 1 and 32 fields, and every field <span class="bcp14">MUST</span> be
+non-empty, so that the resulting Track Namespace satisfies the constraints of
+Section 2.4.1 of <span>[<a href="#MoQTransport" class="cite xref">MoQTransport</a>]</span>. Consequently, the string <span class="bcp14">MUST NOT</span> be empty,
+<span class="bcp14">MUST NOT</span> begin or end with a '/' character, and <span class="bcp14">MUST NOT</span> contain two
+consecutive '/' characters. A parser that encounters a value that is not a
+string, an empty string, a string yielding more than 32 fields, or a string
+yielding an empty field <span class="bcp14">MUST</span> treat the catalog as invalid.<a href="#section-5.2.2-4" class="pilcrow">¶</a></p>
+<p id="section-5.2.2-5">The track namespace is optional. If it is not declared within a track object,
+then the track <span class="bcp14">MUST</span> inherit the Track Namespace of the catalog track, that is,
+the Track Namespace under which the catalog itself was subscribed. A namespace
+declared in a track object replaces (and does not extend) any inherited
+namespace.<a href="#section-5.2.2-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="trackname">
@@ -2467,8 +2512,15 @@ namespace declared in a track object overrides any inherited name space.<a href=
 <a href="#section-5.2.3" class="section-number selfRef">5.2.3. </a><a href="#name-track-name" class="section-name selfRef">Track name</a>
           </h4>
 <p id="section-5.2.3-1">Required: Yes    JSON Type: String    Location: Track Object<a href="#section-5.2.3-1" class="pilcrow">¶</a></p>
-<p id="section-5.2.3-2">A string defining the name of the track. See section 2.3 of <span>[<a href="#MoQTransport" class="cite xref">MoQTransport</a>]</span>.
-Within the catalog, track names <span class="bcp14">MUST</span> be unique per namespace.<a href="#section-5.2.3-2" class="pilcrow">¶</a></p>
+<p id="section-5.2.3-2">A JSON string defining the MOQT Track Name of the track. See Section 2.4.1 of
+<span>[<a href="#MoQTransport" class="cite xref">MoQTransport</a>]</span>. The string is converted to the bytes of the Track Name using
+the rules in <a href="#namemapping" class="auto internal xref">Section 11.2</a>. A Track Name <span class="bcp14">MAY</span> be the empty string.<a href="#section-5.2.3-2" class="pilcrow">¶</a></p>
+<p id="section-5.2.3-3">Within a catalog, the combination of Track Namespace and Track Name (the Full
+Track Name) <span class="bcp14">MUST</span> be unique. Uniqueness, and every other comparison of track
+names or namespaces required by this document (for example in <a href="#dependencies" class="auto internal xref">Section 5.2.14</a>,
+<a href="#parentname" class="auto internal xref">Section 5.2.33</a>, <a href="#parentnamespace" class="auto internal xref">Section 5.2.34</a> and <a href="#deltaupdate" class="auto internal xref">Section 5.1.6</a>), is determined by exact
+comparison of the mapped bytes as described in <a href="#namemapping" class="auto internal xref">Section 11.2</a>, never by
+comparison of the JSON source text.<a href="#section-5.2.3-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="packaging">
@@ -2736,9 +2788,12 @@ Data List <a href="#initdatalist" class="auto internal xref">Section 5.1.7</a>.<
           </h4>
 <p id="section-5.2.14-1">Required: Optional    JSON Type: Array    Location: Track Object<a href="#section-5.2.14-1" class="pilcrow">¶</a></p>
 <p id="section-5.2.14-2">Certain tracks may depend on other tracks for decoding. Dependencies holds an
-array of track names <a href="#trackname" class="auto internal xref">Section 5.2.3</a> on which the current track is dependent.
+array of track names <a href="#trackname" class="auto internal xref">Section 5.2.3</a> on which the current track is dependent. Each
+element is a JSON string mapped and compared as defined in <a href="#namemapping" class="auto internal xref">Section 11.2</a>.
 Since only the track name is signaled, the namespace of the dependencies is
-assumed to match that of the track declaring the dependencies.<a href="#section-5.2.14-2" class="pilcrow">¶</a></p>
+assumed to match that of the track declaring the dependencies. Each element <span class="bcp14">MUST</span>
+match the Track Name of exactly one other track object in the same namespace
+within the catalog; a catalog in which a dependency does not resolve is invalid.<a href="#section-5.2.14-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="template">
@@ -2941,7 +2996,8 @@ the standard Tags for Identifying Languages as defined by <span>[<a href="#LANG"
 <p id="section-5.2.33-1">Required: Optional    JSON Type: String    Location: Track Object<a href="#section-5.2.33-1" class="pilcrow">¶</a></p>
 <p id="section-5.2.33-2">A string defining the parent track name <a href="#trackname" class="auto internal xref">Section 5.2.3</a> to be cloned or updated.
 This field <span class="bcp14">MUST</span> only be included inside a 'clone' or 'update' operation in a
-delta update <a href="#deltaupdate" class="auto internal xref">Section 5.1.6</a>.<a href="#section-5.2.33-2" class="pilcrow">¶</a></p>
+delta update <a href="#deltaupdate" class="auto internal xref">Section 5.1.6</a>. The value is mapped and compared as defined in
+<a href="#namemapping" class="auto internal xref">Section 11.2</a>.<a href="#section-5.2.33-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="parentnamespace">
@@ -2950,9 +3006,11 @@ delta update <a href="#deltaupdate" class="auto internal xref">Section 5.1.6</a>
 <a href="#section-5.2.34" class="section-number selfRef">5.2.34. </a><a href="#name-parent-namespace" class="section-name selfRef">Parent namespace</a>
           </h4>
 <p id="section-5.2.34-1">Required: Optional    JSON Type: String    Location: Track Object<a href="#section-5.2.34-1" class="pilcrow">¶</a></p>
-<p id="section-5.2.34-2">A string defining the parent track namespace <a href="#tracknamespace" class="auto internal xref">Section 5.2.2</a> to be cloned. This field
-<span class="bcp14">MUST</span> only be included inside a 'clone' or 'update' operation in a delta update <a href="#deltaupdate" class="auto internal xref">Section 5.1.6</a>.
-If this field is missing from a clone operation, then the namespace of the catalog is assumed.<a href="#section-5.2.34-2" class="pilcrow">¶</a></p>
+<p id="section-5.2.34-2">A string defining the parent track namespace <a href="#tracknamespace" class="auto internal xref">Section 5.2.2</a> to be
+cloned, with the same syntax and constraints as <a href="#tracknamespace" class="auto internal xref">Section 5.2.2</a>, mapped and
+compared as defined in <a href="#namemapping" class="auto internal xref">Section 11.2</a>. This field <span class="bcp14">MUST</span> only be included inside
+a 'clone' or 'update' operation in a delta update <a href="#deltaupdate" class="auto internal xref">Section 5.1.6</a>. If this field
+is missing from a clone operation, then the namespace of the catalog is assumed.<a href="#section-5.2.34-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="trackduration">
@@ -3962,7 +4020,6 @@ in the video track and a separate SCTE-35 event timeline for ad insertion.<a hre
       "packaging": "mediatimeline",
       "isLive": true,
       "depends": ["video"]
-      ]
     },
     {
       "name": "scte35",
@@ -4260,14 +4317,14 @@ track name formats follow the conventions defined in <span>[<a href="#MOQLOG" cl
   ],
   "publishTracks": [
     {
-      "namespace": "moq://metrics.moq.arpa/v1/%resourceId%",
+      "namespace": "metrics.moq.arpa/logs-v1/%resourceId%",
       "name": "4",
       "packaging": "moqmetrics",
       "role": "metrics",
       "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
     },
     {
-      "namespace": "moq://moq-syslog.arpa/logs-v1/%resourceId%",
+      "namespace": "moq-syslog.arpa/logs-v1/%resourceId%",
       "name": "6",
       "packaging": "moqlog",
       "role": "log",
@@ -4288,8 +4345,7 @@ The track name "4" indicates Warning level granularity.<a href="#section-5.6.17-
 </li>
             <li class="normal" id="section-5.6.17-4.2">
               <p id="section-5.6.17-4.2.1">The log track uses the namespace format defined in <span>[<a href="#MOQLOG" class="cite xref">MOQLOG</a>]</span> with %resourceId%
-as a placeholder. The track name "6" indicates Informational level priority.
-This track establishes a separate connection to logs.example.com.<a href="#section-5.6.17-4.2.1" class="pilcrow">¶</a></p>
+as a placeholder. The track name "6" indicates Informational level priority.<a href="#section-5.6.17-4.2.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-5.6.17-4.3">
               <p id="section-5.6.17-4.3.1">Both tracks include authentication tokens for publishing authorization.<a href="#section-5.6.17-4.3.1" class="pilcrow">¶</a></p>
@@ -4368,7 +4424,8 @@ an array of three required items, whose ordinal position defines their type:<a h
 <ul class="normal">
 <li class="normal" id="section-7.1.1-2.1">
               <p id="section-7.1.1-2.1.1">The first item holds the media presentation timestamp, expressed as a JSON Number.
-This value <span class="bcp14">MUST</span> match the media presentation timestamp, expressed as the floor in integral milliseconds, of the first media sample in the referenced Object. Implementers
+This value <span class="bcp14">MUST</span> match the media presentation timestamp, expressed as the floor in
+integral milliseconds, of the first media sample in the referenced Object. Implementers
 who require increased time precision can parse the retrieved media object itself.<a href="#section-7.1.1-2.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-7.1.1-2.2">
@@ -4727,14 +4784,12 @@ format specified in Section 4 of <span>[<a href="#MOQLOG" class="cite xref">MOQL
         <h3 id="name-log-track-namespace-and-nam">
 <a href="#section-9.2" class="section-number selfRef">9.2. </a><a href="#name-log-track-namespace-and-nam" class="section-name selfRef">Log track namespace and name</a>
         </h3>
-<p id="section-9.2-1">TODO: Finalize on track naming<a href="#section-9.2-1" class="pilcrow">¶</a></p>
-<p id="section-9.2-2">Log tracks <span class="bcp14">MUST</span> use the namespace and track name format defined in Section 3
-of <span>[<a href="#MOQLOG" class="cite xref">MOQLOG</a>]</span>. The Track Namespace consists of the tuples:
-<code>(moq://moq-syslog.arpa/logs-v1/),(resourceID)</code> where resourceID is a unique
-identifier for the publishing resource.<a href="#section-9.2-2" class="pilcrow">¶</a></p>
-<p id="section-9.2-3">The Track Name is a single byte containing the log priority level in binary.
-Priority levels range from 0 (Emergency) to 7 (Debug), following syslog severity
-conventions.<a href="#section-9.2-3" class="pilcrow">¶</a></p>
+<p id="section-9.2-1">The log track's namespace is defined by the <a href="#tracknamespace" class="auto internal xref">Section 5.2.2</a> field and converted to bytes
+according to <a href="#namemapping" class="auto internal xref">Section 11.2</a>.<a href="#section-9.2-1" class="pilcrow">¶</a></p>
+<p id="section-9.2-2">The Track Name is the ASCII decimal representation of the log priority level
+(for example, "6" for Informational), mapped to bytes as defined in
+<a href="#namemapping" class="auto internal xref">Section 11.2</a>. Priority levels range from 0 (Emergency) to 7 (Debug), following syslog
+severity conventions.<a href="#section-9.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="loggroupobject">
@@ -4806,15 +4861,12 @@ of <span>[<a href="#MOQMETRICS" class="cite xref">MOQMETRICS</a>]</span>.<a href
         <h3 id="name-metrics-track-namespace-and">
 <a href="#section-10.2" class="section-number selfRef">10.2. </a><a href="#name-metrics-track-namespace-and" class="section-name selfRef">Metrics track namespace and name</a>
         </h3>
-<p id="section-10.2-1">TODO: Finalize the track naming.<a href="#section-10.2-1" class="pilcrow">¶</a></p>
-<p id="section-10.2-2">Metrics tracks <span class="bcp14">MUST</span> use the namespace and track name format defined in Section 3
- of <span>[<a href="#MOQMETRICS" class="cite xref">MOQMETRICS</a>]</span>. The Track Namespace consists of the tuples:
-<code>(moq://metrics.moq.arpa/v1/),(resourceID)</code> where resourceID is a unique identifier
-for the publishing resource.<a href="#section-10.2-2" class="pilcrow">¶</a></p>
-<p id="section-10.2-3">The Track Name identifies the granularity level for the metrics being published,
-specified as a single tuple <code>(&lt;granularity-level&gt;)</code> where granularity-level is a
+<p id="section-10.2-1">The metric track's namespace is defined by the <a href="#tracknamespace" class="auto internal xref">Section 5.2.2</a> field and converted
+to bytes according to <a href="#namemapping" class="auto internal xref">Section 11.2</a>.<a href="#section-10.2-1" class="pilcrow">¶</a></p>
+<p id="section-10.2-2">The Track Name identifies the granularity level for the metrics being published,
+specified as a ASCII decimal representation,  where granularity-level is a
 value from 0 (Emergency) to 7 (Debug). Higher priority levels (lower numbers)
-indicate more critical metrics that should always be reported.<a href="#section-10.2-3" class="pilcrow">¶</a></p>
+indicate more critical metrics that should always be reported.<a href="#section-10.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="metricsgroupobject">
@@ -5130,6 +5182,16 @@ percent-encoded using a period (.) followed by two lowercase hexadecimal digits
 </li>
           </ul>
 <p id="section-11.1.2-3">Note: This encoding ensures that the structural delimiters (- and --) remain unambiguous.<a href="#section-11.1.2-3" class="pilcrow">¶</a></p>
+<p id="section-11.1.2-4">The byte values that are serialized by this encoding are those produced from
+the catalog's namespace and name strings by <a href="#namemapping" class="auto internal xref">Section 11.2</a>. For example, the
+track object<a href="#section-11.1.2-4" class="pilcrow">¶</a></p>
+<div class="lang-json sourcecode" id="section-11.1.2-5">
+<pre>
+{ "namespace": "customer/livestream/123", "name": "catalog" }
+</pre><a href="#section-11.1.2-5" class="pilcrow">¶</a>
+</div>
+<p id="section-11.1.2-6">is rendered as <code>customer-livestream-123--catalog</code>, and a track named <code>"café"</code>
+in the same namespace is rendered as <code>customer-livestream-123--caf.c3.a9</code>.<a href="#section-11.1.2-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="example-msf-urls">
@@ -5187,146 +5249,335 @@ yZW5lYnJmcmVqMTIzNDU2NzgwMHZpc3VlZF9hdD0xNzMwNDM<a href="#section-11.1.3-1.6.1" 
 </div>
 </section>
 </div>
-<div id="initiating-a-broadcast">
+<div id="namemapping">
 <section id="section-11.2">
-        <h3 id="name-initiating-a-broadcast">
-<a href="#section-11.2" class="section-number selfRef">11.2. </a><a href="#name-initiating-a-broadcast" class="section-name selfRef">Initiating a broadcast</a>
+        <h3 id="name-mapping-catalog-strings-to-">
+<a href="#section-11.2" class="section-number selfRef">11.2. </a><a href="#name-mapping-catalog-strings-to-" class="section-name selfRef">Mapping catalog strings to MOQT byte values</a>
         </h3>
-<p id="section-11.2-1">An MSF publisher <span class="bcp14">MUST</span> publish a catalog track object before publishing any media
-track objects.<a href="#section-11.2-1" class="pilcrow">¶</a></p>
+<p id="section-11.2-1">MOQT Track Namespace Fields and Track Names are sequences of bytes, compared
+byte-for-byte, and Section 2.4.1 of <span>[<a href="#MoQTransport" class="cite xref">MoQTransport</a>]</span> requires any specification
+that constrains them to define the canonical mapping into those bytes. This
+section defines that mapping for every catalog field that carries a Track
+Namespace Field or a Track Name: <a href="#tracknamespace" class="auto internal xref">Section 5.2.2</a>, <a href="#trackname" class="auto internal xref">Section 5.2.3</a>,
+<a href="#dependencies" class="auto internal xref">Section 5.2.14</a>, <a href="#parentname" class="auto internal xref">Section 5.2.33</a> and <a href="#parentnamespace" class="auto internal xref">Section 5.2.34</a>. Extension fields that
+carry track names or namespaces <span class="bcp14">MUST</span> use the same mapping.<a href="#section-11.2-1" class="pilcrow">¶</a></p>
+<div id="producing-bytes-from-a-json-string">
+<section id="section-11.2.1">
+          <h4 id="name-producing-bytes-from-a-json">
+<a href="#section-11.2.1" class="section-number selfRef">11.2.1. </a><a href="#name-producing-bytes-from-a-json" class="section-name selfRef">Producing bytes from a JSON string</a>
+          </h4>
+<p id="section-11.2.1-1">The MOQT byte value corresponding to a JSON string is the UTF-8 <span>[<a href="#UTF8" class="cite xref">UTF8</a>]</span>
+encoding of the sequence of Unicode scalar values obtained by parsing the JSON
+string per Section 7 of <span>[<a href="#JSON" class="cite xref">JSON</a>]</span>. In particular:<a href="#section-11.2.1-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-11.2.1-2.1">
+              <p id="section-11.2.1-2.1.1">JSON escape sequences are resolved before encoding. The string <code>"café"</code> and
+the string <code>"caf\u00e9"</code> denote the same sequence of scalar values and
+therefore map to the same bytes (<code>63 61 66 c3 a9</code>). Whether a producer writes
+a character literally or escaped has no effect on the resulting Track Name.<a href="#section-11.2.1-2.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-11.2.1-2.2">
+              <p id="section-11.2.1-2.2.1">No Unicode normalization (NFC, NFD, NFKC, NFKD), case folding, or other
+transformation is applied, either by the producer when serializing or by the
+consumer when parsing. The scalar values in the catalog are encoded exactly
+as given. Consequently, "é" written as U+00E9 and "é" written as U+0065
+U+0301 are different Track Names. Producers that need two catalogs, or a
+catalog and an out-of-band reference, to agree on a name, are responsible for
+emitting identical scalar value sequences.<a href="#section-11.2.1-2.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-11.2.1-2.3">
+              <p id="section-11.2.1-2.3.1">Producers <span class="bcp14">MUST NOT</span> emit a JSON string in any of the fields listed above that,
+after resolving escapes, contains a code point that is not a Unicode scalar
+value; that is, an unpaired surrogate code point in the range U+D800 to
+U+DFFF (for example <code>"\uDEAD"</code>) is not permitted. Such a value has no UTF-8
+encoding. A consumer that encounters one <span class="bcp14">MUST</span> treat the catalog as invalid.<a href="#section-11.2.1-2.3.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-11.2.1-2.4">
+              <p id="section-11.2.1-2.4.1">Producers <span class="bcp14">MUST NOT</span> emit a U+0000 (NUL) code point in these fields. (This
+restriction is a conservative interoperability measure; NUL is valid UTF-8
+but is rejected or truncated by many string libraries.)<a href="#section-11.2.1-2.4.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+<p id="section-11.2.1-3">The catalog document itself <span class="bcp14">MUST</span> be encoded in UTF-8, as required by Section 8.1
+of <span>[<a href="#JSON" class="cite xref">JSON</a>]</span>, and <span class="bcp14">MUST NOT</span> begin with a byte order mark.<a href="#section-11.2.1-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="comparing-names">
+<section id="section-11.2.2">
+          <h4 id="name-comparing-names">
+<a href="#section-11.2.2" class="section-number selfRef">11.2.2. </a><a href="#name-comparing-names" class="section-name selfRef">Comparing names</a>
+          </h4>
+<p id="section-11.2.2-1">Two Track Names, or two Track Namespace Fields, are equal if and only if their
+mapped byte sequences are identical. Two Track Namespaces are equal if and only
+if they have the same number of fields and each corresponding field is equal.
+Implementations <span class="bcp14">MUST NOT</span> use locale-aware, case-insensitive, or
+normalization-aware string comparison when matching track names or namespaces
+within a catalog, between a catalog and a delta update, or between a catalog and
+the names carried in MOQT control messages. Note that the JSON string comparison
+guidance in Section 8.3 of <span>[<a href="#JSON" class="cite xref">JSON</a>]</span> yields the same result as byte comparison
+for strings that satisfy the constraints above.<a href="#section-11.2.2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="consuming-names-received-from-moqt">
+<section id="section-11.2.3">
+          <h4 id="name-consuming-names-received-fr">
+<a href="#section-11.2.3" class="section-number selfRef">11.2.3. </a><a href="#name-consuming-names-received-fr" class="section-name selfRef">Consuming names received from MOQT</a>
+          </h4>
+<p id="section-11.2.3-1">The mapping in this section is a partial function from JSON strings to bytes, not
+a bijection from bytes to JSON strings: a Track Name or Track Namespace Field
+that is not valid UTF-8 cannot be expressed in an MSF catalog. When an
+implementation needs to compare a name obtained from an MOQT control message
+(for example the Track Namespace of a PUBLISH_NAMESPACE, or the Full Track Name
+in a SUBSCRIBE) against a catalog, it <span class="bcp14">MUST</span> compare the raw MOQT bytes against
+the mapped bytes of the catalog string; it <span class="bcp14">MUST NOT</span> decode the MOQT bytes as
+UTF-8 and compare the result as text. A name received from MOQT that is not
+valid UTF-8 can never match an entry in a catalog.<a href="#section-11.2.3-1" class="pilcrow">¶</a></p>
+<p id="section-11.2.3-2">Consequently, an MSF publisher <span class="bcp14">MUST</span> only publish tracks whose Track Namespace
+Fields and Track Names are valid UTF-8 and satisfy the constraints of this
+section. Tracks that use names outside this space (for example, names defined by
+other specifications as raw binary values) cannot be described in a catalog
+track object.<a href="#section-11.2.3-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="relationship-to-the-serialized-form">
+<section id="section-11.2.4">
+          <h4 id="name-relationship-to-the-seriali">
+<a href="#section-11.2.4" class="section-number selfRef">11.2.4. </a><a href="#name-relationship-to-the-seriali" class="section-name selfRef">Relationship to the serialized form</a>
+          </h4>
+<p id="section-11.2.4-1">The hyphen-and-percent style serialization defined in Section 1.5 of
+<span>[<a href="#MoQTransport" class="cite xref">MoQTransport</a>]</span> and used in MSF URL fragments (<a href="#namespacenameencoding" class="auto internal xref">Section 11.1.2</a>) is an encoding
+of the byte values produced by this section, not of the JSON source text. To
+render a catalog Full Track Name in that form, an implementation first maps each
+namespace element and the track name to bytes as defined above, then applies
+the MOQT Section 1.5 encoding to those bytes.<a href="#section-11.2.4-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="examples-of-string-to-byte-mappings">
+<section id="section-11.2.5">
+          <h4 id="name-examples-of-string-to-byte-">
+<a href="#section-11.2.5" class="section-number selfRef">11.2.5. </a><a href="#name-examples-of-string-to-byte-" class="section-name selfRef">Examples of string-to-byte mappings</a>
+          </h4>
+<span id="name-example-string-to-byte-mapp"></span><div id="namemapping-examples">
+<table class="center" id="table-11">
+            <caption>
+<a href="#table-11" class="selfRef">Table 11</a>:
+<a href="#name-example-string-to-byte-mapp" class="selfRef">Example string-to-byte mappings</a>
+            </caption>
+<thead>
+              <tr>
+                <th class="text-left" rowspan="1" colspan="1">JSON value</th>
+                <th class="text-left" rowspan="1" colspan="1">Mapped bytes (hex)</th>
+                <th class="text-left" rowspan="1" colspan="1">Note</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>"video"</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>76 69 64 65 6f</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1"> </td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>"café"</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>63 61 66 c3 a9</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">U+00E9 (precomposed), written literally</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>"caf\u00e9"</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>63 61 66 c3 a9</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">same JSON escape rules: same track as above</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>"cafe\u0301"</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>63 61 66 65 cc 81</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">U+0065 + U+0301 (decomposed); different track</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>"Video"</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>56 69 64 65 6f</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">different track from <code>"video"</code>
+</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>""</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">(empty)</td>
+                <td class="text-left" rowspan="1" colspan="1">valid Track Name; invalid namespace field</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>"\uDEAD"</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">none</td>
+                <td class="text-left" rowspan="1" colspan="1">invalid; catalog <span class="bcp14">MUST</span> be rejected</td>
+              </tr>
+            </tbody>
+          </table>
+</div>
+</section>
+</div>
+</section>
+</div>
+<div id="initiating-a-broadcast">
+<section id="section-11.3">
+        <h3 id="name-initiating-a-broadcast">
+<a href="#section-11.3" class="section-number selfRef">11.3. </a><a href="#name-initiating-a-broadcast" class="section-name selfRef">Initiating a broadcast</a>
+        </h3>
+<p id="section-11.3-1">An MSF publisher <span class="bcp14">MUST</span> publish a catalog track object before publishing any media
+track objects.<a href="#section-11.3-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="ending-a-live-broadcast">
-<section id="section-11.3">
+<section id="section-11.4">
         <h3 id="name-ending-a-live-broadcast">
-<a href="#section-11.3" class="section-number selfRef">11.3. </a><a href="#name-ending-a-live-broadcast" class="section-name selfRef">Ending a live broadcast</a>
+<a href="#section-11.4" class="section-number selfRef">11.4. </a><a href="#name-ending-a-live-broadcast" class="section-name selfRef">Ending a live broadcast</a>
         </h3>
-<p id="section-11.3-1">After publishing a catalog and defining tracks carrying live content, an original
+<p id="section-11.4-1">After publishing a catalog and defining tracks carrying live content, an original
 publisher can deliver a deterministic signal to all subscribers that the broadcast
-is complete by taking the following steps:<a href="#section-11.3-1" class="pilcrow">¶</a></p>
+is complete by taking the following steps:<a href="#section-11.4-1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-11.3-2.1">
-            <p id="section-11.3-2.1.1">Send a SUBSCRIBE_DONE (See MOQT Section 8.1.2) message for all active tracks using
-status code 0x2 Track Ended.<a href="#section-11.3-2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-11.4-2.1">
+            <p id="section-11.4-2.1.1">Send a SUBSCRIBE_DONE (See MOQT Section 8.1.2) message for all active tracks using
+status code 0x2 Track Ended.<a href="#section-11.4-2.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-11.3-2.2">
-            <p id="section-11.3-2.2.1">If the live stream is being converted instantly to a VOD asset, then publish an
+          <li class="normal" id="section-11.4-2.2">
+            <p id="section-11.4-2.2.1">If the live stream is being converted instantly to a VOD asset, then publish an
 independent (non-delta) catalog update which, for each track, sets isLive <a href="#islive" class="auto internal xref">Section 5.2.7</a>
-to FALSE and adds a track duration <a href="#trackduration" class="auto internal xref">Section 5.2.35</a> field.<a href="#section-11.3-2.2.1" class="pilcrow">¶</a></p>
+to FALSE and adds a track duration <a href="#trackduration" class="auto internal xref">Section 5.2.35</a> field.<a href="#section-11.4-2.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-11.3-2.3">
-            <p id="section-11.3-2.3.1">If the live stream is being terminated permanently without conversion to VOD, then
+          <li class="normal" id="section-11.4-2.3">
+            <p id="section-11.4-2.3.1">If the live stream is being terminated permanently without conversion to VOD, then
 publish an independent catalog update which signals isComplete <a href="#iscomplete" class="auto internal xref">Section 5.1.3</a> as
-TRUE and which contains an empty Tracks <a href="#tracks" class="auto internal xref">Section 5.1.4</a> field.<a href="#section-11.3-2.3.1" class="pilcrow">¶</a></p>
+TRUE and which contains an empty Tracks <a href="#tracks" class="auto internal xref">Section 5.1.4</a> field.<a href="#section-11.4-2.3.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
 </div>
 <div id="authorization">
-<section id="section-11.4">
+<section id="section-11.5">
         <h3 id="name-authorization">
-<a href="#section-11.4" class="section-number selfRef">11.4. </a><a href="#name-authorization" class="section-name selfRef">Authorization</a>
+<a href="#section-11.5" class="section-number selfRef">11.5. </a><a href="#name-authorization" class="section-name selfRef">Authorization</a>
         </h3>
-<p id="section-11.4-1">MSF supports token-based authorization through pluggable authentication schemes.
+<p id="section-11.5-1">MSF supports token-based authorization through pluggable authentication schemes.
 Both original publishers and end subscribers can independently acquire authorization
 tokens and present them to relays. Relays use these tokens to authorize whether
 an end subscriber is permitted to setup the connection, as well as to receive content
-and/or to send content.<a href="#section-11.4-1" class="pilcrow">¶</a></p>
+and/or to send content.<a href="#section-11.5-1" class="pilcrow">¶</a></p>
 <div id="discovering-authorization-requirements">
-<section id="section-11.4.1">
+<section id="section-11.5.1">
           <h4 id="name-discovering-authorization-r">
-<a href="#section-11.4.1" class="section-number selfRef">11.4.1. </a><a href="#name-discovering-authorization-r" class="section-name selfRef">Discovering Authorization Requirements</a>
+<a href="#section-11.5.1" class="section-number selfRef">11.5.1. </a><a href="#name-discovering-authorization-r" class="section-name selfRef">Discovering Authorization Requirements</a>
           </h4>
-<p id="section-11.4.1-1">End subscribers discover authorization requirements by parsing the catalog.
+<p id="section-11.5.1-1">End subscribers discover authorization requirements by parsing the catalog.
 For each track of interest, examine the <code>authInfo</code> field. If present, the
 track requires authorization and the subscriber must obtain appropriate
-credentials for one of the schemes listed in the field.<a href="#section-11.4.1-1" class="pilcrow">¶</a></p>
-<p id="section-11.4.1-2">Original publishers and end subscribers may obtain authorization tokens from
+credentials for one of the schemes listed in the field.<a href="#section-11.5.1-1" class="pilcrow">¶</a></p>
+<p id="section-11.5.1-2">Original publishers and end subscribers may obtain authorization tokens from
 multiple sources, including out-of-band provisioning or as a parameter in
 the connection URI. These tokens can be presented either in the connection
 setup message (CLIENT_SETUP) or in control messages (SUBSCRIBE, FETCH, PUBLISH,
-PUBLISH_NAMESPACE) as described in <a href="#presentingauthorization" class="auto internal xref">Section 11.4.3</a>.<a href="#section-11.4.1-2" class="pilcrow">¶</a></p>
+PUBLISH_NAMESPACE) as described in <a href="#presentingauthorization" class="auto internal xref">Section 11.5.3</a>.<a href="#section-11.5.1-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="token-acquisition">
-<section id="section-11.4.2">
+<section id="section-11.5.2">
           <h4 id="name-token-acquisition">
-<a href="#section-11.4.2" class="section-number selfRef">11.4.2. </a><a href="#name-token-acquisition" class="section-name selfRef">Token Acquisition</a>
+<a href="#section-11.5.2" class="section-number selfRef">11.5.2. </a><a href="#name-token-acquisition" class="section-name selfRef">Token Acquisition</a>
           </h4>
-<p id="section-11.4.2-1">Token acquisition is out of scope for this specification. Both original publishers
-and end subscribers independently obtain tokens through mechanisms such as:<a href="#section-11.4.2-1" class="pilcrow">¶</a></p>
+<p id="section-11.5.2-1">Token acquisition is out of scope for this specification. Both original publishers
+and end subscribers independently obtain tokens through mechanisms such as:<a href="#section-11.5.2-1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-11.4.2-2.1">
-              <p id="section-11.4.2-2.1.1">Direct authentication with a distribution service<a href="#section-11.4.2-2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-11.5.2-2.1">
+              <p id="section-11.5.2-2.1.1">Direct authentication with a distribution service<a href="#section-11.5.2-2.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-11.4.2-2.2">
-              <p id="section-11.4.2-2.2.1">OAuth 2.0 or OpenID Connect flows<a href="#section-11.4.2-2.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-11.5.2-2.2">
+              <p id="section-11.5.2-2.2.1">OAuth 2.0 or OpenID Connect flows<a href="#section-11.5.2-2.2.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-11.4.2-2.3">
-              <p id="section-11.4.2-2.3.1">Out-of-band provisioning<a href="#section-11.4.2-2.3.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-11.5.2-2.3">
+              <p id="section-11.5.2-2.3.1">Out-of-band provisioning<a href="#section-11.5.2-2.3.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-11.4.2-3">The token acquisition endpoint and flow depend on the authorization scheme
+<p id="section-11.5.2-3">The token acquisition endpoint and flow depend on the authorization scheme
 and deployment configuration. Original publishers and end subscribers <span class="bcp14">MAY</span>
-use the same or different authorization services depending on the deployment.<a href="#section-11.4.2-3" class="pilcrow">¶</a></p>
-<p id="section-11.4.2-4">Tokens <span class="bcp14">MAY</span> also be supplied as parameters in the connection URI. When a
+use the same or different authorization services depending on the deployment.<a href="#section-11.5.2-3" class="pilcrow">¶</a></p>
+<p id="section-11.5.2-4">Tokens <span class="bcp14">MAY</span> also be supplied as parameters in the connection URI. When a
 connection URI contains token parameters, the subscriber extracts the token
-value and includes it in the appropriate MOQT message. For example:<a href="#section-11.4.2-4" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-11.4.2-5">
+value and includes it in the appropriate MOQT message. For example:<a href="#section-11.5.2-4" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-11.5.2-5">
 <pre>
 moqt://relay.example.com/moqt#namespace--name&amp;token=eyJhbGciOiJFZERTQSJ9...
-</pre><a href="#section-11.4.2-5" class="pilcrow">¶</a>
+</pre><a href="#section-11.5.2-5" class="pilcrow">¶</a>
 </div>
-<p id="section-11.4.2-6">URI parameters provide a convenient mechanism for distributing pre-authorized
-playback links. The parameter name and format are deployment-specific.<a href="#section-11.4.2-6" class="pilcrow">¶</a></p>
+<p id="section-11.5.2-6">URI parameters provide a convenient mechanism for distributing pre-authorized
+playback links. The parameter name and format are deployment-specific.<a href="#section-11.5.2-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="presentingauthorization">
-<section id="section-11.4.3">
+<section id="section-11.5.3">
           <h4 id="name-presenting-authorization">
-<a href="#section-11.4.3" class="section-number selfRef">11.4.3. </a><a href="#name-presenting-authorization" class="section-name selfRef">Presenting Authorization</a>
+<a href="#section-11.5.3" class="section-number selfRef">11.5.3. </a><a href="#name-presenting-authorization" class="section-name selfRef">Presenting Authorization</a>
           </h4>
-<p id="section-11.4.3-1">Once tokens are obtained, both original publishers and end subscribers present
+<p id="section-11.5.3-1">Once tokens are obtained, both original publishers and end subscribers present
 them to relays according to the scheme specification. Tokens <span class="bcp14">MAY</span> be presented
 in the SETUP message (CLIENT_SETUP or SERVER_SETUP) using the AUTHORIZATION
 TOKEN setup parameter, or in individual control messages using the
-AUTHORIZATION TOKEN message parameter.<a href="#section-11.4.3-1" class="pilcrow">¶</a></p>
-<p id="section-11.4.3-2">When a token is associated with a track, it <span class="bcp14">MUST</span> be included in ALL control
+AUTHORIZATION TOKEN message parameter.<a href="#section-11.5.3-1" class="pilcrow">¶</a></p>
+<p id="section-11.5.3-2">When a token is associated with a track, it <span class="bcp14">MUST</span> be included in ALL control
 messages that accept the AUTHORIZATION TOKEN parameter and are associated
 with that track. For end subscribers, this includes SUBSCRIBE, SUBSCRIBE_NAMESPACE,
 FETCH, and REQUEST_UPDATE messages. For original publishers, this includes
 PUBLISH and PUBLISH_NAMESPACE messages. This requirement applies regardless
-of whether the token was also provided in SETUP.<a href="#section-11.4.3-2" class="pilcrow">¶</a></p>
+of whether the token was also provided in SETUP.<a href="#section-11.5.3-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="handling-authorization-failures">
-<section id="section-11.4.4">
+<section id="section-11.5.4">
           <h4 id="name-handling-authorization-fail">
-<a href="#section-11.4.4" class="section-number selfRef">11.4.4. </a><a href="#name-handling-authorization-fail" class="section-name selfRef">Handling Authorization Failures</a>
+<a href="#section-11.5.4" class="section-number selfRef">11.5.4. </a><a href="#name-handling-authorization-fail" class="section-name selfRef">Handling Authorization Failures</a>
           </h4>
-<p id="section-11.4.4-1">When a relay rejects an authorization token, subscribers <span class="bcp14">SHOULD</span> handle the
-failure gracefully:<a href="#section-11.4.4-1" class="pilcrow">¶</a></p>
+<p id="section-11.5.4-1">When a relay rejects an authorization token, subscribers <span class="bcp14">SHOULD</span> handle the
+failure gracefully:<a href="#section-11.5.4-1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-11.4.4-2.1">
-              <p id="section-11.4.4-2.1.1">If a SUBSCRIBE or FETCH request is rejected due to invalid or expired
+<li class="normal" id="section-11.5.4-2.1">
+              <p id="section-11.5.4-2.1.1">If a SUBSCRIBE or FETCH request is rejected due to invalid or expired
 authorization, the subscriber <span class="bcp14">MAY</span> attempt to obtain a fresh token and
-retry the request.<a href="#section-11.4.4-2.1.1" class="pilcrow">¶</a></p>
+retry the request.<a href="#section-11.5.4-2.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-11.4.4-2.2">
-              <p id="section-11.4.4-2.2.1">If a token is rejected due to insufficient scope, the subscriber <span class="bcp14">SHOULD NOT</span> retry with the same token.<a href="#section-11.4.4-2.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-11.5.4-2.2">
+              <p id="section-11.5.4-2.2.1">If a token is rejected due to insufficient scope, the subscriber <span class="bcp14">SHOULD NOT</span> retry with the same token.<a href="#section-11.5.4-2.2.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-11.4.4-2.3">
-              <p id="section-11.4.4-2.3.1">For interactive applications, subscribers <span class="bcp14">MAY</span> prompt users to
-re-authenticate when authorization fails.<a href="#section-11.4.4-2.3.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-11.5.4-2.3">
+              <p id="section-11.5.4-2.3.1">For interactive applications, subscribers <span class="bcp14">MAY</span> prompt users to
+re-authenticate when authorization fails.<a href="#section-11.5.4-2.3.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-11.4.4-2.4">
-              <p id="section-11.4.4-2.4.1">Subscribers <span class="bcp14">SHOULD</span> implement exponential backoff when retrying failed
-authorization attempts to avoid overwhelming the relay or token issuer.<a href="#section-11.4.4-2.4.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-11.5.4-2.4">
+              <p id="section-11.5.4-2.4.1">Subscribers <span class="bcp14">SHOULD</span> implement exponential backoff when retrying failed
+authorization attempts to avoid overwhelming the relay or token issuer.<a href="#section-11.5.4-2.4.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-11.4.4-3">The specific error codes and retry semantics are defined by the authorization
+<p id="section-11.5.4-3">The specific error codes and retry semantics are defined by the authorization
 scheme specifications. See <span>[<a href="#PrivacyPassAuth" class="cite xref">PrivacyPassAuth</a>]</span> for Privacy Pass error handling
-and <span>[<a href="#C4M" class="cite xref">C4M</a>]</span> for CAT error handling.<a href="#section-11.4.4-3" class="pilcrow">¶</a></p>
+and <span>[<a href="#C4M" class="cite xref">C4M</a>]</span> for CAT error handling.<a href="#section-11.5.4-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -5368,8 +5619,8 @@ is set, then every object in the track is compressed and the object property
 property <span class="bcp14">MUST NOT</span> be set and the object property <span class="bcp14">MUST</span> be used on each
 compressed object.<a href="#section-12.1-3" class="pilcrow">¶</a></p>
 <p id="section-12.1-4">The compression algorithm values used by both mechanisms are:<a href="#section-12.1-4" class="pilcrow">¶</a></p>
-<table class="center" id="table-11">
-          <caption><a href="#table-11" class="selfRef">Table 11</a></caption>
+<table class="center" id="table-12">
+          <caption><a href="#table-12" class="selfRef">Table 12</a></caption>
 <thead>
             <tr>
               <th class="text-left" rowspan="1" colspan="1">Value</th>
@@ -5470,7 +5721,21 @@ entry with a type of 'object-property'.<a href="#section-12.2-6" class="pilcrow"
       <h2 id="name-security-considerations">
 <a href="#section-13" class="section-number selfRef">13. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
-<p id="section-13-1">ToDo<a href="#section-13-1" class="pilcrow">¶</a></p>
+<p id="section-13-1">TODO<a href="#section-13-1" class="pilcrow">¶</a></p>
+<div id="track-naming">
+<section id="section-13.1">
+        <h3 id="name-track-naming">
+<a href="#section-13.1" class="section-number selfRef">13.1. </a><a href="#name-track-naming" class="section-name selfRef">Track naming</a>
+        </h3>
+<p id="section-13.1-1">Track names and namespaces are compared as raw bytes (<a href="#namemapping" class="auto internal xref">Section 11.2</a>). Because
+no Unicode normalization or case folding is applied, visually confusable names
+(for example, names differing only in composed versus decomposed accents, or in
+characters from different scripts that render identically) are distinct tracks.
+Catalog producers <span class="bcp14">SHOULD</span> avoid emitting distinct tracks whose names are
+confusable to a human reader, and applications that display track names to
+users <span class="bcp14">SHOULD NOT</span> rely on visual inspection to establish identity.<a href="#section-13.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="IANA">
@@ -5492,8 +5757,8 @@ require no IANA action.<a href="#section-14-1" class="pilcrow">¶</a></p>
         </h3>
 <p id="section-14.1-1">This document registers the following entry in the "MOQT URI Fragment
 Types" registry established by <span>[<a href="#MoQTransport" class="cite xref">MoQTransport</a>], <a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-19#section-15.3" class="relref">Section 15.3</a></span>:<a href="#section-14.1-1" class="pilcrow">¶</a></p>
-<table class="center" id="table-12">
-          <caption><a href="#table-12" class="selfRef">Table 12</a></caption>
+<table class="center" id="table-13">
+          <caption><a href="#table-13" class="selfRef">Table 13</a></caption>
 <thead>
             <tr>
               <th class="text-left" rowspan="1" colspan="1">Fragment Type</th>
@@ -5616,8 +5881,8 @@ compression algorithm.<a href="#section-14.4-1" class="pilcrow">¶</a></p>
 Values 128 and above are reserved for private use and <span class="bcp14">MUST NOT</span> be
 registered.<a href="#section-14.4-2" class="pilcrow">¶</a></p>
 <p id="section-14.4-3">The initial contents of this registry are:<a href="#section-14.4-3" class="pilcrow">¶</a></p>
-<table class="center" id="table-13">
-          <caption><a href="#table-13" class="selfRef">Table 13</a></caption>
+<table class="center" id="table-14">
+          <caption><a href="#table-14" class="selfRef">Table 14</a></caption>
 <thead>
             <tr>
               <th class="text-left" rowspan="1" colspan="1">Value</th>
@@ -5715,6 +5980,10 @@ registered.<a href="#section-14.4-2" class="pilcrow">¶</a></p>
         <dd>
 <span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8174">https://www.rfc-editor.org/rfc/rfc8174</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="RFC8259">[RFC8259]</dt>
+        <dd>
+<span class="refAuthor">Bray, T., Ed.</span>, <span class="refTitle">"The JavaScript Object Notation (JSON) Data Interchange Format"</span>, <span class="seriesInfo">STD 90</span>, <span class="seriesInfo">RFC 8259</span>, <span class="seriesInfo">DOI 10.17487/RFC8259</span>, <time datetime="2017-12" class="refDate">December 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8259">https://www.rfc-editor.org/rfc/rfc8259</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC9000">[RFC9000]</dt>
         <dd>
 <span class="refAuthor">Iyengar, J., Ed.</span> and <span class="refAuthor">M. Thomson, Ed.</span>, <span class="refTitle">"QUIC: A UDP-Based Multiplexed and Secure Transport"</span>, <span class="seriesInfo">RFC 9000</span>, <span class="seriesInfo">DOI 10.17487/RFC9000</span>, <time datetime="2021-05" class="refDate">May 2021</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9000">https://www.rfc-editor.org/rfc/rfc9000</a>&gt;</span>. </dd>
@@ -5722,6 +5991,10 @@ registered.<a href="#section-14.4-2" class="pilcrow">¶</a></p>
 <dt id="SecureObjects">[SecureObjects]</dt>
         <dd>
 <span class="refAuthor">Jennings, C. F.</span>, <span class="refAuthor">Nandakumar, S.</span>, and <span class="refAuthor">R. Barnes</span>, <span class="refTitle">"End-to-End Secure Objects for Media over QUIC Transport"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-jennings-moq-secure-objects-04</span>, <time datetime="2026-02-08" class="refDate">8 February 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-jennings-moq-secure-objects-04">https://datatracker.ietf.org/doc/html/draft-jennings-moq-secure-objects-04</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="UTF8">[UTF8]</dt>
+        <dd>
+<span class="refAuthor">Yergeau, F.</span>, <span class="refTitle">"UTF-8, a transformation format of ISO 10646"</span>, <span class="seriesInfo">STD 63</span>, <span class="seriesInfo">RFC 3629</span>, <span class="seriesInfo">DOI 10.17487/RFC3629</span>, <time datetime="2003-11" class="refDate">November 2003</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc3629">https://www.rfc-editor.org/rfc/rfc3629</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="WEBCODECS-CODEC-REGISTRY">[WEBCODECS-CODEC-REGISTRY]</dt>
         <dd>
