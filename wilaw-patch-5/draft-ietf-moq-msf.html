@@ -17,18 +17,18 @@
 <meta content="draft-ietf-moq-msf-latest" name="ietf.draft">
 <!-- Generator version information:
   xml2rfc 3.34.1
-    Python 3.14.7
-    ConfigArgParse 1.7.7
+    Python 3.14.8
+    ConfigArgParse 1.8.0
     google-i18n-address 3.1.1
     intervaltree 3.2.1
     Jinja2 3.1.6
     lxml 6.1.1
     natsort 8.4.0
-    platformdirs 4.11.10
+    platformdirs 4.13.4
     pycountry 24.6.1
     PyYAML 6.0.3
     requests 2.33.1
-    wcwidth 0.8.4
+    wcwidth 0.9.2
 -->
 <link href="draft-ietf-moq-msf.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -1044,11 +1044,11 @@ svg {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">MOQT Streaming Format</td>
-<td class="right">September 2026</td>
+<td class="right">October 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Law &amp; Nandakumar</td>
-<td class="center">Expires 30 March 2027</td>
+<td class="center">Expires 1 May 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1061,12 +1061,12 @@ svg {
 <dd class="internet-draft">draft-ietf-moq-msf-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-09-26" class="published">26 September 2026</time>
+<time datetime="2026-10-28" class="published">28 October 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-03-30">30 March 2027</time></dd>
+<dd class="expires"><time datetime="2027-05-01">1 May 2027</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1120,7 +1120,7 @@ svg {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 30 March 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 1 May 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1616,6 +1616,11 @@ svg {
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13">
             <p id="section-toc.1-1.13.1"><a href="#section-13" class="auto internal xref">13</a>. <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.1">
+                <p id="section-toc.1-1.13.2.1.1"><a href="#section-13.1" class="auto internal xref">13.1</a>.  <a href="#name-track-naming" class="internal xref">Track naming</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14">
             <p id="section-toc.1-1.14.1"><a href="#section-14" class="auto internal xref">14</a>. <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
@@ -2476,20 +2481,29 @@ is specified in Table 2.<a href="#section-5.2.1-1" class="pilcrow">¶</a></p>
           </h4>
 <p id="section-5.2.2-1">Required: Optional    JSON Type: String    Location: Track Object<a href="#section-5.2.2-1" class="pilcrow">¶</a></p>
 <p id="section-5.2.2-2">The Track Namespace under which the track name is defined. See Section 2.4.1 of
-<span>[<a href="#MoQTransport" class="cite xref">MoQTransport</a>]</span>. The value is a JSON array in which each element is a JSON
-string corresponding, in order, to one Track Namespace Field of the MOQT Track
-Namespace. Each element is converted to the bytes of its Track Namespace Field
-using the rules in <a href="#namemapping" class="auto internal xref">Section 11.2</a>.<a href="#section-5.2.2-2" class="pilcrow">¶</a></p>
-<p id="section-5.2.2-3">The array <span class="bcp14">MUST</span> contain between 1 and 32 elements, and every element <span class="bcp14">MUST</span> be a
-non-empty JSON string, so that the resulting Track Namespace satisfies the
-constraints of Section 2.4.1 of <span>[<a href="#MoQTransport" class="cite xref">MoQTransport</a>]</span>. A parser that encounters an
-empty array, more than 32 elements, an empty string element, or a non-string
-element <span class="bcp14">MUST</span> treat the catalog as invalid.<a href="#section-5.2.2-3" class="pilcrow">¶</a></p>
-<p id="section-5.2.2-4">The track namespace is optional. If it is not declared within a track object,
+<span>[<a href="#MoQTransport" class="cite xref">MoQTransport</a>]</span>. The value is a single JSON string in which the '/' character
+(U+002F SOLIDUS) delimits the boundaries between Track Namespace Fields. The
+string is split at each '/' character, and the resulting substrings correspond,
+in order, to the Track Namespace Fields of the MOQT Track Namespace. Each substring
+is converted to the bytes of its Track Namespace Field using the rules in <a href="#namemapping" class="auto internal xref">Section 11.2</a>.
+The split is performed on the string value after JSON decoding (Section 7 of <span>[<a href="#RFC8259" class="cite xref">RFC8259</a>]</span>).
+Any U+002F character in the decoded value is a field delimiter, regardless of whether
+it appeared in the JSON text as "/", "\/" or "\u002F". A U+002F character <span class="bcp14">MUST NOT</span> be
+part of a field value and is always interpreted as a field boundary.<a href="#section-5.2.2-2" class="pilcrow">¶</a></p>
+<p id="section-5.2.2-3">For example, the value "example.com/live/channel1" represents a Track
+Namespace with three fields: "example.com", "live" and "channel1".<a href="#section-5.2.2-3" class="pilcrow">¶</a></p>
+<p id="section-5.2.2-4">The string <span class="bcp14">MUST</span> yield between 1 and 32 fields, and every field <span class="bcp14">MUST</span> be
+non-empty, so that the resulting Track Namespace satisfies the constraints of
+Section 2.4.1 of <span>[<a href="#MoQTransport" class="cite xref">MoQTransport</a>]</span>. Consequently, the string <span class="bcp14">MUST NOT</span> be empty,
+<span class="bcp14">MUST NOT</span> begin or end with a '/' character, and <span class="bcp14">MUST NOT</span> contain two
+consecutive '/' characters. A parser that encounters a value that is not a
+string, an empty string, a string yielding more than 32 fields, or a string
+yielding an empty field <span class="bcp14">MUST</span> treat the catalog as invalid.<a href="#section-5.2.2-4" class="pilcrow">¶</a></p>
+<p id="section-5.2.2-5">The track namespace is optional. If it is not declared within a track object,
 then the track <span class="bcp14">MUST</span> inherit the Track Namespace of the catalog track, that is,
 the Track Namespace under which the catalog itself was subscribed. A namespace
 declared in a track object replaces (and does not extend) any inherited
-namespace.<a href="#section-5.2.2-4" class="pilcrow">¶</a></p>
+namespace.<a href="#section-5.2.2-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="trackname">
@@ -2991,8 +3005,8 @@ delta update <a href="#deltaupdate" class="auto internal xref">Section 5.1.6</a>
           <h4 id="name-parent-namespace">
 <a href="#section-5.2.34" class="section-number selfRef">5.2.34. </a><a href="#name-parent-namespace" class="section-name selfRef">Parent namespace</a>
           </h4>
-<p id="section-5.2.34-1">Required: Optional    JSON Type: Array of String    Location: Track Object<a href="#section-5.2.34-1" class="pilcrow">¶</a></p>
-<p id="section-5.2.34-2">An array of strings defining the parent track namespace <a href="#tracknamespace" class="auto internal xref">Section 5.2.2</a> to be
+<p id="section-5.2.34-1">Required: Optional    JSON Type: String    Location: Track Object<a href="#section-5.2.34-1" class="pilcrow">¶</a></p>
+<p id="section-5.2.34-2">A string defining the parent track namespace <a href="#tracknamespace" class="auto internal xref">Section 5.2.2</a> to be
 cloned, with the same syntax and constraints as <a href="#tracknamespace" class="auto internal xref">Section 5.2.2</a>, mapped and
 compared as defined in <a href="#namemapping" class="auto internal xref">Section 11.2</a>. This field <span class="bcp14">MUST</span> only be included inside
 a 'clone' or 'update' operation in a delta update <a href="#deltaupdate" class="auto internal xref">Section 5.1.6</a>. If this field
@@ -3386,7 +3400,7 @@ packaged, time-aligned audio and video tracks.<a href="#section-5.6.1-1" class="
   "tracks": [
     {
       "name": "1080p-video",
-      "namespace": ["conference.example.com", "conference123", "alice"],
+      "namespace": "conference.example.com/conference123/alice",
       "packaging": "loc",
       "isLive": true,
       "targetLatency": 2000,
@@ -3400,7 +3414,7 @@ packaged, time-aligned audio and video tracks.<a href="#section-5.6.1-1" class="
     },
     {
       "name": "audio",
-      "namespace": ["conference.example.com", "conference123", "alice"],
+      "namespace": "conference.example.com/conference123/alice",
       "packaging": "loc",
       "isLive": true,
       "targetLatency": 2000,
@@ -3534,7 +3548,7 @@ express the track relationships.<a href="#section-5.6.3-3" class="pilcrow">¶</a
   "tracks":[
     {
       "name": "480p15",
-      "namespace": ["conference.example.com", "conference123", "alice"],
+      "namespace": "conference.example.com/conference123/alice",
       "renderGroup": 1,
       "packaging": "loc",
       "isLive": true,
@@ -3548,7 +3562,7 @@ express the track relationships.<a href="#section-5.6.3-3" class="pilcrow">¶</a
     },
     {
       "name": "480p30",
-      "namespace": ["conference.example.com", "conference123", "alice"],
+      "namespace": "conference.example.com/conference123/alice",
       "renderGroup": 1,
       "packaging": "loc",
       "isLive": true,
@@ -3563,7 +3577,7 @@ express the track relationships.<a href="#section-5.6.3-3" class="pilcrow">¶</a
     },
     {
       "name": "1080p15",
-      "namespace": ["conference.example.com", "conference123", "alice"],
+      "namespace": "conference.example.com/conference123/alice",
       "renderGroup": 1,
       "packaging": "loc",
       "isLive": true,
@@ -3579,7 +3593,7 @@ express the track relationships.<a href="#section-5.6.3-3" class="pilcrow">¶</a
 
     {
       "name": "1080p30",
-      "namespace": ["conference.example.com", "conference123", "alice"],
+      "namespace": "conference.example.com/conference123/alice",
       "renderGroup": 1,
       "packaging": "loc",
       "isLive": true,
@@ -3594,7 +3608,7 @@ express the track relationships.<a href="#section-5.6.3-3" class="pilcrow">¶</a
     },
     {
       "name": "audio",
-      "namespace": ["conference.example.com", "conference123", "alice"],
+      "namespace": "conference.example.com/conference123/alice",
       "renderGroup": 1,
       "packaging": "loc",
       "isLive": true,
@@ -3656,7 +3670,7 @@ the other is cloned from an existing track.<a href="#section-5.6.4-1" class="pil
       "tracks": [
         {
           "parentName": "video-1080",
-          "parentNamespace": ["example.com","custom"],
+          "parentNamespace": "example.com/custom",
           "name": "video-720",
           "width": 1280,
           "height": 720,
@@ -3708,7 +3722,7 @@ description.<a href="#section-5.6.6-1" class="pilcrow">¶</a></p>
   "tracks": [
     {
       "name": "1080p-video",
-      "namespace": ["conference.example.com", "conference123", "alice"],
+      "namespace": "conference.example.com/conference123/alice",
       "packaging": "loc",
       "isLive": true,
       "buffers": {"target":2000, "min": 1500, "max": 5000},
@@ -3725,7 +3739,7 @@ description.<a href="#section-5.6.6-1" class="pilcrow">¶</a></p>
     },
     {
       "name": "audio",
-      "namespace": ["conference.example.com", "conference123", "alice"],
+      "namespace": "conference.example.com/conference123/alice",
       "packaging": "loc",
       "isLive": true,
       "buffers": {"target":2000, "min": 1500, "max": 5000},
@@ -3758,7 +3772,7 @@ and video tracks.<a href="#section-5.6.7-1" class="pilcrow">¶</a></p>
   "tracks": [
     {
       "name": "video",
-      "namespace": ["movies.example.com", "assets", "boy-meets-girl-season3", "episode5"],
+      "namespace": "movies.example.com/assets/boy-meets-girl-season3/episode5",
       "packaging": "loc",
       "isLive": false,
       "trackDuration": 8072340,
@@ -3771,7 +3785,7 @@ and video tracks.<a href="#section-5.6.7-1" class="pilcrow">¶</a></p>
     },
     {
       "name": "audio",
-      "namespace": ["movies.example.com", "assets", "boy-meets-girl-season3", "episode5"],
+      "namespace": "movies.example.com/assets/boy-meets-girl-season3/episode5",
       "packaging": "loc",
       "isLive": false,
       "trackDuration": 8072340,
@@ -3803,7 +3817,7 @@ tracks using MoQ Secure Objects with AES-128-GCM.<a href="#section-5.6.8-1" clas
   "tracks": [
     {
       "name": "1080p-video",
-      "namespace": ["conference.example.com", "conference123", "alice"],
+      "namespace": "conference.example.com/conference123/alice",
       "packaging": "loc",
       "isLive": true,
       "targetLatency": 2000,
@@ -3821,7 +3835,7 @@ tracks using MoQ Secure Objects with AES-128-GCM.<a href="#section-5.6.8-1" clas
     },
     {
       "name": "audio",
-      "namespace": ["conference.example.com", "conference123", "alice"],
+      "namespace": "conference.example.com/conference123/alice",
       "packaging": "loc",
       "isLive": true,
       "targetLatency": 2000,
@@ -3859,21 +3873,21 @@ synchronized data.<a href="#section-5.6.9-1" class="pilcrow">¶</a></p>
   "tracks": [
     {
       "name": "history",
-      "namespace": ["conference.example.com", "conference123", "alice"],
+      "namespace": "conference.example.com/conference123/alice",
       "packaging": "mediatimeline",
       "mimeType": "application/json",
       "depends": ["1080p-video","audio"]
     },
     {
       "name": "identified-objects",
-      "namespace": ["another-provider", "time-synchronized-data"],
+      "namespace": "another-provider/time-synchronized-data",
       "packaging": "eventtimeline",
       "eventType": "com.ai-extraction/appID/v3",
       "depends": ["history"]
     },
     {
       "name": "1080p-video",
-      "namespace": ["conference.example.com", "conference123", "alice"],
+      "namespace": "conference.example.com/conference123/alice",
       "packaging": "loc",
       "isLive": true,
       "targetLatency": 2000,
@@ -3887,7 +3901,7 @@ synchronized data.<a href="#section-5.6.9-1" class="pilcrow">¶</a></p>
     },
     {
       "name": "audio",
-      "namespace": ["conference.example.com", "conference123", "alice"],
+      "namespace": "conference.example.com/conference123/alice",
       "packaging": "loc",
       "isLive": true,
       "targetLatency": 2000,
@@ -3923,7 +3937,7 @@ template values to accommodate different group durations.<a href="#section-5.6.1
   "tracks": [
     {
       "name": "1080p-video",
-      "namespace": ["conference.example.com", "conference123", "alice"],
+      "namespace": "conference.example.com/conference123/alice",
       "packaging": "loc",
       "isLive": true,
       "targetLatency": 2000,
@@ -3938,7 +3952,7 @@ template values to accommodate different group durations.<a href="#section-5.6.1
     },
     {
       "name": "audio",
-      "namespace": ["conference.example.com", "conference123", "alice"],
+      "namespace": "conference.example.com/conference123/alice",
       "packaging": "loc",
       "isLive": true,
       "targetLatency": 2000,
@@ -4006,7 +4020,6 @@ in the video track and a separate SCTE-35 event timeline for ad insertion.<a hre
       "packaging": "mediatimeline",
       "isLive": true,
       "depends": ["video"]
-      ]
     },
     {
       "name": "scte35",
@@ -4120,7 +4133,7 @@ substitution. The following catalog template:<a href="#section-5.6.14-3" class="
     },
     {
       "name": "tracking-%id%",
-      "namespace": ["advertising-decisions", "live-sports", "%event%"],
+      "namespace": "advertising-decisions/live-sports/%event%",
       "packaging": "eventtimeline",
       "eventType": "com.example.iab.vast",
       "c4m": "%token%"
@@ -4144,7 +4157,7 @@ substitution. The following catalog template:<a href="#section-5.6.14-3" class="
     },
     {
       "name": "tracking-bob",
-      "namespace": ["advertising-decisions", "live-sports", "xyz"],
+      "namespace": "advertising-decisions/live-sports/xyz",
       "packaging": "eventtimeline",
       "eventType": "com.example.iab.vast",
       "c4m": "1234"
@@ -4174,7 +4187,7 @@ specification.<a href="#section-5.6.15-1" class="pilcrow">¶</a></p>
   "tracks": [
     {
       "name": "premium-4k-video",
-      "namespace": ["streaming.example.com","live","sports"],
+      "namespace": "streaming.example.com/live/sports",
       "packaging": "loc",
       "isLive": true,
       "targetLatency": 2000,
@@ -4191,7 +4204,7 @@ specification.<a href="#section-5.6.15-1" class="pilcrow">¶</a></p>
     },
     {
       "name": "standard-720p-video",
-      "namespace": ["streaming.example.com","live","sports"],
+      "namespace": "streaming.example.com/live/sports",
       "packaging": "loc",
       "isLive": true,
       "targetLatency": 2000,
@@ -4208,7 +4221,7 @@ specification.<a href="#section-5.6.15-1" class="pilcrow">¶</a></p>
     },
     {
       "name": "audio",
-      "namespace": ["streaming.example.com","live","sports"],
+      "namespace": "streaming.example.com/live/sports",
       "packaging": "loc",
       "isLive": true,
       "targetLatency": 2000,
@@ -4248,7 +4261,7 @@ a different namespace.<a href="#section-5.6.16-1" class="pilcrow">¶</a></p>
     },
     {
       "name": "camera33-catalog",
-      "namespace": ["example.com","blimps-R-us"],
+      "namespace": "example.com/blimps-R-us",
       "packaging": "catalog",
       "label": "Eye From the Sky video feeds"
     }
@@ -4276,7 +4289,7 @@ track name formats follow the conventions defined in <span>[<a href="#MOQLOG" cl
   "tracks": [
     {
       "name": "video",
-      "namespace": ["broadcast.example.com","live","stream1"],
+      "namespace": "broadcast.example.com/live/stream1",
       "packaging": "loc",
       "isLive": true,
       "targetLatency": 2000,
@@ -4290,7 +4303,7 @@ track name formats follow the conventions defined in <span>[<a href="#MOQLOG" cl
     },
     {
       "name": "audio",
-      "namespace": ["broadcast.example.com","live","stream1"],
+      "namespace": "broadcast.example.com/live/stream1",
       "packaging": "loc",
       "isLive": true,
       "targetLatency": 2000,
@@ -4304,14 +4317,14 @@ track name formats follow the conventions defined in <span>[<a href="#MOQLOG" cl
   ],
   "publishTracks": [
     {
-      "namespace": ["metrics.moq.arpa","v1","%resourceId%"],
+      "namespace": "metrics.moq.arpa/logs-v1/%resourceId%",
       "name": "4",
       "packaging": "moqmetrics",
       "role": "metrics",
       "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
     },
     {
-      "namespace": ["metrics.moq.arpa","v1","%resourceId%"],
+      "namespace": "moq-syslog.arpa/logs-v1/%resourceId%",
       "name": "6",
       "packaging": "moqlog",
       "role": "log",
@@ -4332,8 +4345,7 @@ The track name "4" indicates Warning level granularity.<a href="#section-5.6.17-
 </li>
             <li class="normal" id="section-5.6.17-4.2">
               <p id="section-5.6.17-4.2.1">The log track uses the namespace format defined in <span>[<a href="#MOQLOG" class="cite xref">MOQLOG</a>]</span> with %resourceId%
-as a placeholder. The track name "6" indicates Informational level priority.
-This track establishes a separate connection to logs.example.com.<a href="#section-5.6.17-4.2.1" class="pilcrow">¶</a></p>
+as a placeholder. The track name "6" indicates Informational level priority.<a href="#section-5.6.17-4.2.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-5.6.17-4.3">
               <p id="section-5.6.17-4.3.1">Both tracks include authentication tokens for publishing authorization.<a href="#section-5.6.17-4.3.1" class="pilcrow">¶</a></p>
@@ -5175,7 +5187,7 @@ the catalog's namespace and name strings by <a href="#namemapping" class="auto i
 track object<a href="#section-11.1.2-4" class="pilcrow">¶</a></p>
 <div class="lang-json sourcecode" id="section-11.1.2-5">
 <pre>
-{ "namespace": ["customer", "livestream", "123"], "name": "catalog" }
+{ "namespace": "customer/livestream/123", "name": "catalog" }
 </pre><a href="#section-11.1.2-5" class="pilcrow">¶</a>
 </div>
 <p id="section-11.1.2-6">is rendered as <code>customer-livestream-123--catalog</code>, and a track named <code>"café"</code>
@@ -5259,8 +5271,8 @@ encoding of the sequence of Unicode scalar values obtained by parsing the JSON
 string per Section 7 of <span>[<a href="#JSON" class="cite xref">JSON</a>]</span>. In particular:<a href="#section-11.2.1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-11.2.1-2.1">
-              <p id="section-11.2.1-2.1.1">JSON escape sequences are resolved before encoding. The string <code>"café"</code>
-and the string <code>"café"</code> denote the same sequence of scalar values and
+              <p id="section-11.2.1-2.1.1">JSON escape sequences are resolved before encoding. The string <code>"café"</code> and
+the string <code>"caf\u00e9"</code> denote the same sequence of scalar values and
 therefore map to the same bytes (<code>63 61 66 c3 a9</code>). Whether a producer writes
 a character literally or escaped has no effect on the resulting Track Name.<a href="#section-11.2.1-2.1.1" class="pilcrow">¶</a></p>
 </li>
@@ -5709,13 +5721,21 @@ entry with a type of 'object-property'.<a href="#section-12.2-6" class="pilcrow"
       <h2 id="name-security-considerations">
 <a href="#section-13" class="section-number selfRef">13. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
-<p id="section-13-1">Track names and namespaces are compared as raw bytes (<a href="#namemapping" class="auto internal xref">Section 11.2</a>). Because
+<p id="section-13-1">TODO<a href="#section-13-1" class="pilcrow">¶</a></p>
+<div id="track-naming">
+<section id="section-13.1">
+        <h3 id="name-track-naming">
+<a href="#section-13.1" class="section-number selfRef">13.1. </a><a href="#name-track-naming" class="section-name selfRef">Track naming</a>
+        </h3>
+<p id="section-13.1-1">Track names and namespaces are compared as raw bytes (<a href="#namemapping" class="auto internal xref">Section 11.2</a>). Because
 no Unicode normalization or case folding is applied, visually confusable names
 (for example, names differing only in composed versus decomposed accents, or in
 characters from different scripts that render identically) are distinct tracks.
 Catalog producers <span class="bcp14">SHOULD</span> avoid emitting distinct tracks whose names are
 confusable to a human reader, and applications that display track names to
-users <span class="bcp14">SHOULD NOT</span> rely on visual inspection to establish identity.<a href="#section-13-1" class="pilcrow">¶</a></p>
+users <span class="bcp14">SHOULD NOT</span> rely on visual inspection to establish identity.<a href="#section-13.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="IANA">
@@ -5959,6 +5979,10 @@ registered.<a href="#section-14.4-2" class="pilcrow">¶</a></p>
 <dt id="RFC8174">[RFC8174]</dt>
         <dd>
 <span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8174">https://www.rfc-editor.org/rfc/rfc8174</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8259">[RFC8259]</dt>
+        <dd>
+<span class="refAuthor">Bray, T., Ed.</span>, <span class="refTitle">"The JavaScript Object Notation (JSON) Data Interchange Format"</span>, <span class="seriesInfo">STD 90</span>, <span class="seriesInfo">RFC 8259</span>, <span class="seriesInfo">DOI 10.17487/RFC8259</span>, <time datetime="2017-12" class="refDate">December 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8259">https://www.rfc-editor.org/rfc/rfc8259</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC9000">[RFC9000]</dt>
         <dd>

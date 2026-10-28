@@ -5,8 +5,8 @@
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
 Intended status: Informational                             S. Nandakumar
-Expires: 30 March 2027                                             Cisco
-                                                       26 September 2026
+Expires: 1 May 2027                                                Cisco
+                                                         28 October 2026
 
 
                          MOQT Streaming Format
@@ -49,7 +49,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 30 March 2027.
+   This Internet-Draft will expire on 1 May 2027.
 
 Copyright Notice
 
@@ -212,6 +212,7 @@ Table of Contents
        12.1.2.  MSF_COMPRESSION Object Property
      12.2.  Initialization properties
    13. Security Considerations
+     13.1.  Track naming
    14. IANA Considerations
      14.1.  "MOQT URI Fragment Types" registry
      14.2.  "MSF Event Timeline Types" registry
@@ -733,18 +734,30 @@ Table of Contents
    Required: Optional JSON Type: String Location: Track Object
 
    The Track Namespace under which the track name is defined.  See
-   Section 2.4.1 of [MoQTransport].  The value is a JSON array in which
-   each element is a JSON string corresponding, in order, to one Track
-   Namespace Field of the MOQT Track Namespace.  Each element is
-   converted to the bytes of its Track Namespace Field using the rules
-   in Section 11.2.
+   Section 2.4.1 of [MoQTransport].  The value is a single JSON string
+   in which the '/' character (U+002F SOLIDUS) delimits the boundaries
+   between Track Namespace Fields.  The string is split at each '/'
+   character, and the resulting substrings correspond, in order, to the
+   Track Namespace Fields of the MOQT Track Namespace.  Each substring
+   is converted to the bytes of its Track Namespace Field using the
+   rules in Section 11.2.  The split is performed on the string value
+   after JSON decoding (Section 7 of [RFC8259]).  Any U+002F character
+   in the decoded value is a field delimiter, regardless of whether it
+   appeared in the JSON text as "/", "\/" or "\u002F".  A U+002F
+   character MUST NOT be part of a field value and is always interpreted
+   as a field boundary.
 
-   The array MUST contain between 1 and 32 elements, and every element
-   MUST be a non-empty JSON string, so that the resulting Track
-   Namespace satisfies the constraints of Section 2.4.1 of
-   [MoQTransport].  A parser that encounters an empty array, more than
-   32 elements, an empty string element, or a non-string element MUST
-   treat the catalog as invalid.
+   For example, the value "example.com/live/channel1" represents a Track
+   Namespace with three fields: "example.com", "live" and "channel1".
+
+   The string MUST yield between 1 and 32 fields, and every field MUST
+   be non-empty, so that the resulting Track Namespace satisfies the
+   constraints of Section 2.4.1 of [MoQTransport].  Consequently, the
+   string MUST NOT be empty, MUST NOT begin or end with a '/' character,
+   and MUST NOT contain two consecutive '/' characters.  A parser that
+   encounters a value that is not a string, an empty string, a string
+   yielding more than 32 fields, or a string yielding an empty field
+   MUST treat the catalog as invalid.
 
    The track namespace is optional.  If it is not declared within a
    track object, then the track MUST inherit the Track Namespace of the
@@ -1135,12 +1148,12 @@ Table of Contents
 
 5.2.34.  Parent namespace
 
-   Required: Optional JSON Type: Array of String Location: Track Object
+   Required: Optional JSON Type: String Location: Track Object
 
-   An array of strings defining the parent track namespace Section 5.2.2
-   to be cloned, with the same syntax and constraints as Section 5.2.2,
-   mapped and compared as defined in Section 11.2.  This field MUST only
-   be included inside a 'clone' or 'update' operation in a delta update
+   A string defining the parent track namespace Section 5.2.2 to be
+   cloned, with the same syntax and constraints as Section 5.2.2, mapped
+   and compared as defined in Section 11.2.  This field MUST only be
+   included inside a 'clone' or 'update' operation in a delta update
    Section 5.1.6.  If this field is missing from a clone operation, then
    the namespace of the catalog is assumed.
 
@@ -1461,7 +1474,7 @@ Table of Contents
      "tracks": [
        {
          "name": "1080p-video",
-         "namespace": ["conference.example.com", "conference123", "alice"],
+         "namespace": "conference.example.com/conference123/alice",
          "packaging": "loc",
          "isLive": true,
          "targetLatency": 2000,
@@ -1475,7 +1488,7 @@ Table of Contents
        },
        {
          "name": "audio",
-         "namespace": ["conference.example.com", "conference123", "alice"],
+         "namespace": "conference.example.com/conference123/alice",
          "packaging": "loc",
          "isLive": true,
          "targetLatency": 2000,
@@ -1592,7 +1605,7 @@ Table of Contents
      "tracks":[
        {
          "name": "480p15",
-         "namespace": ["conference.example.com", "conference123", "alice"],
+         "namespace": "conference.example.com/conference123/alice",
          "renderGroup": 1,
          "packaging": "loc",
          "isLive": true,
@@ -1606,7 +1619,7 @@ Table of Contents
        },
        {
          "name": "480p30",
-         "namespace": ["conference.example.com", "conference123", "alice"],
+         "namespace": "conference.example.com/conference123/alice",
          "renderGroup": 1,
          "packaging": "loc",
          "isLive": true,
@@ -1621,7 +1634,7 @@ Table of Contents
        },
        {
          "name": "1080p15",
-         "namespace": ["conference.example.com", "conference123", "alice"],
+         "namespace": "conference.example.com/conference123/alice",
          "renderGroup": 1,
          "packaging": "loc",
          "isLive": true,
@@ -1637,7 +1650,7 @@ Table of Contents
 
        {
          "name": "1080p30",
-         "namespace": ["conference.example.com", "conference123", "alice"],
+         "namespace": "conference.example.com/conference123/alice",
          "renderGroup": 1,
          "packaging": "loc",
          "isLive": true,
@@ -1652,7 +1665,7 @@ Table of Contents
        },
        {
          "name": "audio",
-         "namespace": ["conference.example.com", "conference123", "alice"],
+         "namespace": "conference.example.com/conference123/alice",
          "renderGroup": 1,
          "packaging": "loc",
          "isLive": true,
@@ -1707,7 +1720,7 @@ Table of Contents
          "tracks": [
            {
              "parentName": "video-1080",
-             "parentNamespace": ["example.com","custom"],
+             "parentNamespace": "example.com/custom",
              "name": "video-720",
              "width": 1280,
              "height": 720,
@@ -1745,7 +1758,7 @@ Table of Contents
      "tracks": [
        {
          "name": "1080p-video",
-         "namespace": ["conference.example.com", "conference123", "alice"],
+         "namespace": "conference.example.com/conference123/alice",
          "packaging": "loc",
          "isLive": true,
          "buffers": {"target":2000, "min": 1500, "max": 5000},
@@ -1762,7 +1775,7 @@ Table of Contents
        },
        {
          "name": "audio",
-         "namespace": ["conference.example.com", "conference123", "alice"],
+         "namespace": "conference.example.com/conference123/alice",
          "packaging": "loc",
          "isLive": true,
          "buffers": {"target":2000, "min": 1500, "max": 5000},
@@ -1787,7 +1800,7 @@ Table of Contents
      "tracks": [
        {
          "name": "video",
-         "namespace": ["movies.example.com", "assets", "boy-meets-girl-season3", "episode5"],
+         "namespace": "movies.example.com/assets/boy-meets-girl-season3/episode5",
          "packaging": "loc",
          "isLive": false,
          "trackDuration": 8072340,
@@ -1800,7 +1813,7 @@ Table of Contents
        },
        {
          "name": "audio",
-         "namespace": ["movies.example.com", "assets", "boy-meets-girl-season3", "episode5"],
+         "namespace": "movies.example.com/assets/boy-meets-girl-season3/episode5",
          "packaging": "loc",
          "isLive": false,
          "trackDuration": 8072340,
@@ -1824,7 +1837,7 @@ Table of Contents
      "tracks": [
        {
          "name": "1080p-video",
-         "namespace": ["conference.example.com", "conference123", "alice"],
+         "namespace": "conference.example.com/conference123/alice",
          "packaging": "loc",
          "isLive": true,
          "targetLatency": 2000,
@@ -1842,7 +1855,7 @@ Table of Contents
        },
        {
          "name": "audio",
-         "namespace": ["conference.example.com", "conference123", "alice"],
+         "namespace": "conference.example.com/conference123/alice",
          "packaging": "loc",
          "isLive": true,
          "targetLatency": 2000,
@@ -1873,21 +1886,21 @@ Table of Contents
      "tracks": [
        {
          "name": "history",
-         "namespace": ["conference.example.com", "conference123", "alice"],
+         "namespace": "conference.example.com/conference123/alice",
          "packaging": "mediatimeline",
          "mimeType": "application/json",
          "depends": ["1080p-video","audio"]
        },
        {
          "name": "identified-objects",
-         "namespace": ["another-provider", "time-synchronized-data"],
+         "namespace": "another-provider/time-synchronized-data",
          "packaging": "eventtimeline",
          "eventType": "com.ai-extraction/appID/v3",
          "depends": ["history"]
        },
        {
          "name": "1080p-video",
-         "namespace": ["conference.example.com", "conference123", "alice"],
+         "namespace": "conference.example.com/conference123/alice",
          "packaging": "loc",
          "isLive": true,
          "targetLatency": 2000,
@@ -1901,7 +1914,7 @@ Table of Contents
        },
        {
          "name": "audio",
-         "namespace": ["conference.example.com", "conference123", "alice"],
+         "namespace": "conference.example.com/conference123/alice",
          "packaging": "loc",
          "isLive": true,
          "targetLatency": 2000,
@@ -1930,7 +1943,7 @@ Table of Contents
      "tracks": [
        {
          "name": "1080p-video",
-         "namespace": ["conference.example.com", "conference123", "alice"],
+         "namespace": "conference.example.com/conference123/alice",
          "packaging": "loc",
          "isLive": true,
          "targetLatency": 2000,
@@ -1945,7 +1958,7 @@ Table of Contents
        },
        {
          "name": "audio",
-         "namespace": ["conference.example.com", "conference123", "alice"],
+         "namespace": "conference.example.com/conference123/alice",
          "packaging": "loc",
          "isLive": true,
          "targetLatency": 2000,
@@ -2006,7 +2019,6 @@ Table of Contents
          "packaging": "mediatimeline",
          "isLive": true,
          "depends": ["video"]
-         ]
        },
        {
          "name": "scte35",
@@ -2096,7 +2108,7 @@ Table of Contents
        },
        {
          "name": "tracking-%id%",
-         "namespace": ["advertising-decisions", "live-sports", "%event%"],
+         "namespace": "advertising-decisions/live-sports/%event%",
          "packaging": "eventtimeline",
          "eventType": "com.example.iab.vast",
          "c4m": "%token%"
@@ -2118,7 +2130,7 @@ Table of Contents
        },
        {
          "name": "tracking-bob",
-         "namespace": ["advertising-decisions", "live-sports", "xyz"],
+         "namespace": "advertising-decisions/live-sports/xyz",
          "packaging": "eventtimeline",
          "eventType": "com.example.iab.vast",
          "c4m": "1234"
@@ -2141,7 +2153,7 @@ Table of Contents
      "tracks": [
        {
          "name": "premium-4k-video",
-         "namespace": ["streaming.example.com","live","sports"],
+         "namespace": "streaming.example.com/live/sports",
          "packaging": "loc",
          "isLive": true,
          "targetLatency": 2000,
@@ -2158,7 +2170,7 @@ Table of Contents
        },
        {
          "name": "standard-720p-video",
-         "namespace": ["streaming.example.com","live","sports"],
+         "namespace": "streaming.example.com/live/sports",
          "packaging": "loc",
          "isLive": true,
          "targetLatency": 2000,
@@ -2175,7 +2187,7 @@ Table of Contents
        },
        {
          "name": "audio",
-         "namespace": ["streaming.example.com","live","sports"],
+         "namespace": "streaming.example.com/live/sports",
          "packaging": "loc",
          "isLive": true,
          "targetLatency": 2000,
@@ -2208,7 +2220,7 @@ Table of Contents
        },
        {
          "name": "camera33-catalog",
-         "namespace": ["example.com","blimps-R-us"],
+         "namespace": "example.com/blimps-R-us",
          "packaging": "catalog",
          "label": "Eye From the Sky video feeds"
        }
@@ -2229,7 +2241,7 @@ Table of Contents
      "tracks": [
        {
          "name": "video",
-         "namespace": ["broadcast.example.com","live","stream1"],
+         "namespace": "broadcast.example.com/live/stream1",
          "packaging": "loc",
          "isLive": true,
          "targetLatency": 2000,
@@ -2243,7 +2255,7 @@ Table of Contents
        },
        {
          "name": "audio",
-         "namespace": ["broadcast.example.com","live","stream1"],
+         "namespace": "broadcast.example.com/live/stream1",
          "packaging": "loc",
          "isLive": true,
          "targetLatency": 2000,
@@ -2257,14 +2269,14 @@ Table of Contents
      ],
      "publishTracks": [
        {
-         "namespace": ["metrics.moq.arpa","v1","%resourceId%"],
+         "namespace": "metrics.moq.arpa/logs-v1/%resourceId%",
          "name": "4",
          "packaging": "moqmetrics",
          "role": "metrics",
          "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
        },
        {
-         "namespace": ["metrics.moq.arpa","v1","%resourceId%"],
+         "namespace": "moq-syslog.arpa/logs-v1/%resourceId%",
          "name": "6",
          "packaging": "moqlog",
          "role": "log",
@@ -2283,8 +2295,7 @@ Table of Contents
 
    *  The log track uses the namespace format defined in [MOQLOG] with
       %resourceId% as a placeholder.  The track name "6" indicates
-      Informational level priority.  This track establishes a separate
-      connection to logs.example.com.
+      Informational level priority.
 
    *  Both tracks include authentication tokens for publishing
       authorization.
@@ -2960,7 +2971,7 @@ Table of Contents
    produced from the catalog's namespace and name strings by
    Section 11.2.  For example, the track object
 
-   { "namespace": ["customer", "livestream", "123"], "name": "catalog" }
+   { "namespace": "customer/livestream/123", "name": "catalog" }
 
    is rendered as customer-livestream-123--catalog, and a track named
    "café" in the same namespace is rendered as customer-livestream-123--
@@ -3023,10 +3034,10 @@ Table of Contents
    parsing the JSON string per Section 7 of [JSON].  In particular:
 
    *  JSON escape sequences are resolved before encoding.  The string
-      "café" and the string "café" denote the same sequence of scalar
-      values and therefore map to the same bytes (63 61 66 c3 a9).
-      Whether a producer writes a character literally or escaped has no
-      effect on the resulting Track Name.
+      "café" and the string "caf\u00e9" denote the same sequence of
+      scalar values and therefore map to the same bytes (63 61 66 c3
+      a9).  Whether a producer writes a character literally or escaped
+      has no effect on the resulting Track Name.
 
    *  No Unicode normalization (NFC, NFD, NFKC, NFKD), case folding, or
       other transformation is applied, either by the producer when
@@ -3363,6 +3374,10 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
 
 13.  Security Considerations
 
+   TODO
+
+13.1.  Track naming
+
    Track names and namespaces are compared as raw bytes (Section 11.2).
    Because no Unicode normalization or case folding is applied, visually
    confusable names (for example, names differing only in composed
@@ -3573,6 +3588,11 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
+
+   [RFC8259]  Bray, T., Ed., "The JavaScript Object Notation (JSON) Data
+              Interchange Format", STD 90, RFC 8259,
+              DOI 10.17487/RFC8259, December 2017,
+              <https://www.rfc-editor.org/rfc/rfc8259>.
 
    [RFC9000]  Iyengar, J., Ed. and M. Thomson, Ed., "QUIC: A UDP-Based
               Multiplexed and Secure Transport", RFC 9000,
