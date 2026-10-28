@@ -167,7 +167,7 @@ MSF delivers LOC {{LOC}} packaged media bitstreams.
 This specification references Low Overhead Container (LOC) {{LOC}} to define how
 audio and video content is packaged. With this packaging mode, each
 EncodedAudioChunk or EncodedVideoChunk sample is placed in a separate MOQT
-Object. All MOQT Objects are placed on MOQT Sub-Group 0. Samples that belong to
+Object. All MOQT Objects SHOULD be placed on MOQT Sub-Group 0. Samples that belong to
 the same Group of Pictures (GOP) MUST be placed within the same MOQT Group.
 
 When LOC packaging is used for a track, the catalog packaging attribute
