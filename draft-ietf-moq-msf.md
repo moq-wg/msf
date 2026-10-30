@@ -1941,6 +1941,12 @@ using the MSF_COMPRESSION property ({{compression-signaling}}). The document
 supports two formats: an explicit entry format and a template format. Publishers
 MAY combine both formats in a single document.
 
+The media timeline payload describes when a Group is published within a track. While
+usually regular in cadence, this publication may also be sparse and irregular and this
+sparseness will be reflected in the media and wallclock timestamps associated with each
+group. Additionally, there is no requirement from a media timeline perspective that the
+group numbers are sequential or are monotonically increasing.
+
 ### Explicit entry format {#explicitentryformat}
 The explicit format contains an array of records. Each record consists of
 an array of three required items, whose ordinal position defines their type:
@@ -1957,6 +1963,8 @@ an array of three required items, whose ordinal position defines their type:
   (midnight UTC/GMT) and expressed as a JSON Number. For VOD assets, or if the
   wallclock time is not known, the value SHOULD be 0.
 
+The media timeline track is ordered by media time.
+
 An example media timeline is shown below:
 
 ~~~json
@@ -1972,16 +1980,21 @@ An example media timeline is shown below:
 ## Media Timeline Catalog requirements
 A media timeline track MUST carry a 'type' identifier in the Catalog with a value
 of "mediatimeline". A media timeline track MUST carry a 'depends' attribute which
-contains an array of all track names to which the media timeline track applies.
+contains an array of all track names or renderGroups to which the media timeline
+track applies. If multiple tracks are referenced and then one of those tracks ceases
+publication, the publisher MUST produce a catalog update which removes the 'depends'
+reference of the track that ceased publication. If that track then becomes available
+as VOD content, a new media timeline track must be published to describe the content
+available in that track.
 
 ## Media Timeline track updating
 The publisher MUST publish an independent media timeline in the first MOQT Object
 of each MOQT Group of a media timeline track. An independent media timeline object
-MUST contain all media timeline records accumulated and accessible up to that point, allowing a
-subscriber joining at any group boundary to receive the accessible timeline history.
-The publisher MAY publish incremental updates in the second and subsequent Objects
-within each Group. Incremental updates contain only new media timeline records since
-the previous media timeline Object in that Group.
+MUST contain all media timeline records accumulated and accessible up to that point,
+allowing a subscriber joining at any group boundary to receive the accessible timeline
+history. The publisher MAY publish incremental updates in the second and subsequent
+Objects within each Group. Incremental updates contain only new media timeline records
+since the previous media timeline Object in that Group.
 
 ## Media Timeline Template {#mediatimelinetemplate}
 When the relationship between media time, MOQT Location and wallclock time follows
