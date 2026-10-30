@@ -436,6 +436,7 @@ Table 2 lists the fields defined within each track object.
 | Track duration          | trackDuration          | {{trackduration}}         |
 | Authorization Info      | authInfo               | {{authinfo}}              |
 | Accessibility           | accessibility          | {{accessibility}}         |
+| Accessible Window Time  | accessibleWindowTime   | {{accessiblewindowtime}}  |
 
 ### Tracks object {#trackobject}
 
@@ -940,6 +941,24 @@ semicolon-separated pairs of channel identifier and language code
 
 A subscriber MAY use this information to determine caption availability
 and configure an appropriate caption decoder.
+
+### Accessible Window Time {#accessiblewindowtime}
+Required: Optional   JSON Type: Number    Location: Track Object
+
+The accessibleWindowTime defines a time delta in wallclock {{wallclock}} milliseconds
+behind the live edge at which content in this track reamins accessible. This feature is
+often used to implement a 'DVR' window in live streams, in which content is only available
+for a fixed duration window which trails the live edge. To calculate the earliest available
+content, a client would subtract the accessibleWindowTime value from the current wallclock
+time to give the trailing threshold and then search the appropriate media timeline track for
+the earliest Group whose wallclock time is greater than this trailing threshold.
+
+If the track content is being encoded at a constant real-time temporal rate, then the
+accessibleWindowTime delta can be equally applied to the media time data within the
+media timeline track.
+
+Tracks assigned to the same alternative group {{altgroup}} MUST carry the same
+accessibleWindowTime value.
 
 ## Delta updates {#deltaupdates}
 A catalog update might contain incremental changes. This is a useful property if
@@ -1466,7 +1485,8 @@ tracks using MoQ Secure Objects with AES-128-GCM.
 This example shows a catalog for a media producer capable of sending LOC
 packaged, time-aligned audio and video tracks, along with a Media Timeline
 which describes the history of those tracks and an Event Timeline providing
-synchronized data.
+synchronized data. Additionally, the accessibleWindowTime attribute of the
+video track defines a 5 min 'DVR window'.
 
 ~~~json
 {
@@ -1492,6 +1512,7 @@ synchronized data.
       "namespace": "conference.example.com/conference123/alice",
       "packaging": "loc",
       "isLive": true,
+      "accessibleWindowTime": 300000,
       "targetLatency": 2000,
       "role": "video",
       "renderGroup": 1,
@@ -1934,6 +1955,13 @@ relationship to wallclock time and media time. Media timeline tracks allow playe
 seek to precise points behind the live head in a live broadcast, or for random access
 in a VOD asset. Media timeline tracks are optional. Multiple media timeline tracks
 can exist inside a catalog.
+
+A media timeline track MAY describe content that lies outside the accessibility window
+defined by the Accessible Window Time {{accessiblewindowtime}} track property. Publishers
+of media timeline tracks SHOULD trim their media timeline so as to not describe content
+outside of the availability window. Subscribers of media timeline tracks MUST apply
+any Accessible Window Time constraints before attempting to retrieve content based on
+a media timeline description.
 
 ## Media Timeline track payload {#mediatimelinepayload}
 A media timeline track is a JSON {{JSON}} document. This document MAY be compressed
