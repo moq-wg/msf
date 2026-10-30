@@ -654,13 +654,20 @@ Data List {{initdatalist}}.
 ### Dependencies {#dependencies}
 Required: Optional    JSON Type: Array    Location: Track Object
 
-Certain tracks may depend on other tracks for decoding. Dependencies holds an
-array of track names {{trackname}} on which the current track is dependent. Each
-element is a JSON string mapped and compared as defined in {{namemapping}}.
+Certain tracks may depend on other tracks, for example as a decoding dependency
+or due to a media timeline relationship. To signal this relationship, Dependencies
+holds an array of elements on which the current track is dependent. Each element can be
+either a track name {{trackname}} or renderGroup {{rendergroup}}. To assist parsers
+in determining the type of each element, any entry with a JSON type of String
+MUST reference a track name and any entry with a JSON type of Number MUST reference
+a renderGroup.
+
 Since only the track name is signaled, the namespace of the dependencies is
-assumed to match that of the track declaring the dependencies. Each element MUST
+assumed to match that of the track declaring the dependencies. Each String element MUST
 match the Track Name of exactly one other track object in the same namespace
-within the catalog; a catalog in which a dependency does not resolve is invalid.
+within the catalog. Each Number element MUST match the renderGroup identifier
+of exactly one renderGroup in the same namespace within the catalog. A catalog in
+which a dependency does not resolve is invalid.
 
 ### Template {#template}
 Required: Optional   JSON Type: Array    Location: Track Object
@@ -1996,7 +2003,11 @@ An example media timeline is shown below:
 ## Media Timeline Catalog requirements
 A media timeline track MUST carry a 'type' identifier in the Catalog with a value
 of "mediatimeline". A media timeline track MUST carry a 'depends' attribute which
-contains an array of all track names to which the media timeline track applies.
+contains an array of any track names and renderGroups to which the media timeline
+track applies. If all tracks in a renderGroup match the media timeline, then the
+renderGroup MUST be referenced and the individual track names MUST NOT be referenced.
+If only a subset of tracks in the renderGroup match the media timeline, then the
+renderGroup MUST NOT be referenced and the individual tracks MUST be referenced.
 
 ## Media Timeline track updating
 The publisher MUST publish an independent media timeline in the first MOQT Object
