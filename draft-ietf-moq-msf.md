@@ -41,7 +41,6 @@ normative:
   BASE64: RFC4648
   JSON: RFC8259
   LANG: RFC5646
-  MIME: RFC6838
   RFC9000: RFC9000
   GZIP: RFC1952
   UTF8: RFC3629
@@ -408,7 +407,7 @@ Table 2 lists the fields defined within each track object.
 | Is Live                 | isLive                 | {{islive}}                |
 | Target latency          | targetLatency          | {{targetlatency}}         |
 | Buffers                 | buffers                | {{buffers}}               |
-| Track role              | role                   | {{trackrole}}             |
+| Track type              | type                   | {{tracktype}}             |
 | Track label             | label                  | {{tracklabel}}            |
 | Render group            | renderGroup            | {{rendergroup}}           |
 | Alternate group         | altGroup               | {{altgroup}}              |
@@ -417,7 +416,6 @@ Table 2 lists the fields defined within each track object.
 | Temporal ID             | temporalId             | {{temporalid}}            |
 | Spatial ID              | spatialId              | {{spatialid}}             |
 | Codec                   | codec                  | {{codec}}                 |
-| Mime type               | mimeType               | {{mimetype}}              |
 | Framerate               | framerate              | {{framerate}}             |
 | Timescale               | timescale              | {{timescale}}             |
 | Maximum Bitrate         | bitrate                | {{bitrate}}               |
@@ -514,18 +512,15 @@ naming scheme, such as Reverse Domain Name Notation, where domain name component
 This field is required if the {{packaging}} value is "eventtimeline".
 This field MUST NOT be used if the packaging value is not "eventtimeline".
 
-### Track role {#trackrole}
+### Track type {#tracktype}
 Required: Optional    JSON Type: String    Location: Track Object
 
-A string defining the role of content carried by the track. Specified roles
-are described in Table 4. These role values are case-sensitive.
+A string defining the type of content carried by the track. Specified types
+are described in Table 4. These type values are case-sensitive.
 
-This role field MAY be used in conjunction with the Mimetype {{mimetype}} to
-fully describe the content of the track.
+Table 4: Reserved track types
 
-Table 4: Reserved track roles
-
-| Role             |   Description                                                     |
+| Type             |   Description                                                     |
 |:=================|:==================================================================|
 | audiodescription | An audio description for visually impaired users                  |
 | video            | Visual content                                                    |
@@ -540,7 +535,7 @@ Table 4: Reserved track roles
 | data             | A generic descriptor for tracks carrying application-defined data |
 |------------------|-------------------------------------------------------------------|
 
-Custom roles MAY be used as long as they do not collide with the specified roles.
+Custom types MAY be used as long as they do not collide with the specified types.
 
 ### Is Live {#islive}
 Required: Yes    JSON Type: Boolean    Location: Track Object
@@ -672,11 +667,6 @@ and Section 4 of {{WEBCODECS-CODEC-REGISTRY}}.
 This property MUST be specified for tracks which have an inherent codec
 associated with them (e.g., audio and video tracks). It is not required for
 raw data tracks or event streams.
-
-### Mimetype {#mimetype}
-Required: Optional    JSON Type: String    Location: Track Object
-
-A string defining the mime type {{MIME}} of the track.
 
 ### Framerate {#framerate}
 Required: Optional    JSON Type: Number    Location: Track Object
@@ -1036,7 +1026,7 @@ packaged, time-aligned audio and video tracks.
       "packaging": "loc",
       "isLive": true,
       "targetLatency": 2000,
-      "role": "video",
+      "type": "video",
       "renderGroup": 1,
       "codec":"av01.0.08M.10.0.110.09",
       "width":1920,
@@ -1050,7 +1040,7 @@ packaged, time-aligned audio and video tracks.
       "packaging": "loc",
       "isLive": true,
       "targetLatency": 2000,
-      "role": "audio",
+      "type": "audio",
       "renderGroup": 1,
       "codec":"opus",
       "samplerate":48000,
@@ -1083,7 +1073,7 @@ of the catalog.
       "packaging": "loc",
       "isLive": true,
       "targetLatency": 1500,
-      "role": "video",
+      "type": "video",
       "codec":"av01",
       "width":1920,
       "height":1080,
@@ -1097,7 +1087,7 @@ of the catalog.
       "packaging": "loc",
       "isLive": true,
       "targetLatency": 1500,
-      "role": "video",
+      "type": "video",
       "codec":"av01",
       "width":720,
       "height":640,
@@ -1111,7 +1101,7 @@ of the catalog.
       "packaging": "loc",
       "isLive": true,
       "targetLatency": 1500,
-      "role": "video",
+      "type": "video",
       "codec":"av01",
       "width":192,
       "height":144,
@@ -1125,7 +1115,7 @@ of the catalog.
       "packaging": "loc",
       "isLive": true,
       "targetLatency": 1500,
-      "role": "audio",
+      "type": "audio",
       "codec":"opus",
       "samplerate":48000,
       "channelConfig":"2",
@@ -1182,7 +1172,7 @@ express the track relationships.
       "packaging": "loc",
       "isLive": true,
       "buffers": {"target":2000},
-      "role": "video",
+      "type": "video",
       "codec":"av01.0.01M.10.0.110.09",
       "width":640,
       "height":480,
@@ -1196,7 +1186,7 @@ express the track relationships.
       "packaging": "loc",
       "isLive": true,
       "buffers": {"target":2000},
-      "role": "video",
+      "type": "video",
       "codec":"av01.0.04M.10.0.110.09",
       "width":640,
       "height":480,
@@ -1211,7 +1201,7 @@ express the track relationships.
       "packaging": "loc",
       "isLive": true,
       "buffers": {"target":2000},
-      "role": "video",
+      "type": "video",
       "codec":"av01.0.05M.10.0.110.09",
       "width":1920,
       "height":1080,
@@ -1227,7 +1217,7 @@ express the track relationships.
       "packaging": "loc",
       "isLive": true,
       "buffers": {"target":2000},
-      "role": "video",
+      "type": "video",
       "codec":"av01.0.08M.10.0.110.09",
       "width":1920,
       "height":1080,
@@ -1242,7 +1232,7 @@ express the track relationships.
       "packaging": "loc",
       "isLive": true,
       "buffers": {"target":2000},
-      "role": "audio",
+      "type": "audio",
       "codec":"opus",
       "samplerate":48000,
       "channelConfig":"2",
@@ -1279,7 +1269,7 @@ the other is cloned from an existing track.
           "name": "slides",
           "packaging": "loc",
           "isLive": true,
-          "role": "video",
+          "type": "video",
           "codec": "av01.0.08M.10.0.110.09",
           "width": 1920,
           "height": 1080,
@@ -1341,7 +1331,7 @@ description.
       "packaging": "loc",
       "isLive": true,
       "buffers": {"target":2000, "min": 1500, "max": 5000},
-      "role": "video",
+      "type": "video",
       "renderGroup": 1,
       "codec":"av01.0.08M.10.0.110.09",
       "width":1920,
@@ -1358,7 +1348,7 @@ description.
       "packaging": "loc",
       "isLive": true,
       "buffers": {"target":2000, "min": 1500, "max": 5000},
-      "role": "audio",
+      "type": "audio",
       "renderGroup": 1,
       "codec":"opus",
       "samplerate":48000,
@@ -1428,7 +1418,7 @@ tracks using MoQ Secure Objects with AES-128-GCM.
       "packaging": "loc",
       "isLive": true,
       "targetLatency": 2000,
-      "role": "video",
+      "type": "video",
       "renderGroup": 1,
       "codec": "av01.0.08M.10.0.110.09",
       "width": 1920,
@@ -1446,7 +1436,7 @@ tracks using MoQ Secure Objects with AES-128-GCM.
       "packaging": "loc",
       "isLive": true,
       "targetLatency": 2000,
-      "role": "audio",
+      "type": "audio",
       "renderGroup": 1,
       "codec": "opus",
       "samplerate": 48000,
@@ -1477,7 +1467,6 @@ synchronized data.
       "name": "history",
       "namespace": "conference.example.com/conference123/alice",
       "packaging": "mediatimeline",
-      "mimeType": "application/json",
       "depends": ["1080p-video","audio"]
     },
     {
@@ -1493,7 +1482,7 @@ synchronized data.
       "packaging": "loc",
       "isLive": true,
       "targetLatency": 2000,
-      "role": "video",
+      "type": "video",
       "renderGroup": 1,
       "codec":"av01.0.08M.10.0.110.09",
       "width":1920,
@@ -1507,7 +1496,7 @@ synchronized data.
       "packaging": "loc",
       "isLive": true,
       "targetLatency": 2000,
-      "role": "audio",
+      "type": "audio",
       "renderGroup": 1,
       "codec":"opus",
       "samplerate":48000,
@@ -1538,7 +1527,7 @@ template values to accommodate different group durations.
       "packaging": "loc",
       "isLive": true,
       "targetLatency": 2000,
-      "role": "video",
+      "type": "video",
       "renderGroup": 1,
       "template": [0, 2002, [0, 0], [1, 0], 1759924158381, 2002],
       "codec":"av01.0.08M.10.0.110.09",
@@ -1553,7 +1542,7 @@ template values to accommodate different group durations.
       "packaging": "loc",
       "isLive": true,
       "targetLatency": 2000,
-      "role": "audio",
+      "type": "audio",
       "renderGroup": 1,
       "template": [0, 2002, [0, 0], [1, 0], 1759924158381, 2002],
       "codec":"opus",
@@ -1581,7 +1570,7 @@ in the video track and a separate SCTE-35 event timeline for ad insertion.
       "packaging": "loc",
       "isLive": true,
       "targetLatency": 4000,
-      "role": "video",
+      "type": "video",
       "renderGroup": 1,
       "codec": "avc1.4d401f",
       "width": 1920,
@@ -1600,7 +1589,7 @@ in the video track and a separate SCTE-35 event timeline for ad insertion.
       "packaging": "loc",
       "isLive": true,
       "targetLatency": 4000,
-      "role": "audio",
+      "type": "audio",
       "renderGroup": 1,
       "codec": "opus",
       "samplerate": 48000,
@@ -1639,7 +1628,7 @@ in the video track, demonstrating multiple caption services.
       "packaging": "loc",
       "isLive": true,
       "targetLatency": 4000,
-      "role": "video",
+      "type": "video",
       "renderGroup": 1,
       "codec": "hev1.1.6.L93.B0",
       "width": 1920,
@@ -1658,7 +1647,7 @@ in the video track, demonstrating multiple caption services.
       "packaging": "loc",
       "isLive": true,
       "targetLatency": 4000,
-      "role": "audio",
+      "type": "audio",
       "renderGroup": 1,
       "codec": "mp4a.40.2",
       "samplerate": 48000,
@@ -1703,7 +1692,7 @@ substitution. The following catalog template:
       "name": "video",
       "packaging": "loc",
       "isLive": true,
-      "role": "video",
+      "type": "video",
       "renderGroup": 1
     },
     {
@@ -1727,7 +1716,7 @@ would be resolved by the subscriber as:
       "name": "video",
       "packaging": "loc",
       "isLive": true,
-      "role": "video",
+      "type": "video",
       "renderGroup": 1
     },
     {
@@ -1761,7 +1750,7 @@ specification.
       "packaging": "loc",
       "isLive": true,
       "targetLatency": 2000,
-      "role": "video",
+      "type": "video",
       "renderGroup": 1,
       "codec": "av01.0.12M.10.0.110.09",
       "width": 3840,
@@ -1778,7 +1767,7 @@ specification.
       "packaging": "loc",
       "isLive": true,
       "targetLatency": 2000,
-      "role": "video",
+      "type": "video",
       "renderGroup": 2,
       "codec": "av01.0.05M.10.0.110.09",
       "width": 1280,
@@ -1795,7 +1784,7 @@ specification.
       "packaging": "loc",
       "isLive": true,
       "targetLatency": 2000,
-      "role": "audio",
+      "type": "audio",
       "renderGroup": 1,
       "codec": "opus",
       "samplerate": 48000,
@@ -1853,7 +1842,7 @@ track name formats follow the conventions defined in {{MOQLOG}} and {{MOQMETRICS
       "packaging": "loc",
       "isLive": true,
       "targetLatency": 2000,
-      "role": "video",
+      "type": "video",
       "renderGroup": 1,
       "codec": "av01.0.08M.10.0.110.09",
       "width": 1920,
@@ -1867,7 +1856,7 @@ track name formats follow the conventions defined in {{MOQLOG}} and {{MOQMETRICS
       "packaging": "loc",
       "isLive": true,
       "targetLatency": 2000,
-      "role": "audio",
+      "type": "audio",
       "renderGroup": 1,
       "codec": "opus",
       "samplerate": 48000,
@@ -1880,14 +1869,14 @@ track name formats follow the conventions defined in {{MOQLOG}} and {{MOQMETRICS
       "namespace": "metrics.moq.arpa/logs-v1/%resourceId%",
       "name": "4",
       "packaging": "moqmetrics",
-      "role": "metrics",
+      "type": "metrics",
       "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
     },
     {
       "namespace": "moq-syslog.arpa/logs-v1/%resourceId%",
       "name": "6",
       "packaging": "moqlog",
-      "role": "log",
+      "type": "log",
       "connectionUri": "moqt://logs.example.com:4443",
       "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
     }
@@ -2270,7 +2259,7 @@ between messages captured at the same timestamp.
 A log track MUST be declared in the publishTracks array of the catalog with:
 
 * a {{packaging}} attribute with a value of "moqlog".
-* a {{trackrole}} attribute with a value of "log".
+* a {{tracktype}} attribute with a value of "log".
 
 A log track MAY include:
 
@@ -2328,7 +2317,7 @@ maintaining efficient MOQT caching and distribution.
 A metrics track MUST be declared in the publishTracks array of the catalog with:
 
 * a {{packaging}} attribute with a value of "moqmetrics".
-* a {{trackrole}} attribute with a value of "metrics".
+* a {{tracktype}} attribute with a value of "metrics".
 
 A metrics track MAY include:
 
@@ -2829,10 +2818,10 @@ VIDEO_CONFIG type 0x0D
 AUIDO_CONFIG type 0x0F
 
 The VIDEO_CONFIG Track & Object property carries the initialization data for a track
-with a track role type of "video".
+with a track type of "video".
 
 The AUDIO_CONFIG Track & Object property carries the initialization data for a track
-with a track role type of "audio".
+with a track type of "audio".
 
 If this initialization data is immutable over the life of the track, then the property
 MUST be added as a Track property and there MUST be an initRef {{initref}} Track field
