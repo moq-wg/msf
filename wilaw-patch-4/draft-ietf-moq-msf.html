@@ -2805,13 +2805,19 @@ Data List <a href="#initdatalist" class="auto internal xref">Section 5.1.7</a>.<
 <a href="#section-5.2.14" class="section-number selfRef">5.2.14. </a><a href="#name-dependencies" class="section-name selfRef">Dependencies</a>
           </h4>
 <p id="section-5.2.14-1">Required: Optional    JSON Type: Array    Location: Track Object<a href="#section-5.2.14-1" class="pilcrow">¶</a></p>
-<p id="section-5.2.14-2">Certain tracks may depend on other tracks for decoding. Dependencies holds an
-array of track names <a href="#trackname" class="auto internal xref">Section 5.2.3</a> on which the current track is dependent. Each
-element is a JSON string mapped and compared as defined in <a href="#namemapping" class="auto internal xref">Section 11.2</a>.
-Since only the track name is signaled, the namespace of the dependencies is
-assumed to match that of the track declaring the dependencies. Each element <span class="bcp14">MUST</span>
+<p id="section-5.2.14-2">Certain tracks may depend on other tracks, for example as a decoding dependency
+or due to a media timeline relationship. To signal this relationship, Dependencies
+holds an array of elements on which the current track is dependent. Each element can be
+either a track name <a href="#trackname" class="auto internal xref">Section 5.2.3</a> or renderGroup <a href="#rendergroup" class="auto internal xref">Section 5.2.11</a>. To assist parsers
+in determining the type of each element, any entry with a JSON type of String
+<span class="bcp14">MUST</span> reference a track name and any entry with a JSON type of Number <span class="bcp14">MUST</span> reference
+a renderGroup.<a href="#section-5.2.14-2" class="pilcrow">¶</a></p>
+<p id="section-5.2.14-3">Since only the track name is signaled, the namespace of the dependencies is
+assumed to match that of the track declaring the dependencies. Each String element <span class="bcp14">MUST</span>
 match the Track Name of exactly one other track object in the same namespace
-within the catalog; a catalog in which a dependency does not resolve is invalid.<a href="#section-5.2.14-2" class="pilcrow">¶</a></p>
+within the catalog. Each Number element <span class="bcp14">MUST</span> match the renderGroup identifier
+of exactly one renderGroup in the same namespace within the catalog. A catalog in
+which a dependency does not resolve is invalid.<a href="#section-5.2.14-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="template">
@@ -4480,7 +4486,11 @@ For VOD assets, or if the wallclock time is not known, the value <span class="bc
         </h3>
 <p id="section-7.2-1">A media timeline track <span class="bcp14">MUST</span> carry a 'type' identifier in the Catalog with a value
 of "mediatimeline". A media timeline track <span class="bcp14">MUST</span> carry a 'depends' attribute which
-contains an array of all track names to which the media timeline track applies.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
+contains an array of any track names and renderGroups to which the media timeline
+track applies. If all tracks in a renderGroup match the media timeline, then the
+renderGroup <span class="bcp14">MUST</span> be referenced and the individual track names <span class="bcp14">MUST NOT</span> be referenced.
+If only a subset of tracks in the renderGroup match the media timeline, then the
+renderGroup <span class="bcp14">MUST NOT</span> be referenced and the individual tracks <span class="bcp14">MUST</span> be referenced.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="media-timeline-track-updating">

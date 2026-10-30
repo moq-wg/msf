@@ -982,15 +982,22 @@ Table of Contents
 
    Required: Optional JSON Type: Array Location: Track Object
 
-   Certain tracks may depend on other tracks for decoding.  Dependencies
-   holds an array of track names Section 5.2.3 on which the current
-   track is dependent.  Each element is a JSON string mapped and
-   compared as defined in Section 11.2.  Since only the track name is
-   signaled, the namespace of the dependencies is assumed to match that
-   of the track declaring the dependencies.  Each element MUST match the
-   Track Name of exactly one other track object in the same namespace
-   within the catalog; a catalog in which a dependency does not resolve
-   is invalid.
+   Certain tracks may depend on other tracks, for example as a decoding
+   dependency or due to a media timeline relationship.  To signal this
+   relationship, Dependencies holds an array of elements on which the
+   current track is dependent.  Each element can be either a track name
+   Section 5.2.3 or renderGroup Section 5.2.11.  To assist parsers in
+   determining the type of each element, any entry with a JSON type of
+   String MUST reference a track name and any entry with a JSON type of
+   Number MUST reference a renderGroup.
+
+   Since only the track name is signaled, the namespace of the
+   dependencies is assumed to match that of the track declaring the
+   dependencies.  Each String element MUST match the Track Name of
+   exactly one other track object in the same namespace within the
+   catalog.  Each Number element MUST match the renderGroup identifier
+   of exactly one renderGroup in the same namespace within the catalog.
+   A catalog in which a dependency does not resolve is invalid.
 
 5.2.15.  Template
 
@@ -2392,8 +2399,13 @@ Table of Contents
 
    A media timeline track MUST carry a 'type' identifier in the Catalog
    with a value of "mediatimeline".  A media timeline track MUST carry a
-   'depends' attribute which contains an array of all track names to
-   which the media timeline track applies.
+   'depends' attribute which contains an array of any track names and
+   renderGroups to which the media timeline track applies.  If all
+   tracks in a renderGroup match the media timeline, then the
+   renderGroup MUST be referenced and the individual track names MUST
+   NOT be referenced.  If only a subset of tracks in the renderGroup
+   match the media timeline, then the renderGroup MUST NOT be referenced
+   and the individual tracks MUST be referenced.
 
 7.3.  Media Timeline track updating
 
