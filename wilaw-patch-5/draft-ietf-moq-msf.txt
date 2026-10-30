@@ -5,8 +5,8 @@
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
 Intended status: Informational                             S. Nandakumar
-Expires: 1 May 2027                                                Cisco
-                                                         28 October 2026
+Expires: 3 May 2027                                                Cisco
+                                                         30 October 2026
 
 
                          MOQT Streaming Format
@@ -49,7 +49,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 1 May 2027.
+   This Internet-Draft will expire on 3 May 2027.
 
 Copyright Notice
 
@@ -170,13 +170,15 @@ Table of Contents
        7.4.1.  Template Format
        7.4.2.  Template Immutability
    8.  Event Timeline track
-     8.1.  Event Timeline data format
-     8.2.  Event Timeline Catalog requirements
-     8.3.  Event Timeline track updating
-     8.4.  Event timeline track payload examples
-       8.4.1.  Event timeline track with wallclock time indexing
-       8.4.2.  Event timeline track with MOQT Location indexing
-       8.4.3.  Event timeline track with media time indexing
+     8.1.  Event Timeline header data
+       8.1.1.  Example of Event Timeline header data
+     8.2.  Event Timeline data format
+     8.3.  Event Timeline Catalog requirements
+     8.4.  Event Timeline track updating
+     8.5.  Event timeline track payload examples
+       8.5.1.  Event timeline track with wallclock time indexing
+       8.5.2.  Event timeline track with MOQT Location indexing
+       8.5.3.  Event timeline track with media time indexing
    9.  Log track
      9.1.  Log track payload
      9.2.  Log track namespace and name
@@ -211,6 +213,8 @@ Table of Contents
        12.1.1.  MSF_COMPRESSION Track Property
        12.1.2.  MSF_COMPRESSION Object Property
      12.2.  Initialization properties
+     12.3.  Event Timeline Track properties
+       12.3.1.  MSF_EVENT_TIMELINE_HEADER Track property
    13. Security Considerations
      13.1.  Track naming
    14. IANA Considerations
@@ -328,8 +332,9 @@ Table of Contents
    This specification references Low Overhead Container (LOC) [LOC] to
    define how audio and video content is packaged.  With this packaging
    mode, each EncodedAudioChunk or EncodedVideoChunk sample is placed in
-   a separate MOQT Object.  Samples that belong to the same Group of
-   Pictures (GOP) MUST be placed within the same MOQT Group.
+   a separate MOQT Object.  All MOQT Objects SHOULD be placed on MOQT
+   Sub-Group 0.  Samples that belong to the same Group of Pictures (GOP)
+   MUST be placed within the same MOQT Group.
 
    When LOC packaging is used for a track, the catalog packaging
    attribute (Section 5.2.4) MUST be present and it MUST be populated
@@ -2306,8 +2311,9 @@ Table of Contents
 6.  Media transmission
 
    The MOQT Groups and MOQT Objects need to be mapped to MOQT Streams.
-   Irrespective of the Section 4 in place, each MOQT Object MUST be
-   mapped to a new MOQT Stream.
+   This mapping is defined by the packaging Section 4 type of each
+   track.  Each MOQT Object SHOULD be placed on MOQT sub-group 0, unless
+   otherwise defined by the packaging type.
 
 6.1.  Group numbering
 
@@ -2383,10 +2389,10 @@ Table of Contents
 
 7.2.  Media Timeline Catalog requirements
 
-   A media timeline track MUST carry a 'type' identifier in the Catalog
-   with a value of "mediatimeline".  A media timeline track MUST carry a
-   'depends' attribute which contains an array of all track names to
-   which the media timeline track applies.
+   A media timeline track MUST carry a 'packaging' Section 5.2.4
+   attribute with a value of "mediatimeline".  A media timeline track
+   MUST carry a 'depends' attribute which contains an array of all track
+   names to which the media timeline track applies.
 
 7.3.  Media Timeline track updating
 
@@ -2486,7 +2492,53 @@ Table of Contents
    'publishtracks' arrays, implying that can be both consumed and
    produced by an endpoint.
 
-8.1.  Event Timeline data format
+8.1.  Event Timeline header data
+
+   Certain event payloads require header data to help initialize or give
+   context to the payload data, which consists solely of an array of
+   records.  This header data is typically invariant over the life of
+   the track.
+
+   This header data is communicated by the MSF_EVENT_TIMELINE_HEADER
+   Track property Section 12.3.1.
+
+   Subscribers to an Event Timeline Track MUST check for the presence of
+   this track property before parsing the payload of the event timeline
+   track.
+
+   Usage of this track property is optional.  Absence of the
+   MSF_EVENT_TIMELINE_HEADER Track property indicates that no header
+   data is provided for the Event Timeline Track.
+
+8.1.1.  Example of Event Timeline header data
+
+   Consider an example of drone telemetry.  The catalog defines the
+   track as an event timeline.
+
+   {
+     "name": "telemetry",
+     "namespace": "live.example.com/flight/1",
+     "packaging": "eventtimeline",
+     "eventType": "com.example.dronetelemetry",
+     "depends": ["1080p-video"]
+   }
+
+   The publisher sends contextual metadata in the
+   MSF_EVENT_TIMELINE_HEADER property, serialized as the following JSON
+   object.
+
+   {"crs": "WGS84", "fields": ["latitude", "longitude", "altitude"], "altitudeUnit": "meter"}
+
+   This data is used by the subscriber to correctly interpret the event
+   timeline records.  Transmitting this data once in the property is
+   more efficient than repeating it in each record.
+
+   [
+     {"L": [0,0], "data": [47.1812, 8.4592, 488.2]},
+     {"L": [1,0], "data": [47.1662, 8.5155, 502.7]}
+   ]
+
+8.2.  Event Timeline data format
 
    An event timeline track is a JSON [JSON] document.  This document MAY
    be compressed using the MSF_COMPRESSION property (Section 12.1).  The
@@ -2506,7 +2558,7 @@ Table of Contents
    *  A 'data' Object, whose structure is defined by the Section 5.2.5
       value declared for this track in the Catalog.
 
-8.2.  Event Timeline Catalog requirements
+8.3.  Event Timeline Catalog requirements
 
    An event timeline track MUST carry:
 
@@ -2521,7 +2573,7 @@ Table of Contents
    be listed in a 'depends' Section 5.2.14 field within the the Event
    Timeline track definition.
 
-8.3.  Event Timeline track updating
+8.4.  Event Timeline track updating
 
    The mapping of Event Timeline payloads to MOQT Groups is defined by
    the 'eventType'.
@@ -2541,9 +2593,9 @@ Table of Contents
    history, then the publisher SHOULD publish each record in its own
    MOQT Group and use a single MOQT Object per MOQT Group.
 
-8.4.  Event timeline track payload examples
+8.5.  Event timeline track payload examples
 
-8.4.1.  Event timeline track with wallclock time indexing
+8.5.1.  Event timeline track with wallclock time indexing
 
    This example shows how sports scores and game information might be
    defined in a live sports broadcast.
@@ -2573,7 +2625,7 @@ Table of Contents
        }
    ]
 
-8.4.2.  Event timeline track with MOQT Location indexing
+8.5.2.  Event timeline track with MOQT Location indexing
 
    This example shows drone GPS coordinates synched with the start of
    each Group.
@@ -2589,7 +2641,7 @@ Table of Contents
        }
    ]
 
-8.4.3.  Event timeline track with media time indexing
+8.5.3.  Event timeline track with media time indexing
 
    This example shows an object identification track from a hypothetical
    video indexing system.
@@ -3371,6 +3423,23 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
    data using this Object property MUST include an initRef
    Section 5.2.13 field referencing an Initialization Data List
    Section 5.1.7 entry with a type of 'object-property'.
+
+12.3.  Event Timeline Track properties
+
+12.3.1.  MSF_EVENT_TIMELINE_HEADER Track property
+
+   Track Property type: 0x7B
+
+   The MSF_EVENT_TIMELINE_HEADER Track property carries header data for
+   an Event Timeline track.  This initialization data is immutable over
+   the life of the track.
+
+   The serialization of the value of the property is defined by the
+   Event timeline type Section 5.2.5.
+
+   If used, publishers MUST include the MSF_EVENT_TIMELINE_HEADER track
+   property in the PUBLISH message (publisher-initiated flow) or
+   SUBSCRIBE_OK message (subscriber-initiated flow).
 
 13.  Security Considerations
 
