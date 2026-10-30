@@ -1970,7 +1970,7 @@ An example media timeline is shown below:
 ~~~
 
 ## Media Timeline Catalog requirements
-A media timeline track MUST carry a 'type' identifier in the Catalog with a value
+A media timeline track MUST carry a 'packaging' {{packaging}} attribute with a value
 of "mediatimeline". A media timeline track MUST carry a 'depends' attribute which
 contains an array of all track names to which the media timeline track applies.
 
