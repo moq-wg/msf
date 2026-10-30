@@ -945,10 +945,10 @@ and configure an appropriate caption decoder.
 ### Accessible Window Time {#accessiblewindowtime}
 Required: Optional   JSON Type: Number    Location: Track Object
 
-The accessibleWindowTime defines a time delta in wallclock {{wallclock}} milliseconds
-behind the live edge at which content in this track reamins accessible. This feature is
-often used to implement a 'DVR' window in live streams, in which content is only available
-for a fixed duration window which trails the live edge. To calculate the earliest available
+The accessibleWindowTime defines a time delta in wallclock milliseconds behind the
+live edge at which content in this track reamins accessible. This feature is often used
+to implement a 'DVR' window in live streams, in which content is only available for a
+fixed duration window which trails the live edge. To calculate the earliest available
 content, a client would subtract the accessibleWindowTime value from the current wallclock
 time to give the trailing threshold and then search the appropriate media timeline track for
 the earliest Group whose wallclock time is greater than this trailing threshold.
