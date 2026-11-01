@@ -510,7 +510,7 @@ Which additional track fields are required depends on the pair
 ### Required fields per packaging and role {#requiredfields}
 
 {{tracknamespace}}, {{trackname}}, {{packaging}}, and {{islive}} are
-required on every track. Table 5 lists the fields that MUST also be
+required on every track. The table below lists the fields that MUST also be
 present for each (`packaging`, `role`) pair. Fields not listed remain
 OPTIONAL. Where an individual field definition sets a stricter constraint
 (e.g. `Conditional`), that constraint wins.
@@ -518,19 +518,18 @@ OPTIONAL. Where an individual field definition sets a stricter constraint
 Fields with no meaning for a given pair SHOULD NOT be included; parsers
 ignore fields they do not understand.
 
-| Packaging       | Role             | Also required                          |
-|:================|:=================|:=======================================|
-| loc             | audio            | codec, samplerate, channelConfig       |
-| loc             | video            | codec, framerate                       |
-| loc             | audiodescription | codec, samplerate, channelConfig, lang |
-| loc             | signlanguage     | codec, framerate                       |
-| eventtimeline   | eventtimeline    | eventType                              |
-| mediatimeline   | mediatimeline    | -                                      |
-| moqlog          | log              | -                                      |
-| moqmetrics      | metrics          | -                                      |
-| catalog         | any              | -                                      |
+| Packaging     | Role             | Also required                          |
+|:==============|:=================|:=======================================|
+| loc           | audio            | codec, samplerate, channelConfig       |
+| loc           | video            | codec, framerate                       |
+| loc           | audiodescription | codec, samplerate, channelConfig, lang |
+| loc           | signlanguage     | codec, framerate                       |
+| eventtimeline | eventtimeline    | eventType                              |
 
-Table 5: Required track fields per (packaging, role)
+Table: Required track fields per (packaging, role)
+
+Packaging and role combinations not listed in the table above have no
+required fields beyond those required on every track.
 
 Specifications defining new packaging values extend this table with
 their own per-role rows.
@@ -960,7 +959,7 @@ embedded within the track. Each descriptor is a JSON Object containing:
 * A required 'value' field (String) specifying the accessibility channels
   or features available.
 
-Table 6: Registered accessibility schemes
+Table 8: Registered accessibility schemes
 
 | Scheme                             | Description                          |
 |:===================================|:=====================================|
@@ -2480,7 +2479,7 @@ meaning, as defined by {{reservedfragmentparameters}}.
 
 ### Reserved fragment parameters {#reservedfragmentparameters}
 
-Table 8 defines reserved key names for the parameter portion of the msf-fragment. Keynames are
+Table 9 defines reserved key names for the parameter portion of the msf-fragment. Keynames are
 case-sensitive.
 
 | Name            |                Description                       |
