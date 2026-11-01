@@ -162,20 +162,19 @@ When LOC packaging is used for a track, the catalog packaging attribute
 LOC {{LOC}} defines only the payload container carried in each MOQT Object; it
 does not specify how those Objects are mapped onto MOQT Streams. MSF publishers
 using LOC packaging MUST select one of the mapping modes listed below, and
-subscribers MUST be prepared to consume any of them. The chosen mode is
+subscribers MUST be prepared to consume both of them. The chosen mode is
 signaled per-track via the {{packagingmetadata}} field using the
 `streamMapping` key.
 
-| streamMapping value | Description                                                                                          |
-|:====================|:=====================================================================================================|
-| object              | Each MOQT Object is sent on its own MOQT Stream. Default; RECOMMENDED for the lowest latency.        |
-| subgroup            | All MOQT Objects within a single MOQT Subgroup are sent on the same MOQT Stream, in Object ID order. |
-| group               | All MOQT Objects within a single MOQT Group are sent on the same MOQT Stream, in Object ID order.    |
+| streamMapping value | Description                                                                                           |
+|:====================|:======================================================================================================|
+| group               | All MOQT Objects within a MOQT Group are sent in a single MOQT Subgroup, in Object ID order. Default. |
+| object              | Each MOQT Object is sent in its own MOQT Subgroup.                                                    |
 
 Table: LOC stream-mapping modes signaled via `packagingMetadata`
 
 If `packagingMetadata` is absent, or if it is present but does not carry a
-`streamMapping` key, the mode `object` MUST be assumed.
+`streamMapping` key, the mode `group` MUST be assumed.
 
 Regardless of the selected mode, the mapping of samples to Objects and Groups
 defined above (one sample per Object, one GOP per Group) is unchanged.
@@ -533,7 +532,7 @@ Required: Optional    JSON Type: String    Location: Track Object
 
 Additional parameters for the {{packaging}} value in use, encoded as a
 semicolon-separated list of `key=value` pairs (e.g. `key1=v1;key2=v2`).
-Keys and values are case-sensitive and MUST NOT contain whitespace.
+Keys and values are case-sensitive and MUST NOT contain whitespace, `=` or `;`.
 
 The permitted keys and their meaning are defined by the specification
 for the packaging value in use. Subscribers MUST ignore any key that
@@ -543,15 +542,8 @@ more than once, the first occurrence is used.
 For `packaging` value "loc", the following keys are defined:
 
 * `streamMapping` - the LOC to MOQT Stream mapping mode. Permitted values are
-  listed in {{loc-stream-mapping}}. If this key is absent, the value `object`
+  listed in {{loc-stream-mapping}}. If this key is absent, the value `group`
   is assumed.
-
-Example:
-
-~~~
-"packaging": "loc",
-"packagingMetadata": "streamMapping=subgroup"
-~~~
 
 ### Event timeline type {#eventtype}
 Required: Optional    JSON Type: String    Location: Track Object
