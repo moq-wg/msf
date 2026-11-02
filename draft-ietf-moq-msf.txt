@@ -2489,6 +2489,14 @@ Table of Contents
    template format.  Publishers MAY combine both formats in a single
    document.
 
+   The media timeline payload describes when a Group is published within
+   a track.  While usually regular in cadence, this publication may also
+   be sparse and irregular and this sparseness will be reflected in the
+   media and wallclock timestamps associated with each group.
+   Additionally, there is no requirement from a media timeline
+   perspective that the group numbers are sequential or are
+   monotonically increasing.
+
 7.1.1.  Explicit entry format
 
    The explicit format contains an array of records.  Each record
@@ -2513,6 +2521,8 @@ Table of Contents
       Number.  For VOD assets, or if the wallclock time is not known,
       the value SHOULD be 0.
 
+   The media timeline track is ordered by media time.
+
    An example media timeline is shown below:
 
    [
@@ -2527,8 +2537,14 @@ Table of Contents
 
    A media timeline track MUST carry a 'type' identifier in the Catalog
    with a value of "mediatimeline".  A media timeline track MUST carry a
-   'depends' attribute which contains an array of all track names to
-   which the media timeline track applies.
+   'depends' attribute which contains an array of all track names or
+   renderGroups to which the media timeline track applies.  If multiple
+   tracks are referenced and then one of those tracks ceases
+   publication, the publisher MUST produce a catalog update which
+   removes the 'depends' reference of the track that ceased publication.
+   If that track then becomes available as VOD content, a new media
+   timeline track must be published to describe the content available in
+   that track.
 
 7.3.  Media Timeline track updating
 
