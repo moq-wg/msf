@@ -5,8 +5,8 @@
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
 Intended status: Informational                             S. Nandakumar
-Expires: 1 May 2027                                                Cisco
-                                                         28 October 2026
+Expires: 6 May 2027                                                Cisco
+                                                         2 November 2026
 
 
                          MOQT Streaming Format
@@ -49,7 +49,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 1 May 2027.
+   This Internet-Draft will expire on 6 May 2027.
 
 Copyright Notice
 
@@ -73,11 +73,12 @@ Table of Contents
    4.  Media packaging
      4.1.  LOC packaging
      4.2.  Time-alignment
-     4.3.  Content protection and encryption
-       4.3.1.  Encryption scheme signaling
-       4.3.2.  Key management
-       4.3.3.  Recommended encryption scheme
-       4.3.4.  Encrypted object structure
+     4.3.  Packaging for track switching
+     4.4.  Content protection and encryption
+       4.4.1.  Encryption scheme signaling
+       4.4.2.  Key management
+       4.4.3.  Recommended encryption scheme
+       4.4.4.  Encrypted object structure
    5.  Catalog
      5.1.  Root Catalog Fields
        5.1.1.  MSF version
@@ -132,6 +133,7 @@ Table of Contents
        5.2.42. Authorization Info
        5.2.43. Token Delivery via URI
        5.2.44. Accessibility
+       5.2.45. Keyframe spacing
      5.3.  Delta updates
      5.4.  Variable Substitution
        5.4.1.  Variable Syntax
@@ -161,6 +163,9 @@ Table of Contents
    6.  Media transmission
      6.1.  Group numbering
      6.2.  Object Numbering
+     6.3.  Multi-Variant Fast Track Switching
+       6.3.1.  Switching Procedure
+       6.3.2.  Calculating Valid Switch Points
    7.  Media Timeline track
      7.1.  Media Timeline track payload
        7.1.1.  Explicit entry format
@@ -362,7 +367,34 @@ Table of Contents
    client to enable it to switch smoothly between time-aligned, but
    numerically dissimilar, Group IDs.
 
-4.3.  Content protection and encryption
+4.3.  Packaging for track switching
+
+   When publishing multiple tracks within an alternate group that have
+   dissimilar keyframe intervals (different GOP sizes), publishers MUST
+   follow these requirements to enable seamless track switching:
+
+   *  Each MOQT Group MUST start with a keyframe.  Publishers MUST NOT
+      place multiple keyframes within a single group, as this hides
+      intermediate join points from subscribers.
+
+   *  All tracks within an alternate group MUST be time-aligned at
+      object boundaries, not only at group boundaries.
+
+   *  The keyframeSpacing Section 5.2.45 catalog field MUST be specified
+      for each track, indicating the number of objects per keyframe
+      interval.
+
+   *  If any track within an alternate group specifies a keyframeSpacing
+      value, then all tracks within that alternate group MUST specify a
+      keyframeSpacing value.
+
+   *  The starting Group ID of all tracks within an alternate group MUST
+      be identical.
+
+   See Section 6.3 for details on how subscribers use keyframeSpacing to
+   calculate valid switch points.
+
+4.4.  Content protection and encryption
 
    MSF supports end-to-end encryption of media content using MoQ Secure
    Objects [SecureObjects].  When encryption is enabled, the payload of
@@ -370,7 +402,7 @@ Table of Contents
    relays can still route content based on unencrypted header
    information.
 
-4.3.1.  Encryption scheme signaling
+4.4.1.  Encryption scheme signaling
 
    The encryption scheme and parameters are signaled in the catalog
    using the following track-level fields:
@@ -388,7 +420,7 @@ Table of Contents
    subscribers MUST decrypt the object payload using the specified
    scheme before processing.
 
-4.3.2.  Key management
+4.4.2.  Key management
 
    The keyId and trackBaseKey values are obtained from an external key
    management system and the mechanism for obtaining these values is out
@@ -408,7 +440,7 @@ Table of Contents
    Publishers and subscribers MUST use the same key management system
    and agree on the keyId scope semantics for interoperable operation.
 
-4.3.3.  Recommended encryption scheme
+4.4.3.  Recommended encryption scheme
 
    The RECOMMENDED encryption scheme for MSF is "moq-secure-objects".
    Implementations supporting content encryption MUST implement the
@@ -424,7 +456,7 @@ Table of Contents
    *  The trackBaseKey field MUST be present to provide the base key
       material
 
-4.3.4.  Encrypted object structure
+4.4.4.  Encrypted object structure
 
    For LOC-packaged tracks with encryption enabled (see [SecureObjects],
    Section 4):
@@ -725,6 +757,8 @@ Table of Contents
       | Authorization Info     | authInfo         | Section 5.2.42 |
       +------------------------+------------------+----------------+
       | Accessibility          | accessibility    | Section 5.2.44 |
+      +------------------------+------------------+----------------+
+      | Keyframe spacing       | keyframeSpacing  | Section 5.2.45 |
       +------------------------+------------------+----------------+
 
                                  Table 3
@@ -1374,6 +1408,21 @@ Table of Contents
 
    A subscriber MAY use this information to determine caption
    availability and configure an appropriate caption decoder.
+
+5.2.45.  Keyframe spacing
+
+   Location: T Required: Optional JSON Type: Number
+
+   A number defining the number of objects per keyframe interval.  A
+   value of 15 means each group contains a keyframe followed by 14
+   predicted frames (15 objects total).  A value of 600 means each group
+   contains a keyframe followed by 599 predicted frames (600 objects
+   total).
+
+   This field is used by subscribers to calculate valid switch points
+   when performing adaptive bitrate switching between tracks with
+   different keyframe intervals.  See Section 4.3 for publisher
+   requirements and Section 6.3 for details on how to use this field.
 
 5.3.  Delta updates
 
@@ -2335,6 +2384,35 @@ Table of Contents
 
    Object ID MUST be zero for the first Object within a Group and then
    MUST increase monotonically by one within that Group.
+
+6.3.  Multi-Variant Fast Track Switching
+
+   This section specifies how a subscriber switches between tracks
+   within an alternate group that have dissimilar keyframeSpacing
+   values.  Publishers MUST package such tracks as described in
+   Section 4.3.  Additional background, implementation guidance and
+   evaluation of this technique are provided in [MVFTS].
+
+6.3.1.  Switching Procedure
+
+   To minimize join latency when joining an alternate group, a
+   subscriber SHOULD first subscribe to the track with the closest
+   switch point that satisfies the bandwidth constraints.  Once playback
+   begins, the subscriber MAY switch to a track with a larger
+   keyframeSpacing at a valid switch point, calculated as described in
+   Section 6.3.2.
+
+6.3.2.  Calculating Valid Switch Points
+
+   Given a source track with keyframeSpacing S and a target track with
+   keyframeSpacing T, a switch from Group ID G and Object ID N of the
+   source track is valid if:
+
+   (G * S + N) / T
+
+   yields an integer.  That integer is the Group ID in the target track
+   at which the subscriber begins receiving objects, starting at Object
+   ID 0.
 
 7.  Media Timeline track
 
@@ -3625,9 +3703,9 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
    [MOQMETRICS]
               Jennings, C. F. and S. Nandakumar, "Metrics over MOQT",
               Work in Progress, Internet-Draft, draft-jennings-moq-
-              metrics-02, 20 October 2025,
+              metrics-03, 2 November 2026,
               <https://datatracker.ietf.org/doc/html/draft-jennings-moq-
-              metrics-02>.
+              metrics-03>.
 
    [MoQTransport]
               Nandakumar, S., Vasiliev, V., Swett, I., and A. Frindell,
@@ -3640,9 +3718,9 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
               Nandakumar, S., Jennings, C. F., and T. Meunier, "Privacy
               Pass Authentication for Media over QUIC (MoQ)", Work in
               Progress, Internet-Draft, draft-ietf-moq-privacy-pass-
-              auth-03, 6 July 2026,
+              auth-04, 1 November 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-moq-
-              privacy-pass-auth-03>.
+              privacy-pass-auth-04>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -3702,6 +3780,13 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
               draft-law-moq-imsc1-msf-00, 6 July 2026,
               <https://datatracker.ietf.org/doc/html/draft-law-moq-
               imsc1-msf-00>.
+
+   [MVFTS]    Ugur, D., Gürel, Z., and A. C. Begen, "Subscriber-Side
+              Multi-Variant Fast Track Switching for MOQT", Work in
+              Progress, Internet-Draft, draft-ugur-moq-fast-switching-
+              00, 13 October 2026,
+              <https://datatracker.ietf.org/doc/html/draft-ugur-moq-
+              fast-switching-00>.
 
    [RFC8141]  Saint-Andre, P. and J. Klensin, "Uniform Resource Names
               (URNs)", RFC 8141, DOI 10.17487/RFC8141, April 2017,
