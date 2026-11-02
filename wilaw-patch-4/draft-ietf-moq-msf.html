@@ -5566,7 +5566,11 @@ track object<a href="#section-11.1.2-4" class="pilcrow">¶</a></p>
 </pre><a href="#section-11.1.2-5" class="pilcrow">¶</a>
 </div>
 <p id="section-11.1.2-6">is rendered as <code>customer-livestream-123--catalog</code>, and a track named <code>"café"</code>
-in the same namespace is rendered as <code>customer-livestream-123--caf.c3.a9</code>.<a href="#section-11.1.2-6" class="pilcrow">¶</a></p>
+in the same namespace is rendered as <code>customer-livestream-123--caf.c3.a9</code>. This difference
+between the catalog namespace form and the URL namespace form is intentional, since the former
+needs to satisfy JSON encoding while the latter needs to be compliant with RFC 3986.<a href="#section-11.1.2-6" class="pilcrow">¶</a></p>
+<p id="section-11.1.2-7">Publishers wanting easily readable URLs <span class="bcp14">SHOULD</span> use [A-Za-z0-9_] in namespace fields and
+track names, since those characters need no escaping.<a href="#section-11.1.2-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="example-msf-urls">
