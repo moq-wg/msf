@@ -2716,7 +2716,7 @@ as defined in Table 3.<a href="#section-5.2.4-2" class="pilcrow">¶</a></p>
             </h5>
 <p id="section-5.2.4.1-1"><a href="#tracknamespace" class="auto internal xref">Section 5.2.2</a>, <a href="#trackname" class="auto internal xref">Section 5.2.3</a>, <a href="#packaging" class="auto internal xref">Section 5.2.4</a>, and <a href="#islive" class="auto internal xref">Section 5.2.8</a> are
 required on every track. The table below lists the fields that <span class="bcp14">MUST</span> also be
-present for each (<code>packaging</code>, <code>type</code>) pair. Fields not listed remain
+present for each (<code>packaging</code>, <code>role</code>) pair. Fields not listed remain
 <span class="bcp14">OPTIONAL</span>. Where an individual field definition sets a stricter constraint
 (e.g. <code>Conditional</code>), that constraint wins.<a href="#section-5.2.4.1-1" class="pilcrow">¶</a></p>
 <p id="section-5.2.4.1-2">Fields with no meaning for a given pair <span class="bcp14">SHOULD NOT</span> be included; parsers
@@ -2726,7 +2726,7 @@ ignore fields they do not understand.<a href="#section-5.2.4.1-2" class="pilcrow
 <thead>
                 <tr>
                   <th class="text-left" rowspan="1" colspan="1">Packaging</th>
-                  <th class="text-left" rowspan="1" colspan="1">Track type</th>
+                  <th class="text-left" rowspan="1" colspan="1">Role</th>
                   <th class="text-left" rowspan="1" colspan="1">Also required</th>
                 </tr>
               </thead>
@@ -2758,8 +2758,8 @@ ignore fields they do not understand.<a href="#section-5.2.4.1-2" class="pilcrow
                 </tr>
               </tbody>
             </table>
-<p id="section-5.2.4.1-4">Table: Required track fields per (packaging, type)<a href="#section-5.2.4.1-4" class="pilcrow">¶</a></p>
-<p id="section-5.2.4.1-5">Packaging and type combinations not listed in the table above have no
+<p id="section-5.2.4.1-4">Table: Required track fields per (packaging, role)<a href="#section-5.2.4.1-4" class="pilcrow">¶</a></p>
+<p id="section-5.2.4.1-5">Packaging and role combinations not listed in the table above have no
 required fields beyond those required on every track.<a href="#section-5.2.4.1-5" class="pilcrow">¶</a></p>
 <p id="section-5.2.4.1-6">Specifications defining new packaging values extend this table with
 their own per-role rows.<a href="#section-5.2.4.1-6" class="pilcrow">¶</a></p>

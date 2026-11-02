@@ -891,7 +891,7 @@ Table of Contents
 
    Section 5.2.2, Section 5.2.3, Section 5.2.4, and Section 5.2.8 are
    required on every track.  The table below lists the fields that MUST
-   also be present for each (packaging, type) pair.  Fields not listed
+   also be present for each (packaging, role) pair.  Fields not listed
    remain OPTIONAL.  Where an individual field definition sets a
    stricter constraint (e.g. Conditional), that constraint wins.
 
@@ -899,7 +899,7 @@ Table of Contents
    parsers ignore fields they do not understand.
 
         +===============+==================+=====================+
-        | Packaging     | Track type       | Also required       |
+        | Packaging     | Role             | Also required       |
         +===============+==================+=====================+
         | loc           | audio            | codec, samplerate,  |
         |               |                  | channelConfig       |
@@ -916,9 +916,9 @@ Table of Contents
 
                                  Table 6
 
-   Table: Required track fields per (packaging, type)
+   Table: Required track fields per (packaging, role)
 
-   Packaging and type combinations not listed in the table above have no
+   Packaging and role combinations not listed in the table above have no
    required fields beyond those required on every track.
 
    Specifications defining new packaging values extend this table with
