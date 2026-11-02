@@ -59,6 +59,23 @@ normative:
     title: "W3C, TTML Profiles for Internet Media Subtitles and Captions 1.0 (IMSC1)"
     date: April 2016
     target: https://www.w3.org/TR/ttml-imsc1/
+  POSIX:
+    title: "IEEE Standard for Information Technology--Portable Operating System Interface (POSIX(TM)) Base Specifications, Issue 8"
+    author:
+      - org: IEEE
+      - org: The Open Group
+    date: 2024
+    seriesinfo:
+      IEEE Std: 1003.1-2024
+    target: https://pubs.opengroup.org/onlinepubs/9799919799/
+  ITU-R-TF.460-6:
+    title: "Standard-frequency and time-signal emissions"
+    author:
+      - org: ITU-R
+    date: 2002-02
+    seriesinfo:
+      ITU-R Recommendation: TF.460-6
+    target: https://www.itu.int/rec/R-REC-TF.460-6-200202-I/en
 
 informative:
   E2EE-MLS: I-D.draft-jennings-moq-e2ee-mls
@@ -70,6 +87,15 @@ informative:
     title: "SCTE 214-1: MPEG DASH for IP-Based Cable Services Part 1 - MPD Constraints and Extensions"
     date: 2022
     target: https://www.scte.org/standards/library/catalog/scte-214-1-mpeg-dash-for-ip-based-cable-services-part-1-mpd-constraints-and-extensions/
+  RFC5905:
+  IEEE1588:
+    title: "IEEE Standard for a Precision Clock Synchronization Protocol for Networked Measurement and Control Systems"
+    author:
+      - org: IEEE
+    date: 2020-06
+    seriesinfo:
+      IEEE Std: 1588-2019
+      DOI: 10.1109/IEEESTD.2020.9120376
 
 --- abstract
 
@@ -351,9 +377,8 @@ the version as "draft-XX". For example "draft-03" refers to the -03 draft releas
 ### Generated at {#generatedat}
 Required: Optional    JSON Type: Number    Location: Root Catalog
 
-The wallclock time at which this catalog instance was generated, expressed as the
-number of milliseconds that have elapsed since January 1, 1970 (midnight UTC/GMT).
-This field SHOULD NOT be included if the isLive field is false.
+The wallclock time at which this catalog instance was generated, as defined by
+{{wallclock}}. This field SHOULD NOT be included if the isLive field is false.
 
 ### Is Complete {#iscomplete}
 Required: Optional    JSON Type: Boolean    Location: Root Catalog
@@ -655,14 +680,14 @@ A True value MUST never follow a False value.
 Required: Optional    JSON Type: Number    Location: Track Object
 
 The target latency in milliseconds. Target latency is defined as the offset in
-wallclock time between when content was encoded and when it is displayed to the
-end user. For example, if a frame of video is encoded at 10:08:32.638 UTC and the
-target latency is 5000, then that frame should be rendered to the end-user at
-10:08:37.638 UTC. If isLive is FALSE, this field MUST be ignored. All tracks
-belonging to the same render group MUST have identical target latencies. All tracks
-belonging to the same alternate group MUST have identical target latencies. If this
-field is absent from the track definition, and isLive is TRUE, then the player
-MAY choose the latency with which it renders the content.
+wallclock time between when content entered the encoder and when it is displayed to the
+end user. Wallclock time is defined by {{wallclock}}. For example, if a frame of video
+entered the encoder at 10:08:32.638 UTC and the target latency is 5000, then that frame
+should be rendered to the end-user at10:08:37.638 UTC. If isLive is false, this field
+MUST be ignored. All tracks belonging to the same render group MUST have identical target
+latencies. All tracks belonging to the same alternate group MUST have identical target
+latencies. If this field is absent from the track definition, and isLive is TRUE, then
+the player MAY choose the latency with which it renders the content.
 
 This property MUST NOT be present if the buffers {{buffers}} property
 is present within a track definition.
@@ -727,13 +752,20 @@ Data List {{initdatalist}}.
 ### Dependencies {#dependencies}
 Required: Optional    JSON Type: Array    Location: Track Object
 
-Certain tracks may depend on other tracks for decoding. Dependencies holds an
-array of track names {{trackname}} on which the current track is dependent. Each
-element is a JSON string mapped and compared as defined in {{namemapping}}.
+Certain tracks may depend on other tracks, for example as a decoding dependency
+or due to a media timeline relationship. To signal this relationship, Dependencies
+holds an array of elements on which the current track is dependent. Each element can be
+either a track name {{trackname}} or renderGroup {{rendergroup}}. To assist parsers
+in determining the type of each element, any entry with a JSON type of String
+MUST reference a track name and any entry with a JSON type of Number MUST reference
+a renderGroup.
+
 Since only the track name is signaled, the namespace of the dependencies is
-assumed to match that of the track declaring the dependencies. Each element MUST
+assumed to match that of the track declaring the dependencies. Each String element MUST
 match the Track Name of exactly one other track object in the same namespace
-within the catalog; a catalog in which a dependency does not resolve is invalid.
+within the catalog. Each Number element MUST match the renderGroup identifier
+of exactly one renderGroup in the same namespace within the catalog. A catalog in
+which a dependency does not resolve is invalid.
 
 ### Template {#template}
 Required: Optional   JSON Type: Array    Location: Track Object
@@ -2126,10 +2158,9 @@ an array of three required items, whose ordinal position defines their type:
 * The second item holds the MOQT Location of the entry, defined as a tuple of the MOQT
   Group ID and MOQT Object ID, and expressed as a JSON Array of Numbers, where the
   first number is the Group ID and the second number is the Object ID.
-* The third item holds the wallclock time at which the media was encoded, defined as
-  the number of milliseconds that have elapsed since January 1, 1970
-  (midnight UTC/GMT) and expressed as a JSON Number. For VOD assets, or if the
-  wallclock time is not known, the value SHOULD be 0.
+* The third item holds the wallclock time at which the content, represented by the media
+  presentation timestamp, entered the encoder. Wallclock time is defined by {{wallclock}}.
+  For VOD assets, or if the wallclock time is not known, the value SHOULD be 0.
 
 The media timeline track is ordered by media time.
 
@@ -2148,8 +2179,13 @@ An example media timeline is shown below:
 ## Media Timeline Catalog requirements
 A media timeline track MUST carry a 'packaging' {{packaging}} attribute with a value
 of "mediatimeline". A media timeline track MUST carry a 'depends' attribute which
-contains an array of all track names or renderGroups to which the media timeline
-track applies. If multiple tracks are referenced and then one of those tracks ceases
+contains an array of any track names and renderGroups to which the media timeline
+track applies. If all tracks in a renderGroup match the media timeline, then the
+renderGroup MUST be referenced and the individual track names MUST NOT be referenced.
+If only a subset of tracks in the renderGroup match the media timeline, then the
+renderGroup MUST NOT be referenced and the individual tracks MUST be referenced.
+
+If multiple tracks are referenced and then one of those tracks ceases
 publication, the publisher MUST produce a catalog update which removes the 'depends'
 reference of the track that ceased publication. If that track then becomes available
 as VOD content, a new media timeline track must be published to describe the content
@@ -2638,9 +2674,9 @@ case-sensitive.
 | c4m             | A base64 encoded C4M token                       |
 | connection      | Mandates a connection type                       |
 
-* wallclock-range - a range defined by start and end wallclock times, each expressed
-  as milliseconds since Unix Epoch and separated by a "-" dash. The dash and end
-  time MAY be omitted to indicate an open range. The range definition is inclusive.
+* wallclock-range - a range defined by start and end wallclock times, separated by a "-" dash.
+  Wallclock time is defined by {{wallclock}}. The dash and end time MAY be omitted to indicate
+  an open range. The range definition is inclusive.
 * mediatime-range - a range defined by start and end media times, each expressed
   as milliseconds and separated by a "-" dash. The dash and end time MAY be omitted
   to indicate an open range. The range definition is inclusive.
@@ -2923,6 +2959,16 @@ failure gracefully:
 The specific error codes and retry semantics are defined by the authorization
 scheme specifications. See {{PrivacyPassAuth}} for Privacy Pass error handling
 and {{C4M}} for CAT error handling.
+
+## Wallclock time {#wallclock}
+
+When wallclock time is referenced in this specification, it is expressed as
+the number of milliseconds elapsed since the Unix epoch (1970-01-01T00:00:00Z),
+excluding leap seconds, as defined for "Seconds Since the Epoch" in {{POSIX}},
+scaled to milliseconds. This time scale is derived from Coordinated Universal
+Time (UTC) {{ITU-R-TF.460-6}}. Publishers and subscribers that use wallclock
+values SHOULD synchronize their clocks to UTC, for example using NTP {{RFC5905}}
+or PTP {{IEEE1588}}.
 
 # MSF Properties {#properties}
 
