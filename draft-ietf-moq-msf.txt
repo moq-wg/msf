@@ -216,6 +216,7 @@ Table of Contents
        11.5.2.  Token Acquisition
        11.5.3.  Presenting Authorization
        11.5.4.  Handling Authorization Failures
+     11.6.  Wallclock time
    12. MSF Properties
      12.1.  Compression Signaling
        12.1.1.  MSF_COMPRESSION Track Property
@@ -603,10 +604,9 @@ Table of Contents
 
    Required: Optional JSON Type: Number Location: Root Catalog
 
-   The wallclock time at which this catalog instance was generated,
-   expressed as the number of milliseconds that have elapsed since
-   January 1, 1970 (midnight UTC/GMT).  This field SHOULD NOT be
-   included if the isLive field is false.
+   The wallclock time at which this catalog instance was generated, as
+   defined by Section 11.6.  This field SHOULD NOT be included if the
+   isLive field is false.
 
 5.1.3.  Is Complete
 
@@ -1029,16 +1029,17 @@ Table of Contents
    Required: Optional JSON Type: Number Location: Track Object
 
    The target latency in milliseconds.  Target latency is defined as the
-   offset in wallclock time between when content was encoded and when it
-   is displayed to the end user.  For example, if a frame of video is
-   encoded at 10:08:32.638 UTC and the target latency is 5000, then that
-   frame should be rendered to the end-user at 10:08:37.638 UTC.  If
-   isLive is FALSE, this field MUST be ignored.  All tracks belonging to
-   the same render group MUST have identical target latencies.  All
-   tracks belonging to the same alternate group MUST have identical
-   target latencies.  If this field is absent from the track definition,
-   and isLive is TRUE, then the player MAY choose the latency with which
-   it renders the content.
+   offset in wallclock time between when content entered the encoder and
+   when it is displayed to the end user.  Wallclock time is defined by
+   Section 11.6.  For example, if a frame of video entered the encoder
+   at 10:08:32.638 UTC and the target latency is 5000, then that frame
+   should be rendered to the end-user at10:08:37.638 UTC.  If isLive is
+   false, this field MUST be ignored.  All tracks belonging to the same
+   render group MUST have identical target latencies.  All tracks
+   belonging to the same alternate group MUST have identical target
+   latencies.  If this field is absent from the track definition, and
+   isLive is TRUE, then the player MAY choose the latency with which it
+   renders the content.
 
    This property MUST NOT be present if the buffers Section 5.2.10
    property is present within a track definition.
@@ -1115,15 +1116,22 @@ Table of Contents
 
    Required: Optional JSON Type: Array Location: Track Object
 
-   Certain tracks may depend on other tracks for decoding.  Dependencies
-   holds an array of track names Section 5.2.3 on which the current
-   track is dependent.  Each element is a JSON string mapped and
-   compared as defined in Section 11.2.  Since only the track name is
-   signaled, the namespace of the dependencies is assumed to match that
-   of the track declaring the dependencies.  Each element MUST match the
-   Track Name of exactly one other track object in the same namespace
-   within the catalog; a catalog in which a dependency does not resolve
-   is invalid.
+   Certain tracks may depend on other tracks, for example as a decoding
+   dependency or due to a media timeline relationship.  To signal this
+   relationship, Dependencies holds an array of elements on which the
+   current track is dependent.  Each element can be either a track name
+   Section 5.2.3 or renderGroup Section 5.2.12.  To assist parsers in
+   determining the type of each element, any entry with a JSON type of
+   String MUST reference a track name and any entry with a JSON type of
+   Number MUST reference a renderGroup.
+
+   Since only the track name is signaled, the namespace of the
+   dependencies is assumed to match that of the track declaring the
+   dependencies.  Each String element MUST match the Track Name of
+   exactly one other track object in the same namespace within the
+   catalog.  Each Number element MUST match the renderGroup identifier
+   of exactly one renderGroup in the same namespace within the catalog.
+   A catalog in which a dependency does not resolve is invalid.
 
 5.2.16.  Template
 
@@ -2592,11 +2600,11 @@ Table of Contents
       JSON Array of Numbers, where the first number is the Group ID and
       the second number is the Object ID.
 
-   *  The third item holds the wallclock time at which the media was
-      encoded, defined as the number of milliseconds that have elapsed
-      since January 1, 1970 (midnight UTC/GMT) and expressed as a JSON
-      Number.  For VOD assets, or if the wallclock time is not known,
-      the value SHOULD be 0.
+   *  The third item holds the wallclock time at which the content,
+      represented by the media presentation timestamp, entered the
+      encoder.  Wallclock time is defined by Section 11.6.  For VOD
+      assets, or if the wallclock time is not known, the value SHOULD be
+      0.
 
    The media timeline track is ordered by media time.
 
@@ -2614,9 +2622,15 @@ Table of Contents
 
    A media timeline track MUST carry a 'packaging' Section 5.2.4
    attribute with a value of "mediatimeline".  A media timeline track
-   MUST carry a 'depends' attribute which contains an array of all track
-   names or renderGroups to which the media timeline track applies.  If
-   multiple tracks are referenced and then one of those tracks ceases
+   MUST carry a 'depends' attribute which contains an array of any track
+   names and renderGroups to which the media timeline track applies.  If
+   all tracks in a renderGroup match the media timeline, then the
+   renderGroup MUST be referenced and the individual track names MUST
+   NOT be referenced.  If only a subset of tracks in the renderGroup
+   match the media timeline, then the renderGroup MUST NOT be referenced
+   and the individual tracks MUST be referenced.
+
+   If multiple tracks are referenced and then one of those tracks ceases
    publication, the publisher MUST produce a catalog update which
    removes the 'depends' reference of the track that ceased publication.
    If that track then becomes available as VOD content, a new media
@@ -3170,9 +3184,9 @@ Table of Contents
                                   Table 12
 
    *  wallclock-range - a range defined by start and end wallclock
-      times, each expressed as milliseconds since Unix Epoch and
-      separated by a "-" dash.  The dash and end time MAY be omitted to
-      indicate an open range.  The range definition is inclusive.
+      times, separated by a "-" dash.  Wallclock time is defined by
+      Section 11.6.  The dash and end time MAY be omitted to indicate an
+      open range.  The range definition is inclusive.
 
    *  mediatime-range - a range defined by start and end media times,
       each expressed as milliseconds and separated by a "-" dash.  The
@@ -3534,6 +3548,17 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
    authorization scheme specifications.  See [PrivacyPassAuth] for
    Privacy Pass error handling and [C4M] for CAT error handling.
 
+11.6.  Wallclock time
+
+   When wallclock time is referenced in this specification, it is
+   expressed as the number of milliseconds elapsed since the Unix epoch
+   (1970-01-01T00:00:00Z), excluding leap seconds, as defined for
+   "Seconds Since the Epoch" in [POSIX], scaled to milliseconds.  This
+   time scale is derived from Coordinated Universal Time (UTC)
+   [ITU-R-TF.460-6].  Publishers and subscribers that use wallclock
+   values SHOULD synchronize their clocks to UTC, for example using NTP
+   [RFC5905] or PTP [IEEE1588].
+
 12.  MSF Properties
 
    MSF uses MOQT Track Properties and Object Properties (see
@@ -3825,6 +3850,11 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
               Captions 1.0 (IMSC1)", April 2016,
               <https://www.w3.org/TR/ttml-imsc1/>.
 
+   [ITU-R-TF.460-6]
+              ITU-R, "Standard-frequency and time-signal emissions",
+              ITU-R Recommendation TF.460-6, February 2002,
+              <https://www.itu.int/rec/R-REC-TF.460-6-200202-I/en>.
+
    [JSON]     Bray, T., Ed., "The JavaScript Object Notation (JSON) Data
               Interchange Format", STD 90, RFC 8259,
               DOI 10.17487/RFC8259, December 2017,
@@ -3864,6 +3894,12 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
               Draft, draft-ietf-moq-transport-19, 6 July 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-moq-
               transport-19>.
+
+   [POSIX]    IEEE and The Open Group, "IEEE Standard for Information
+              Technology--Portable Operating System Interface
+              (POSIX(TM)) Base Specifications, Issue 8", IEEE
+              Std 1003.1-2024, 2024,
+              <https://pubs.opengroup.org/onlinepubs/9799919799/>.
 
    [PrivacyPassAuth]
               Nandakumar, S., Jennings, C. F., and T. Meunier, "Privacy
@@ -3925,6 +3961,11 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
               2025, <https://datatracker.ietf.org/doc/html/draft-
               jennings-moq-e2ee-mls-03>.
 
+   [IEEE1588] IEEE, "IEEE Standard for a Precision Clock Synchronization
+              Protocol for Networked Measurement and Control Systems",
+              IEEE Std 1588-2019, DOI 10.1109/IEEESTD.2020.9120376, June
+              2020, <https://doi.org/10.1109/IEEESTD.2020.9120376>.
+
    [IMSC1-MSF]
               Law, W. and S. Nandakumar, "IMSC1 Packaging for MOQT
               Streaming Format", Work in Progress, Internet-Draft,
@@ -3938,6 +3979,11 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
               00, 13 October 2026,
               <https://datatracker.ietf.org/doc/html/draft-ugur-moq-
               fast-switching-00>.
+
+   [RFC5905]  Mills, D., Martin, J., Ed., Burbank, J., and W. Kasch,
+              "Network Time Protocol Version 4: Protocol and Algorithms
+              Specification", RFC 5905, DOI 10.17487/RFC5905, June 2010,
+              <https://www.rfc-editor.org/rfc/rfc5905>.
 
    [RFC8141]  Saint-Andre, P. and J. Klensin, "Uniform Resource Names
               (URNs)", RFC 8141, DOI 10.17487/RFC8141, April 2017,

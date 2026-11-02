@@ -1629,6 +1629,9 @@ svg {
 </li>
                 </ul>
 </li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.6">
+                <p id="section-toc.1-1.11.2.6.1"><a href="#section-11.6" class="auto internal xref">11.6</a>.  <a href="#name-wallclock-time" class="internal xref">Wallclock time</a></p>
+</li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
@@ -2179,9 +2182,8 @@ the version as "draft-XX". For example "draft-03" refers to the -03 draft releas
 <a href="#section-5.1.2" class="section-number selfRef">5.1.2. </a><a href="#name-generated-at" class="section-name selfRef">Generated at</a>
           </h4>
 <p id="section-5.1.2-1">Required: Optional    JSON Type: Number    Location: Root Catalog<a href="#section-5.1.2-1" class="pilcrow">¶</a></p>
-<p id="section-5.1.2-2">The wallclock time at which this catalog instance was generated, expressed as the
-number of milliseconds that have elapsed since January 1, 1970 (midnight UTC/GMT).
-This field <span class="bcp14">SHOULD NOT</span> be included if the isLive field is false.<a href="#section-5.1.2-2" class="pilcrow">¶</a></p>
+<p id="section-5.1.2-2">The wallclock time at which this catalog instance was generated, as defined by
+<a href="#wallclock" class="auto internal xref">Section 11.6</a>. This field <span class="bcp14">SHOULD NOT</span> be included if the isLive field is false.<a href="#section-5.1.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="iscomplete">
@@ -2902,14 +2904,14 @@ A True value <span class="bcp14">MUST</span> never follow a False value.<a href=
           </h4>
 <p id="section-5.2.9-1">Required: Optional    JSON Type: Number    Location: Track Object<a href="#section-5.2.9-1" class="pilcrow">¶</a></p>
 <p id="section-5.2.9-2">The target latency in milliseconds. Target latency is defined as the offset in
-wallclock time between when content was encoded and when it is displayed to the
-end user. For example, if a frame of video is encoded at 10:08:32.638 UTC and the
-target latency is 5000, then that frame should be rendered to the end-user at
-10:08:37.638 UTC. If isLive is FALSE, this field <span class="bcp14">MUST</span> be ignored. All tracks
-belonging to the same render group <span class="bcp14">MUST</span> have identical target latencies. All tracks
-belonging to the same alternate group <span class="bcp14">MUST</span> have identical target latencies. If this
-field is absent from the track definition, and isLive is TRUE, then the player
-<span class="bcp14">MAY</span> choose the latency with which it renders the content.<a href="#section-5.2.9-2" class="pilcrow">¶</a></p>
+wallclock time between when content entered the encoder and when it is displayed to the
+end user. Wallclock time is defined by <a href="#wallclock" class="auto internal xref">Section 11.6</a>. For example, if a frame of video
+entered the encoder at 10:08:32.638 UTC and the target latency is 5000, then that frame
+should be rendered to the end-user at10:08:37.638 UTC. If isLive is false, this field
+<span class="bcp14">MUST</span> be ignored. All tracks belonging to the same render group <span class="bcp14">MUST</span> have identical target
+latencies. All tracks belonging to the same alternate group <span class="bcp14">MUST</span> have identical target
+latencies. If this field is absent from the track definition, and isLive is TRUE, then
+the player <span class="bcp14">MAY</span> choose the latency with which it renders the content.<a href="#section-5.2.9-2" class="pilcrow">¶</a></p>
 <p id="section-5.2.9-3">This property <span class="bcp14">MUST NOT</span> be present if the buffers <a href="#buffers" class="auto internal xref">Section 5.2.10</a> property
 is present within a track definition.<a href="#section-5.2.9-3" class="pilcrow">¶</a></p>
 </section>
@@ -3001,13 +3003,19 @@ Data List <a href="#initdatalist" class="auto internal xref">Section 5.1.7</a>.<
 <a href="#section-5.2.15" class="section-number selfRef">5.2.15. </a><a href="#name-dependencies" class="section-name selfRef">Dependencies</a>
           </h4>
 <p id="section-5.2.15-1">Required: Optional    JSON Type: Array    Location: Track Object<a href="#section-5.2.15-1" class="pilcrow">¶</a></p>
-<p id="section-5.2.15-2">Certain tracks may depend on other tracks for decoding. Dependencies holds an
-array of track names <a href="#trackname" class="auto internal xref">Section 5.2.3</a> on which the current track is dependent. Each
-element is a JSON string mapped and compared as defined in <a href="#namemapping" class="auto internal xref">Section 11.2</a>.
-Since only the track name is signaled, the namespace of the dependencies is
-assumed to match that of the track declaring the dependencies. Each element <span class="bcp14">MUST</span>
+<p id="section-5.2.15-2">Certain tracks may depend on other tracks, for example as a decoding dependency
+or due to a media timeline relationship. To signal this relationship, Dependencies
+holds an array of elements on which the current track is dependent. Each element can be
+either a track name <a href="#trackname" class="auto internal xref">Section 5.2.3</a> or renderGroup <a href="#rendergroup" class="auto internal xref">Section 5.2.12</a>. To assist parsers
+in determining the type of each element, any entry with a JSON type of String
+<span class="bcp14">MUST</span> reference a track name and any entry with a JSON type of Number <span class="bcp14">MUST</span> reference
+a renderGroup.<a href="#section-5.2.15-2" class="pilcrow">¶</a></p>
+<p id="section-5.2.15-3">Since only the track name is signaled, the namespace of the dependencies is
+assumed to match that of the track declaring the dependencies. Each String element <span class="bcp14">MUST</span>
 match the Track Name of exactly one other track object in the same namespace
-within the catalog; a catalog in which a dependency does not resolve is invalid.<a href="#section-5.2.15-2" class="pilcrow">¶</a></p>
+within the catalog. Each Number element <span class="bcp14">MUST</span> match the renderGroup identifier
+of exactly one renderGroup in the same namespace within the catalog. A catalog in
+which a dependency does not resolve is invalid.<a href="#section-5.2.15-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="template">
@@ -4740,10 +4748,9 @@ Group ID and MOQT Object ID, and expressed as a JSON Array of Numbers, where the
 first number is the Group ID and the second number is the Object ID.<a href="#section-7.1.1-2.2.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-7.1.1-2.3">
-              <p id="section-7.1.1-2.3.1">The third item holds the wallclock time at which the media was encoded, defined as
-the number of milliseconds that have elapsed since January 1, 1970
-(midnight UTC/GMT) and expressed as a JSON Number. For VOD assets, or if the
-wallclock time is not known, the value <span class="bcp14">SHOULD</span> be 0.<a href="#section-7.1.1-2.3.1" class="pilcrow">¶</a></p>
+              <p id="section-7.1.1-2.3.1">The third item holds the wallclock time at which the content, represented by the media
+presentation timestamp, entered the encoder. Wallclock time is defined by <a href="#wallclock" class="auto internal xref">Section 11.6</a>.
+For VOD assets, or if the wallclock time is not known, the value <span class="bcp14">SHOULD</span> be 0.<a href="#section-7.1.1-2.3.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 <p id="section-7.1.1-3">The media timeline track is ordered by media time.<a href="#section-7.1.1-3" class="pilcrow">¶</a></p>
@@ -4770,12 +4777,16 @@ wallclock time is not known, the value <span class="bcp14">SHOULD</span> be 0.<a
         </h3>
 <p id="section-7.2-1">A media timeline track <span class="bcp14">MUST</span> carry a 'packaging' <a href="#packaging" class="auto internal xref">Section 5.2.4</a> attribute with a value
 of "mediatimeline". A media timeline track <span class="bcp14">MUST</span> carry a 'depends' attribute which
-contains an array of all track names or renderGroups to which the media timeline
-track applies. If multiple tracks are referenced and then one of those tracks ceases
+contains an array of any track names and renderGroups to which the media timeline
+track applies. If all tracks in a renderGroup match the media timeline, then the
+renderGroup <span class="bcp14">MUST</span> be referenced and the individual track names <span class="bcp14">MUST NOT</span> be referenced.
+If only a subset of tracks in the renderGroup match the media timeline, then the
+renderGroup <span class="bcp14">MUST NOT</span> be referenced and the individual tracks <span class="bcp14">MUST</span> be referenced.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
+<p id="section-7.2-2">If multiple tracks are referenced and then one of those tracks ceases
 publication, the publisher <span class="bcp14">MUST</span> produce a catalog update which removes the 'depends'
 reference of the track that ceased publication. If that track then becomes available
 as VOD content, a new media timeline track must be published to describe the content
-available in that track.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
+available in that track.<a href="#section-7.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="media-timeline-track-updating">
@@ -5451,9 +5462,9 @@ case-sensitive.<a href="#section-11.1.1-1" class="pilcrow">¶</a></p>
           </table>
 <ul class="normal">
 <li class="normal" id="section-11.1.1-3.1">
-              <p id="section-11.1.1-3.1.1">wallclock-range - a range defined by start and end wallclock times, each expressed
-as milliseconds since Unix Epoch and separated by a "-" dash. The dash and end
-time <span class="bcp14">MAY</span> be omitted to indicate an open range. The range definition is inclusive.<a href="#section-11.1.1-3.1.1" class="pilcrow">¶</a></p>
+              <p id="section-11.1.1-3.1.1">wallclock-range - a range defined by start and end wallclock times, separated by a "-" dash.
+Wallclock time is defined by <a href="#wallclock" class="auto internal xref">Section 11.6</a>. The dash and end time <span class="bcp14">MAY</span> be omitted to indicate
+an open range. The range definition is inclusive.<a href="#section-11.1.1-3.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-11.1.1-3.2">
               <p id="section-11.1.1-3.2.1">mediatime-range - a range defined by start and end media times, each expressed
@@ -5946,6 +5957,20 @@ and <span>[<a href="#C4M" class="cite xref">C4M</a>]</span> for CAT error handli
 </div>
 </section>
 </div>
+<div id="wallclock">
+<section id="section-11.6">
+        <h3 id="name-wallclock-time">
+<a href="#section-11.6" class="section-number selfRef">11.6. </a><a href="#name-wallclock-time" class="section-name selfRef">Wallclock time</a>
+        </h3>
+<p id="section-11.6-1">When wallclock time is referenced in this specification, it is expressed as
+the number of milliseconds elapsed since the Unix epoch (1970-01-01T00:00:00Z),
+excluding leap seconds, as defined for "Seconds Since the Epoch" in <span>[<a href="#POSIX" class="cite xref">POSIX</a>]</span>,
+scaled to milliseconds. This time scale is derived from Coordinated Universal
+Time (UTC) <span>[<a href="#ITU-R-TF.460-6" class="cite xref">ITU-R-TF.460-6</a>]</span>. Publishers and subscribers that use wallclock
+values <span class="bcp14">SHOULD</span> synchronize their clocks to UTC, for example using NTP <span>[<a href="#RFC5905" class="cite xref">RFC5905</a>]</span>
+or PTP <span>[<a href="#IEEE1588" class="cite xref">IEEE1588</a>]</span>.<a href="#section-11.6-1" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="properties">
@@ -6320,6 +6345,10 @@ registered.<a href="#section-14.4-2" class="pilcrow">¶</a></p>
         <dd>
 <span class="refTitle">"W3C, TTML Profiles for Internet Media Subtitles and Captions 1.0 (IMSC1)"</span>, <time datetime="2016-04" class="refDate">April 2016</time>, <span>&lt;<a href="https://www.w3.org/TR/ttml-imsc1/">https://www.w3.org/TR/ttml-imsc1/</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="ITU-R-TF.460-6">[ITU-R-TF.460-6]</dt>
+        <dd>
+<span class="refAuthor">ITU-R</span>, <span class="refTitle">"Standard-frequency and time-signal emissions"</span>, <span class="seriesInfo">ITU-R Recommendation TF.460-6</span>, <time datetime="2002-02" class="refDate">February 2002</time>, <span>&lt;<a href="https://www.itu.int/rec/R-REC-TF.460-6-200202-I/en">https://www.itu.int/rec/R-REC-TF.460-6-200202-I/en</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="JSON">[JSON]</dt>
         <dd>
 <span class="refAuthor">Bray, T., Ed.</span>, <span class="refTitle">"The JavaScript Object Notation (JSON) Data Interchange Format"</span>, <span class="seriesInfo">STD 90</span>, <span class="seriesInfo">RFC 8259</span>, <span class="seriesInfo">DOI 10.17487/RFC8259</span>, <time datetime="2017-12" class="refDate">December 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8259">https://www.rfc-editor.org/rfc/rfc8259</a>&gt;</span>. </dd>
@@ -6347,6 +6376,10 @@ registered.<a href="#section-14.4-2" class="pilcrow">¶</a></p>
 <dt id="MoQTransport">[MoQTransport]</dt>
         <dd>
 <span class="refAuthor">Nandakumar, S.</span>, <span class="refAuthor">Vasiliev, V.</span>, <span class="refAuthor">Swett, I.</span>, and <span class="refAuthor">A. Frindell</span>, <span class="refTitle">"Media over QUIC Transport"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-moq-transport-19</span>, <time datetime="2026-07-06" class="refDate">6 July 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-19">https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-19</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="POSIX">[POSIX]</dt>
+        <dd>
+<span class="refAuthor">IEEE</span> and <span class="refAuthor">The Open Group</span>, <span class="refTitle">"IEEE Standard for Information Technology--Portable Operating System Interface (POSIX(TM)) Base Specifications, Issue 8"</span>, <span class="seriesInfo">IEEE Std 1003.1-2024</span>, <time datetime="2024" class="refDate">2024</time>, <span>&lt;<a href="https://pubs.opengroup.org/onlinepubs/9799919799/">https://pubs.opengroup.org/onlinepubs/9799919799/</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="PrivacyPassAuth">[PrivacyPassAuth]</dt>
         <dd>
@@ -6401,6 +6434,10 @@ registered.<a href="#section-14.4-2" class="pilcrow">¶</a></p>
         <dd>
 <span class="refAuthor">Jennings, C. F.</span>, <span class="refAuthor">Nandakumar, S.</span>, and <span class="refAuthor">R. Barnes</span>, <span class="refTitle">"End-to-end Security for Media over QUIC"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-jennings-moq-e2ee-mls-03</span>, <time datetime="2025-06-30" class="refDate">30 June 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-jennings-moq-e2ee-mls-03">https://datatracker.ietf.org/doc/html/draft-jennings-moq-e2ee-mls-03</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="IEEE1588">[IEEE1588]</dt>
+        <dd>
+<span class="refAuthor">IEEE</span>, <span class="refTitle">"IEEE Standard for a Precision Clock Synchronization Protocol for Networked Measurement and Control Systems"</span>, <span class="seriesInfo">IEEE Std 1588-2019</span>, <span class="seriesInfo">DOI 10.1109/IEEESTD.2020.9120376</span>, <time datetime="2020-06" class="refDate">June 2020</time>, <span>&lt;<a href="https://doi.org/10.1109/IEEESTD.2020.9120376">https://doi.org/10.1109/IEEESTD.2020.9120376</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="IMSC1-MSF">[IMSC1-MSF]</dt>
         <dd>
 <span class="refAuthor">Law, W.</span> and <span class="refAuthor">S. Nandakumar</span>, <span class="refTitle">"IMSC1 Packaging for MOQT Streaming Format"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-law-moq-imsc1-msf-00</span>, <time datetime="2026-07-06" class="refDate">6 July 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-law-moq-imsc1-msf-00">https://datatracker.ietf.org/doc/html/draft-law-moq-imsc1-msf-00</a>&gt;</span>. </dd>
@@ -6408,6 +6445,10 @@ registered.<a href="#section-14.4-2" class="pilcrow">¶</a></p>
 <dt id="MVFTS">[MVFTS]</dt>
         <dd>
 <span class="refAuthor">Ugur, D.</span>, <span class="refAuthor">Gürel, Z.</span>, and <span class="refAuthor">A. C. Begen</span>, <span class="refTitle">"Subscriber-Side Multi-Variant Fast Track Switching for MOQT"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ugur-moq-fast-switching-00</span>, <time datetime="2026-10-13" class="refDate">13 October 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ugur-moq-fast-switching-00">https://datatracker.ietf.org/doc/html/draft-ugur-moq-fast-switching-00</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC5905">[RFC5905]</dt>
+        <dd>
+<span class="refAuthor">Mills, D.</span>, <span class="refAuthor">Martin, J., Ed.</span>, <span class="refAuthor">Burbank, J.</span>, and <span class="refAuthor">W. Kasch</span>, <span class="refTitle">"Network Time Protocol Version 4: Protocol and Algorithms Specification"</span>, <span class="seriesInfo">RFC 5905</span>, <span class="seriesInfo">DOI 10.17487/RFC5905</span>, <time datetime="2010-06" class="refDate">June 2010</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc5905">https://www.rfc-editor.org/rfc/rfc5905</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8141">[RFC8141]</dt>
         <dd>
