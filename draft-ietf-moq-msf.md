@@ -1976,7 +1976,7 @@ technique are provided in {{MVFTS}}.
 ### Switching Procedure
 
 To minimize join latency when joining an alternate group, a subscriber
-SHOULD first subscribe to the track with the lowest keyframeSpacing value.
+SHOULD first subscribe to the track with the closest switch point that satisfies the bandwidth constraints.
 Once playback begins, the subscriber MAY switch to a track with a larger
 keyframeSpacing at a valid switch point, calculated as described in
 {{switchpoints}}.
