@@ -2734,7 +2734,12 @@ track object
 ~~~
 
 is rendered as `customer-livestream-123--catalog`, and a track named `"café"`
-in the same namespace is rendered as `customer-livestream-123--caf.c3.a9`.
+in the same namespace is rendered as `customer-livestream-123--caf.c3.a9`. This difference
+between the catalog namespace form and the URL namespace form is intentional, since the former
+needs to satisfy JSON encoding while the latter needs to be compliant with RFC 3986.
+
+Publishers wanting easily readable URLs SHOULD use [A-Za-z0-9_] in namespace fields and
+track names, since those characters need no escaping.
 
 ### Example MSF URLs
 
