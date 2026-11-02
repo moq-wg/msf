@@ -65,6 +65,7 @@ informative:
   WebVTT-MSF: I-D.draft-wilaw-moq-webvtt-msf
   IMSC1-MSF: I-D.draft-law-moq-imsc1-msf
   SCTE35-MSF: I-D.draft-wilaw-moq-scte35-event-timeline
+  MVFTS: I-D.draft-ugur-moq-fast-switching
   SCTE214-1:
     title: "SCTE 214-1: MPEG DASH for IP-Based Cable Services Part 1 - MPD Constraints and Extensions"
     date: 2022
@@ -157,6 +158,28 @@ the same Group of Pictures (GOP) MUST be placed within the same MOQT Group.
 When LOC packaging is used for a track, the catalog packaging attribute
 ({{packaging}}) MUST be present and it MUST be populated with a value of "loc".
 
+### LOC to MOQT Stream mapping {#loc-stream-mapping}
+
+LOC {{LOC}} defines only the payload container carried in each MOQT Object; it
+does not specify how those Objects are mapped onto MOQT Streams. MSF publishers
+using LOC packaging MUST select one of the mapping modes listed below, and
+subscribers MUST be prepared to consume both of them. The chosen mode is
+signaled per-track via the {{packagingmetadata}} field using the
+`streamMapping` key.
+
+| streamMapping value | Description                                                                                           |
+|:====================|:======================================================================================================|
+| group               | All MOQT Objects within a MOQT Group are sent in a single MOQT Subgroup, in Object ID order. Default. |
+| object              | Each MOQT Object is sent in its own MOQT Subgroup.                                                    |
+
+Table: LOC stream-mapping modes signaled via `packagingMetadata`
+
+If `packagingMetadata` is absent, or if it is present but does not carry a
+`streamMapping` key, the mode `group` MUST be assumed.
+
+Regardless of the selected mode, the mapping of samples to Objects and Groups
+defined above (one sample per Object, one GOP per Group) is unchanged.
+
 ## Time-alignment {#timealignment}
 MSF Tracks MAY be time-aligned. Those that are, are subject to the following
 requirements:
@@ -173,6 +196,28 @@ If time-aligned media tracks do not have overlapping presentation time at
 equally-numbered group boundaries, then an alternate mechanism, not defined by
 this specification, must be provided to the client to enable it to switch smoothly
 between time-aligned, but numerically dissimilar, Group IDs.
+
+## Packaging for track switching {#packagingforswitching}
+
+When publishing multiple tracks within an alternate group that have dissimilar
+keyframe intervals (different GOP sizes), publishers MUST follow these
+requirements to enable seamless track switching:
+
+* Each MOQT Group MUST start with a keyframe. Publishers MUST NOT place
+  multiple keyframes within a single group, as this hides intermediate join
+  points from subscribers.
+* All tracks within an alternate group MUST be time-aligned at object
+  boundaries, not only at group boundaries.
+* The keyframeSpacing {{keyframespacing}} catalog field MUST be specified for
+  each track, indicating the number of objects per keyframe interval.
+* If any track within an alternate group specifies a keyframeSpacing value,
+  then all tracks within that alternate group MUST specify a keyframeSpacing
+  value.
+* The starting Group ID of all tracks within an alternate group MUST be
+  identical.
+
+See {{mvfts}} for details on how subscribers use keyframeSpacing to calculate
+valid switch points.
 
 ## Content protection and encryption {#contentprotection}
 
@@ -404,6 +449,7 @@ Table 2 lists the fields defined within each track object.
 | Track namespace         | namespace              | {{tracknamespace}}        |
 | Track name              | name                   | {{trackname}}             |
 | Packaging               | packaging              | {{packaging}}             |
+| Packaging metadata      | packagingMetadata      | {{packagingmetadata}}     |
 | Event timeline type     | eventType              | {{eventtype}}             |
 | Is Live                 | isLive                 | {{islive}}                |
 | Target latency          | targetLatency          | {{targetlatency}}         |
@@ -436,7 +482,7 @@ Table 2 lists the fields defined within each track object.
 | Track duration          | trackDuration          | {{trackduration}}         |
 | Authorization Info      | authInfo               | {{authinfo}}              |
 | Accessibility           | accessibility          | {{accessibility}}         |
-| Accessible Window Time  | accessibleWindowTime   | {{accessiblewindowtime}}  |
+| Keyframe spacing        | keyframeSpacing        | {{keyframespacing}}       |
 
 ### Tracks object {#trackobject}
 
@@ -504,6 +550,24 @@ as defined in Table 3.
 | Catalog         | catalog        | See {{catalog}}            |
 
 Table 3: Allowed packaging values
+
+### Packaging metadata {#packagingmetadata}
+Required: Optional    JSON Type: String    Location: Track Object
+
+Additional parameters for the {{packaging}} value in use, encoded as a
+semicolon-separated list of `key=value` pairs (e.g. `key1=v1;key2=v2`).
+Keys and values are case-sensitive and MUST NOT contain whitespace, `=` or `;`.
+
+The permitted keys and their meaning are defined by the specification
+for the packaging value in use. Subscribers MUST ignore any key that
+is not defined for the current packaging value. If the same key appears
+more than once, the first occurrence is used.
+
+For `packaging` value "loc", the following keys are defined:
+
+* `streamMapping` - the LOC to MOQT Stream mapping mode. Permitted values are
+  listed in {{loc-stream-mapping}}. If this key is absent, the value `group`
+  is assumed.
 
 ### Event timeline type {#eventtype}
 Required: Optional    JSON Type: String    Location: Track Object
@@ -959,6 +1023,20 @@ media timeline track.
 
 Tracks assigned to the same alternative group {{altgroup}} MUST carry the same
 accessibleWindowTime value.
+
+### Keyframe spacing {#keyframespacing}
+Location: T    Required: Optional   JSON Type: Number
+
+A number defining the number of objects per keyframe interval. A value of 15
+means each group contains a keyframe followed by 14 predicted frames (15 objects
+total). A value of 600 means each group contains a keyframe followed by 599
+predicted frames (600 objects total).
+
+This field is used by subscribers to calculate valid switch points when
+performing adaptive bitrate switching between tracks with different keyframe
+intervals. See {{packagingforswitching}} for publisher requirements and
+{{mvfts}} for details on how to use this field.
+
 
 ## Delta updates {#deltaupdates}
 A catalog update might contain incremental changes. This is a useful property if
@@ -1932,6 +2010,8 @@ In this example:
 The MOQT Groups and MOQT Objects need to be mapped to MOQT Streams. This mapping is
 defined by the packaging {{mediapackaging}} type of each track. Each MOQT Object SHOULD
 be placed on MOQT sub-group 0, unless otherwise defined by the packaging type.
+For LOC-packaged tracks, the mapping is signaled per-track via
+{{packagingmetadata}} as defined in {{loc-stream-mapping}}.
 
 ## Group numbering
 Group IDs for a track MUST be unique and MUST increase monotonically. Within a
@@ -1948,6 +2028,33 @@ it SHOULD signal the gap using the MOQT Prior Group ID Gap Extension header.
 ## Object Numbering
 Object ID MUST be zero for the first Object within a Group and then MUST increase
 monotonically by one within that Group.
+
+## Multi-Variant Fast Track Switching {#mvfts}
+
+This section specifies how a subscriber switches between tracks within an
+alternate group that have dissimilar keyframeSpacing values. Publishers
+MUST package such tracks as described in {{packagingforswitching}}.
+Additional background, implementation guidance and evaluation of this
+technique are provided in {{MVFTS}}.
+
+### Switching Procedure
+
+To minimize join latency when joining an alternate group, a subscriber
+SHOULD first subscribe to the track with the closest switch point that satisfies the bandwidth constraints.
+Once playback begins, the subscriber MAY switch to a track with a larger
+keyframeSpacing at a valid switch point, calculated as described in
+{{switchpoints}}.
+
+### Calculating Valid Switch Points {#switchpoints}
+
+Given a source track with keyframeSpacing S and a target track with
+keyframeSpacing T, a switch from Group ID G and Object ID N of the source
+track is valid if:
+
+    (G * S + N) / T
+
+yields an integer. That integer is the Group ID in the target track at which
+the subscriber begins receiving objects, starting at Object ID 0.
 
 # Media Timeline track {#mediatimelinetrack}
 The media timeline track provides data about the previously published Groups and their
@@ -1969,6 +2076,12 @@ using the MSF_COMPRESSION property ({{compression-signaling}}). The document
 supports two formats: an explicit entry format and a template format. Publishers
 MAY combine both formats in a single document.
 
+The media timeline payload describes when a Group is published within a track. While
+usually regular in cadence, this publication may also be sparse and irregular and this
+sparseness will be reflected in the media and wallclock timestamps associated with each
+group. Additionally, there is no requirement from a media timeline perspective that the
+group numbers are sequential or are monotonically increasing.
+
 ### Explicit entry format {#explicitentryformat}
 The explicit format contains an array of records. Each record consists of
 an array of three required items, whose ordinal position defines their type:
@@ -1985,6 +2098,8 @@ an array of three required items, whose ordinal position defines their type:
   (midnight UTC/GMT) and expressed as a JSON Number. For VOD assets, or if the
   wallclock time is not known, the value SHOULD be 0.
 
+The media timeline track is ordered by media time.
+
 An example media timeline is shown below:
 
 ~~~json
@@ -2000,16 +2115,21 @@ An example media timeline is shown below:
 ## Media Timeline Catalog requirements
 A media timeline track MUST carry a 'type' identifier in the Catalog with a value
 of "mediatimeline". A media timeline track MUST carry a 'depends' attribute which
-contains an array of all track names to which the media timeline track applies.
+contains an array of all track names or renderGroups to which the media timeline
+track applies. If multiple tracks are referenced and then one of those tracks ceases
+publication, the publisher MUST produce a catalog update which removes the 'depends'
+reference of the track that ceased publication. If that track then becomes available
+as VOD content, a new media timeline track must be published to describe the content
+available in that track.
 
 ## Media Timeline track updating
 The publisher MUST publish an independent media timeline in the first MOQT Object
 of each MOQT Group of a media timeline track. An independent media timeline object
-MUST contain all media timeline records accumulated and accessible up to that point, allowing a
-subscriber joining at any group boundary to receive the accessible timeline history.
-The publisher MAY publish incremental updates in the second and subsequent Objects
-within each Group. Incremental updates contain only new media timeline records since
-the previous media timeline Object in that Group.
+MUST contain all media timeline records accumulated and accessible up to that point,
+allowing a subscriber joining at any group boundary to receive the accessible timeline
+history. The publisher MAY publish incremental updates in the second and subsequent
+Objects within each Group. Incremental updates contain only new media timeline records
+since the previous media timeline Object in that Group.
 
 ## Media Timeline Template {#mediatimelinetemplate}
 When the relationship between media time, MOQT Location and wallclock time follows
