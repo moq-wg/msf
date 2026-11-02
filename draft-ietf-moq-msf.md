@@ -585,7 +585,7 @@ The target latency in milliseconds. Target latency is defined as the offset in
 wallclock time between when content entered the encoder and when it is displayed to the
 end user. Wallclock time is defined by {{wallclock}}. For example, if a frame of video
 entered the encoder at 10:08:32.638 UTC and the target latency is 5000, then that frame
-should be rendered to the end-user at10:08:37.638 UTC. If isLive is FALSE, this field
+should be rendered to the end-user at10:08:37.638 UTC. If isLive is false, this field
 MUST be ignored. All tracks belonging to the same render group MUST have identical target
 latencies. All tracks belonging to the same alternate group MUST have identical target
 latencies. If this field is absent from the track definition, and isLive is TRUE, then
