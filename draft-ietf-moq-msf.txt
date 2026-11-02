@@ -2569,11 +2569,11 @@ Table of Contents
 
 7.2.  Media Timeline Catalog requirements
 
-   A media timeline track MUST carry a 'type' identifier in the Catalog
-   with a value of "mediatimeline".  A media timeline track MUST carry a
-   'depends' attribute which contains an array of all track names or
-   renderGroups to which the media timeline track applies.  If multiple
-   tracks are referenced and then one of those tracks ceases
+   A media timeline track MUST carry a 'packaging' Section 5.2.4
+   attribute with a value of "mediatimeline".  A media timeline track
+   MUST carry a 'depends' attribute which contains an array of all track
+   names or renderGroups to which the media timeline track applies.  If
+   multiple tracks are referenced and then one of those tracks ceases
    publication, the publisher MUST produce a catalog update which
    removes the 'depends' reference of the track that ceased publication.
    If that track then becomes available as VOD content, a new media
