@@ -5,8 +5,8 @@
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
 Intended status: Informational                             S. Nandakumar
-Expires: 5 May 2027                                                Cisco
-                                                         1 November 2026
+Expires: 6 May 2027                                                Cisco
+                                                         2 November 2026
 
 
                          MOQT Streaming Format
@@ -49,7 +49,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 5 May 2027.
+   This Internet-Draft will expire on 6 May 2027.
 
 Copyright Notice
 
@@ -2396,10 +2396,11 @@ Table of Contents
 6.3.1.  Switching Procedure
 
    To minimize join latency when joining an alternate group, a
-   subscriber SHOULD first subscribe to the track with the lowest
-   keyframeSpacing value.  Once playback begins, the subscriber MAY
-   switch to a track with a larger keyframeSpacing at a valid switch
-   point, calculated as described in Section 6.3.2.
+   subscriber SHOULD first subscribe to the track with the closest
+   switch point that satisfies the bandwidth constraints.  Once playback
+   begins, the subscriber MAY switch to a track with a larger
+   keyframeSpacing at a valid switch point, calculated as described in
+   Section 6.3.2.
 
 6.3.2.  Calculating Valid Switch Points
 
@@ -3702,9 +3703,9 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
    [MOQMETRICS]
               Jennings, C. F. and S. Nandakumar, "Metrics over MOQT",
               Work in Progress, Internet-Draft, draft-jennings-moq-
-              metrics-02, 20 October 2025,
+              metrics-03, 2 November 2026,
               <https://datatracker.ietf.org/doc/html/draft-jennings-moq-
-              metrics-02>.
+              metrics-03>.
 
    [MoQTransport]
               Nandakumar, S., Vasiliev, V., Swett, I., and A. Frindell,
@@ -3717,9 +3718,9 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
               Nandakumar, S., Jennings, C. F., and T. Meunier, "Privacy
               Pass Authentication for Media over QUIC (MoQ)", Work in
               Progress, Internet-Draft, draft-ietf-moq-privacy-pass-
-              auth-03, 6 July 2026,
+              auth-04, 1 November 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-moq-
-              privacy-pass-auth-03>.
+              privacy-pass-auth-04>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
