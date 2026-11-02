@@ -1362,7 +1362,10 @@ svg {
                     <p id="section-toc.1-1.5.2.2.2.45.1"><a href="#section-5.2.45" class="auto internal xref">5.2.45</a>. <a href="#name-accessibility" class="internal xref">Accessibility</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2.2.46">
-                    <p id="section-toc.1-1.5.2.2.2.46.1"><a href="#section-5.2.46" class="auto internal xref">5.2.46</a>. <a href="#name-keyframe-spacing" class="internal xref">Keyframe spacing</a></p>
+                    <p id="section-toc.1-1.5.2.2.2.46.1"><a href="#section-5.2.46" class="auto internal xref">5.2.46</a>. <a href="#name-accessible-window-time" class="internal xref">Accessible Window Time</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2.2.47">
+                    <p id="section-toc.1-1.5.2.2.2.47.1"><a href="#section-5.2.47" class="auto internal xref">5.2.47</a>. <a href="#name-keyframe-spacing" class="internal xref">Keyframe spacing</a></p>
 </li>
                 </ul>
 </li>
@@ -1926,7 +1929,7 @@ points from subscribers.<a href="#section-4.3-2.1.1" class="pilcrow">¶</a></p>
 boundaries, not only at group boundaries.<a href="#section-4.3-2.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-4.3-2.3">
-            <p id="section-4.3-2.3.1">The keyframeSpacing <a href="#keyframespacing" class="auto internal xref">Section 5.2.46</a> catalog field <span class="bcp14">MUST</span> be specified for
+            <p id="section-4.3-2.3.1">The keyframeSpacing <a href="#keyframespacing" class="auto internal xref">Section 5.2.47</a> catalog field <span class="bcp14">MUST</span> be specified for
 each track, indicating the number of objects per keyframe interval.<a href="#section-4.3-2.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-4.3-2.4">
@@ -2588,7 +2591,7 @@ of the catalog tracks by moving the verbose init data towards the end of the doc
               <td class="text-left" rowspan="1" colspan="1">Keyframe spacing</td>
               <td class="text-left" rowspan="1" colspan="1">keyframeSpacing</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <a href="#keyframespacing" class="auto internal xref">Section 5.2.46</a>
+                <a href="#keyframespacing" class="auto internal xref">Section 5.2.47</a>
 </td>
             </tr>
           </tbody>
@@ -3432,20 +3435,40 @@ semicolon-separated pairs of channel identifier and language code
 and configure an appropriate caption decoder.<a href="#section-5.2.45-7" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="keyframespacing">
+<div id="accessiblewindowtime">
 <section id="section-5.2.46">
-          <h4 id="name-keyframe-spacing">
-<a href="#section-5.2.46" class="section-number selfRef">5.2.46. </a><a href="#name-keyframe-spacing" class="section-name selfRef">Keyframe spacing</a>
+          <h4 id="name-accessible-window-time">
+<a href="#section-5.2.46" class="section-number selfRef">5.2.46. </a><a href="#name-accessible-window-time" class="section-name selfRef">Accessible Window Time</a>
           </h4>
-<p id="section-5.2.46-1">Location: T    Required: Optional   JSON Type: Number<a href="#section-5.2.46-1" class="pilcrow">¶</a></p>
-<p id="section-5.2.46-2">A number defining the number of objects per keyframe interval. A value of 15
+<p id="section-5.2.46-1">Required: Optional   JSON Type: Number    Location: Track Object<a href="#section-5.2.46-1" class="pilcrow">¶</a></p>
+<p id="section-5.2.46-2">The accessibleWindowTime defines a time delta in wallclock milliseconds behind the
+live edge at which content in this track reamins accessible. This feature is often used
+to implement a 'DVR' window in live streams, in which content is only available for a
+fixed duration window which trails the live edge. To calculate the earliest available
+content, a client would subtract the accessibleWindowTime value from the current wallclock
+time to give the trailing threshold and then search the appropriate media timeline track for
+the earliest Group whose wallclock time is greater than this trailing threshold.<a href="#section-5.2.46-2" class="pilcrow">¶</a></p>
+<p id="section-5.2.46-3">If the track content is being encoded at a constant real-time temporal rate, then the
+accessibleWindowTime delta can be equally applied to the media time data within the
+media timeline track.<a href="#section-5.2.46-3" class="pilcrow">¶</a></p>
+<p id="section-5.2.46-4">Tracks assigned to the same alternative group <a href="#altgroup" class="auto internal xref">Section 5.2.13</a> <span class="bcp14">MUST</span> carry the same
+accessibleWindowTime value.<a href="#section-5.2.46-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="keyframespacing">
+<section id="section-5.2.47">
+          <h4 id="name-keyframe-spacing">
+<a href="#section-5.2.47" class="section-number selfRef">5.2.47. </a><a href="#name-keyframe-spacing" class="section-name selfRef">Keyframe spacing</a>
+          </h4>
+<p id="section-5.2.47-1">Location: T    Required: Optional   JSON Type: Number<a href="#section-5.2.47-1" class="pilcrow">¶</a></p>
+<p id="section-5.2.47-2">A number defining the number of objects per keyframe interval. A value of 15
 means each group contains a keyframe followed by 14 predicted frames (15 objects
 total). A value of 600 means each group contains a keyframe followed by 599
-predicted frames (600 objects total).<a href="#section-5.2.46-2" class="pilcrow">¶</a></p>
-<p id="section-5.2.46-3">This field is used by subscribers to calculate valid switch points when
+predicted frames (600 objects total).<a href="#section-5.2.47-2" class="pilcrow">¶</a></p>
+<p id="section-5.2.47-3">This field is used by subscribers to calculate valid switch points when
 performing adaptive bitrate switching between tracks with different keyframe
 intervals. See <a href="#packagingforswitching" class="auto internal xref">Section 4.3</a> for publisher requirements and
-<a href="#mvfts" class="auto internal xref">Section 6.3</a> for details on how to use this field.<a href="#section-5.2.46-3" class="pilcrow">¶</a></p>
+<a href="#mvfts" class="auto internal xref">Section 6.3</a> for details on how to use this field.<a href="#section-5.2.47-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -4031,8 +4054,9 @@ tracks using MoQ Secure Objects with AES-128-GCM.<a href="#section-5.6.8-1" clas
 <p id="section-5.6.9-1">This example shows a catalog for a media producer capable of sending LOC
 packaged, time-aligned audio and video tracks, along with a Media Timeline
 which describes the history of those tracks and an Event Timeline providing
-synchronized data.<a href="#section-5.6.9-1" class="pilcrow">¶</a></p>
-<div class="lang-json sourcecode" id="section-5.6.9-2">
+synchronized data. Additionally, the accessibleWindowTime attribute of the
+video track defines a 5 min 'DVR window'.<a href="#section-5.6.9-1" class="pilcrow">¶</a></p>
+<div class="breakable lang-json sourcecode" id="section-5.6.9-2">
 <pre>
 {
   "version": "draft-01",
@@ -4057,6 +4081,7 @@ synchronized data.<a href="#section-5.6.9-1" class="pilcrow">¶</a></p>
       "namespace": "conference.example.com/conference123/alice",
       "packaging": "loc",
       "isLive": true,
+      "accessibleWindowTime": 300000,
       "targetLatency": 2000,
       "role": "video",
       "renderGroup": 1,
@@ -4615,6 +4640,12 @@ relationship to wallclock time and media time. Media timeline tracks allow playe
 seek to precise points behind the live head in a live broadcast, or for random access
 in a VOD asset. Media timeline tracks are optional. Multiple media timeline tracks
 can exist inside a catalog.<a href="#section-7-1" class="pilcrow">¶</a></p>
+<p id="section-7-2">A media timeline track <span class="bcp14">MAY</span> describe content that lies outside the accessibility window
+defined by the Accessible Window Time <a href="#accessiblewindowtime" class="auto internal xref">Section 5.2.46</a> track property. Publishers
+of media timeline tracks <span class="bcp14">SHOULD</span> trim their media timeline so as to not describe content
+outside of the availability window. Subscribers of media timeline tracks <span class="bcp14">MUST</span> apply
+any Accessible Window Time constraints before attempting to retrieve content based on
+a media timeline description.<a href="#section-7-2" class="pilcrow">¶</a></p>
 <div id="mediatimelinepayload">
 <section id="section-7.1">
         <h3 id="name-media-timeline-track-payloa">
