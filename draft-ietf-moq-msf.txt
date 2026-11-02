@@ -885,6 +885,46 @@ Table of Contents
 
    Table 3: Allowed packaging values
 
+   Which additional track fields are required depends on the pair
+   (packaging, role) - see Section 5.2.4.1.
+
+5.2.4.1.  Required fields per packaging and track type
+
+   Section 5.2.2, Section 5.2.3, Section 5.2.4, and Section 5.2.8 are
+   required on every track.  The table below lists the fields that MUST
+   also be present for each (packaging, role) pair.  Fields not listed
+   remain OPTIONAL.  Where an individual field definition sets a
+   stricter constraint (e.g. Conditional), that constraint wins.
+
+   Fields with no meaning for a given pair SHOULD NOT be included;
+   parsers ignore fields they do not understand.
+
+        +===============+==================+=====================+
+        | Packaging     | Role             | Also required       |
+        +===============+==================+=====================+
+        | loc           | audio            | codec, samplerate,  |
+        |               |                  | channelConfig       |
+        +---------------+------------------+---------------------+
+        | loc           | video            | codec, framerate    |
+        +---------------+------------------+---------------------+
+        | loc           | audiodescription | codec, samplerate,  |
+        |               |                  | channelConfig, lang |
+        +---------------+------------------+---------------------+
+        | loc           | signlanguage     | codec, framerate    |
+        +---------------+------------------+---------------------+
+        | eventtimeline | eventtimeline    | eventType           |
+        +---------------+------------------+---------------------+
+
+                                 Table 6
+
+   Table: Required track fields per (packaging, role)
+
+   Packaging and role combinations not listed in the table above have no
+   required fields beyond those required on every track.
+
+   Specifications defining new packaging values extend this table with
+   their own per-role rows.
+
 5.2.5.  Packaging metadata
 
    Required: Optional JSON Type: String Location: Track Object
@@ -930,6 +970,9 @@ Table of Contents
    This role field MAY be used in conjunction with the Mimetype
    Section 5.2.20 to fully describe the content of the track.
 
+   See Section 5.2.4.1 for the fields that MUST accompany each role
+   under a given Section 5.2.4.
+
    Table 4: Reserved track roles
 
          +==================+===================================+
@@ -965,7 +1008,7 @@ Table of Contents
          |                  | carrying application-defined data |
          +------------------+-----------------------------------+
 
-                                 Table 6
+                                 Table 7
 
    Custom roles MAY be used as long as they do not collide with the
    specified roles.
@@ -1302,7 +1345,7 @@ Table of Contents
        | MoQ Secure Objects | moq-secure-objects | [SecureObjects] |
        +--------------------+--------------------+-----------------+
 
-                                  Table 7
+                                  Table 8
 
    Custom encryption schemes MAY be used.  Custom scheme names SHOULD
    use Reverse Domain Name Notation to avoid collisions (e.g.,
@@ -1332,7 +1375,7 @@ Table of Contents
     |                            |                            | bits |
     +----------------------------+----------------------------+------+
 
-                                 Table 8
+                                 Table 9
 
    Implementations MUST support "aes-128-gcm-sha256".  Implementations
    SHOULD support "aes-128-ctr-hmac-sha256-80" for scenarios requiring
@@ -1398,7 +1441,7 @@ Table of Contents
             | CAT          | cat          | [C4M]             |
             +--------------+--------------+-------------------+
 
-                                  Table 9
+                                  Table 10
 
    Custom authorization schemes MAY be used.  Custom scheme names MUST
    use a unique naming convention, such as Reverse Domain Name Notation
@@ -1446,7 +1489,7 @@ Table of Contents
    *  A required 'value' field (String) specifying the accessibility
       channels or features available.
 
-   Table 6: Registered accessibility schemes
+   Table 8: Registered accessibility schemes
 
         +===============================+=========================+
         | Scheme                        | Description             |
@@ -1456,7 +1499,7 @@ Table of Contents
         | urn:scte:dash:cc:cea-708:2015 | CEA-708 closed captions |
         +-------------------------------+-------------------------+
 
-                                  Table 10
+                                  Table 11
 
    The 'value' field for CEA-608/708 schemes uses the format defined by
    [SCTE214-1], where caption service channels are specified as
@@ -3107,7 +3150,7 @@ Table of Contents
 
 11.1.1.  Reserved fragment parameters
 
-   Table 8 defines reserved key names for the parameter portion of the
+   Table 9 defines reserved key names for the parameter portion of the
    msf-fragment.  Keynames are case-sensitive.
 
      +=================+=============================================+
@@ -3124,7 +3167,7 @@ Table of Contents
      | connection      | Mandates a connection type                  |
      +-----------------+---------------------------------------------+
 
-                                  Table 11
+                                  Table 12
 
    *  wallclock-range - a range defined by start and end wallclock
       times, each expressed as milliseconds since Unix Epoch and
@@ -3372,7 +3415,7 @@ Table of Contents
    |              |                    | rejected                      |
    +--------------+--------------------+-------------------------------+
 
-                 Table 12: Example string-to-byte mappings
+                 Table 13: Example string-to-byte mappings
 
 11.3.  Initiating a broadcast
 
@@ -3529,7 +3572,7 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
                | 1     | GZIP                  | [GZIP]    |
                +-------+-----------------------+-----------+
 
-                                  Table 13
+                                  Table 14
 
    Table: MSF Compression Values
 
@@ -3662,7 +3705,7 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
          | msf           | MOQT Streaming Format | This document |
          +---------------+-----------------------+---------------+
 
-                                  Table 14
+                                  Table 15
 
 14.2.  "MSF Event Timeline Types" registry
 
@@ -3757,7 +3800,7 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
              | 1     | GZIP                  | [GZIP]        |
              +-------+-----------------------+---------------+
 
-                                  Table 15
+                                  Table 16
 
 15.  References
 
