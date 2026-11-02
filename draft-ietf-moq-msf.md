@@ -551,6 +551,36 @@ as defined in Table 3.
 
 Table 3: Allowed packaging values
 
+Which additional track fields are required depends on the pair
+(`packaging`, `role`) - see {{requiredfields}}.
+
+#### Required fields per packaging and track type {#requiredfields}
+
+{{tracknamespace}}, {{trackname}}, {{packaging}}, and {{islive}} are
+required on every track. The table below lists the fields that MUST also be
+present for each (`packaging`, `role`) pair. Fields not listed remain
+OPTIONAL. Where an individual field definition sets a stricter constraint
+(e.g. `Conditional`), that constraint wins.
+
+Fields with no meaning for a given pair SHOULD NOT be included; parsers
+ignore fields they do not understand.
+
+| Packaging     | Role             | Also required                          |
+|:==============|:=================|:=======================================|
+| loc           | audio            | codec, samplerate, channelConfig       |
+| loc           | video            | codec, framerate                       |
+| loc           | audiodescription | codec, samplerate, channelConfig, lang |
+| loc           | signlanguage     | codec, framerate                       |
+| eventtimeline | eventtimeline    | eventType                              |
+
+Table: Required track fields per (packaging, role)
+
+Packaging and role combinations not listed in the table above have no
+required fields beyond those required on every track.
+
+Specifications defining new packaging values extend this table with
+their own per-role rows.
+
 ### Packaging metadata {#packagingmetadata}
 Required: Optional    JSON Type: String    Location: Track Object
 
@@ -587,6 +617,9 @@ are described in Table 4. These role values are case-sensitive.
 
 This role field MAY be used in conjunction with the Mimetype {{mimetype}} to
 fully describe the content of the track.
+
+See {{requiredfields}} for the fields that MUST accompany each role under a
+given {{packaging}}.
 
 Table 4: Reserved track roles
 
@@ -991,7 +1024,7 @@ embedded within the track. Each descriptor is a JSON Object containing:
 * A required 'value' field (String) specifying the accessibility channels
   or features available.
 
-Table 6: Registered accessibility schemes
+Table 8: Registered accessibility schemes
 
 | Scheme                             | Description                          |
 |:===================================|:=====================================|
@@ -2594,7 +2627,7 @@ meaning, as defined by {{reservedfragmentparameters}}.
 
 ### Reserved fragment parameters {#reservedfragmentparameters}
 
-Table 8 defines reserved key names for the parameter portion of the msf-fragment. Keynames are
+Table 9 defines reserved key names for the parameter portion of the msf-fragment. Keynames are
 case-sensitive.
 
 | Name            |                Description                       |
