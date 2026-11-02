@@ -558,14 +558,14 @@ Which additional track fields are required depends on the pair
 
 {{tracknamespace}}, {{trackname}}, {{packaging}}, and {{islive}} are
 required on every track. The table below lists the fields that MUST also be
-present for each (`packaging`, `type`) pair. Fields not listed remain
+present for each (`packaging`, `role`) pair. Fields not listed remain
 OPTIONAL. Where an individual field definition sets a stricter constraint
 (e.g. `Conditional`), that constraint wins.
 
 Fields with no meaning for a given pair SHOULD NOT be included; parsers
 ignore fields they do not understand.
 
-| Packaging     | Track type       | Also required                          |
+| Packaging     | Role             | Also required                          |
 |:==============|:=================|:=======================================|
 | loc           | audio            | codec, samplerate, channelConfig       |
 | loc           | video            | codec, framerate                       |
@@ -573,9 +573,9 @@ ignore fields they do not understand.
 | loc           | signlanguage     | codec, framerate                       |
 | eventtimeline | eventtimeline    | eventType                              |
 
-Table: Required track fields per (packaging, type)
+Table: Required track fields per (packaging, role)
 
-Packaging and type combinations not listed in the table above have no
+Packaging and role combinations not listed in the table above have no
 required fields beyond those required on every track.
 
 Specifications defining new packaging values extend this table with
