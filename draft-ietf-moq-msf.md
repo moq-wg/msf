@@ -220,7 +220,7 @@ cleanly switch between time-aligned media tracks at group boundaries.
 
 If time-aligned media tracks do not have overlapping presentation time at
 equally-numbered group boundaries, then an alternate mechanism, not defined by
-this specification, need to be provided to the client to enable it to switch smoothly
+this specification, needs to be provided to the client to enable it to switch smoothly
 between time-aligned, but numerically dissimilar, Group IDs.
 
 ## Packaging for multi-variant track switching {#packagingforswitching}
@@ -555,7 +555,7 @@ namespace.
 ### Track name {#trackname}
 Required: Yes    JSON Type: String    Location: Track Object
 
-A JSON string defining the MOQT Track Name of the track. See {{MOQT. Section 2.4.1}}.
+A JSON string defining the MOQT Track Name of the track. See {{MOQT, Section 2.4.1}}.
 The string is converted to the bytes of the Track Name using
 the rules in {{namemapping}}. A Track Name MAY be the empty string.
 
@@ -589,7 +589,7 @@ Which additional track fields are required depends on the pair
 #### Required fields per packaging and track type {#requiredfields}
 
 Namespace {{tracknamespace}}, trackName {{trackname}}, packaging {{packaging}},
-and isLive {{islive}} are required on every track. Namspace MAY be inherited
+and isLive {{islive}} are required on every track. Namespace MAY be inherited
 if not defined explicitly. {{tbl-required-track-fields}} lists the fields that MUST also be
 present for each (`packaging`, `role`) pair. Fields not listed remain
 OPTIONAL. Where an individual field definition sets a stricter constraint
@@ -1127,7 +1127,7 @@ The following rules are to be followed in constructing and processing delta upda
   processing required for joining subscribers.
 * Error handling - any illogical update operation, such as adding an existing name,
   removing or updating an unknown track or cloning to an existing name MUST be
-  rejected as an invalid catalog. 
+  rejected as an invalid catalog.
 
 ## Variable Substitution {#variablesubstitution}
 
@@ -1351,7 +1351,8 @@ express the track relationships.
       "width":640,
       "height":480,
       "bitrate":3000000,
-      "spatialId": 0
+      "spatialId": 0,
+      "temporalId": 0,
       "framerate":15
     },
     {
@@ -1366,7 +1367,8 @@ express the track relationships.
       "width":640,
       "height":480,
       "bitrate":3800000,
-      "spatialId": 1
+      "spatialId": 0,
+      "temporalId": 1,
       "framerate":30,
       "depends": ["480p15"]
     },
@@ -1382,7 +1384,8 @@ express the track relationships.
       "width":1920,
       "height":1080,
       "bitrate":6000000,
-      "spatialId": 2
+      "spatialId": 1,
+      "temporalId": 0,
       "framerate":15,
       "depends":["480p15"]
     },
@@ -1399,6 +1402,8 @@ express the track relationships.
       "width":1920,
       "height":1080,
       "bitrate":5000000,
+      "spatialId": 1,
+      "temporalId": 1,
       "framerate":30,
       "depends": ["480p30", "1080p15"]
     },
@@ -1624,7 +1629,7 @@ tracks using MoQ Secure Objects with AES-128-GCM.
       "encryptionScheme": "moq-secure-objects",
       "cipherSuite": "aes-128-gcm-sha256",
       "keyId": "key-2024-q1-premium",
-      "trackBaseKey": "dGhpc2lzYXNhbXBsZWJhc2VrZXk="
+      "trackBaseKey": "MTIzNDU2Nzg5MDEyMzQ1Ng=="
     }
   ]
 }
@@ -1910,6 +1915,7 @@ would be resolved by the subscriber as:
       "name": "tracking-bob",
       "namespace": "advertising-decisions/live-sports/xyz",
       "packaging": "eventtimeline",
+      "isLive": true,
       "eventType": "com.example.iab.vast",
       "authInfo": {
           "cat": "1234"
@@ -1993,7 +1999,7 @@ a different namespace.
 
 ~~~json
 {
-  "version": "1",
+  "version": "draft-02",
   "generatedAt": 1746104606044,
   "tracks": [
     {
@@ -2268,9 +2274,9 @@ An example template value is shown below:
 [0, 2002, [0, 0], [1, 0], 1759924158381, 2002]
 ~~~
 
-This template indicates that the first entry has media time 0ms, location [0,0],
+This template indicates that the first entry has media time 0ms, '[0,0]',
 and wallclock time 1759924158381. Each subsequent entry increments media time by
-2002ms, location by [1,0] (next group, same object), and wallclock by 2002ms.
+2002ms, '[1,0]' (next group, same object), and wallclock by 2002ms.
 
 ### Template Immutability
 Unlike the explicit media timeline track, the media timeline template is intended
@@ -2362,7 +2368,7 @@ An event timeline track MUST carry:
   event timeline track.
 
 If an Event Timeline track has an index reference which refers to one or more Media Timeline tracks,
-then those Media Timline tracks MUST be listed in a 'depends' {{dependencies}} field within the
+then those Media Timeline tracks MUST be listed in a 'depends' {{dependencies}} field within the
 Event Timeline track definition.
 
 ## Event Timeline track updating
@@ -2537,7 +2543,7 @@ A log track MUST be declared in the publishTracks array of the catalog with:
 A log track MAY include:
 
 * a {{connectionuri}} attribute if logs should be published to a different endpoint.
-* a {{token}} attribute for publish authorization.
+* an {{authinfo}} attribute for publish authorization.
 
 
 # Metrics track {#metricstrack}
@@ -2556,8 +2562,7 @@ with timeseries values).
 
 {{MOQMETRICS}} defines two metric value types - Gauge and Counter.
 Both value types support either 64-bit floating point or integer representation.
-Implementations MUST follow the object payload format specified in
-of {{MOQMETRICS, Section 3}}.
+Implementations MUST follow the object payload format specified in {{MOQMETRICS, Section 3}}.
 
 ## Metrics track namespace and name {#metricstrackname}
 
@@ -2595,7 +2600,7 @@ A metrics track MUST be declared in the publishTracks array of the catalog with:
 A metrics track MAY include:
 
 * a {{connectionuri}} attribute if metrics should be published to a different endpoint.
-* a {{token}} attribute for publish authorization.
+* a {{authinfo}} attribute for publish authorization.
 
 # Workflow
 
@@ -2864,7 +2869,7 @@ track object.
 ### Relationship to the serialized form
 
 The hyphen-and-percent style serialization defined in {{MOQT, Section 8.8}}
-and used in MSF URL fragments ({{namespacenameencoding}})is an encoding
+and used in MSF URL fragments ({{namespacenameencoding}}) is an encoding
 of the byte values produced by this section, not of the JSON source text. To
 render a catalog Full Track Name in that form, an implementation first maps each
 namespace element and the track name to bytes as defined above, then applies
@@ -2881,8 +2886,7 @@ the MOQT encoding to those bytes.
 | `"Video"`       | `56 69 64 65 6f`     | different track from `"video"`                |
 | `""`            | (empty)              | valid Track Name; invalid namespace field     |
 | `"\uDEAD"`      | none                 | invalid; catalog MUST be rejected             |
-
-{: #namemapping-examples title="Example string-to-byte mappings"}
+{: #tbl-namemapping-examples title="Example string-to-byte mappings"}
 
 ## Initiating a broadcast
 An MSF publisher MUST publish a catalog track object before publishing any media
@@ -2940,7 +2944,7 @@ connection URI contains token parameters, the subscriber extracts the token
 value and includes it in the appropriate MOQT message. For example:
 
 ~~~
-moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
+moqt://relay.example.com/moqt#msf:namespace--name&cat=eyJhbGciOiJFZERTQSJ9...
 ~~~
 
 URI parameters provide a convenient mechanism for distributing pre-authorized
@@ -3025,7 +3029,7 @@ The compression algorithm values used by both mechanisms are:
 |:======|:======================|:==============|
 | 0     | None (uncompressed)   | This document |
 | 1     | GZIP                  | {{GZIP}}      |
-{: #tbl-compresison-values title="MSF Compression Values"}
+{: #tbl-compression-values title="MSF Compression Values"}
 
 All MSF implementations MUST support both uncompressed payloads (value 0 or
 property absent) and GZIP compressed payloads (value 1).
@@ -3131,7 +3135,7 @@ Timeline Types" registry ({{iana-event-timeline-types}}) and the "MSF
 Compression Algorithms" registry ({{iana-compression-algorithms}})
 defined below. It also registers one entry in the existing "MOQT URI
 Fragment Types" registry and documents a Property Type value that
-require no IANA action.
+requires no IANA action.
 
 ## "MOQT URI Fragment Types" registry
 
@@ -3140,7 +3144,7 @@ Types" registry established by {{MOQT, Section 15.3}}:
 
 | Fragment Type   |  Description          | Specification  |
 |:================|:======================|:===============|
-| msf             | MOQT Streaming Format | This document        |
+| msf             | MOQT Streaming Format | This document  |
 
 ## "MSF Event Timeline Types" registry {#iana-event-timeline-types}
 
