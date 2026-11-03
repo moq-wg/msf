@@ -198,7 +198,6 @@ signaled per-track via the {{packagingmetadata}} field using the
 |:====================|:======================================================================================================|
 | group               | All MOQT Objects within a MOQT Group are sent in a single MOQT Subgroup, in Object ID order. Default. |
 | object              | Each MOQT Object is sent in its own MOQT Subgroup.                                                    |
-
 {: #tbl-loc-stream-mapping-modes title="LOC stream-mapping modes signaled via `packagingMetadata`"}
 
 If `packagingMetadata` is absent, or if it is present but does not carry a
@@ -360,7 +359,6 @@ A parser MUST ignore fields it does not understand.
 | Publish tracks            | publishTracks          | {{publishtracks}}         |
 | Delta update              | deltaUpdate            | {{deltaupdate}}           |
 | Initialization Data List  | initDataList           | {{initdatalist}}          |
-
 {: #tbl-root-fields title="Root catalog fields"}
 
 
@@ -516,7 +514,6 @@ of the catalog tracks by moving the verbose init data towards the end of the doc
 | Accessibility           | accessibility          | {{accessibility}}         |
 | Accessible Window Time  | accessibleWindowTime   | {{accessiblewindowtime}}  |
 | Keyframe spacing        | keyframeSpacing        | {{keyframespacing}}       |
-
 {: #tbl-track-fields title="Track fields"}
 
 ### Tracks object {#trackobject}
@@ -583,7 +580,6 @@ as defined in {{tbl-allowed-packaging-values}}.
 | MoQ Log         | moqlog         | See {{MOQLOG}}             |
 | MoQ Metrics     | moqmetrics     | See {{MOQMETRICS}}         |
 | Catalog         | catalog        | See {{catalog}}            |
-
 {: #tbl-allowed-packaging-values title="Allowed packaging values"}
 
 
@@ -609,7 +605,6 @@ ignore fields they do not understand.
 | loc           | audiodescription | codec, samplerate, channelConfig, lang    |
 | loc           | signlanguage     | codec, framerate                          |
 | eventtimeline | eventtimeline    | eventType                                 |
-
 {: #tbl-required-track-fields title="Required track fields per (packaging, role)"}
 
 Packaging and role combinations not listed in the table above have no
@@ -672,7 +667,6 @@ given {{packaging}}.
 | log              | A log publishing track per {{MOQLOG}}.                            |
 | metrics          | A metrics publishing track per {{MOQMETRICS}}.                    |
 | data             | A generic descriptor for tracks carrying application-defined data |
-
 {: #tbl-reserved-track-roles title="Reserved track roles"}
 
 Custom roles MAY be used as long as they do not collide with the specified roles.
@@ -946,7 +940,6 @@ The RECOMMENDED value is "moq-secure-objects" as defined in
 | Name                |   Value              |      Reference                    |
 |:====================|:=====================|:==================================|
 | MoQ Secure Objects  | moq-secure-objects   | {{SecureObjects}}                 |
-
 {: #tbl-defined-encryption-schemes title="Defined encryption schemes"}
 
 Custom encryption schemes MAY be used. Custom scheme names SHOULD use Reverse
@@ -964,7 +957,6 @@ MUST be present when the encryptionScheme is "moq-secure-objects". For the
 | AES-128-GCM-SHA256         | aes-128-gcm-sha256           | 128 bits |
 | AES-256-GCM-SHA512         | aes-256-gcm-sha512           | 128 bits |
 | AES-128-CTR-HMAC-SHA256-80 | aes-128-ctr-hmac-sha256-80   | 80 bits  |
-
 {: #tbl-cipher-suites title="Cipher suites for moq-secure-objects"}
 
 Implementations MUST support "aes-128-gcm-sha256". Implementations SHOULD
@@ -1019,7 +1011,6 @@ JSON elements defined by the referenced specifications.
 |:================|:===============|:======================================|
 | Privacy Pass     | privacy-pass   | {{PrivacyPassAuth}}                    |
 | CAT              | cat            | {{C4M}}                                |
-
 {: #tbl-defined-authorization-schemes title="Defined Authorization Schemes"}
 
 Custom authorization schemes MAY be used. Custom scheme names MUST use a
@@ -1067,7 +1058,6 @@ embedded within the track. Each descriptor is a JSON Object containing:
 |:===================================|:=====================================|
 | urn:scte:dash:cc:cea-608:2015      | CEA-608 closed captions              |
 | urn:scte:dash:cc:cea-708:2015      | CEA-708 closed captions              |
-
 {: #tbl-defined-accessibility-schemes title="Defined accessibility schemes"}
 
 The 'value' field for CEA-608/708 schemes uses the format defined by
@@ -2705,7 +2695,6 @@ case-sensitive.
 | location-range  | A subclip defined by a MOQT Location range       |
 | cat             | A base64 encoded C4M token                       |
 | connection      | Mandates a connection type                       |
-
 {: #tbl-reserved-key-names title="Reserved key names for the parameter portion of the msf-fragment"}
 
 * wallclock-range - a range defined by start and end wallclock times, separated by a "-" dash.
@@ -3036,7 +3025,6 @@ The compression algorithm values used by both mechanisms are:
 |:======|:======================|:==============|
 | 0     | None (uncompressed)   | This document |
 | 1     | GZIP                  | {{GZIP}}      |
-
 {: #tbl-compresison-values title="MSF Compression Values"}
 
 All MSF implementations MUST support both uncompressed payloads (value 0 or
