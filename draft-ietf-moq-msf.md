@@ -1164,9 +1164,9 @@ Query parameters (following the `?` character) are reserved for server-side
 processing and MUST NOT be used for variable substitution.
 
 When a subscriber requests a catalog using a URI containing a fragment identifier,
-the fragment is parsed as key-value pairs (using `&` as delimiter and `=` as
-separator). Each key becomes available as a variable name, and the variable
-is replaced with the corresponding value.
+the fragment is parsed as key-value pairs, using & as delimiter. Each pair is
+split at its first = character into a key and a value. Each key becomes available
+as a variable name, and the variable is replaced with the corresponding value.
 
 ## Catalog Compression {#catalog-compression}
 
@@ -3101,7 +3101,8 @@ If this initialization data is immutable over the life of the track, then the pr
 MUST be added as a Track property and there MUST be an initRef {{initref}} Track field
 referencing an Initialization Data List {{initdatalist}} entry with a type of
 'track-property'. If used, publishers MUST include the Track property in the PUBLISH
-message (publisher-initiated flow) or SUBSCRIBE_OK message (subscriber-initiated flow).
+message (publisher-initiated flow) or SUBSCRIBE_OK or FETCH_OK message
+(subscriber-initiated flow).
 
 If this initialization data might change over the life of the track, then the property
 MUST be added as an Object property. Since subscription might occur at any time, this Object
@@ -3122,7 +3123,7 @@ This initialization data is immutable over the life of the track.
 The serialization of the value of the property is defined by the Event timeline type {{eventtype}}.
 
 If used, publishers MUST include the MSF_EVENT_TIMELINE_HEADER track property in the PUBLISH
-message (publisher-initiated flow) or SUBSCRIBE_OK message (subscriber-initiated flow).
+message (publisher-initiated flow) or SUBSCRIBE_OK message or FETCH_OK (subscriber-initiated flow).
 
 
 # Security Considerations
