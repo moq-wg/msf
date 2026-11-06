@@ -4840,8 +4840,8 @@ a media timeline description.<a href="#section-7-2" class="pilcrow">¶</a></p>
         </h3>
 <p id="section-7.1-1">A media timeline track is a JSON <span>[<a href="#JSON" class="cite xref">JSON</a>]</span> document. This document <span class="bcp14">MAY</span> be compressed
 using the MSF_COMPRESSION property (<a href="#compression-signaling" class="auto internal xref">Section 12.1</a>). The document
-supports two formats: an explicit entry format and a template format. Only one
-format may be used within a given media timeline track.<a href="#section-7.1-1" class="pilcrow">¶</a></p>
+supports two formats: an explicit entry format and a template format. A media
+timeline track <span class="bcp14">MUST NOT</span> use both formats.<a href="#section-7.1-1" class="pilcrow">¶</a></p>
 <p id="section-7.1-2">The media timeline payload describes when a Group is published within a track. While
 usually regular in cadence, this publication may also be sparse and irregular and this
 sparseness will be reflected in the media and wallclock timestamps associated with each
