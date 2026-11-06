@@ -2894,7 +2894,7 @@ the MOQT encoding to those bytes.
 | `"caf\u00e9"`   | `63 61 66 c3 a9`     | same JSON escape rules: same track as above   |
 | `"cafe\u0301"`  | `63 61 66 65 cc 81`  | U+0065 + U+0301 (decomposed); different track |
 | `"Video"`       | `56 69 64 65 6f`     | different track from `"video"`                |
-| `""`            | (empty)              | valid Track Name; invalid namespace field     |
+| `""`            | (empty)              | invalid Track Name; invalid namespace field   |
 | `"\uDEAD"`      | none                 | invalid; catalog MUST be rejected             |
 {: #tbl-namemapping-examples title="Example string-to-byte mappings"}
 
