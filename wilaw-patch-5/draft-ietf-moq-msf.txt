@@ -3452,7 +3452,7 @@ moqt://sports.example.com/catalog?a=1#msf:namespace--catalog&token=1234&id=bob&e
    | "Video"      | 56 69 64 65        | different track from "video"  |
    |              | 6f                 |                               |
    +--------------+--------------------+-------------------------------+
-   | ""           | (empty)            | valid Track Name; invalid     |
+   | ""           | (empty)            | invalid Track Name; invalid   |
    |              |                    | namespace field               |
    +--------------+--------------------+-------------------------------+
    | "\uDEAD"     | none               | invalid; catalog MUST be      |
