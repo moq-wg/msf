@@ -2826,7 +2826,7 @@ moqt://sports.example.com/catalog?a=1#msf:namespace--catalog&token=1234&id=bob&e
       Array of Numbers, where the first item represents the MOQT GroupID
       and the second item the MOQT Object ID.
 
-   *  A 'data' object, any JSON value whose structure is defined by the
+   *  A 'data' field, a JSON value whose structure is defined by the
       eventType Section 5.2.6 value declared for this track in the
       Catalog.
 
