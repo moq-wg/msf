@@ -5,8 +5,8 @@
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
 Intended status: Informational                             S. Nandakumar
-Expires: 7 May 2027                                                Cisco
-                                                         3 November 2026
+Expires: 10 May 2027                                               Cisco
+                                                         6 November 2026
 
 
                          MOQT Streaming Format
@@ -49,7 +49,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 7 May 2027.
+   This Internet-Draft will expire on 10 May 2027.
 
 Copyright Notice
 
@@ -3743,7 +3743,7 @@ moqt://relay.example.com/moqt#msf:namespace--name&cat=eyJhbGciOiJFZERTQSJ9...
 14.1.  "MOQT URI Fragment Types" registry
 
    This document registers the following entry in the "MOQT URI Fragment
-   Types" registry established by [MOQT], Section 15.3:
+   Types" registry established by [MOQT], Section 16.3:
 
          +===============+=======================+===============+
          | Fragment Type | Description           | Specification |
