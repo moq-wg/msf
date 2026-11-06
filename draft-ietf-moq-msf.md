@@ -2175,8 +2175,8 @@ a media timeline description.
 ## Media Timeline track payload {#mediatimelinepayload}
 A media timeline track is a JSON {{JSON}} document. This document MAY be compressed
 using the MSF_COMPRESSION property ({{compression-signaling}}). The document
-supports two formats: an explicit entry format and a template format. Only one
-format may be used within a given media timeline track.
+supports two formats: an explicit entry format and a template format. A media
+timeline track MUST NOT use both formats.
 
 The media timeline payload describes when a Group is published within a track. While
 usually regular in cadence, this publication may also be sparse and irregular and this
