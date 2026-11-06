@@ -588,9 +588,9 @@ Which additional track fields are required depends on the pair
 
 #### Required fields per packaging and track type {#requiredfields}
 
-Namespace {{tracknamespace}}, trackName {{trackname}}, packaging {{packaging}},
-and isLive {{islive}} are required on every track. Namespace MAY be inherited
-if not defined explicitly. {{tbl-required-track-fields}} lists the fields that MUST also be
+trackName {{trackname}}, packaging {{packaging}}, and isLive {{islive}} are required
+on every track. A track without a namespace {{tracknamespace}} inherits the namespace
+of the catalog. {{tbl-required-track-fields}} lists the fields that MUST also be
 present for each (`packaging`, `role`) pair. Fields not listed remain
 OPTIONAL. Where an individual field definition sets a stricter constraint
 (e.g. `Conditional`), that constraint wins.
