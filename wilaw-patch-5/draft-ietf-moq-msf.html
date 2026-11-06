@@ -4762,7 +4762,7 @@ continuous publishing session, each subsequent Group ID <span class="bcp14">SHOU
 Group ID for that track. One approach is to use the current wall clock time in
 milliseconds since the Unix epoch as the starting Group ID.<a href="#section-6.1-2" class="pilcrow">¶</a></p>
 <p id="section-6.1-3">If a publisher maintains state across a restart and knows the previous Group ID,
-it <span class="bcp14">SHOULD</span> signal the gap using the MOQT Prior Group ID Gap Extension header.<a href="#section-6.1-3" class="pilcrow">¶</a></p>
+it <span class="bcp14">SHOULD</span> signal the gap using the PRIOR_GROUP_ID_GAP property <span>[<a href="#MOQT" class="cite xref">MOQT</a>], <a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-23#section-10.8" class="relref">Section 10.8</a></span>.<a href="#section-6.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="object-numbering">
@@ -5674,7 +5674,7 @@ a double hyphen (--).<a href="#section-11.1.2-2.2.1" class="pilcrow">¶</a></p>
 </li>
                 <li class="normal" id="section-11.1.2-2.3.2.2">
                   <p id="section-11.1.2-2.3.2.2.1">All other byte values (including hyphens and periods used as data) <span class="bcp14">MUST</span> be
-percent-encoded using a period (.) followed by two lowercase hexadecimal digits
+escaped using a period (.) followed by two lowercase hexadecimal digits
 (e.g., a literal hyphen in a name becomes .2d).<a href="#section-11.1.2-2.3.2.2.1" class="pilcrow">¶</a></p>
 </li>
               </ul>
@@ -5843,7 +5843,7 @@ track object.<a href="#section-11.2.3-2" class="pilcrow">¶</a></p>
           <h4 id="name-relationship-to-the-seriali">
 <a href="#section-11.2.4" class="section-number selfRef">11.2.4. </a><a href="#name-relationship-to-the-seriali" class="section-name selfRef">Relationship to the serialized form</a>
           </h4>
-<p id="section-11.2.4-1">The hyphen-and-percent style serialization defined in <span>[<a href="#MOQT" class="cite xref">MOQT</a>], <a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-23#section-8.8" class="relref">Section 8.8</a></span>
+<p id="section-11.2.4-1">The hyphen-and-period serialization defined in <span>[<a href="#MOQT" class="cite xref">MOQT</a>], <a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-23#section-8.8" class="relref">Section 8.8</a></span>
 and used in MSF URL fragments (<a href="#namespacenameencoding" class="auto internal xref">Section 11.1.2</a>) is an encoding
 of the byte values produced by this section, not of the JSON source text. To
 render a catalog Full Track Name in that form, an implementation first maps each
