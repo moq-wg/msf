@@ -2367,7 +2367,7 @@ the following required fields:
   payload {{mediatimelinepayload}}. Wallclock time and media PTS values are JSON Number,
   while Location value is an Array of Numbers, where the first item represents the MOQT
   GroupID and the second item the MOQT Object ID.
-* A 'data' object, any JSON value whose structure is defined by the eventType {{eventtype}}
+* A 'data' field, a JSON value whose structure is defined by the eventType {{eventtype}}
   value declared for this track in the Catalog.
 
 ## Event Timeline Catalog requirements
