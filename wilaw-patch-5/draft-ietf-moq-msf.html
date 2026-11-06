@@ -2705,7 +2705,7 @@ namespace.<a href="#section-5.2.2-5" class="pilcrow">¶</a></p>
 <p id="section-5.2.3-1">Required: Yes    JSON Type: String    Location: Track Object<a href="#section-5.2.3-1" class="pilcrow">¶</a></p>
 <p id="section-5.2.3-2">A JSON string defining the MOQT Track Name of the track. See <span>[<a href="#MOQT" class="cite xref">MOQT</a>], <a href="https://datatracker.ietf.org/doc/html/draft-ietf-moq-transport-23#section-2.4.1" class="relref">Section 2.4.1</a></span>.
 The string is converted to the bytes of the Track Name using
-the rules in <a href="#namemapping" class="auto internal xref">Section 11.2</a>. A Track Name <span class="bcp14">MAY</span> be the empty string.<a href="#section-5.2.3-2" class="pilcrow">¶</a></p>
+the rules in <a href="#namemapping" class="auto internal xref">Section 11.2</a>. A Track Name <span class="bcp14">MUST NOT</span> be the empty string.<a href="#section-5.2.3-2" class="pilcrow">¶</a></p>
 <p id="section-5.2.3-3">Within a catalog, the combination of Track Namespace and Track Name (the Full
 Track Name) <span class="bcp14">MUST</span> be unique. Uniqueness, and every other comparison of track
 names or namespaces required by this document (for example in <a href="#dependencies" class="auto internal xref">Section 5.2.15</a>,

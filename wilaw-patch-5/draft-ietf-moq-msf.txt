@@ -854,8 +854,8 @@ Table of Contents
 
    A JSON string defining the MOQT Track Name of the track.  See [MOQT],
    Section 2.4.1.  The string is converted to the bytes of the Track
-   Name using the rules in Section 11.2.  A Track Name MAY be the empty
-   string.
+   Name using the rules in Section 11.2.  A Track Name MUST NOT be the
+   empty string.
 
    Within a catalog, the combination of Track Namespace and Track Name
    (the Full Track Name) MUST be unique.  Uniqueness, and every other
