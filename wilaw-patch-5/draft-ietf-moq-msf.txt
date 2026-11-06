@@ -3813,7 +3813,7 @@ moqt://relay.example.com/moqt#msf:namespace--name&cat=eyJhbGciOiJFZERTQSJ9...
 
    The MSF_COMPRESSION Track and Object properties (Section 12.1) use
    Property Type value 0x78.  This value falls within the range that
-   [MOQT], Section 15.8 reserves for application-specific use, for which
+   [MOQT], Section 8.4 reserves for application-specific use, for which
    IANA registration is not permitted.  Accordingly, this document
    requests no IANA action for these Property Type values; they are
    defined directly by this specification and require no coordination
