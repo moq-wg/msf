@@ -1879,6 +1879,9 @@ substitution. The following catalog template:
   "tracks": [
     {
       "name": "video",
+      "codec": "av01.0.08M.10.0.110.09",
+      "bitrate": 5000000,
+      "framerate": 30,
       "packaging": "loc",
       "isLive": true,
       "role": "video",
