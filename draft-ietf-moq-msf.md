@@ -2088,7 +2088,9 @@ track name formats follow the conventions defined in {{MOQLOG}} and {{MOQMETRICS
       "packaging": "moqlog",
       "role": "log",
       "connectionURI": "moqt://logs.example.com:4443",
-      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      "authInfo": {
+          "cat": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      }
     }
   ]
 }
