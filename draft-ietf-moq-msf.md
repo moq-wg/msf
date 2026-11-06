@@ -557,7 +557,7 @@ Required: Yes    JSON Type: String    Location: Track Object
 
 A JSON string defining the MOQT Track Name of the track. See {{MOQT, Section 2.4.1}}.
 The string is converted to the bytes of the Track Name using
-the rules in {{namemapping}}. A Track Name MAY be the empty string.
+the rules in {{namemapping}}. A Track Name MUST NOT be the empty string.
 
 Within a catalog, the combination of Track Namespace and Track Name (the Full
 Track Name) MUST be unique. Uniqueness, and every other comparison of track
