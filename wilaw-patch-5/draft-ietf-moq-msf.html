@@ -2783,9 +2783,9 @@ as defined in <a href="#tbl-allowed-packaging-values" class="auto internal xref"
             <h5 id="name-required-fields-per-packagi">
 <a href="#section-5.2.4.1" class="section-number selfRef">5.2.4.1. </a><a href="#name-required-fields-per-packagi" class="section-name selfRef">Required fields per packaging and track type</a>
             </h5>
-<p id="section-5.2.4.1-1">Namespace <a href="#tracknamespace" class="auto internal xref">Section 5.2.2</a>, trackName <a href="#trackname" class="auto internal xref">Section 5.2.3</a>, packaging <a href="#packaging" class="auto internal xref">Section 5.2.4</a>,
-and isLive <a href="#islive" class="auto internal xref">Section 5.2.8</a> are required on every track. Namespace <span class="bcp14">MAY</span> be inherited
-if not defined explicitly. <a href="#tbl-required-track-fields" class="auto internal xref">Table 6</a> lists the fields that <span class="bcp14">MUST</span> also be
+<p id="section-5.2.4.1-1">trackName <a href="#trackname" class="auto internal xref">Section 5.2.3</a>, packaging <a href="#packaging" class="auto internal xref">Section 5.2.4</a>, and isLive <a href="#islive" class="auto internal xref">Section 5.2.8</a> are required
+on every track. A track without a namespace <a href="#tracknamespace" class="auto internal xref">Section 5.2.2</a> inherits the namespace
+of the catalog. <a href="#tbl-required-track-fields" class="auto internal xref">Table 6</a> lists the fields that <span class="bcp14">MUST</span> also be
 present for each (<code>packaging</code>, <code>role</code>) pair. Fields not listed remain
 <span class="bcp14">OPTIONAL</span>. Where an individual field definition sets a stricter constraint
 (e.g. <code>Conditional</code>), that constraint wins.<a href="#section-5.2.4.1-1" class="pilcrow">¶</a></p>

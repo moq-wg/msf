@@ -895,13 +895,13 @@ Table of Contents
 
 5.2.4.1.  Required fields per packaging and track type
 
-   Namespace Section 5.2.2, trackName Section 5.2.3, packaging
-   Section 5.2.4, and isLive Section 5.2.8 are required on every track.
-   Namespace MAY be inherited if not defined explicitly.  Table 6 lists
-   the fields that MUST also be present for each (packaging, role) pair.
-   Fields not listed remain OPTIONAL.  Where an individual field
-   definition sets a stricter constraint (e.g. Conditional), that
-   constraint wins.
+   trackName Section 5.2.3, packaging Section 5.2.4, and isLive
+   Section 5.2.8 are required on every track.  A track without a
+   namespace Section 5.2.2 inherits the namespace of the catalog.
+   Table 6 lists the fields that MUST also be present for each
+   (packaging, role) pair.  Fields not listed remain OPTIONAL.  Where an
+   individual field definition sets a stricter constraint (e.g.
+   Conditional), that constraint wins.
 
    Fields with no meaning for a given pair SHOULD NOT be included;
    parsers ignore fields they do not understand.
