@@ -3219,7 +3219,7 @@ specification and require no coordination with IANA.
 The MSF_EVENT_TIMELINE_HEADER Track property ({{eventtimeline-header-track-property}})
 uses Property Type value 0x7B, which falls within the same range and likewise
 requires no IANA action.
-Implementers should note the caveat in {{MOQT, Section 15.8}}
+Implementers should note the caveat in {{MOQT, Section 8.4}}
 regarding this range: because application-specific codepoints are not
 coordinated across independently developed extensions, an endpoint
 processing tracks from uncoordinated sources could encounter the same
