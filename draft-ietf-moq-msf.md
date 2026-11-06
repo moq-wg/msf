@@ -2125,7 +2125,7 @@ Group ID for that track. One approach is to use the current wall clock time in
 milliseconds since the Unix epoch as the starting Group ID.
 
 If a publisher maintains state across a restart and knows the previous Group ID,
-it SHOULD signal the gap using the MOQT Prior Group ID Gap Extension header.
+it SHOULD signal the gap using the PRIOR_GROUP_ID_GAP property {{MOQT, Section 10.8}}.
 
 ## Object Numbering
 Object ID MUST be zero for the first Object within a Group and then MUST increase
@@ -2758,7 +2758,7 @@ MOQT {{MOQT}} and repeated here for convenience:
 * Character Escaping:
     * Unreserved characters (a-z, A-Z, 0-9, _) are represented literally.
     * All other byte values (including hyphens and periods used as data) MUST be
-      percent-encoded using a period (.) followed by two lowercase hexadecimal digits
+      escaped using a period (.) followed by two lowercase hexadecimal digits
       (e.g., a literal hyphen in a name becomes .2d).
 
 Note: This encoding ensures that the structural delimiters (- and --) remain unambiguous.
@@ -2878,7 +2878,7 @@ track object.
 
 ### Relationship to the serialized form
 
-The hyphen-and-percent style serialization defined in {{MOQT, Section 8.8}}
+The hyphen-and-period serialization defined in {{MOQT, Section 8.8}}
 and used in MSF URL fragments ({{namespacenameencoding}}) is an encoding
 of the byte values produced by this section, not of the JSON source text. To
 render a catalog Full Track Name in that form, an implementation first maps each
