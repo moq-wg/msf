@@ -2077,7 +2077,9 @@ track name formats follow the conventions defined in {{MOQLOG}} and {{MOQMETRICS
       "isLive": true,
       "packaging": "moqmetrics",
       "role": "metrics",
-      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      "authInfo": {
+          "cat": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      }
     },
     {
       "namespace": "moq-syslog.arpa/logs-v1/%resourceId%",
