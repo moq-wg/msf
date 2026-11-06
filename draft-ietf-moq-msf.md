@@ -1827,7 +1827,7 @@ in the video track, demonstrating multiple caption services.
       "accessibility": [
         {
           "scheme": "urn:scte:dash:cc:cea-708:2015",
-          "value": "CC1=eng;CC3=spa"
+          "value": "1=lang:eng;2=lang:spa;3=lang:fra"
         }
       ]
     },
