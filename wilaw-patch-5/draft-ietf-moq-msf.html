@@ -3699,9 +3699,9 @@ customization without affecting server-side caching.<a href="#section-5.4.2-1" c
 <p id="section-5.4.2-2">Query parameters (following the <code>?</code> character) are reserved for server-side
 processing and <span class="bcp14">MUST NOT</span> be used for variable substitution.<a href="#section-5.4.2-2" class="pilcrow">¶</a></p>
 <p id="section-5.4.2-3">When a subscriber requests a catalog using a URI containing a fragment identifier,
-the fragment is parsed as key-value pairs (using <code>&amp;</code> as delimiter and <code>=</code> as
-separator). Each key becomes available as a variable name, and the variable
-is replaced with the corresponding value.<a href="#section-5.4.2-3" class="pilcrow">¶</a></p>
+the fragment is parsed as key-value pairs, using &amp; as delimiter. Each pair is
+split at its first = character into a key and a value. Each key becomes available
+as a variable name, and the variable is replaced with the corresponding value.<a href="#section-5.4.2-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -6227,7 +6227,8 @@ with a track role type of "audio".<a href="#section-12.2-4" class="pilcrow">¶</
 <span class="bcp14">MUST</span> be added as a Track property and there <span class="bcp14">MUST</span> be an initRef <a href="#initref" class="auto internal xref">Section 5.2.14</a> Track field
 referencing an Initialization Data List <a href="#initdatalist" class="auto internal xref">Section 5.1.7</a> entry with a type of
 'track-property'. If used, publishers <span class="bcp14">MUST</span> include the Track property in the PUBLISH
-message (publisher-initiated flow) or SUBSCRIBE_OK message (subscriber-initiated flow).<a href="#section-12.2-5" class="pilcrow">¶</a></p>
+message (publisher-initiated flow) or SUBSCRIBE_OK or FETCH_OK message
+(subscriber-initiated flow).<a href="#section-12.2-5" class="pilcrow">¶</a></p>
 <p id="section-12.2-6">If this initialization data might change over the life of the track, then the property
 <span class="bcp14">MUST</span> be added as an Object property. Since subscription might occur at any time, this Object
 property needs to be repeated. Publishers <span class="bcp14">SHOULD</span> add this Object property to the first Object
@@ -6251,7 +6252,7 @@ entry with a type of 'object-property'.<a href="#section-12.2-6" class="pilcrow"
 This initialization data is immutable over the life of the track.<a href="#section-12.3.1-2" class="pilcrow">¶</a></p>
 <p id="section-12.3.1-3">The serialization of the value of the property is defined by the Event timeline type <a href="#eventtype" class="auto internal xref">Section 5.2.6</a>.<a href="#section-12.3.1-3" class="pilcrow">¶</a></p>
 <p id="section-12.3.1-4">If used, publishers <span class="bcp14">MUST</span> include the MSF_EVENT_TIMELINE_HEADER track property in the PUBLISH
-message (publisher-initiated flow) or SUBSCRIBE_OK message (subscriber-initiated flow).<a href="#section-12.3.1-4" class="pilcrow">¶</a></p>
+message (publisher-initiated flow) or SUBSCRIBE_OK message or FETCH_OK (subscriber-initiated flow).<a href="#section-12.3.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>

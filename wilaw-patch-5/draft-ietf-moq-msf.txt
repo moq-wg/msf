@@ -1619,10 +1619,10 @@ Table of Contents
    side processing and MUST NOT be used for variable substitution.
 
    When a subscriber requests a catalog using a URI containing a
-   fragment identifier, the fragment is parsed as key-value pairs (using
-   & as delimiter and = as separator).  Each key becomes available as a
-   variable name, and the variable is replaced with the corresponding
-   value.
+   fragment identifier, the fragment is parsed as key-value pairs, using
+   & as delimiter.  Each pair is split at its first = character into a
+   key and a value.  Each key becomes available as a variable name, and
+   the variable is replaced with the corresponding value.
 
 5.5.  Catalog Compression
 
@@ -3696,8 +3696,8 @@ moqt://relay.example.com/moqt#msf:namespace--name&cat=eyJhbGciOiJFZERTQSJ9...
    an initRef Section 5.2.14 Track field referencing an Initialization
    Data List Section 5.1.7 entry with a type of 'track-property'.  If
    used, publishers MUST include the Track property in the PUBLISH
-   message (publisher-initiated flow) or SUBSCRIBE_OK message
-   (subscriber-initiated flow).
+   message (publisher-initiated flow) or SUBSCRIBE_OK or FETCH_OK
+   message (subscriber-initiated flow).
 
    If this initialization data might change over the life of the track,
    then the property MUST be added as an Object property.  Since
@@ -3723,7 +3723,7 @@ moqt://relay.example.com/moqt#msf:namespace--name&cat=eyJhbGciOiJFZERTQSJ9...
 
    If used, publishers MUST include the MSF_EVENT_TIMELINE_HEADER track
    property in the PUBLISH message (publisher-initiated flow) or
-   SUBSCRIBE_OK message (subscriber-initiated flow).
+   SUBSCRIBE_OK message or FETCH_OK (subscriber-initiated flow).
 
 13.  Security Considerations
 
