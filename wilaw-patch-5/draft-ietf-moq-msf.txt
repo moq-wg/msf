@@ -3826,13 +3826,16 @@ moqt://relay.example.com/moqt#msf:namespace--name&cat=eyJhbGciOiJFZERTQSJ9...
    IANA registration is not permitted.  Accordingly, this document
    requests no IANA action for these Property Type values; they are
    defined directly by this specification and require no coordination
-   with IANA.
+   with IANA. specification and require no coordination with IANA.
 
-   Implementers should note the caveat in [MOQT], Section 15.8 regarding
-   this range: because application-specific codepoints are not
-   coordinated across independently developed extensions, an endpoint
-   processing tracks from uncoordinated sources could encounter the same
-   Property Type value used with different semantics.
+   The MSF_EVENT_TIMELINE_HEADER Track property (Section 12.3.1) uses
+   Property Type value 0x7B, which falls within the same range and
+   likewise requires no IANA action.  Implementers should note the
+   caveat in [MOQT], Section 15.8 regarding this range: because
+   application-specific codepoints are not coordinated across
+   independently developed extensions, an endpoint processing tracks
+   from uncoordinated sources could encounter the same Property Type
+   value used with different semantics.
 
 14.4.  "MSF Compression Algorithms" registry
 
