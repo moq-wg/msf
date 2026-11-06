@@ -3140,7 +3140,7 @@ requires no IANA action.
 ## "MOQT URI Fragment Types" registry
 
 This document registers the following entry in the "MOQT URI Fragment
-Types" registry established by {{MOQT, Section 15.3}}:
+Types" registry established by {{MOQT, Section 16.3}}:
 
 | Fragment Type   |  Description          | Specification  |
 |:================|:======================|:===============|
