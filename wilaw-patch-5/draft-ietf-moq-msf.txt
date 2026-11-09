@@ -5,8 +5,8 @@
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
 Intended status: Informational                             S. Nandakumar
-Expires: 10 May 2027                                               Cisco
-                                                         6 November 2026
+Expires: 13 May 2027                                               Cisco
+                                                         9 November 2026
 
 
                          MOQT Streaming Format
@@ -49,7 +49,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 10 May 2027.
+   This Internet-Draft will expire on 13 May 2027.
 
 Copyright Notice
 
@@ -1129,13 +1129,11 @@ Table of Contents
    String MUST reference a track name and any entry with a JSON type of
    Number MUST reference a renderGroup.
 
-   Since only the track name is signaled, the namespace of the
-   dependencies is assumed to match that of the track declaring the
-   dependencies.  Each String element MUST match the Track Name of
-   exactly one other track object in the same namespace within the
-   catalog.  Each Number element MUST match the renderGroup identifier
-   of exactly one renderGroup in the same namespace within the catalog.
-   A catalog in which a dependency does not resolve is invalid.
+   Since only the track name is signaled, each String element MUST match
+   the Track Name of exactly one other track object in the catalog.
+   Each Number element MUST match the renderGroup identifier of exactly
+   one renderGroup in the catalog.  A catalog in which a dependency does
+   not resolve is invalid.
 
 5.2.16.  Template
 
