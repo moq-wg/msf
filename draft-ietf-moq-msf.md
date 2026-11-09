@@ -3143,8 +3143,8 @@ This document requests IANA to create a new registry group titled
 Timeline Types" registry ({{iana-event-timeline-types}}) and the "MSF
 Compression Algorithms" registry ({{iana-compression-algorithms}})
 defined below. It also registers one entry in the existing "MOQT URI
-Fragment Types" registry and documents a Property Type value that
-requires no IANA action.
+Fragment Types" registry and documents two Property Type values that
+require no IANA action.
 
 ## "MOQT URI Fragment Types" registry
 
@@ -3212,7 +3212,6 @@ use Property Type value 0x78. This value falls within the range that {{MOQT, Sec
 reserves for application-specific use, for which IANA registration is not
 permitted. Accordingly, this document requests no IANA action for
 these Property Type values; they are defined directly by this
-specification and require no coordination with IANA.
 specification and require no coordination with IANA.
 
 The MSF_EVENT_TIMELINE_HEADER Track property ({{eventtimeline-header-track-property}})
