@@ -766,12 +766,10 @@ in determining the type of each element, any entry with a JSON type of String
 MUST reference a track name and any entry with a JSON type of Number MUST reference
 a renderGroup.
 
-Since only the track name is signaled, the namespace of the dependencies is
-assumed to match that of the track declaring the dependencies. Each String element MUST
-match the Track Name of exactly one other track object in the same namespace
-within the catalog. Each Number element MUST match the renderGroup identifier
-of exactly one renderGroup in the same namespace within the catalog. A catalog in
-which a dependency does not resolve is invalid.
+Since only the track name is signaled, each String element MUST match the Track Name
+of exactly one other track object in the catalog. Each Number element MUST match the
+renderGroup identifier of exactly one renderGroup in the catalog. A catalog in which
+a dependency does not resolve is invalid.
 
 ### Template {#template}
 Required: Optional   JSON Type: Array    Location: Track Object
