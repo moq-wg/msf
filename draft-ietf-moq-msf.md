@@ -1577,7 +1577,8 @@ and video tracks.
 ### Encrypted Audio/Video Tracks
 
 This example shows a catalog for encrypted LOC-packaged audio and video
-tracks using MoQ Secure Objects with AES-128-GCM.
+tracks using MoQ Secure Objects with AES-128-GCM.  This catalog is
+encrypted end-to-end and its content cannot be read by relays.
 
 ~~~json
 {
@@ -1854,7 +1855,7 @@ This example shows a catalog using variable substitution to enable
 personalized advertising and reporting while maintaining cacheability.
 Given a catalog request URI of:
 
-    moqt://relay.example.com/sports/catalog?a=1#token=1234&id=bob&event=xyz
+    moqt://relay.example.com/sports/catalog?a=1#token=1234&id=c3e5s7w&event=xyz
 
 The fragment parameters (`token`, `id`, `event`) are available for variable
 substitution. The following catalog template:
@@ -1895,7 +1896,7 @@ would be resolved by the subscriber as:
       "renderGroup": 1
     },
     {
-      "name": "tracking-bob",
+      "name": "tracking-c3e5s7w",
       "namespace": "advertising-decisions/live-sports/xyz",
       "packaging": "eventtimeline",
       "eventType": "com.example.iab.vast",
@@ -3151,9 +3152,9 @@ SHOULD encrypt the catalog end-to-end.
 ## Authorization tokens
 
 Authorization tokens ({{authorization}}) may appear in the authInfo catalog field,
-in URI fragment parameters
-({{reservedfragmentparameters}}, {{tokendelivery}}) and in MOQT control
-messages ({{presentingauthorization}}). Each location carries distinct risks:
+in URI fragment parameters ({{reservedfragmentparameters}}, {{tokendelivery}}) and
+in MOQT control messages ({{presentingauthorization}}). Each location carries
+distinct risks:
 
 * Tokens written directly into a catalog are visible to every relay that
   caches the catalog and to every subscriber that receives it. Such tokens are
@@ -3168,8 +3169,8 @@ messages ({{presentingauthorization}}). Each location carries distinct risks:
   and scoped to the specific content they authorize.
 * Tokens presented in MOQT control messages are visible to the relay that
   terminates the session. Relays are therefore trusted with the tokens they
-  receive and MUST NOT forward a token to a party other than the one for which
-  it was issued, unless the authorization scheme explicitly permits it.
+  receive. MOQT ({MOQT, section 15.3}} details specific security requirements
+  for relays in this regard.
 
 Bearer tokens are susceptible to replay by any party that obtains them. The
 replay protections, binding mechanisms and validation rules of the selected
