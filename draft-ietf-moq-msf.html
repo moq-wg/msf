@@ -1662,7 +1662,31 @@ svg {
             <p id="section-toc.1-1.13.1"><a href="#section-13" class="auto internal xref">13</a>. <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.1">
-                <p id="section-toc.1-1.13.2.1.1"><a href="#section-13.1" class="auto internal xref">13.1</a>.  <a href="#name-track-naming" class="internal xref">Track naming</a></p>
+                <p id="section-toc.1-1.13.2.1.1"><a href="#section-13.1" class="auto internal xref">13.1</a>.  <a href="#name-catalog-integrity-and-authe" class="internal xref">Catalog integrity and authenticity</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.2">
+                <p id="section-toc.1-1.13.2.2.1"><a href="#section-13.2" class="auto internal xref">13.2</a>.  <a href="#name-key-material-in-the-catalog" class="internal xref">Key material in the catalog</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.3">
+                <p id="section-toc.1-1.13.2.3.1"><a href="#section-13.3" class="auto internal xref">13.3</a>.  <a href="#name-metadata-exposure" class="internal xref">Metadata exposure</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.4">
+                <p id="section-toc.1-1.13.2.4.1"><a href="#section-13.4" class="auto internal xref">13.4</a>.  <a href="#name-authorization-tokens" class="internal xref">Authorization tokens</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.5">
+                <p id="section-toc.1-1.13.2.5.1"><a href="#section-13.5" class="auto internal xref">13.5</a>.  <a href="#name-variable-substitution-2" class="internal xref">Variable substitution</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.6">
+                <p id="section-toc.1-1.13.2.6.1"><a href="#section-13.6" class="auto internal xref">13.6</a>.  <a href="#name-publish-tracks-and-connecti" class="internal xref">Publish tracks and connection URIs</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.7">
+                <p id="section-toc.1-1.13.2.7.1"><a href="#section-13.7" class="auto internal xref">13.7</a>.  <a href="#name-resource-exhaustion" class="internal xref">Resource exhaustion</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.8">
+                <p id="section-toc.1-1.13.2.8.1"><a href="#section-13.8" class="auto internal xref">13.8</a>.  <a href="#name-timing-information" class="internal xref">Timing information</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.9">
+                <p id="section-toc.1-1.13.2.9.1"><a href="#section-13.9" class="auto internal xref">13.9</a>.  <a href="#name-track-naming" class="internal xref">Track naming</a></p>
 </li>
             </ul>
 </li>
@@ -4200,7 +4224,8 @@ and video tracks.<a href="#section-5.6.7-1" class="pilcrow">¶</a></p>
 <a href="#section-5.6.8" class="section-number selfRef">5.6.8. </a><a href="#name-encrypted-audio-video-track" class="section-name selfRef">Encrypted Audio/Video Tracks</a>
           </h4>
 <p id="section-5.6.8-1">This example shows a catalog for encrypted LOC-packaged audio and video
-tracks using MoQ Secure Objects with AES-128-GCM.<a href="#section-5.6.8-1" class="pilcrow">¶</a></p>
+tracks using MoQ Secure Objects with AES-128-GCM.  This catalog is
+encrypted end-to-end and its content cannot be read by relays.<a href="#section-5.6.8-1" class="pilcrow">¶</a></p>
 <div class="lang-json sourcecode" id="section-5.6.8-2">
 <pre>
 {
@@ -4508,11 +4533,7 @@ live broadcast containing a video and an audio track.<a href="#section-5.6.13-1"
 <p id="section-5.6.14-1">This example shows a catalog using variable substitution to enable
 personalized advertising and reporting while maintaining cacheability.
 Given a catalog request URI of:<a href="#section-5.6.14-1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.6.14-2">
-<pre>
-moqt://sports.example.com/catalog?a=1#msf:namespace--catalog&amp;token=1234&amp;id=bob&amp;event=xyz
-</pre><a href="#section-5.6.14-2" class="pilcrow">¶</a>
-</div>
+<p id="section-5.6.14-2">moqt://sports.example.com/catalog?a=1#msf:namespace--catalog&amp;token=1234&amp;id=c3e5s7w&amp;event=xyz<a href="#section-5.6.14-2" class="pilcrow">¶</a></p>
 <p id="section-5.6.14-3">The fragment parameters (<code>token</code>, <code>id</code>, <code>event</code>) are available for variable
 substitution. The following catalog template:<a href="#section-5.6.14-3" class="pilcrow">¶</a></p>
 <div class="lang-json sourcecode" id="section-5.6.14-4">
@@ -4561,7 +4582,7 @@ substitution. The following catalog template:<a href="#section-5.6.14-3" class="
       "renderGroup": 1
     },
     {
-      "name": "tracking-bob",
+      "name": "tracking-c3e5s7w",
       "namespace": "advertising-decisions/live-sports/xyz",
       "packaging": "eventtimeline",
       "isLive": true,
@@ -6299,24 +6320,221 @@ message (publisher-initiated flow) or SUBSCRIBE_OK message or FETCH_OK (subscrib
 </div>
 </section>
 </div>
-<div id="security-considerations">
+<div id="security">
 <section id="section-13">
       <h2 id="name-security-considerations">
 <a href="#section-13" class="section-number selfRef">13. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
-<p id="section-13-1">TODO<a href="#section-13-1" class="pilcrow">¶</a></p>
-<div id="track-naming">
+<p id="section-13-1">MSF inherits the security properties of <span>[<a href="#MOQT" class="cite xref">MOQT</a>]</span> and of the underlying QUIC or
+WebTransport session, which provide confidentiality and integrity on each hop
+between endpoints and relays. MSF does not, by itself, provide end-to-end
+integrity or confidentiality between the original publisher and the final
+subscriber. Relays are in a position to read, cache, drop, delay or alter any
+content that is not protected end-to-end, including catalogs, timeline tracks
+and unencrypted media. The considerations below describe the additional risks
+introduced by the features defined in this document.<a href="#section-13-1" class="pilcrow">¶</a></p>
+<div id="catalog-integrity-and-authenticity">
 <section id="section-13.1">
-        <h3 id="name-track-naming">
-<a href="#section-13.1" class="section-number selfRef">13.1. </a><a href="#name-track-naming" class="section-name selfRef">Track naming</a>
+        <h3 id="name-catalog-integrity-and-authe">
+<a href="#section-13.1" class="section-number selfRef">13.1. </a><a href="#name-catalog-integrity-and-authe" class="section-name selfRef">Catalog integrity and authenticity</a>
         </h3>
-<p id="section-13.1-1">Track names and namespaces are compared as raw bytes (<a href="#namemapping" class="auto internal xref">Section 11.2</a>). Because
+<p id="section-13.1-1">The catalog (<a href="#catalog" class="auto internal xref">Section 5</a>) controls how a subscriber locates, selects, decodes,
+decrypts and authorizes access to content. An attacker able to modify a catalog
+in transit or in a relay cache could, for example, substitute track names or
+namespaces, alter codec or initialization data, remove or alter authorization
+and encryption fields, or insert publish tracks and connection URIs that direct
+the subscriber to an endpoint of the attacker's choosing.<a href="#section-13.1-1" class="pilcrow">¶</a></p>
+<p id="section-13.1-2">MSF does not define a catalog signature mechanism. Where relays are not fully
+trusted, publishers <span class="bcp14">SHOULD</span> protect catalog objects end-to-end, for example by
+using <span>[<a href="#SecureObjects" class="cite xref">SecureObjects</a>]</span> on the catalog track, and subscribers <span class="bcp14">SHOULD</span> reject
+catalog objects that fail authentication. Subscribers <span class="bcp14">SHOULD</span> treat every catalog
+field as untrusted input and validate it against the constraints in this
+document before acting on it. A catalog that violates those constraints, such as
+a delta update that fails to apply (<a href="#deltaupdates" class="auto internal xref">Section 5.3</a>) or a name that cannot be
+mapped (<a href="#namemapping" class="auto internal xref">Section 11.2</a>), <span class="bcp14">MUST</span> be treated as invalid.<a href="#section-13.1-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="key-material-in-the-catalog">
+<section id="section-13.2">
+        <h3 id="name-key-material-in-the-catalog">
+<a href="#section-13.2" class="section-number selfRef">13.2. </a><a href="#name-key-material-in-the-catalog" class="section-name selfRef">Key material in the catalog</a>
+        </h3>
+<p id="section-13.2-1">The trackBaseKey field (<a href="#trackbasekey" class="auto internal xref">Section 5.2.41</a>) carries raw key material from which
+content encryption keys are derived. Any party that can read a catalog
+containing this field can decrypt the corresponding tracks. Because catalogs are
+routinely cached and forwarded by relays, publishing a trackBaseKey in a catalog
+that is not itself encrypted end-to-end defeats the purpose of content
+encryption (<a href="#contentprotection" class="auto internal xref">Section 4.4</a>) with respect to every relay on the path.<a href="#section-13.2-1" class="pilcrow">¶</a></p>
+<p id="section-13.2-2">Publishers <span class="bcp14">MUST NOT</span> include a trackBaseKey in a catalog unless that catalog is
+encrypted end-to-end such that only authorized subscribers can read it, or is
+delivered to subscribers over a channel that relays cannot observe. Deployments
+that require relays to be excluded from access to content keys <span class="bcp14">SHOULD</span> deliver
+key material through the key management system (<span>[<a href="#E2EE-MLS" class="cite xref">E2EE-MLS</a>]</span> or equivalent)
+rather than through the catalog. The keyId field (<a href="#keyid" class="auto internal xref">Section 5.2.40</a>) is not secret, but
+it can reveal information about key rotation and entitlement tiers and <span class="bcp14">SHOULD NOT</span> encode sensitive information.<a href="#section-13.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="metadata-exposure">
+<section id="section-13.3">
+        <h3 id="name-metadata-exposure">
+<a href="#section-13.3" class="section-number selfRef">13.3. </a><a href="#name-metadata-exposure" class="section-name selfRef">Metadata exposure</a>
+        </h3>
+<p id="section-13.3-1">When media is encrypted with <span>[<a href="#SecureObjects" class="cite xref">SecureObjects</a>]</span>, Group IDs, Object IDs, object
+sizes, timing, priorities, Track Namespaces and Track Names remain visible to
+relays. These can reveal the content type, bitrate, frame structure, scene
+complexity and, through track and namespace naming, the identity of the
+broadcast or of individual participants. An unencrypted catalog additionally
+exposes codec parameters, labels, languages and the relationships between
+tracks. Publishers concerned about traffic analysis <span class="bcp14">SHOULD</span> avoid placing
+identifying information in Track Namespaces, Track Names and catalog labels, and
+<span class="bcp14">SHOULD</span> encrypt the catalog end-to-end.<a href="#section-13.3-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="authorization-tokens">
+<section id="section-13.4">
+        <h3 id="name-authorization-tokens">
+<a href="#section-13.4" class="section-number selfRef">13.4. </a><a href="#name-authorization-tokens" class="section-name selfRef">Authorization tokens</a>
+        </h3>
+<p id="section-13.4-1">Authorization tokens (<a href="#authorization" class="auto internal xref">Section 11.5</a>) may appear in the authInfo catalog field,
+in URI fragment parameters (<a href="#reservedfragmentparameters" class="auto internal xref">Section 11.1.1</a>, <a href="#tokendelivery" class="auto internal xref">Section 5.2.43</a>) and
+in MOQT control messages (<a href="#presentingauthorization" class="auto internal xref">Section 11.5.3</a>). Each location carries
+distinct risks:<a href="#section-13.4-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-13.4-2.1">
+            <p id="section-13.4-2.1.1">Tokens written directly into a catalog are visible to every relay that
+caches the catalog and to every subscriber that receives it. Such tokens are
+effectively shared bearer credentials. Publishers <span class="bcp14">SHOULD NOT</span> place
+per-subscriber credentials directly in a cacheable catalog; per-subscriber
+tokens <span class="bcp14">SHOULD</span> instead be supplied through variable substitution or out-of-band
+provisioning. Any token placed in a catalog <span class="bcp14">SHOULD</span> be narrowly scoped and
+short-lived.<a href="#section-13.4-2.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-13.4-2.2">
+            <p id="section-13.4-2.2.1">URI fragments are not sent to the server during connection establishment,
+but they are commonly retained in browser history, application logs,
+bookmarks and shared links. Tokens supplied in fragments <span class="bcp14">SHOULD</span> be short-lived
+and scoped to the specific content they authorize.<a href="#section-13.4-2.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-13.4-2.3">
+            <p id="section-13.4-2.3.1">Tokens presented in MOQT control messages are visible to the relay that
+terminates the session. Relays are therefore trusted with the tokens they
+receive. MOQT ({MOQT, section 15.3}} details specific security requirements
+for relays in this regard.<a href="#section-13.4-2.3.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-13.4-3">Bearer tokens are susceptible to replay by any party that obtains them. The
+replay protections, binding mechanisms and validation rules of the selected
+authorization scheme (<span>[<a href="#C4M" class="cite xref">C4M</a>]</span>, <span>[<a href="#PrivacyPassAuth" class="cite xref">PrivacyPassAuth</a>]</span>) apply.<a href="#section-13.4-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="variable-substitution">
+<section id="section-13.5">
+        <h3 id="name-variable-substitution-2">
+<a href="#section-13.5" class="section-number selfRef">13.5. </a><a href="#name-variable-substitution-2" class="section-name selfRef">Variable substitution</a>
+        </h3>
+<p id="section-13.5-1">Variable substitution (<a href="#variablesubstitution" class="auto internal xref">Section 5.4</a>) inserts values taken from the
+URI fragment into catalog fields. The restricted character set for variable
+values limits structural injection into the catalog, but substituted values
+remain attacker-controlled whenever the URI was crafted or modified by a third
+party. A malicious link could, for example, cause a subscriber to subscribe to a
+different Track Namespace, present a token to an unintended track, or publish
+logs and metrics under an identifier of the attacker's choosing.<a href="#section-13.5-1" class="pilcrow">¶</a></p>
+<p id="section-13.5-2">Subscribers <span class="bcp14">MUST</span> validate the catalog after substitution, including applying
+the rules of <a href="#namemapping" class="auto internal xref">Section 11.2</a> to any substituted name or namespace. Subscribers
+<span class="bcp14">SHOULD NOT</span> apply variable substitution to fields that determine a network
+endpoint, such as Connection URI (<a href="#connectionuri" class="auto internal xref">Section 5.2.37</a>), unless the application
+explicitly trusts the source of the URI.<a href="#section-13.5-2" class="pilcrow">¶</a></p>
+<p id="section-13.5-3">Personalization values, such as viewer identifiers, become visible to relays
+when they are substituted into Track Namespaces or Track Names, since those
+names are carried in MOQT control messages. Applications <span class="bcp14">SHOULD</span> use opaque,
+non-identifying values for this purpose.<a href="#section-13.5-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="publish-tracks-and-connection-uris">
+<section id="section-13.6">
+        <h3 id="name-publish-tracks-and-connecti">
+<a href="#section-13.6" class="section-number selfRef">13.6. </a><a href="#name-publish-tracks-and-connecti" class="section-name selfRef">Publish tracks and connection URIs</a>
+        </h3>
+<p id="section-13.6-1">Publish tracks (<a href="#publishtracks" class="auto internal xref">Section 5.1.5</a>) and the Connection URI field
+(<a href="#connectionuri" class="auto internal xref">Section 5.2.37</a>) allow a catalog to instruct a subscriber to open new
+connections and to upload data. A malicious or tampered catalog could use these
+to direct subscribers to connect to arbitrary hosts, to generate unwanted load
+against a third party, or to exfiltrate client-side data.<a href="#section-13.6-1" class="pilcrow">¶</a></p>
+<p id="section-13.6-2">Subscribers <span class="bcp14">SHOULD</span> only publish to endpoints permitted by local application
+policy, for example endpoints within the same administrative domain as the
+catalog source, and <span class="bcp14">SHOULD</span> ignore publish tracks that do not satisfy that
+policy. Subscribers <span class="bcp14">SHOULD</span> rate-limit the data they publish on log
+(<a href="#logtrack" class="auto internal xref">Section 9</a>) and metrics (<a href="#metricstrack" class="auto internal xref">Section 10</a>) tracks.<a href="#section-13.6-2" class="pilcrow">¶</a></p>
+<p id="section-13.6-3">Log and metrics data may contain identifiers, network information, device
+characteristics and viewing behavior. Applications <span class="bcp14">SHOULD</span> collect only the data
+necessary for their purpose, <span class="bcp14">SHOULD</span> obtain any user consent required by
+applicable policy, and <span class="bcp14">SHOULD</span> avoid including direct personal identifiers in
+Track Namespaces, Track Names or payloads.<a href="#section-13.6-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="resource-exhaustion">
+<section id="section-13.7">
+        <h3 id="name-resource-exhaustion">
+<a href="#section-13.7" class="section-number selfRef">13.7. </a><a href="#name-resource-exhaustion" class="section-name selfRef">Resource exhaustion</a>
+        </h3>
+<p id="section-13.7-1">Several MSF mechanisms allow a publisher, or an attacker able to modify content,
+to cause a subscriber to consume excessive resources:<a href="#section-13.7-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-13.7-2.1">
+            <p id="section-13.7-2.1.1">Compressed payloads (<a href="#compression-signaling" class="auto internal xref">Section 12.1</a>) may expand to a size far
+larger than the transmitted object. Subscribers <span class="bcp14">MUST</span> enforce an upper bound on
+the decompressed size of any catalog, media timeline or event timeline object
+and <span class="bcp14">SHOULD</span> abort decompression when that bound is exceeded.<a href="#section-13.7-2.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-13.7-2.2">
+            <p id="section-13.7-2.2.1">Catalogs, media timelines and event timelines are JSON documents that can be
+arbitrarily large or deeply nested. Subscribers <span class="bcp14">SHOULD</span> bound the document size,
+nesting depth, number of tracks and number of timeline records they are
+willing to process.<a href="#section-13.7-2.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-13.7-2.3">
+            <p id="section-13.7-2.3.1">Long chains of delta updates (<a href="#deltaupdates" class="auto internal xref">Section 5.3</a>) increase processing cost for
+joining subscribers. Subscribers <span class="bcp14">MAY</span> bound the number of delta updates they
+will apply before requiring a new independent catalog.<a href="#section-13.7-2.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-13.7-2.4">
+            <p id="section-13.7-2.4.1">A catalog may reference other catalogs. Subscribers <span class="bcp14">MUST</span> detect reference
+cycles and <span class="bcp14">SHOULD</span> bound the depth of catalog references they will follow.<a href="#section-13.7-2.4.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-13.7-2.5">
+            <p id="section-13.7-2.5.1">Independent media timeline objects (<a href="#mediatimelinetrack" class="auto internal xref">Section 7</a>) and event timeline
+objects (<a href="#eventtimelinetrack" class="auto internal xref">Section 8</a>) contain the accumulated history of the track
+and can grow without limit over long broadcasts. Publishers <span class="bcp14">SHOULD</span> trim
+timelines to the accessible window, and subscribers <span class="bcp14">SHOULD</span> bound the size of
+timeline objects they will retain.<a href="#section-13.7-2.5.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+</section>
+</div>
+<div id="timing-information">
+<section id="section-13.8">
+        <h3 id="name-timing-information">
+<a href="#section-13.8" class="section-number selfRef">13.8. </a><a href="#name-timing-information" class="section-name selfRef">Timing information</a>
+        </h3>
+<p id="section-13.8-1">Target latency, buffer and wallclock values (<a href="#wallclock" class="auto internal xref">Section 11.6</a>) influence when
+subscribers render content. Manipulated values, or clocks that are not
+synchronized to UTC, can cause excessive buffering, playback stalls or loss of
+synchronization between subscribers. Subscribers <span class="bcp14">SHOULD</span> apply sanity bounds to
+these values and <span class="bcp14">SHOULD NOT</span> rely on them for any security decision.<a href="#section-13.8-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="track-naming">
+<section id="section-13.9">
+        <h3 id="name-track-naming">
+<a href="#section-13.9" class="section-number selfRef">13.9. </a><a href="#name-track-naming" class="section-name selfRef">Track naming</a>
+        </h3>
+<p id="section-13.9-1">Track names and namespaces are compared as raw bytes (<a href="#namemapping" class="auto internal xref">Section 11.2</a>). Because
 no Unicode normalization or case folding is applied, visually confusable names
 (for example, names differing only in composed versus decomposed accents, or in
 characters from different scripts that render identically) are distinct tracks.
 Catalog producers <span class="bcp14">SHOULD</span> avoid emitting distinct tracks whose names are
 confusable to a human reader, and applications that display track names to
-users <span class="bcp14">SHOULD NOT</span> rely on visual inspection to establish identity.<a href="#section-13.1-1" class="pilcrow">¶</a></p>
+users <span class="bcp14">SHOULD NOT</span> rely on visual inspection to establish identity.<a href="#section-13.9-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
