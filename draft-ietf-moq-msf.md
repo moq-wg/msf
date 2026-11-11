@@ -124,20 +124,22 @@ audio, video and associated timed data. MSF specifies:
 * media timeline and event timeline tracks, which relate MOQT Locations to
   media time and wallclock time and synchronize ancillary data with the media
   ({{mediatimelinetrack}}, {{eventtimelinetrack}});
-* how subscribers switch between alternate tracks for adaptive bitrate
-  playback ({{mvfts}});
-* signaling for content encryption ({{contentprotection}}) and token-based
-  authorization ({{authorization}});
-* publish tracks through which subscribers report logs and metrics back to the
-  delivery system ({{logtrack}}, {{metricstrack}});
+* how subscribers switch between alternate tracks with consistent group durations,
+  for adaptive bitrate playback ({{altgroup}}), as well as across tracks with variable
+  group durations ({{mvfts}});
+* how ({{contentprotection}}) and token-based authorization ({{authorization}}) are
+  signalled.
+* how to initiate subscribers to publish tracks, such as might be used to report logs
+  and metrics to an analytics system ({{logtrack}}, {{metricstrack}});
 * a URL format for addressing MSF content, and procedures for starting and
   ending a broadcast.
 
 MSF supports live content across a range of latency targets, from real-time
 and interactive through to standard broadcast latency, as well as
-video-on-demand (VOD) content. Additional data types, such as timed-text
-captions and ad-insertion signaling, are carried as event timeline types
-defined in companion specifications ({{wellknowneventtypes}}).
+video-on-demand (VOD) content. An event timeline track is defined, as an
+option for carrying additional data types, such as timed-text captions and
+ad-insertion signaling. Companion specifications ({{wellknowneventtypes}}) may
+also define custom packaging formats.
 
 MSF semantics are interpreted only by original publishers and end
 subscribers. Relays do not need to understand MSF: they forward and cache MSF
