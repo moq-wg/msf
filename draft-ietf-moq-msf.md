@@ -3150,8 +3150,8 @@ SHOULD encrypt the catalog end-to-end.
 
 ## Authorization tokens
 
-Authorization tokens ({{authorization}}) may appear in catalog fields (authInfo
-and the publish track token field), in URI fragment parameters
+Authorization tokens ({{authorization}}) may appear in the authInfo catalog field,
+in URI fragment parameters
 ({{reservedfragmentparameters}}, {{tokendelivery}}) and in MOQT control
 messages ({{presentingauthorization}}). Each location carries distinct risks:
 
@@ -3185,7 +3185,7 @@ party. A malicious link could, for example, cause a subscriber to subscribe to a
 different Track Namespace, present a token to an unintended track, or publish
 logs and metrics under an identifier of the attacker's choosing.
 
-Subscribers SHOULD validate the catalog after substitution, including applying
+Subscribers MUST validate the catalog after substitution, including applying
 the rules of {{namemapping}} to any substituted name or namespace. Subscribers
 SHOULD NOT apply variable substitution to fields that determine a network
 endpoint, such as Connection URI ({{connectionuri}}), unless the application
