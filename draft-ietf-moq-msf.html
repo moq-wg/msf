@@ -1048,7 +1048,7 @@ svg {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Law &amp; Nandakumar</td>
-<td class="center">Expires 13 May 2027</td>
+<td class="center">Expires 15 May 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1061,12 +1061,12 @@ svg {
 <dd class="internet-draft">draft-ietf-moq-msf-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-11-09" class="published">9 November 2026</time>
+<time datetime="2026-11-11" class="published">11 November 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-05-13">13 May 2027</time></dd>
+<dd class="expires"><time datetime="2027-05-15">15 May 2027</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1120,7 +1120,7 @@ svg {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 13 May 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 15 May 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1717,17 +1717,59 @@ svg {
       <h2 id="name-introduction">
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
-<p id="section-1-1">MOQT Streaming Format (MSF) is a media format designed to deliver LOC <span>[<a href="#LOC" class="cite xref">LOC</a>]</span>
-compliant media content over Media Over QUIC Transport (MOQT) <span>[<a href="#MOQT" class="cite xref">MOQT</a>]</span>.
-MSF works by fragmenting the bitstream into objects that can be independently
-transmitted. MSF leverages a catalog format to describe the output of the
-original publisher. MSF specifies how content should be packaged and signaled,
-defines how the catalog communicates the content, specifies prioritization
-strategies for real-time and workflows for beginning and terminating broadcasts.
-MSF also details how end-subscribers may perform adaptive bitrate switching.
-MSF is targeted at real-time and interactive levels of live latency, as well as
-VOD content.<a href="#section-1-1" class="pilcrow">¶</a></p>
-<p id="section-1-2">This document describes version 1 of the streaming format.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-1">Media over QUIC Transport (MOQT) <span>[<a href="#MOQT" class="cite xref">MOQT</a>]</span> is a publish/subscribe protocol that
+delivers media and other data as named Tracks, each composed of Groups and
+Objects, through a network of relays. MOQT deliberately leaves the meaning of
+Track payloads, the naming of Tracks and the relationships between Tracks to
+the applications built on top of it. Independently developed publishers,
+relays and players can only interoperate if they agree on these details.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">The MOQT Streaming Format (MSF) defines that agreement for the delivery of
+audio, video and associated timed data. MSF specifies:<a href="#section-1-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-1-3.1">
+          <p id="section-1-3.1.1">how media is packaged into MOQT Objects and Groups, using Low Overhead
+Container (LOC) <span>[<a href="#LOC" class="cite xref">LOC</a>]</span> payloads (<a href="#mediapackaging" class="auto internal xref">Section 4</a>);<a href="#section-1-3.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-1-3.2">
+          <p id="section-1-3.2.1">a catalog, carried in its own MOQT Track, that describes the tracks produced
+by an original publisher, their properties and their relationships, and that
+can be updated incrementally as the broadcast evolves (<a href="#catalog" class="auto internal xref">Section 5</a>);<a href="#section-1-3.2.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-1-3.3">
+          <p id="section-1-3.3.1">media timeline and event timeline tracks, which relate MOQT Locations to
+media time and wallclock time and synchronize ancillary data with the media
+(<a href="#mediatimelinetrack" class="auto internal xref">Section 7</a>, <a href="#eventtimelinetrack" class="auto internal xref">Section 8</a>);<a href="#section-1-3.3.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-1-3.4">
+          <p id="section-1-3.4.1">how subscribers switch between alternate tracks with consistent group durations,
+for adaptive bitrate playback (<a href="#altgroup" class="auto internal xref">Section 5.2.13</a>), as well as across tracks with variable
+group durations (<a href="#mvfts" class="auto internal xref">Section 6.3</a>);<a href="#section-1-3.4.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-1-3.5">
+          <p id="section-1-3.5.1">how (<a href="#contentprotection" class="auto internal xref">Section 4.4</a>) and token-based authorization (<a href="#authorization" class="auto internal xref">Section 11.5</a>) are
+signalled.<a href="#section-1-3.5.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-1-3.6">
+          <p id="section-1-3.6.1">how to initiate subscribers to publish tracks, such as might be used to report logs
+and metrics to an analytics system (<a href="#logtrack" class="auto internal xref">Section 9</a>, <a href="#metricstrack" class="auto internal xref">Section 10</a>);<a href="#section-1-3.6.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-1-3.7">
+          <p id="section-1-3.7.1">a URL format for addressing MSF content, and procedures for starting and
+ending a broadcast.<a href="#section-1-3.7.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="section-1-4">MSF supports live content across a range of latency targets, from real-time
+and interactive through to standard broadcast latency, as well as
+video-on-demand (VOD) content. An event timeline track is defined, as an
+option for carrying additional data types, such as timed-text captions and
+ad-insertion signaling. Companion specifications (<a href="#wellknowneventtypes" class="auto internal xref">Section 8.5</a>) may
+also define custom packaging formats.<a href="#section-1-4" class="pilcrow">¶</a></p>
+<p id="section-1-5">MSF semantics are interpreted only by original publishers and end
+subscribers. Relays do not need to understand MSF: they forward and cache MSF
+Tracks, including the catalog, as they would any other MOQT Track.<a href="#section-1-5" class="pilcrow">¶</a></p>
+<p id="section-1-6">This document describes version 1 of MSF. While this document is an
+Internet-Draft, the version is signaled in the catalog as described in
+<a href="#msfversion" class="auto internal xref">Section 5.1.1</a>.<a href="#section-1-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="conventions-and-definitions">
