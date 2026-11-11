@@ -5,8 +5,8 @@
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
 Intended status: Informational                             S. Nandakumar
-Expires: 9 May 2027                                                Cisco
-                                                         5 November 2026
+Expires: 15 May 2027                                               Cisco
+                                                        11 November 2026
 
 
                          MOQT Streaming Format
@@ -49,7 +49,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 9 May 2027.
+   This Internet-Draft will expire on 15 May 2027.
 
 Copyright Notice
 
@@ -265,24 +265,28 @@ Table of Contents
       Locations to media time and wallclock time and synchronize
       ancillary data with the media (Section 7, Section 8);
 
-   *  how subscribers switch between alternate tracks for adaptive
-      bitrate playback (Section 6.3);
+   *  how subscribers switch between alternate tracks with consistent
+      group durations, for adaptive bitrate playback (Section 5.2.13),
+      as well as across tracks with variable group durations
+      (Section 6.3);
 
-   *  signaling for content encryption (Section 4.4) and token-based
-      authorization (Section 11.5);
+   *  how (Section 4.4) and token-based authorization (Section 11.5) are
+      signalled.
 
-   *  publish tracks through which subscribers report logs and metrics
-      back to the delivery system (Section 9, Section 10);
+   *  how to initiate subscribers to publish tracks, such as might be
+      used to report logs and metrics to an analytics system (Section 9,
+      Section 10);
 
    *  a URL format for addressing MSF content, and procedures for
       starting and ending a broadcast.
 
    MSF supports live content across a range of latency targets, from
    real-time and interactive through to standard broadcast latency, as
-   well as video-on-demand (VOD) content.  Additional data types, such
-   as timed-text captions and ad-insertion signaling, are carried as
-   event timeline types defined in companion specifications
-   (Section 10.5).
+   well as video-on-demand (VOD) content.  An event timeline track is
+   defined, as an option for carrying additional data types, such as
+   timed-text captions and ad-insertion signaling.  Companion
+   specifications (Section 10.5) may also define custom packaging
+   formats.
 
    MSF semantics are interpreted only by original publishers and end
    subscribers.  Relays do not need to understand MSF: they forward and
