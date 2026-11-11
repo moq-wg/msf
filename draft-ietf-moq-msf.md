@@ -1617,7 +1617,8 @@ and video tracks.
 ### Encrypted Audio/Video Tracks
 
 This example shows a catalog for encrypted LOC-packaged audio and video
-tracks using MoQ Secure Objects with AES-128-GCM.
+tracks using MoQ Secure Objects with AES-128-GCM.  This catalog is
+encrypted end-to-end and its content cannot be read by relays.
 
 ~~~json
 {
@@ -1896,7 +1897,7 @@ This example shows a catalog using variable substitution to enable
 personalized advertising and reporting while maintaining cacheability.
 Given a catalog request URI of:
 
-    moqt://sports.example.com/catalog?a=1#msf:namespace--catalog&token=1234&id=bob&event=xyz
+moqt://sports.example.com/catalog?a=1#msf:namespace--catalog&token=1234&id=c3e5s7w&event=xyz
 
 The fragment parameters (`token`, `id`, `event`) are available for variable
 substitution. The following catalog template:
@@ -1946,7 +1947,7 @@ would be resolved by the subscriber as:
       "renderGroup": 1
     },
     {
-      "name": "tracking-bob",
+      "name": "tracking-c3e5s7w",
       "namespace": "advertising-decisions/live-sports/xyz",
       "packaging": "eventtimeline",
       "isLive": true,
@@ -3154,10 +3155,167 @@ If used, publishers MUST include the MSF_EVENT_TIMELINE_HEADER track property in
 message (publisher-initiated flow) or SUBSCRIBE_OK message or FETCH_OK (subscriber-initiated flow).
 
 
-# Security Considerations
-TODO
+# Security Considerations {#security}
+
+MSF inherits the security properties of {{MOQT}} and of the underlying QUIC or
+WebTransport session, which provide confidentiality and integrity on each hop
+between endpoints and relays. MSF does not, by itself, provide end-to-end
+integrity or confidentiality between the original publisher and the final
+subscriber. Relays are in a position to read, cache, drop, delay or alter any
+content that is not protected end-to-end, including catalogs, timeline tracks
+and unencrypted media. The considerations below describe the additional risks
+introduced by the features defined in this document.
+
+## Catalog integrity and authenticity
+
+The catalog ({{catalog}}) controls how a subscriber locates, selects, decodes,
+decrypts and authorizes access to content. An attacker able to modify a catalog
+in transit or in a relay cache could, for example, substitute track names or
+namespaces, alter codec or initialization data, remove or alter authorization
+and encryption fields, or insert publish tracks and connection URIs that direct
+the subscriber to an endpoint of the attacker's choosing.
+
+MSF does not define a catalog signature mechanism. Where relays are not fully
+trusted, publishers SHOULD protect catalog objects end-to-end, for example by
+using {{SecureObjects}} on the catalog track, and subscribers SHOULD reject
+catalog objects that fail authentication. Subscribers SHOULD treat every catalog
+field as untrusted input and validate it against the constraints in this
+document before acting on it. A catalog that violates those constraints, such as
+a delta update that fails to apply ({{deltaupdates}}) or a name that cannot be
+mapped ({{namemapping}}), MUST be treated as invalid.
+
+## Key material in the catalog
+
+The trackBaseKey field ({{trackbasekey}}) carries raw key material from which
+content encryption keys are derived. Any party that can read a catalog
+containing this field can decrypt the corresponding tracks. Because catalogs are
+routinely cached and forwarded by relays, publishing a trackBaseKey in a catalog
+that is not itself encrypted end-to-end defeats the purpose of content
+encryption ({{contentprotection}}) with respect to every relay on the path.
+
+Publishers MUST NOT include a trackBaseKey in a catalog unless that catalog is
+encrypted end-to-end such that only authorized subscribers can read it, or is
+delivered to subscribers over a channel that relays cannot observe. Deployments
+that require relays to be excluded from access to content keys SHOULD deliver
+key material through the key management system ({{E2EE-MLS}} or equivalent)
+rather than through the catalog. The keyId field ({{keyid}}) is not secret, but
+it can reveal information about key rotation and entitlement tiers and SHOULD
+NOT encode sensitive information.
+
+## Metadata exposure
+
+When media is encrypted with {{SecureObjects}}, Group IDs, Object IDs, object
+sizes, timing, priorities, Track Namespaces and Track Names remain visible to
+relays. These can reveal the content type, bitrate, frame structure, scene
+complexity and, through track and namespace naming, the identity of the
+broadcast or of individual participants. An unencrypted catalog additionally
+exposes codec parameters, labels, languages and the relationships between
+tracks. Publishers concerned about traffic analysis SHOULD avoid placing
+identifying information in Track Namespaces, Track Names and catalog labels, and
+SHOULD encrypt the catalog end-to-end.
+
+## Authorization tokens
+
+Authorization tokens ({{authorization}}) may appear in the authInfo catalog field,
+in URI fragment parameters ({{reservedfragmentparameters}}, {{tokendelivery}}) and
+in MOQT control messages ({{presentingauthorization}}). Each location carries
+distinct risks:
+
+* Tokens written directly into a catalog are visible to every relay that
+  caches the catalog and to every subscriber that receives it. Such tokens are
+  effectively shared bearer credentials. Publishers SHOULD NOT place
+  per-subscriber credentials directly in a cacheable catalog; per-subscriber
+  tokens SHOULD instead be supplied through variable substitution or out-of-band
+  provisioning. Any token placed in a catalog SHOULD be narrowly scoped and
+  short-lived.
+* URI fragments are not sent to the server during connection establishment,
+  but they are commonly retained in browser history, application logs,
+  bookmarks and shared links. Tokens supplied in fragments SHOULD be short-lived
+  and scoped to the specific content they authorize.
+* Tokens presented in MOQT control messages are visible to the relay that
+  terminates the session. Relays are therefore trusted with the tokens they
+  receive. MOQT ({MOQT, section 15.3}} details specific security requirements
+  for relays in this regard.
+
+Bearer tokens are susceptible to replay by any party that obtains them. The
+replay protections, binding mechanisms and validation rules of the selected
+authorization scheme ({{C4M}}, {{PrivacyPassAuth}}) apply.
+
+## Variable substitution
+
+Variable substitution ({{variablesubstitution}}) inserts values taken from the
+URI fragment into catalog fields. The restricted character set for variable
+values limits structural injection into the catalog, but substituted values
+remain attacker-controlled whenever the URI was crafted or modified by a third
+party. A malicious link could, for example, cause a subscriber to subscribe to a
+different Track Namespace, present a token to an unintended track, or publish
+logs and metrics under an identifier of the attacker's choosing.
+
+Subscribers MUST validate the catalog after substitution, including applying
+the rules of {{namemapping}} to any substituted name or namespace. Subscribers
+SHOULD NOT apply variable substitution to fields that determine a network
+endpoint, such as Connection URI ({{connectionuri}}), unless the application
+explicitly trusts the source of the URI.
+
+Personalization values, such as viewer identifiers, become visible to relays
+when they are substituted into Track Namespaces or Track Names, since those
+names are carried in MOQT control messages. Applications SHOULD use opaque,
+non-identifying values for this purpose.
+
+## Publish tracks and connection URIs
+
+Publish tracks ({{publishtracks}}) and the Connection URI field
+({{connectionuri}}) allow a catalog to instruct a subscriber to open new
+connections and to upload data. A malicious or tampered catalog could use these
+to direct subscribers to connect to arbitrary hosts, to generate unwanted load
+against a third party, or to exfiltrate client-side data.
+
+Subscribers SHOULD only publish to endpoints permitted by local application
+policy, for example endpoints within the same administrative domain as the
+catalog source, and SHOULD ignore publish tracks that do not satisfy that
+policy. Subscribers SHOULD rate-limit the data they publish on log
+({{logtrack}}) and metrics ({{metricstrack}}) tracks.
+
+Log and metrics data may contain identifiers, network information, device
+characteristics and viewing behavior. Applications SHOULD collect only the data
+necessary for their purpose, SHOULD obtain any user consent required by
+applicable policy, and SHOULD avoid including direct personal identifiers in
+Track Namespaces, Track Names or payloads.
+
+## Resource exhaustion
+
+Several MSF mechanisms allow a publisher, or an attacker able to modify content,
+to cause a subscriber to consume excessive resources:
+
+* Compressed payloads ({{compression-signaling}}) may expand to a size far
+  larger than the transmitted object. Subscribers MUST enforce an upper bound on
+  the decompressed size of any catalog, media timeline or event timeline object
+  and SHOULD abort decompression when that bound is exceeded.
+* Catalogs, media timelines and event timelines are JSON documents that can be
+  arbitrarily large or deeply nested. Subscribers SHOULD bound the document size,
+  nesting depth, number of tracks and number of timeline records they are
+  willing to process.
+* Long chains of delta updates ({{deltaupdates}}) increase processing cost for
+  joining subscribers. Subscribers MAY bound the number of delta updates they
+  will apply before requiring a new independent catalog.
+* A catalog may reference other catalogs. Subscribers MUST detect reference
+  cycles and SHOULD bound the depth of catalog references they will follow.
+* Independent media timeline objects ({{mediatimelinetrack}}) and event timeline
+  objects ({{eventtimelinetrack}}) contain the accumulated history of the track
+  and can grow without limit over long broadcasts. Publishers SHOULD trim
+  timelines to the accessible window, and subscribers SHOULD bound the size of
+  timeline objects they will retain.
+
+## Timing information
+
+Target latency, buffer and wallclock values ({{wallclock}}) influence when
+subscribers render content. Manipulated values, or clocks that are not
+synchronized to UTC, can cause excessive buffering, playback stalls or loss of
+synchronization between subscribers. Subscribers SHOULD apply sanity bounds to
+these values and SHOULD NOT rely on them for any security decision.
 
 ## Track naming
+
 Track names and namespaces are compared as raw bytes ({{namemapping}}). Because
 no Unicode normalization or case folding is applied, visually confusable names
 (for example, names differing only in composed versus decomposed accents, or in
