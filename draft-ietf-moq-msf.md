@@ -106,18 +106,48 @@ This document specifies the MOQT Streaming Format, designed to operate on Media 
 
 # Introduction
 
-MOQT Streaming Format (MSF) is a media format designed to deliver LOC {{LOC}}
-compliant media content over Media Over QUIC Transport (MOQT) {{MOQT}}.
-MSF works by fragmenting the bitstream into objects that can be independently
-transmitted. MSF leverages a catalog format to describe the output of the
-original publisher. MSF specifies how content should be packaged and signaled,
-defines how the catalog communicates the content, specifies prioritization
-strategies for real-time and workflows for beginning and terminating broadcasts.
-MSF also details how end-subscribers may perform adaptive bitrate switching.
-MSF is targeted at real-time and interactive levels of live latency, as well as
-VOD content.
+Media over QUIC Transport (MOQT) {{MOQT}} is a publish/subscribe protocol that
+delivers media and other data as named Tracks, each composed of Groups and
+Objects, through a network of relays. MOQT deliberately leaves the meaning of
+Track payloads, the naming of Tracks and the relationships between Tracks to
+the applications built on top of it. Independently developed publishers,
+relays and players can only interoperate if they agree on these details.
 
-This document describes version 1 of the streaming format.
+The MOQT Streaming Format (MSF) defines that agreement for the delivery of
+audio, video and associated timed data. MSF specifies:
+
+* how media is packaged into MOQT Objects and Groups, using Low Overhead
+  Container (LOC) {{LOC}} payloads ({{mediapackaging}});
+* a catalog, carried in its own MOQT Track, that describes the tracks produced
+  by an original publisher, their properties and their relationships, and that
+  can be updated incrementally as the broadcast evolves ({{catalog}});
+* media timeline and event timeline tracks, which relate MOQT Locations to
+  media time and wallclock time and synchronize ancillary data with the media
+  ({{mediatimelinetrack}}, {{eventtimelinetrack}});
+* how subscribers switch between alternate tracks with consistent group durations,
+  for adaptive bitrate playback ({{altgroup}}), as well as across tracks with variable
+  group durations ({{mvfts}});
+* how ({{contentprotection}}) and token-based authorization ({{authorization}}) are
+  signalled.
+* how to initiate subscribers to publish tracks, such as might be used to report logs
+  and metrics to an analytics system ({{logtrack}}, {{metricstrack}});
+* a URL format for addressing MSF content, and procedures for starting and
+  ending a broadcast.
+
+MSF supports live content across a range of latency targets, from real-time
+and interactive through to standard broadcast latency, as well as
+video-on-demand (VOD) content. An event timeline track is defined, as an
+option for carrying additional data types, such as timed-text captions and
+ad-insertion signaling. Companion specifications ({{wellknowneventtypes}}) may
+also define custom packaging formats.
+
+MSF semantics are interpreted only by original publishers and end
+subscribers. Relays do not need to understand MSF: they forward and cache MSF
+Tracks, including the catalog, as they would any other MOQT Track.
+
+This document describes version 1 of MSF. While this document is an
+Internet-Draft, the version is signaled in the catalog as described in
+{{msfversion}}.
 
 # Conventions and Definitions
 
