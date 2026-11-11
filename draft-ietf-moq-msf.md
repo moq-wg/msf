@@ -106,7 +106,7 @@ This document specifies the MOQT Streaming Format, designed to operate on Media 
 
 # Introduction
 
-Media over QUIC Transport (MOQT) {{MoQTransport}} is a publish/subscribe protocol that
+Media over QUIC Transport (MOQT) {{MOQT}} is a publish/subscribe protocol that
 delivers media and other data as named Tracks, each composed of Groups and
 Objects, through a network of relays. MOQT deliberately leaves the meaning of
 Track payloads, the naming of Tracks and the relationships between Tracks to
