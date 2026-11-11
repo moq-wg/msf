@@ -74,7 +74,7 @@ Table of Contents
      4.1.  LOC packaging
        4.1.1.  LOC to MOQT Stream mapping
      4.2.  Time-alignment
-     4.3.  Packaging for track switching
+     4.3.  Packaging for multi-variant track switching
      4.4.  Content protection and encryption
        4.4.1.  Encryption scheme signaling
        4.4.2.  Key management
@@ -127,16 +127,15 @@ Table of Contents
        5.2.35. Parent namespace
        5.2.36. Track duration
        5.2.37. Connection URI
-       5.2.38. Token
-       5.2.39. Encryption scheme
-       5.2.40. Cipher suite
-       5.2.41. Key ID
-       5.2.42. Track Base Key
-       5.2.43. Authorization Info
-       5.2.44. Token Delivery via URI
-       5.2.45. Accessibility
-       5.2.46. Accessible Window Time
-       5.2.47. Keyframe spacing
+       5.2.38. Encryption scheme
+       5.2.39. Cipher suite
+       5.2.40. Key ID
+       5.2.41. Track Base Key
+       5.2.42. Authorization Info
+       5.2.43. Token Delivery via URI
+       5.2.44. Accessibility
+       5.2.45. Accessible Window Time
+       5.2.46. Keyframe spacing
      5.3.  Delta updates
      5.4.  Variable Substitution
        5.4.1.  Variable Syntax
@@ -183,10 +182,11 @@ Table of Contents
      8.2.  Event Timeline data format
      8.3.  Event Timeline Catalog requirements
      8.4.  Event Timeline track updating
-     8.5.  Event timeline track payload examples
-       8.5.1.  Event timeline track with wallclock time indexing
-       8.5.2.  Event timeline track with MOQT Location indexing
-       8.5.3.  Event timeline track with media time indexing
+     8.5.  Well-known event timeline types
+     8.6.  Event timeline track payload examples
+       8.6.1.  Event timeline track with wallclock time indexing
+       8.6.2.  Event timeline track with MOQT Location indexing
+       8.6.3.  Event timeline track with media time indexing
    9.  Log track
      9.1.  Log track payload
      9.2.  Log track namespace and name
@@ -197,7 +197,6 @@ Table of Contents
      10.2.  Metrics track namespace and name
      10.3.  Metrics track Group ID and Object ID
      10.4.  Metrics track catalog requirements
-     10.5.  Well-known event timeline types
    11. Workflow
      11.1.  URL construction and interpretation
        11.1.1.  Reserved fragment parameters
@@ -241,14 +240,13 @@ Table of Contents
 
 1.  Introduction
 
-   Media over QUIC Transport (MOQT) [MoQTransport] is a publish/
-   subscribe protocol that delivers media and other data as named
-   Tracks, each composed of Groups and Objects, through a network of
-   relays.  MOQT deliberately leaves the meaning of Track payloads, the
-   naming of Tracks and the relationships between Tracks to the
-   applications built on top of it.  Independently developed publishers,
-   relays and players can only interoperate if they agree on these
-   details.
+   Media over QUIC Transport (MOQT) [MOQT] is a publish/subscribe
+   protocol that delivers media and other data as named Tracks, each
+   composed of Groups and Objects, through a network of relays.  MOQT
+   deliberately leaves the meaning of Track payloads, the naming of
+   Tracks and the relationships between Tracks to the applications built
+   on top of it.  Independently developed publishers, relays and players
+   can only interoperate if they agree on these details.
 
    The MOQT Streaming Format (MSF) defines that agreement for the
    delivery of audio, video and associated timed data.  MSF specifies:
@@ -285,7 +283,7 @@ Table of Contents
    well as video-on-demand (VOD) content.  An event timeline track is
    defined, as an option for carrying additional data types, such as
    timed-text captions and ad-insertion signaling.  Companion
-   specifications (Section 10.5) may also define custom packaging
+   specifications (Section 8.5) may also define custom packaging
    formats.
 
    MSF semantics are interpreted only by original publishers and end
@@ -305,13 +303,13 @@ Table of Contents
    BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
    capitals, as shown here.
 
-   This document uses the conventions detailed in Section 1.3 of
-   [RFC9000] when describing the binary encoding.
+   This document uses the conventions detailed in [RFC9000], Section 1.3
+   when describing the binary encoding.
 
 3.  Scope
 
    The purpose of MSF is to provide an interoperable media streaming
-   format operating over [MoQTransport].  Interoperability implies that:
+   format operating over [MOQT].  Interoperability implies that:
 
    *  An original publisher can package incoming media content into
       tracks, prepare a catalog and announce the availability of the
@@ -349,14 +347,14 @@ Table of Contents
       publisher placing the content on the wire and the final subscriber
       rendering it)
 
-   *  Real-time - less than 500ms
+      -  Real-time - less than 500ms
 
-   *  Interactive - between 500ms and 2500ms
+      -  Interactive - between 500ms and 2500ms
 
-   *  Standard - above 2500ms
+      -  Standard - above 2500ms
 
-   *  VOD latency - content that was previously produced, is no longer
-      live and is available indefinitely.
+      -  VOD latency - content that was previously produced, is no
+         longer live and is available indefinitely.
 
    *  Content encryption
 
@@ -384,8 +382,9 @@ Table of Contents
    define how audio and video content is packaged.  With this packaging
    mode, each EncodedAudioChunk or EncodedVideoChunk sample is placed in
    a separate MOQT Object.  All MOQT Objects SHOULD be placed on MOQT
-   Sub-Group 0.  Samples that belong to the same Group of Pictures (GOP)
-   MUST be placed within the same MOQT Group.
+   Subgroup 0 unless streamMapping Section 4.1.1 indicates otherwise.
+   Samples that belong to the same Group of Pictures (GOP) MUST be
+   placed within the same MOQT Group.
 
    When LOC packaging is used for a track, the catalog packaging
    attribute (Section 5.2.4) MUST be present and it MUST be populated
@@ -412,9 +411,8 @@ Table of Contents
          |               | MOQT Subgroup.                       |
          +---------------+--------------------------------------+
 
-                                 Table 1
-
-   Table: LOC stream-mapping modes signaled via packagingMetadata
+              Table 1: LOC stream-mapping modes signaled via
+                           `packagingMetadata`
 
    If packagingMetadata is absent, or if it is present but does not
    carry a streamMapping key, the mode group MUST be assumed.
@@ -441,11 +439,11 @@ Table of Contents
 
    If time-aligned media tracks do not have overlapping presentation
    time at equally-numbered group boundaries, then an alternate
-   mechanism, not defined by this specification, must be provided to the
-   client to enable it to switch smoothly between time-aligned, but
+   mechanism, not defined by this specification, needs to be provided to
+   the client to enable it to switch smoothly between time-aligned, but
    numerically dissimilar, Group IDs.
 
-4.3.  Packaging for track switching
+4.3.  Packaging for multi-variant track switching
 
    When publishing multiple tracks within an alternate group that have
    dissimilar keyframe intervals (different GOP sizes), publishers MUST
@@ -458,16 +456,13 @@ Table of Contents
    *  All tracks within an alternate group MUST be time-aligned at
       object boundaries, not only at group boundaries.
 
-   *  The keyframeSpacing Section 5.2.47 catalog field MUST be specified
+   *  The keyframeSpacing Section 5.2.46 catalog field MUST be specified
       for each track, indicating the number of objects per keyframe
       interval.
 
-   *  If any track within an alternate group specifies a keyframeSpacing
-      value, then all tracks within that alternate group MUST specify a
-      keyframeSpacing value.
-
    *  The starting Group ID of all tracks within an alternate group MUST
-      be identical.
+      be identical.  The GroupID of each subsequent group MUST increase
+      by 1.
 
    See Section 6.3 for details on how subscribers use keyframeSpacing to
    calculate valid switch points.
@@ -485,14 +480,14 @@ Table of Contents
    The encryption scheme and parameters are signaled in the catalog
    using the following track-level fields:
 
-   *  encryptionScheme Section 5.2.39 - identifies the encryption
+   *  encryptionScheme Section 5.2.38 - identifies the encryption
       mechanism
 
-   *  cipherSuite Section 5.2.40 - specifies the AEAD algorithm
+   *  cipherSuite Section 5.2.39 - specifies the AEAD algorithm
 
-   *  keyId Section 5.2.41 - identifies the key material for decryption
+   *  keyId Section 5.2.40 - identifies the key material for decryption
 
-   *  trackBaseKey Section 5.2.42 - the base key material for this track
+   *  trackBaseKey Section 5.2.41 - the base key material for this track
 
    When the encryptionScheme field is present in a track definition,
    subscribers MUST decrypt the object payload using the specified
@@ -511,9 +506,9 @@ Table of Contents
 
    *  A single track
 
-   *  A single MoQ Session
+   *  A single MOQT Session
 
-   *  Multiple tracks across one or more MoQ sessions
+   *  Multiple tracks across one or more MOQT sessions
 
    Publishers and subscribers MUST use the same key management system
    and agree on the keyId scope semantics for interoperable operation.
@@ -539,19 +534,19 @@ Table of Contents
    For LOC-packaged tracks with encryption enabled (see [SecureObjects],
    Section 4):
 
-   *  The immutable header extensions (including Group ID and Object ID)
+   *  The immutable object properties (including Group ID and Object ID)
       remain in plaintext and are authenticated
 
    *  The object payload is encrypted and authenticated using the
       specified cipher
 
-   *  Private header extensions (type 0xA) are encrypted alongside the
+   *  Private object properties (type 0xA) are encrypted alongside the
       payload
 
 5.  Catalog
 
    A Catalog is an MOQT Track that provides information about the other
-   tracks being produced by a MSF publisher.  A Catalog is used by MSF
+   tracks being produced by an MSF publisher.  A Catalog is used by MSF
    publishers for advertising their output and for subscribers in
    consuming that output.  The payload of the Catalog object is opaque
    to Relays and can be end-to-end encrypted.  The Catalog provides the
@@ -582,7 +577,7 @@ Table of Contents
    subscriptions.
 
    Each catalog update MUST be mapped to an MOQT Object.  All catalog
-   updates, both independent and delta, MUST be mapped to MOQT sub-group
+   updates, both independent and delta, MUST be mapped to MOQT Subgroup
    0.  The first Object (with Object ID 0) in any Group in a catalog
    track MUST hold an independent copy of the catalog.  All subsequent
    Objects within that Group (i.e Objects IDs >= 1) MUST hold a delta
@@ -605,7 +600,7 @@ Table of Contents
 
 5.1.  Root Catalog Fields
 
-   Table 1 lists the fields defined at the root of the catalog JSON
+   Table 2 lists the fields defined at the root of the catalog JSON
    object.
 
        +==========================+===============+===============+
@@ -626,7 +621,7 @@ Table of Contents
        | Initialization Data List | initDataList  | Section 5.1.7 |
        +--------------------------+---------------+---------------+
 
-                                 Table 2
+                       Table 2: Root catalog fields
 
 5.1.1.  MSF version
 
@@ -647,8 +642,7 @@ Table of Contents
    Required: Optional JSON Type: Number Location: Root Catalog
 
    The wallclock time at which this catalog instance was generated, as
-   defined by Section 11.6.  This field SHOULD NOT be included if the
-   isLive field is false.
+   defined by Section 11.6.
 
 5.1.3.  Is Complete
 
@@ -731,7 +725,7 @@ Table of Contents
    *  id : a string defining a reference to this initialization data
       which is unique within the scope of the catalog.
 
-   *  type: as string defining the type of reference.  This version of
+   *  type: a string defining the type of reference.  This version of
       the specification defines the following allowed types:
 
      +=================+=============================================+
@@ -750,132 +744,144 @@ Table of Contents
 
    For both the track-property and object-property types, the
    initialization data is serialized as raw binary data and carried in
-   the value field of the initialization properties, see
-   {#initialization-properties}.
+   the value field of the initialization properties, see Section 12.2.
 
-   The Initialization Data List, if present, MUST be located after the
+   The Initialization Data List, if present, SHOULD be located after the
    tracks array in the root of the JSON catalog.  The purpose of this is
    to improve the human readability of the catalog tracks by moving the
    verbose init data towards the end of the document.
 
 5.2.  Track Object Fields
 
-   Table 2 lists the fields defined within each track object.
+   Table 4 lists the fields defined within each track object.
 
-      +========================+===================+================+
-      | Field                  | Name              | Definition     |
-      +========================+===================+================+
-      | Track namespace        | namespace         | Section 5.2.2  |
-      +------------------------+-------------------+----------------+
-      | Track name             | name              | Section 5.2.3  |
-      +------------------------+-------------------+----------------+
-      | Packaging              | packaging         | Section 5.2.4  |
-      +------------------------+-------------------+----------------+
-      | Packaging metadata     | packagingMetadata | Section 5.2.5  |
-      +------------------------+-------------------+----------------+
-      | Event timeline type    | eventType         | Section 5.2.6  |
-      +------------------------+-------------------+----------------+
-      | Is Live                | isLive            | Section 5.2.8  |
-      +------------------------+-------------------+----------------+
-      | Target latency         | targetLatency     | Section 5.2.9  |
-      +------------------------+-------------------+----------------+
-      | Buffers                | buffers           | Section 5.2.10 |
-      +------------------------+-------------------+----------------+
-      | Track role             | role              | Section 5.2.7  |
-      +------------------------+-------------------+----------------+
-      | Track label            | label             | Section 5.2.11 |
-      +------------------------+-------------------+----------------+
-      | Render group           | renderGroup       | Section 5.2.12 |
-      +------------------------+-------------------+----------------+
-      | Alternate group        | altGroup          | Section 5.2.13 |
-      +------------------------+-------------------+----------------+
-      | Initialization ref     | initRef           | Section 5.2.14 |
-      +------------------------+-------------------+----------------+
-      | Dependencies           | depends           | Section 5.2.15 |
-      +------------------------+-------------------+----------------+
-      | Temporal ID            | temporalId        | Section 5.2.17 |
-      +------------------------+-------------------+----------------+
-      | Spatial ID             | spatialId         | Section 5.2.18 |
-      +------------------------+-------------------+----------------+
-      | Codec                  | codec             | Section 5.2.19 |
-      +------------------------+-------------------+----------------+
-      | Mime type              | mimeType          | Section 5.2.20 |
-      +------------------------+-------------------+----------------+
-      | Framerate              | framerate         | Section 5.2.21 |
-      +------------------------+-------------------+----------------+
-      | Timescale              | timescale         | Section 5.2.22 |
-      +------------------------+-------------------+----------------+
-      | Maximum Bitrate        | bitrate           | Section 5.2.23 |
-      +------------------------+-------------------+----------------+
-      | Average Bitrate        | avgBitrate        | Section 5.2.24 |
-      +------------------------+-------------------+----------------+
-      | Maximum GOP Duration   | maxGopDuration    | Section 5.2.25 |
-      +------------------------+-------------------+----------------+
-      | Maximum Group Duration | maxGroupDuration  | Section 5.2.26 |
-      +------------------------+-------------------+----------------+
-      | Width                  | width             | Section 5.2.27 |
-      +------------------------+-------------------+----------------+
-      | Height                 | height            | Section 5.2.28 |
-      +------------------------+-------------------+----------------+
-      | Audio sample rate      | samplerate        | Section 5.2.29 |
-      +------------------------+-------------------+----------------+
-      | Channel configuration  | channelConfig     | Section 5.2.30 |
-      +------------------------+-------------------+----------------+
-      | Display width          | displayWidth      | Section 5.2.31 |
-      +------------------------+-------------------+----------------+
-      | Display height         | displayHeight     | Section 5.2.32 |
-      +------------------------+-------------------+----------------+
-      | Language               | lang              | Section 5.2.33 |
-      +------------------------+-------------------+----------------+
-      | Parent name            | parentName        | Section 5.2.34 |
-      +------------------------+-------------------+----------------+
-      | Parent namespace       | parentNamespace   | Section 5.2.35 |
-      +------------------------+-------------------+----------------+
-      | Track duration         | trackDuration     | Section 5.2.36 |
-      +------------------------+-------------------+----------------+
-      | Authorization Info     | authInfo          | Section 5.2.43 |
-      +------------------------+-------------------+----------------+
-      | Accessibility          | accessibility     | Section 5.2.45 |
-      +------------------------+-------------------+----------------+
-      | Keyframe spacing       | keyframeSpacing   | Section 5.2.47 |
-      +------------------------+-------------------+----------------+
+    +=========================+======================+================+
+    | Field                   | Name                 | Definition     |
+    +=========================+======================+================+
+    | Track namespace         | namespace            | Section 5.2.2  |
+    +-------------------------+----------------------+----------------+
+    | Track name              | name                 | Section 5.2.3  |
+    +-------------------------+----------------------+----------------+
+    | Packaging               | packaging            | Section 5.2.4  |
+    +-------------------------+----------------------+----------------+
+    | Packaging metadata      | packagingMetadata    | Section 5.2.5  |
+    +-------------------------+----------------------+----------------+
+    | Event timeline type     | eventType            | Section 5.2.6  |
+    +-------------------------+----------------------+----------------+
+    | Is Live                 | isLive               | Section 5.2.8  |
+    +-------------------------+----------------------+----------------+
+    | Target latency          | targetLatency        | Section 5.2.9  |
+    +-------------------------+----------------------+----------------+
+    | Buffers                 | buffers              | Section 5.2.10 |
+    +-------------------------+----------------------+----------------+
+    | Track role              | role                 | Section 5.2.7  |
+    +-------------------------+----------------------+----------------+
+    | Track label             | label                | Section 5.2.11 |
+    +-------------------------+----------------------+----------------+
+    | Render group            | renderGroup          | Section 5.2.12 |
+    +-------------------------+----------------------+----------------+
+    | Alternate group         | altGroup             | Section 5.2.13 |
+    +-------------------------+----------------------+----------------+
+    | Initialization ref      | initRef              | Section 5.2.14 |
+    +-------------------------+----------------------+----------------+
+    | Dependencies            | depends              | Section 5.2.15 |
+    +-------------------------+----------------------+----------------+
+    | Media timeline template | template             | Section 5.2.16 |
+    +-------------------------+----------------------+----------------+
+    | Temporal ID             | temporalId           | Section 5.2.17 |
+    +-------------------------+----------------------+----------------+
+    | Spatial ID              | spatialId            | Section 5.2.18 |
+    +-------------------------+----------------------+----------------+
+    | Codec                   | codec                | Section 5.2.19 |
+    +-------------------------+----------------------+----------------+
+    | Mime type               | mimeType             | Section 5.2.20 |
+    +-------------------------+----------------------+----------------+
+    | Framerate               | framerate            | Section 5.2.21 |
+    +-------------------------+----------------------+----------------+
+    | Timescale               | timescale            | Section 5.2.22 |
+    +-------------------------+----------------------+----------------+
+    | Maximum Bitrate         | bitrate              | Section 5.2.23 |
+    +-------------------------+----------------------+----------------+
+    | Average Bitrate         | avgBitrate           | Section 5.2.24 |
+    +-------------------------+----------------------+----------------+
+    | Maximum GOP Duration    | maxGopDuration       | Section 5.2.25 |
+    +-------------------------+----------------------+----------------+
+    | Maximum Group Duration  | maxGroupDuration     | Section 5.2.26 |
+    +-------------------------+----------------------+----------------+
+    | Width                   | width                | Section 5.2.27 |
+    +-------------------------+----------------------+----------------+
+    | Height                  | height               | Section 5.2.28 |
+    +-------------------------+----------------------+----------------+
+    | Audio sample rate       | samplerate           | Section 5.2.29 |
+    +-------------------------+----------------------+----------------+
+    | Channel configuration   | channelConfig        | Section 5.2.30 |
+    +-------------------------+----------------------+----------------+
+    | Display width           | displayWidth         | Section 5.2.31 |
+    +-------------------------+----------------------+----------------+
+    | Display height          | displayHeight        | Section 5.2.32 |
+    +-------------------------+----------------------+----------------+
+    | Language                | lang                 | Section 5.2.33 |
+    +-------------------------+----------------------+----------------+
+    | Parent name             | parentName           | Section 5.2.34 |
+    +-------------------------+----------------------+----------------+
+    | Parent namespace        | parentNamespace      | Section 5.2.35 |
+    +-------------------------+----------------------+----------------+
+    | Track duration          | trackDuration        | Section 5.2.36 |
+    +-------------------------+----------------------+----------------+
+    | Connection URI          | connectionURI        | Section 5.2.37 |
+    +-------------------------+----------------------+----------------+
+    | Encryption scheme       | encryptionScheme     | Section 5.2.38 |
+    +-------------------------+----------------------+----------------+
+    | Cipher suite            | cipherSuite          | Section 5.2.39 |
+    +-------------------------+----------------------+----------------+
+    | Key ID                  | keyId                | Section 5.2.40 |
+    +-------------------------+----------------------+----------------+
+    | Track Base Key          | trackBaseKey         | Section 5.2.41 |
+    +-------------------------+----------------------+----------------+
+    | Authorization Info      | authInfo             | Section 5.2.42 |
+    +-------------------------+----------------------+----------------+
+    | Accessibility           | accessibility        | Section 5.2.44 |
+    +-------------------------+----------------------+----------------+
+    | Accessible Window Time  | accessibleWindowTime | Section 5.2.45 |
+    +-------------------------+----------------------+----------------+
+    | Keyframe spacing        | keyframeSpacing      | Section 5.2.46 |
+    +-------------------------+----------------------+----------------+
 
-                                  Table 4
+                           Table 4: Track fields
 
 5.2.1.  Tracks object
 
    A track object is a JSON Object containing a collection of fields
-   whose location is specified in Table 2.
+   whose location is specified in Table 4.
 
 5.2.2.  Track namespace
 
    Required: Optional JSON Type: String Location: Track Object
 
    The Track Namespace under which the track name is defined.  See
-   Section 2.4.1 of [MoQTransport].  The value is a single JSON string
-   in which the '/' character (U+002F SOLIDUS) delimits the boundaries
-   between Track Namespace Fields.  The string is split at each '/'
-   character, and the resulting substrings correspond, in order, to the
-   Track Namespace Fields of the MOQT Track Namespace.  Each substring
-   is converted to the bytes of its Track Namespace Field using the
-   rules in Section 11.2.  The split is performed on the string value
-   after JSON decoding (Section 7 of [RFC8259]).  Any U+002F character
-   in the decoded value is a field delimiter, regardless of whether it
-   appeared in the JSON text as "/", "\/" or "\u002F".  A U+002F
-   character MUST NOT be part of a field value and is always interpreted
-   as a field boundary.
+   [MOQT], Section 2.4.1.  The value is a single JSON string in which
+   the '/' character (U+002F SOLIDUS) delimits the boundaries between
+   Track Namespace Fields.  The string is split at each '/' character,
+   and the resulting substrings correspond, in order, to the Track
+   Namespace Fields of the MOQT Track Namespace.  Each substring is
+   converted to the bytes of its Track Namespace Field using the rules
+   in Section 11.2.  The split is performed on the string value after
+   JSON decoding [JSON], Section 7.  Any U+002F character in the decoded
+   value is a field delimiter, regardless of whether it appeared in the
+   JSON text as "/", "\/" or "\u002F".  A U+002F character MUST NOT be
+   part of a field value and is always interpreted as a field boundary.
 
    For example, the value "example.com/live/channel1" represents a Track
    Namespace with three fields: "example.com", "live" and "channel1".
 
    The string MUST yield between 1 and 32 fields, and every field MUST
    be non-empty, so that the resulting Track Namespace satisfies the
-   constraints of Section 2.4.1 of [MoQTransport].  Consequently, the
-   string MUST NOT be empty, MUST NOT begin or end with a '/' character,
-   and MUST NOT contain two consecutive '/' characters.  A parser that
-   encounters a value that is not a string, an empty string, a string
-   yielding more than 32 fields, or a string yielding an empty field
-   MUST treat the catalog as invalid.
+   constraints of [MOQT], Section 2.4.1.  Consequently, the string MUST
+   NOT be empty, MUST NOT begin or end with a '/' character, and MUST
+   NOT contain two consecutive '/' characters.  A parser that encounters
+   a value that is not a string, an empty string, a string yielding more
+   than 32 fields, or a string yielding an empty field MUST treat the
+   catalog as invalid.
 
    The track namespace is optional.  If it is not declared within a
    track object, then the track MUST inherit the Track Namespace of the
@@ -887,10 +893,10 @@ Table of Contents
 
    Required: Yes JSON Type: String Location: Track Object
 
-   A JSON string defining the MOQT Track Name of the track.  See
-   Section 2.4.1 of [MoQTransport].  The string is converted to the
-   bytes of the Track Name using the rules in Section 11.2.  A Track
-   Name MAY be the empty string.
+   A JSON string defining the MOQT Track Name of the track.  See [MOQT],
+   Section 2.4.1.  The string is converted to the bytes of the Track
+   Name using the rules in Section 11.2.  A Track Name MUST NOT be the
+   empty string.
 
    Within a catalog, the combination of Track Namespace and Track Name
    (the Full Track Name) MUST be unique.  Uniqueness, and every other
@@ -905,12 +911,12 @@ Table of Contents
    Required: Yes JSON Type: String Location: Track Object
 
    A string defining the type of payload encapsulation.  Allowed values
-   are strings as defined in Table 3.
+   are strings as defined in Table 5.
 
            +================+===============+==================+
            | Name           | Value         | Reference        |
            +================+===============+==================+
-           | LOC            | loc           | See RFC XXXX     |
+           | LOC            | loc           | [LOC]            |
            +----------------+---------------+------------------+
            | Media Timeline | mediatimeline | See Section 7    |
            +----------------+---------------+------------------+
@@ -923,43 +929,41 @@ Table of Contents
            | Catalog        | catalog       | See Section 5    |
            +----------------+---------------+------------------+
 
-                                  Table 5
-
-   Table 3: Allowed packaging values
+                     Table 5: Allowed packaging values
 
    Which additional track fields are required depends on the pair
    (packaging, role) - see Section 5.2.4.1.
 
 5.2.4.1.  Required fields per packaging and track type
 
-   Section 5.2.2, Section 5.2.3, Section 5.2.4, and Section 5.2.8 are
-   required on every track.  The table below lists the fields that MUST
-   also be present for each (packaging, role) pair.  Fields not listed
-   remain OPTIONAL.  Where an individual field definition sets a
-   stricter constraint (e.g. Conditional), that constraint wins.
+   trackName Section 5.2.3, packaging Section 5.2.4, and isLive
+   Section 5.2.8 are required on every track.  A track without a
+   namespace Section 5.2.2 inherits the namespace of the catalog.
+   Table 6 lists the fields that MUST also be present for each
+   (packaging, role) pair.  Fields not listed remain OPTIONAL.  Where an
+   individual field definition sets a stricter constraint (e.g.
+   Conditional), that constraint wins.
 
    Fields with no meaning for a given pair SHOULD NOT be included;
    parsers ignore fields they do not understand.
 
-        +===============+==================+=====================+
-        | Packaging     | Role             | Also required       |
-        +===============+==================+=====================+
-        | loc           | audio            | codec, samplerate,  |
-        |               |                  | channelConfig       |
-        +---------------+------------------+---------------------+
-        | loc           | video            | codec, framerate    |
-        +---------------+------------------+---------------------+
-        | loc           | audiodescription | codec, samplerate,  |
-        |               |                  | channelConfig, lang |
-        +---------------+------------------+---------------------+
-        | loc           | signlanguage     | codec, framerate    |
-        +---------------+------------------+---------------------+
-        | eventtimeline | eventtimeline    | eventType           |
-        +---------------+------------------+---------------------+
+     +===============+==================+===========================+
+     | Packaging     | Role             | Also required             |
+     +===============+==================+===========================+
+     | loc           | audio            | codec, bitrate,           |
+     |               |                  | samplerate, channelConfig |
+     +---------------+------------------+---------------------------+
+     | loc           | video            | codec, bitrate, framerate |
+     +---------------+------------------+---------------------------+
+     | loc           | audiodescription | codec, samplerate,        |
+     |               |                  | channelConfig, lang       |
+     +---------------+------------------+---------------------------+
+     | loc           | signlanguage     | codec, framerate          |
+     +---------------+------------------+---------------------------+
+     | eventtimeline | eventtimeline    | eventType                 |
+     +---------------+------------------+---------------------------+
 
-                                 Table 6
-
-   Table: Required track fields per (packaging, role)
+           Table 6: Required track fields per (packaging, role)
 
    Packaging and role combinations not listed in the table above have no
    required fields beyond those required on every track.
@@ -1006,7 +1010,7 @@ Table of Contents
    Required: Optional JSON Type: String Location: Track Object
 
    A string defining the role of content carried by the track.
-   Specified roles are described in Table 4.  These role values are
+   Specified roles are described in Table 7.  These role values are
    case-sensitive.
 
    This role field MAY be used in conjunction with the Mimetype
@@ -1014,8 +1018,6 @@ Table of Contents
 
    See Section 5.2.4.1 for the fields that MUST accompany each role
    under a given Section 5.2.4.
-
-   Table 4: Reserved track roles
 
          +==================+===================================+
          | Role             | Description                       |
@@ -1050,7 +1052,7 @@ Table of Contents
          |                  | carrying application-defined data |
          +------------------+-----------------------------------+
 
-                                 Table 7
+                      Table 7: Reserved track roles
 
    Custom roles MAY be used as long as they do not collide with the
    specified roles.
@@ -1064,7 +1066,8 @@ Table of Contents
    False if no new Objects will be added to the track.  A False value is
    sent under two possible conditions: * the publisher of a previously
    live track has ended the track. * the track is Video-On-Demand (VOD)
-   and was never live.  A True value MUST never follow a False value.
+   and was never live.  A True value MUST NOT follow a False value in a
+   catalog update.
 
 5.2.9.  Target latency
 
@@ -1075,7 +1078,7 @@ Table of Contents
    when it is displayed to the end user.  Wallclock time is defined by
    Section 11.6.  For example, if a frame of video entered the encoder
    at 10:08:32.638 UTC and the target latency is 5000, then that frame
-   should be rendered to the end-user at10:08:37.638 UTC.  If isLive is
+   should be rendered to the end-user at 10:08:37.638 UTC.  If isLive is
    false, this field MUST be ignored.  All tracks belonging to the same
    render group MUST have identical target latencies.  All tracks
    belonging to the same alternate group MUST have identical target
@@ -1091,10 +1094,10 @@ Table of Contents
    Required: Optional JSON Type: Object Location: Track Object
 
    An object defining a set of target buffers.  Buffer is defined as the
-   duration of media data that MUST be buffered before decoding
+   duration of media data that needs to be buffered before decoding
    commences.  This is typically known as a forward or jitter-buffer in
-   a media player.Players with identical buffer lengths are likely to be
-   synchronized.  The target buffer object has these keys:
+   a media player.  Players with identical buffer lengths are likely to
+   be synchronized.  The target buffer object has these keys:
 
    *  target : defines the target buffer in integer milliseconds.
       Players SHOULD attempt to stabilize playback at this value.
@@ -1167,13 +1170,11 @@ Table of Contents
    String MUST reference a track name and any entry with a JSON type of
    Number MUST reference a renderGroup.
 
-   Since only the track name is signaled, the namespace of the
-   dependencies is assumed to match that of the track declaring the
-   dependencies.  Each String element MUST match the Track Name of
-   exactly one other track object in the same namespace within the
-   catalog.  Each Number element MUST match the renderGroup identifier
-   of exactly one renderGroup in the same namespace within the catalog.
-   A catalog in which a dependency does not resolve is invalid.
+   Since only the track name is signaled, each String element MUST match
+   the Track Name of exactly one other track object in the catalog.
+   Each Number element MUST match the renderGroup identifier of exactly
+   one renderGroup in the catalog.  A catalog in which a dependency does
+   not resolve is invalid.
 
 5.2.16.  Template
 
@@ -1364,30 +1365,19 @@ Table of Contents
    is absent, the subscriber SHOULD reuse the existing MOQT connection
    that was used to receive the catalog.
 
-   The URI MUST be a valid MOQT endpoint URI as defined by
-   [MoQTransport] (Section 3.1.1).  Examples include
-   "moqt://logs.example.com:4443", "moqt://metrics.example.com:8443", or
-   "https://logs.example.com/moqt".
+   The URI MUST be a valid MOQT endpoint URI as defined by [MOQT],
+   Section 6.1.  Examples include "moqt://logs.example.com",
+   "moqt://metrics.example.com:8443", or "moqt://logs.example.com/
+   moqt?a=1&b=2".
 
-5.2.38.  Token
-
-   Required: Optional JSON Type: String Location: Track Object
-
-   A string containing an authentication token or credential for the
-   track.  For publish tracks, this token authorizes the subscriber to
-   publish data to the specified track.  The format and validation of
-   the token is application-specific.
-
-5.2.39.  Encryption scheme
+5.2.38.  Encryption scheme
 
    Required: Optional JSON Type: String Location: Track Object
 
    A string identifying the encryption scheme used to protect the track
-   content.  The default and RECOMMENDED value is "moq-secure-objects"
-   as defined in [SecureObjects].  If this field is absent, the track
-   content is unencrypted.
-
-   Table 5: Registered encryption schemes
+   content.  The RECOMMENDED value is "moq-secure-objects" as defined in
+   [SecureObjects].  If this field is absent, the track content is
+   unencrypted.
 
        +====================+====================+=================+
        | Name               | Value              | Reference       |
@@ -1395,21 +1385,20 @@ Table of Contents
        | MoQ Secure Objects | moq-secure-objects | [SecureObjects] |
        +--------------------+--------------------+-----------------+
 
-                                  Table 8
+                    Table 8: Defined encryption schemes
 
    Custom encryption schemes MAY be used.  Custom scheme names SHOULD
    use Reverse Domain Name Notation to avoid collisions (e.g.,
    "com.example.custom-encryption").
 
-5.2.40.  Cipher suite
+5.2.39.  Cipher suite
 
    Required: Optional JSON Type: String Location: Track Object
 
    A string identifying the AEAD cipher suite used for encryption.  This
-   field MUST be present when encryptionScheme is specified.  For the
-   "moq-secure-objects" scheme, the following cipher suites are defined:
-
-   Table 6: Cipher suites for moq-secure-objects
+   field MUST be present when the encryptionScheme is "moq-secure-
+   objects".  For the "moq-secure-objects" scheme, the following cipher
+   suites are defined:
 
     +============================+============================+======+
     | Name                       | Value                      | Tag  |
@@ -1425,13 +1414,13 @@ Table of Contents
     |                            |                            | bits |
     +----------------------------+----------------------------+------+
 
-                                 Table 9
+              Table 9: Cipher suites for moq-secure-objects
 
    Implementations MUST support "aes-128-gcm-sha256".  Implementations
    SHOULD support "aes-128-ctr-hmac-sha256-80" for scenarios requiring
    smaller authentication tags.
 
-5.2.41.  Key ID
+5.2.40.  Key ID
 
    Required: Optional JSON Type: String Location: Track Object
 
@@ -1451,7 +1440,7 @@ Table of Contents
    keys are derived using the track name as defined in ([SecureObjects],
    Section 5).
 
-5.2.42.  Track Base Key
+5.2.41.  Track Base Key
 
    Required: Optional JSON Type: String Location: Track Object
 
@@ -1467,21 +1456,19 @@ Table of Contents
    and subscribers MUST use matching trackBaseKey values for successful
    decryption.
 
-5.2.43.  Authorization Info
+5.2.42.  Authorization Info
 
    Required: Optional JSON Type: Object Location: Track Object
 
    An object indicating that authorization is required to access this
    track.  The presence of this field signals to subscribers that they
-   must obtain and present valid authorization tokens when subscribing
-   to this track.
+   need to obtain and present valid authorization tokens when
+   subscribing to this track.
 
    The keys of this object are authorization scheme identifiers.
-   Registered schemes are defined in Table 7.  The values are scheme-
-   specific configuration objects defined by the referenced
+   Allowed schemes are defined in Table 10.  The values are scheme-
+   specific configuration JSON elements defined by the referenced
    specifications.
-
-   Table 7: Registered Authorization Schemes
 
             +==============+==============+===================+
             | Scheme       | Value        | Reference         |
@@ -1491,7 +1478,7 @@ Table of Contents
             | CAT          | cat          | [C4M]             |
             +--------------+--------------+-------------------+
 
-                                  Table 10
+                  Table 10: Defined Authorization Schemes
 
    Custom authorization schemes MAY be used.  Custom scheme names MUST
    use a unique naming convention, such as Reverse Domain Name Notation
@@ -1503,7 +1490,7 @@ Table of Contents
    presentation method are defined by the authorization scheme
    specification.
 
-5.2.44.  Token Delivery via URI
+5.2.43.  Token Delivery via URI
 
    Tokens can be delivered to subscribers through the catalog request
    URI using variable substitution.  Fragment parameters (following the
@@ -1513,7 +1500,7 @@ Table of Contents
 
    For example, given a URI:
 
-   moqt://relay.example.com/live#namespace--name&token=XYZ789
+   moqt://relay.example.com/live#msf:namespace--name&token=XYZ789
 
    A catalog with:
 
@@ -1525,7 +1512,7 @@ Table of Contents
    is then presented in control messages as specified by the
    authorization scheme.
 
-5.2.45.  Accessibility
+5.2.44.  Accessibility
 
    Required: Optional JSON Type: Array Location: Track Object
 
@@ -1539,8 +1526,6 @@ Table of Contents
    *  A required 'value' field (String) specifying the accessibility
       channels or features available.
 
-   Table 8: Registered accessibility schemes
-
         +===============================+=========================+
         | Scheme                        | Description             |
         +===============================+=========================+
@@ -1549,7 +1534,7 @@ Table of Contents
         | urn:scte:dash:cc:cea-708:2015 | CEA-708 closed captions |
         +-------------------------------+-------------------------+
 
-                                  Table 11
+                  Table 11: Defined accessibility schemes
 
    The 'value' field for CEA-608/708 schemes uses the format defined by
    [SCTE214-1], where caption service channels are specified as
@@ -1559,13 +1544,13 @@ Table of Contents
    A subscriber MAY use this information to determine caption
    availability and configure an appropriate caption decoder.
 
-5.2.46.  Accessible Window Time
+5.2.45.  Accessible Window Time
 
    Required: Optional JSON Type: Number Location: Track Object
 
    The accessibleWindowTime defines a time delta in wallclock
    milliseconds behind the live edge at which content in this track
-   reamins accessible.  This feature is often used to implement a 'DVR'
+   remains accessible.  This feature is often used to implement a 'DVR'
    window in live streams, in which content is only available for a
    fixed duration window which trails the live edge.  To calculate the
    earliest available content, a client would subtract the
@@ -1578,12 +1563,12 @@ Table of Contents
    temporal rate, then the accessibleWindowTime delta can be equally
    applied to the media time data within the media timeline track.
 
-   Tracks assigned to the same alternative group Section 5.2.13 MUST
-   carry the same accessibleWindowTime value.
+   Tracks assigned to the same alternate group Section 5.2.13 MUST carry
+   the same accessibleWindowTime value.
 
-5.2.47.  Keyframe spacing
+5.2.46.  Keyframe spacing
 
-   Location: T Required: Optional JSON Type: Number
+   Required: Optional JSON Type: Number Location: Track Object
 
    A number defining the number of objects per keyframe interval.  A
    value of 15 means each group contains a keyframe followed by 14
@@ -1630,6 +1615,10 @@ Table of Contents
       bound the amount of delta processing required for joining
       subscribers.
 
+   *  Error handling - any illogical update operation, such as adding an
+      existing name, removing or updating an unknown track or cloning to
+      an existing name MUST be rejected as an invalid catalog.
+
 5.4.  Variable Substitution
 
    Catalog field values MAY contain variables that are substituted at
@@ -1641,20 +1630,21 @@ Table of Contents
 5.4.1.  Variable Syntax
 
    Variables are denoted by enclosing the variable name in percent
-   characters (%).  Variable names MUST consist of alphanumeric
-   characters, hyphens, and underscores.  Variable names are case-
-   sensitive.
+   characters (%).  Variable names are case-sensitive.
 
    The percent character (%) MUST NOT appear in catalog field values
    except as part of a variable reference.  Literal percent characters
    are not permitted.
 
    Variable values MUST consist only of alphanumeric characters,
-   hyphens, underscores, and the at sign (@).  Special characters
-   including commas, semicolons, quotes, ampersands, and other
-   punctuation MUST NOT appear in variable values.  This restriction
-   prevents injection attacks and ensures safe substitution into catalog
-   field values.
+   hyphens, underscores, plus sign, forward slash, equals, period and
+   the at sign (@).  Special characters including commas, semicolons,
+   quotes, ampersands, and other punctuation MUST NOT appear in variable
+   values.  This restriction prevents injection attacks and ensures safe
+   substitution into catalog field values.
+
+   The rules of mapping catalog strings to MOQT byte values Section 11.2
+   are applied after variable substitution has been performed.
 
 5.4.2.  Variable Resolution
 
@@ -1668,10 +1658,10 @@ Table of Contents
    side processing and MUST NOT be used for variable substitution.
 
    When a subscriber requests a catalog using a URI containing a
-   fragment identifier, the fragment is parsed as key-value pairs (using
-   & as delimiter and = as separator).  Each key becomes available as a
-   variable name, and the variable is replaced with the corresponding
-   value.
+   fragment identifier, the fragment is parsed as key-value pairs, using
+   & as delimiter.  Each pair is split at its first = character into a
+   key and a value.  Each key becomes available as a variable name, and
+   the variable is replaced with the corresponding value.
 
 5.5.  Catalog Compression
 
@@ -1695,7 +1685,7 @@ Table of Contents
    LOC packaged, time-aligned audio and video tracks.
 
    {
-     "version": "draft-01",
+     "version": "draft-02",
      "generatedAt": 1746104606044,
      "tracks": [
        {
@@ -1734,10 +1724,10 @@ Table of Contents
    3 time-aligned video tracks for high definition, low definition and
    medium definition video qualities, along with an audio track.  In
    this example the namespace is absent, which infers that each track
-   must inherit the namespace of the catalog.
+   needs to inherit the namespace of the catalog.
 
    {
-     "version": "draft-01",
+     "version": "draft-02",
      "generatedAt": 1746104606044,
      "tracks":[
        {
@@ -1747,7 +1737,7 @@ Table of Contents
          "isLive": true,
          "targetLatency": 1500,
          "role": "video",
-         "codec":"av01",
+         "codec":"av01.0.05M.08",
          "width":1920,
          "height":1080,
          "bitrate":5000000,
@@ -1761,9 +1751,9 @@ Table of Contents
          "isLive": true,
          "targetLatency": 1500,
          "role": "video",
-         "codec":"av01",
-         "width":720,
-         "height":640,
+         "codec":"av01.0.05M.08",
+         "width":1280,
+         "height":720,
          "bitrate":3000000,
          "framerate":30,
          "altGroup":1
@@ -1775,7 +1765,7 @@ Table of Contents
          "isLive": true,
          "targetLatency": 1500,
          "role": "video",
-         "codec":"av01",
+         "codec":"av01.0.05M.08",
          "width":192,
          "height":144,
          "bitrate":500000,
@@ -1810,15 +1800,15 @@ Table of Contents
         |                  ^
         |                  |
    +----------+            |
-   |  S1TO    |            |
+   |  S1T0    |            |
    | 1080p15  |            |
    +----------+      +-----+----+
-         ^           |  SOT1    |
+         ^           |  S0T1    |
          |           | 480p30   |
          |           +----------+
          |               ^
    +----------+          |
-   |  SOTO     |         |
+   |  S0T0     |         |
    | 480p15    |---------+
    +----------+
 
@@ -1826,7 +1816,7 @@ Table of Contents
    track relationships.
 
    {
-     "version": "draft-01",
+     "version": "draft-02",
      "generatedAt": 1746104606044,
      "tracks":[
        {
@@ -1841,6 +1831,8 @@ Table of Contents
          "width":640,
          "height":480,
          "bitrate":3000000,
+         "spatialId": 0,
+         "temporalId": 0,
          "framerate":15
        },
        {
@@ -1854,7 +1846,9 @@ Table of Contents
          "codec":"av01.0.04M.10.0.110.09",
          "width":640,
          "height":480,
-         "bitrate":3000000,
+         "bitrate":3800000,
+         "spatialId": 0,
+         "temporalId": 1,
          "framerate":30,
          "depends": ["480p15"]
        },
@@ -1869,7 +1863,9 @@ Table of Contents
          "codec":"av01.0.05M.10.0.110.09",
          "width":1920,
          "height":1080,
-         "bitrate":3000000,
+         "bitrate":6000000,
+         "spatialId": 1,
+         "temporalId": 0,
          "framerate":15,
          "depends":["480p15"]
        },
@@ -1886,6 +1882,8 @@ Table of Contents
          "width":1920,
          "height":1080,
          "bitrate":5000000,
+         "spatialId": 1,
+         "temporalId": 1,
          "framerate":30,
          "depends": ["480p30", "1080p15"]
        },
@@ -1919,7 +1917,7 @@ Table of Contents
          "op": "update",
          "tracks": [
            {
-             "name": "video-1080",
+             "parentName": "video-1080",
              "bitrate": 4000000
            }
          ]
@@ -1979,7 +1977,7 @@ Table of Contents
    fields in each track description.
 
    {
-     "version": "draft-01",
+     "version": "draft-02",
      "generatedAt": 1746104606044,
      "tracks": [
        {
@@ -2022,7 +2020,7 @@ Table of Contents
    includes time-aligned audio and video tracks.
 
    {
-     "version": "draft-01",
+     "version": "draft-02",
      "tracks": [
        {
          "name": "video",
@@ -2032,6 +2030,7 @@ Table of Contents
          "trackDuration": 8072340,
          "renderGroup": 1,
          "codec":"av01.0.08M.10.0.110.09",
+         "role": "video",
          "width":1920,
          "height":1080,
          "framerate":30,
@@ -2045,6 +2044,7 @@ Table of Contents
          "trackDuration": 8072340,
          "renderGroup": 1,
          "codec":"opus",
+         "role": "audio",
          "samplerate":48000,
          "channelConfig":"2",
          "bitrate":32000
@@ -2058,7 +2058,7 @@ Table of Contents
    video tracks using MoQ Secure Objects with AES-128-GCM.
 
    {
-     "version": "draft-01",
+     "version": "draft-02",
      "generatedAt": 1746104606044,
      "tracks": [
        {
@@ -2077,7 +2077,7 @@ Table of Contents
          "encryptionScheme": "moq-secure-objects",
          "cipherSuite": "aes-128-gcm-sha256",
          "keyId": "key-2024-q1-premium",
-         "trackBaseKey": "dGhpc2lzYXNhbXBsZWJhc2VrZXk="
+         "trackBaseKey": "MTIzNDU2Nzg5MDEyMzQ1Ng=="
        },
        {
          "name": "audio",
@@ -2094,7 +2094,7 @@ Table of Contents
          "encryptionScheme": "moq-secure-objects",
          "cipherSuite": "aes-128-gcm-sha256",
          "keyId": "key-2024-q1-premium",
-         "trackBaseKey": "dGhpc2lzYXNhbXBsZWJhc2VrZXk="
+         "trackBaseKey": "MTIzNDU2Nzg5MDEyMzQ1Ng=="
        }
      ]
    }
@@ -2109,20 +2109,22 @@ Table of Contents
    'DVR window'.
 
    {
-     "version": "draft-01",
+     "version": "draft-02",
      "generatedAt": 1746104606044,
      "tracks": [
        {
          "name": "history",
          "namespace": "conference.example.com/conference123/alice",
          "packaging": "mediatimeline",
+         "isLive": true,
          "mimeType": "application/json",
-         "depends": ["1080p-video","audio"]
+         "depends": [1]
        },
        {
          "name": "identified-objects",
          "namespace": "another-provider/time-synchronized-data",
          "packaging": "eventtimeline",
+         "isLive": true,
          "eventType": "com.ai-extraction/appID/v3",
          "depends": ["history"]
        },
@@ -2167,7 +2169,7 @@ Table of Contents
    values to accommodate different group durations.
 
    {
-     "version": "draft-01",
+     "version": "draft-02",
      "generatedAt": 1746104606044,
      "tracks": [
        {
@@ -2209,7 +2211,7 @@ Table of Contents
    ad insertion.
 
    {
-     "version": "draft-01",
+     "version": "draft-02",
      "generatedAt": 1746104606044,
      "tracks": [
        {
@@ -2265,7 +2267,7 @@ Table of Contents
    embedded in the video track, demonstrating multiple caption services.
 
    {
-     "version": "draft-01",
+     "version": "draft-02",
      "generatedAt": 1746104606044,
      "tracks": [
        {
@@ -2308,7 +2310,7 @@ Table of Contents
    previously live broadcast containing a video and an audio track.
 
    {
-     "version": "draft-01",
+     "version": "draft-02",
      "generatedAt": 1746104606044,
      "isComplete": true,
      "tracks": []
@@ -2320,16 +2322,19 @@ Table of Contents
    personalized advertising and reporting while maintaining
    cacheability.  Given a catalog request URI of:
 
- moqt://relay.example.com/sports/catalog?a=1#token=1234&id=bob&event=xyz
+moqt://sports.example.com/catalog?a=1#msf:namespace--catalog&token=1234&id=bob&event=xyz
 
    The fragment parameters (token, id, event) are available for variable
    substitution.  The following catalog template:
 
    {
-     "version": "draft-01",
+     "version": "draft-02",
      "tracks": [
        {
          "name": "video",
+         "codec": "av01.0.08M.10.0.110.09",
+         "bitrate": 5000000,
+         "framerate": 30,
          "packaging": "loc",
          "isLive": true,
          "role": "video",
@@ -2339,8 +2344,11 @@ Table of Contents
          "name": "tracking-%id%",
          "namespace": "advertising-decisions/live-sports/%event%",
          "packaging": "eventtimeline",
+         "isLive": true,
          "eventType": "com.example.iab.vast",
-         "c4m": "%token%"
+         "authInfo": {
+             "cat": "%token%"
+         }
        }
      ]
    }
@@ -2348,10 +2356,13 @@ Table of Contents
    would be resolved by the subscriber as:
 
    {
-     "version": "draft-01",
+     "version": "draft-02",
      "tracks": [
        {
          "name": "video",
+         "codec": "av01.0.08M.10.0.110.09",
+         "bitrate": 5000000,
+         "framerate": 30,
          "packaging": "loc",
          "isLive": true,
          "role": "video",
@@ -2361,8 +2372,11 @@ Table of Contents
          "name": "tracking-bob",
          "namespace": "advertising-decisions/live-sports/xyz",
          "packaging": "eventtimeline",
+         "isLive": true,
          "eventType": "com.example.iab.vast",
-         "c4m": "1234"
+         "authInfo": {
+             "cat": "1234"
+         }
        }
      ]
    }
@@ -2377,7 +2391,7 @@ Table of Contents
    the authorization scheme specification.
 
    {
-     "version": "draft-01",
+     "version": "draft-02",
      "generatedAt": 1746104606044,
      "tracks": [
        {
@@ -2388,6 +2402,7 @@ Table of Contents
          "targetLatency": 2000,
          "role": "video",
          "renderGroup": 1,
+         "altGroup": 1,
          "codec": "av01.0.12M.10.0.110.09",
          "width": 3840,
          "height": 2160,
@@ -2404,7 +2419,8 @@ Table of Contents
          "isLive": true,
          "targetLatency": 2000,
          "role": "video",
-         "renderGroup": 2,
+         "renderGroup": 1,
+         "altGroup": 1,
          "codec": "av01.0.05M.10.0.110.09",
          "width": 1280,
          "height": 720,
@@ -2436,21 +2452,24 @@ Table of Contents
    which is in a different namespace.
 
    {
-     "version": "1",
+     "version": "draft-02",
      "generatedAt": 1746104606044,
      "tracks": [
        {
          "name": "premium-catalog",
+         "isLive": true,
          "packaging": "catalog"
        },
        {
          "name": "free-catalog",
+         "isLive": true,
          "packaging": "catalog"
        },
        {
          "name": "camera33-catalog",
          "namespace": "example.com/blimps-R-us",
          "packaging": "catalog",
+         "isLive": true,
          "label": "Eye From the Sky video feeds"
        }
       ]
@@ -2465,7 +2484,7 @@ Table of Contents
    conventions defined in [MOQLOG] and [MOQMETRICS].
 
    {
-     "version": "draft-01",
+     "version": "draft-02",
      "generatedAt": 1746104606044,
      "tracks": [
        {
@@ -2498,19 +2517,25 @@ Table of Contents
      ],
      "publishTracks": [
        {
-         "namespace": "metrics.moq.arpa/logs-v1/%resourceId%",
+         "namespace": "metrics.moq.arpa/metrics-v1/%resourceId%",
          "name": "4",
+         "isLive": true,
          "packaging": "moqmetrics",
          "role": "metrics",
-         "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+         "authInfo": {
+             "cat": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+         }
        },
        {
          "namespace": "moq-syslog.arpa/logs-v1/%resourceId%",
          "name": "6",
+         "isLive": true,
          "packaging": "moqlog",
          "role": "log",
-         "connectionUri": "moqt://logs.example.com:4443",
-         "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+         "connectionURI": "moqt://logs.example.com:4443",
+         "authInfo": {
+             "cat": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+         }
        }
      ]
    }
@@ -2536,7 +2561,7 @@ Table of Contents
 
    The MOQT Groups and MOQT Objects need to be mapped to MOQT Streams.
    This mapping is defined by the packaging Section 4 type of each
-   track.  Each MOQT Object SHOULD be placed on MOQT sub-group 0, unless
+   track.  Each MOQT Object SHOULD be placed on MOQT Subgroup 0, unless
    otherwise defined by the packaging type.  For LOC-packaged tracks,
    the mapping is signaled per-track via Section 5.2.5 as defined in
    Section 4.1.1.
@@ -2554,8 +2579,8 @@ Table of Contents
    as the starting Group ID.
 
    If a publisher maintains state across a restart and knows the
-   previous Group ID, it SHOULD signal the gap using the MOQT Prior
-   Group ID Gap Extension header.
+   previous Group ID, it SHOULD signal the gap using the
+   PRIOR_GROUP_ID_GAP property [MOQT], Section 10.8.
 
 6.2.  Object Numbering
 
@@ -2602,7 +2627,7 @@ Table of Contents
 
    A media timeline track MAY describe content that lies outside the
    accessibility window defined by the Accessible Window Time
-   Section 5.2.46 track property.  Publishers of media timeline tracks
+   Section 5.2.45 track property.  Publishers of media timeline tracks
    SHOULD trim their media timeline so as to not describe content
    outside of the availability window.  Subscribers of media timeline
    tracks MUST apply any Accessible Window Time constraints before
@@ -2613,8 +2638,7 @@ Table of Contents
    A media timeline track is a JSON [JSON] document.  This document MAY
    be compressed using the MSF_COMPRESSION property (Section 12.1).  The
    document supports two formats: an explicit entry format and a
-   template format.  Publishers MAY combine both formats in a single
-   document.
+   template format.  A media timeline track MUST NOT use both formats.
 
    The media timeline payload describes when a Group is published within
    a track.  While usually regular in cadence, this publication may also
@@ -2676,8 +2700,8 @@ Table of Contents
    publication, the publisher MUST produce a catalog update which
    removes the 'depends' reference of the track that ceased publication.
    If that track then becomes available as VOD content, a new media
-   timeline track must be published to describe the content available in
-   that track.
+   timeline track needs to be published to describe the content
+   available in that track.
 
 7.3.  Media Timeline track updating
 
@@ -2745,9 +2769,9 @@ Table of Contents
    [0, 2002, [0, 0], [1, 0], 1759924158381, 2002]
 
    This template indicates that the first entry has media time 0ms,
-   location [0,0], and wallclock time 1759924158381.  Each subsequent
-   entry increments media time by 2002ms, location by [1,0] (next group,
-   same object), and wallclock by 2002ms.
+   '[0,0]', and wallclock time 1759924158381.  Each subsequent entry
+   increments media time by 2002ms, '[1,0]' (next group, same object),
+   and wallclock by 2002ms.
 
 7.4.2.  Template Immutability
 
@@ -2774,7 +2798,7 @@ Table of Contents
    catalog, to facilitate client selection and parsing.
 
    Event timeline tracks can be present in both the 'tracks' and
-   'publishtracks' arrays, implying that can be both consumed and
+   'publishTracks' arrays, implying that they can be both consumed and
    produced by an endpoint.
 
 8.1.  Event Timeline header data
@@ -2804,6 +2828,7 @@ Table of Contents
      "name": "telemetry",
      "namespace": "live.example.com/flight/1",
      "packaging": "eventtimeline",
+     "isLive": true,
      "eventType": "com.example.dronetelemetry",
      "depends": ["1080p-video"]
    }
@@ -2840,8 +2865,9 @@ Table of Contents
       Array of Numbers, where the first item represents the MOQT GroupID
       and the second item the MOQT Object ID.
 
-   *  A 'data' Object, whose structure is defined by the Section 5.2.6
-      value declared for this track in the Catalog.
+   *  A 'data' field, a JSON value whose structure is defined by the
+      eventType Section 5.2.6 value declared for this track in the
+      Catalog.
 
 8.3.  Event Timeline Catalog requirements
 
@@ -2854,8 +2880,8 @@ Table of Contents
       structure of data contained in the event timeline track.
 
    If an Event Timeline track has an index reference which refers to one
-   or more Media Timeline tracks, then those Media Timline tracks MUST
-   be listed in a 'depends' Section 5.2.15 field within the the Event
+   or more Media Timeline tracks, then those Media Timeline tracks MUST
+   be listed in a 'depends' Section 5.2.15 field within the Event
    Timeline track definition.
 
 8.4.  Event Timeline track updating
@@ -2878,9 +2904,35 @@ Table of Contents
    history, then the publisher SHOULD publish each record in its own
    MOQT Group and use a single MOQT Object per MOQT Group.
 
-8.5.  Event timeline track payload examples
+8.5.  Well-known event timeline types
 
-8.5.1.  Event timeline track with wallclock time indexing
+   Event timelines can carry various types of broadcast metadata
+   synchronized with media content.  The "MSF Event Timeline Types"
+   registry (Section 14.2) is established by this document but has no
+   initial entries; entries are registered by the specifications that
+   define each event type, which are expected to include:
+
+   *  Ad insertion signaling (e.g., SCTE-35 splice points) - see
+      [SCTE35-MSF]
+
+   *  Out-of-band timed-text cues (WebVTT, IMSC1) - see [WebVTT-MSF] and
+      [IMSC1-MSF]
+
+   Other data types, for example sports scores and game state, GPS
+   coordinates and telemetry, active speaker notifications, and custom
+   application-specific metadata, MAY also be carried on event timeline
+   tracks, defined by their own specifications and registered
+   accordingly.
+
+   The packaging format and data structure for each event type is
+   defined by the specification referenced in the registry.  Custom
+   event types not intended for registration SHOULD use Reverse Domain
+   Name Notation (e.g., "com.example.myeventtype") to avoid naming
+   collisions.
+
+8.6.  Event timeline track payload examples
+
+8.6.1.  Event timeline track with wallclock time indexing
 
    This example shows how sports scores and game information might be
    defined in a live sports broadcast.
@@ -2910,7 +2962,7 @@ Table of Contents
        }
    ]
 
-8.5.2.  Event timeline track with MOQT Location indexing
+8.6.2.  Event timeline track with MOQT Location indexing
 
    This example shows drone GPS coordinates synched with the start of
    each Group.
@@ -2926,7 +2978,7 @@ Table of Contents
        }
    ]
 
-8.5.3.  Event timeline track with media time indexing
+8.6.3.  Event timeline track with media time indexing
 
    This example shows an object identification track from a hypothetical
    video indexing system.
@@ -2978,7 +3030,7 @@ Table of Contents
    distributed tracing integration with TraceID, SpanID, and
    InstrumentationScope aligned with OpenTelemetry specifications.
    Implementations MUST follow the object payload format specified in
-   Section 4 of [MOQLOG].
+   [MOQLOG], Section 4.
 
 9.2.  Log track namespace and name
 
@@ -3016,7 +3068,7 @@ Table of Contents
    *  a Section 5.2.37 attribute if logs should be published to a
       different endpoint.
 
-   *  a Section 5.2.38 attribute for publish authorization.
+   *  an Section 5.2.42 attribute for publish authorization.
 
 10.  Metrics track
 
@@ -3036,7 +3088,7 @@ Table of Contents
    [MOQMETRICS] defines two metric value types - Gauge and Counter.
    Both value types support either 64-bit floating point or integer
    representation.  Implementations MUST follow the object payload
-   format specified in Section 3 of [MOQMETRICS].
+   format specified in [MOQMETRICS], Section 3.
 
 10.2.  Metrics track namespace and name
 
@@ -3044,7 +3096,7 @@ Table of Contents
    and converted to bytes according to Section 11.2.
 
    The Track Name identifies the granularity level for the metrics being
-   published, specified as a ASCII decimal representation, where
+   published, specified as an ASCII decimal representation, where
    granularity-level is a value from 0 (Emergency) to 7 (Debug).  Higher
    priority levels (lower numbers) indicate more critical metrics that
    should always be reported.
@@ -3082,33 +3134,7 @@ Table of Contents
    *  a Section 5.2.37 attribute if metrics should be published to a
       different endpoint.
 
-   *  a Section 5.2.38 attribute for publish authorization.
-
-10.5.  Well-known event timeline types
-
-   Event timelines can carry various types of broadcast metadata
-   synchronized with media content.  The "MSF Event Timeline Types"
-   registry (Section 14.2) is established by this document but has no
-   initial entries; entries are registered by the specifications that
-   define each event type, which are expected to include:
-
-   *  Ad insertion signaling (e.g., SCTE-35 splice points) - see
-      [SCTE35-MSF]
-
-   *  Out-of-band timed-text cues (WebVTT, IMSC1) - see [WebVTT-MSF] and
-      [IMSC1-MSF]
-
-   Other data types, for example sports scores and game state, GPS
-   coordinates and telemetry, active speaker notifications, and custom
-   application-specific metadata, MAY also be carried on event timeline
-   tracks, defined by their own specifications and registered
-   accordingly.
-
-   The packaging format and data structure for each event type is
-   defined by the specification referenced in the registry.  Custom
-   event types not intended for registration SHOULD use Reverse Domain
-   Name Notation (e.g., "com.example.myeventtype") to avoid naming
-   collisions.
+   *  a Section 5.2.42 attribute for publish authorization.
 
 11.  Workflow
 
@@ -3116,9 +3142,9 @@ Table of Contents
 
    An MSF URL identifies a MOQT session and an optional sub-resource
    within that session.  It inherits the MOQT URI scheme defined in
-   [MoQTransport] and extends it to add a fragment definition, which
-   defines the type, the namespace and name of the track along with
-   optional key-value attributes.
+   [MOQT] and extends it to add a fragment definition, which defines the
+   type, the namespace and name of the track along with optional key-
+   value attributes.
 
    ; MSF URI Definition
    ; The following rules are imported from RFC 3986:
@@ -3131,7 +3157,7 @@ Table of Contents
    The MOQT specification carries the normative definition of these
    components, along with processing instructions.  They are repeated
    here for clarity.  In the event of any conflict, the definition in
-   [MoQTransport] is authoritative.
+   [MOQT] is authoritative.
 
    *  Scheme: This case-insensitive scheme defines the underlying
       transport.  The client may use either a WebTransport or native
@@ -3153,9 +3179,9 @@ Table of Contents
       client.
 
    This specification registers a fragment type of "msf" in the "MOQT
-   URI Fragment Types" registry established by [MoQTransport] (see
-   Section 14).  This type is required for any URL defining an MSF
-   resource.  The value of this type is the msf-fragment-value.
+   URI Fragment Types" registry established by [MOQT] (see Section 14).
+   This type is required for any URL defining an MSF resource.  The
+   value of this type is the msf-fragment-value.
 
    The msf-fragment is defined by the following ABNF:
 
@@ -3206,7 +3232,7 @@ Table of Contents
 
 11.1.1.  Reserved fragment parameters
 
-   Table 9 defines reserved key names for the parameter portion of the
+   Table 12 defines reserved key names for the parameter portion of the
    msf-fragment.  Keynames are case-sensitive.
 
      +=================+=============================================+
@@ -3218,12 +3244,13 @@ Table of Contents
      +-----------------+---------------------------------------------+
      | location-range  | A subclip defined by a MOQT Location range  |
      +-----------------+---------------------------------------------+
-     | c4m             | A base64 encoded C4M token                  |
+     | cat             | A base64 encoded C4M token                  |
      +-----------------+---------------------------------------------+
      | connection      | Mandates a connection type                  |
      +-----------------+---------------------------------------------+
 
-                                  Table 12
+       Table 12: Reserved key names for the parameter portion of the
+                                msf-fragment
 
    *  wallclock-range - a range defined by start and end wallclock
       times, separated by a "-" dash.  Wallclock time is defined by
@@ -3244,7 +3271,7 @@ Table of Contents
       included in the range.  The "." dot and "-" dash separators MUST
       be omitted when the second value is omitted.
 
-   *  c4m - a base64 encoded token, as defined by [C4M].
+   *  cat - a base64 encoded token, as defined by [C4M].
 
    *  connection - mandates the client to use a particular connection
       type when connecting to the server.  There are two allowed values
@@ -3276,14 +3303,14 @@ Table of Contents
    *  location-range=16-24 (range from Group ID 16 through to and
       including all Objects in Group ID 24)
 
-   *  c4m=gqhkYWxnIGVzaGFyqGR0eXBNhdZ9hdWQAY3VybGZlbWlzcwZleWV2aW5uZWlhdGVwQWNyZW5lY
+   *  cat=gqhkYWxnIGVzaGFyqGR0eXBNhdZ9hdWQAY3VybGZlbWlzcwZleWV2aW5uZWlhdGVwQWNyZW5lY
 
 11.1.2.  MSF Namespace-Name String Encoding
 
-   To represent MoQ Tuples (which are sequences of byte strings) within
-   the URL fragment, MSF uses a specific encoding convention, which is
-   normatively defined by MOQT [MoQTransport] and repeated here for
-   convenience:
+   To represent MOQT Namespace Tuples (which are sequences of byte
+   strings) within the URL fragment, MSF uses a specific encoding
+   convention, which is normatively defined by MOQT [MOQT] and repeated
+   here for convenience:
 
    *  Hierarchy: Each element of the Namespace tuple is rendered in
       order, separated by a single hyphen (-).
@@ -3297,9 +3324,9 @@ Table of Contents
          literally.
 
       -  All other byte values (including hyphens and periods used as
-         data) MUST be percent-encoded using a period (.) followed by
-         two lowercase hexadecimal digits (e.g., a literal hyphen in a
-         name becomes .2d).
+         data) MUST be escaped using a period (.) followed by two
+         lowercase hexadecimal digits (e.g., a literal hyphen in a name
+         becomes .2d).
 
    Note: This encoding ensures that the structural delimiters (- and --)
    remain unambiguous.
@@ -3342,33 +3369,33 @@ Table of Contents
    *  URL pointing at a catalog and supplying a token for the client:
       (linebreaks for display only) moqt://example.com/relay-app/
       relayID#msf:customerID-broadcastID--
-      catalog&c4m=gqhkYWxnIGVzaGFyqGR0eXBNhdZ9hdWQAY3VybGZlbWlzcwZleWV2
+      catalog&cat=gqhkYWxnIGVzaGFyqGR0eXBNhdZ9hdWQAY3VybGZlbWlzcwZleWV2
       aW5uZWlhdGVwQWNyZW5lYnJmcmVqMTIzNDU2NzgwMHZpc3VlZF9hdD0xNzMwNDM
 
    *  URL pointing at a catalog and supplying a token for the client
       along with a separate token for the server: (linebreaks for
       display only) moqt://example.com/relay-app/
       relayID?token=HTRCII74GHFT@JHBCV
-      SW56HKKneH2Dbyq6NHBI2#msf:customerID-broadcastID--catalog&c4m=gqh
+      SW56HKKneH2Dbyq6NHBI2#msf:customerID-broadcastID--catalog&cat=gqh
       kYWxnIGVzaGFyqGR0eXBNhdZ9hdWQAY3VybGZlbWlzcwZleWV2aW5uZWlhdGVwQWN
       yZW5lYnJmcmVqMTIzNDU2NzgwMHZpc3VlZF9hdD0xNzMwNDM
 
 11.2.  Mapping catalog strings to MOQT byte values
 
    MOQT Track Namespace Fields and Track Names are sequences of bytes,
-   compared byte-for-byte, and Section 2.4.1 of [MoQTransport] requires
-   any specification that constrains them to define the canonical
-   mapping into those bytes.  This section defines that mapping for
-   every catalog field that carries a Track Namespace Field or a Track
-   Name: Section 5.2.2, Section 5.2.3, Section 5.2.15, Section 5.2.34
-   and Section 5.2.35.  Extension fields that carry track names or
+   compared byte-for-byte, and [MOQT], Section 2.4.1 requires any
+   specification that constrains them to define the canonical mapping
+   into those bytes.  This section defines that mapping for every
+   catalog field that carries a Track Namespace Field or a Track Name:
+   Section 5.2.2, Section 5.2.3, Section 5.2.15, Section 5.2.34 and
+   Section 5.2.35.  Extension fields that carry track names or
    namespaces MUST use the same mapping.
 
 11.2.1.  Producing bytes from a JSON string
 
    The MOQT byte value corresponding to a JSON string is the UTF-8
    [UTF8] encoding of the sequence of Unicode scalar values obtained by
-   parsing the JSON string per Section 7 of [JSON].  In particular:
+   parsing the JSON string per [JSON], Section 7.  In particular:
 
    *  JSON escape sequences are resolved before encoding.  The string
       "café" and the string "caf\u00e9" denote the same sequence of
@@ -3398,7 +3425,7 @@ Table of Contents
       libraries.)
 
    The catalog document itself MUST be encoded in UTF-8, as required by
-   Section 8.1 of [JSON], and MUST NOT begin with a byte order mark.
+   [JSON], Section 8.1, and MUST NOT begin with a byte order mark.
 
 11.2.2.  Comparing names
 
@@ -3410,8 +3437,8 @@ Table of Contents
    when matching track names or namespaces within a catalog, between a
    catalog and a delta update, or between a catalog and the names
    carried in MOQT control messages.  Note that the JSON string
-   comparison guidance in Section 8.3 of [JSON] yields the same result
-   as byte comparison for strings that satisfy the constraints above.
+   comparison guidance in [JSON], Section 8.3 yields the same result as
+   byte comparison for strings that satisfy the constraints above.
 
 11.2.3.  Consuming names received from MOQT
 
@@ -3435,13 +3462,12 @@ Table of Contents
 
 11.2.4.  Relationship to the serialized form
 
-   The hyphen-and-percent style serialization defined in Section 1.5 of
-   [MoQTransport] and used in MSF URL fragments (Section 11.1.2) is an
-   encoding of the byte values produced by this section, not of the JSON
-   source text.  To render a catalog Full Track Name in that form, an
-   implementation first maps each namespace element and the track name
-   to bytes as defined above, then applies the MOQT Section 1.5 encoding
-   to those bytes.
+   The hyphen-and-period serialization defined in [MOQT], Section 8.8
+   and used in MSF URL fragments (Section 11.1.2) is an encoding of the
+   byte values produced by this section, not of the JSON source text.
+   To render a catalog Full Track Name in that form, an implementation
+   first maps each namespace element and the track name to bytes as
+   defined above, then applies the MOQT encoding to those bytes.
 
 11.2.5.  Examples of string-to-byte mappings
 
@@ -3464,7 +3490,7 @@ Table of Contents
    | "Video"      | 56 69 64 65        | different track from "video"  |
    |              | 6f                 |                               |
    +--------------+--------------------+-------------------------------+
-   | ""           | (empty)            | valid Track Name; invalid     |
+   | ""           | (empty)            | invalid Track Name; invalid   |
    |              |                    | namespace field               |
    +--------------+--------------------+-------------------------------+
    | "\uDEAD"     | none               | invalid; catalog MUST be      |
@@ -3485,8 +3511,8 @@ Table of Contents
    subscribers that the broadcast is complete by taking the following
    steps:
 
-   *  Send a SUBSCRIBE_DONE (See MOQT Section 8.1.2) message for all
-      active tracks using status code 0x2 Track Ended.
+   *  Send a PUBLISH_DONE [MOQT], Section 9.9 message for all active
+      tracks.
 
    *  If the live stream is being converted instantly to a VOD asset,
       then publish an independent (non-delta) catalog update which, for
@@ -3504,14 +3530,14 @@ Table of Contents
    authentication schemes.  Both original publishers and end subscribers
    can independently acquire authorization tokens and present them to
    relays.  Relays use these tokens to authorize whether an end
-   subscriber is permitted to setup the connection, as well as to
+   subscriber is permitted to set up the connection, as well as to
    receive content and/or to send content.
 
 11.5.1.  Discovering Authorization Requirements
 
    End subscribers discover authorization requirements by parsing the
    catalog.  For each track of interest, examine the authInfo field.  If
-   present, the track requires authorization and the subscriber must
+   present, the track requires authorization and the subscriber needs to
    obtain appropriate credentials for one of the schemes listed in the
    field.
 
@@ -3544,7 +3570,7 @@ Table of Contents
    extracts the token value and includes it in the appropriate MOQT
    message.  For example:
 
-moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
+moqt://relay.example.com/moqt#msf:namespace--name&cat=eyJhbGciOiJFZERTQSJ9...
 
    URI parameters provide a convenient mechanism for distributing pre-
    authorized playback links.  The parameter name and format are
@@ -3603,11 +3629,11 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
 
 12.  MSF Properties
 
-   MSF uses MOQT Track Properties and Object Properties (see
-   [MoQTransport]) to signal metadata about MSF tracks and objects.
-   These properties are carried in MOQT control messages and object
-   headers, allowing endpoints to learn track and object characteristics
-   before processing payload data.
+   MSF uses MOQT Track Properties and Object Properties (see [MOQT]) to
+   signal metadata about MSF tracks and objects.  These properties are
+   carried in MOQT control messages and object headers, allowing
+   endpoints to learn track and object characteristics before processing
+   payload data.
 
 12.1.  Compression Signaling
 
@@ -3631,17 +3657,15 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
 
    The compression algorithm values used by both mechanisms are:
 
-               +=======+=======================+===========+
-               | Value | Compression Algorithm | Reference |
-               +=======+=======================+===========+
-               | 0     | None (uncompressed)   | RFC XXXX  |
-               +-------+-----------------------+-----------+
-               | 1     | GZIP                  | [GZIP]    |
-               +-------+-----------------------+-----------+
+             +=======+=======================+===============+
+             | Value | Compression Algorithm | Reference     |
+             +=======+=======================+===============+
+             | 0     | None (uncompressed)   | This document |
+             +-------+-----------------------+---------------+
+             | 1     | GZIP                  | [GZIP]        |
+             +-------+-----------------------+---------------+
 
-                                  Table 14
-
-   Table: MSF Compression Values
+                      Table 14: MSF Compression Values
 
    All MSF implementations MUST support both uncompressed payloads
    (value 0 or property absent) and GZIP compressed payloads (value 1).
@@ -3656,8 +3680,8 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
    compression.
 
    If used, publishers MUST include the MSF_COMPRESSION track property
-   in the PUBLISH message (publisher-initiated flow) or SUBSCRIBE_OK
-   (subscriber-initiated flow).
+   in the PUBLISH message (publisher-initiated flow) or SUBSCRIBE_OK or
+   FETCH_OK (subscriber-initiated flows).
 
    Subscribers MUST check for this property in the corresponding message
    before processing the track payload.
@@ -3692,10 +3716,12 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
 12.2.  Initialization properties
 
    MSF leverages Track properties and Object properties to carry media
-   initialization data.  These properties are registered in the
-   [MoQTransport] Sect 15.8.
+   initialization data.  These properties are registered in the [MOQT],
+   Section 16.8.
 
-   VIDEO_CONFIG type 0x0D AUIDO_CONFIG type 0x0F
+   *  VIDEO_CONFIG type 0x0D
+
+   *  AUDIO_CONFIG type 0x0F
 
    The VIDEO_CONFIG Track & Object property carries the initialization
    data for a track with a track role type of "video".
@@ -3708,8 +3734,8 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
    an initRef Section 5.2.14 Track field referencing an Initialization
    Data List Section 5.1.7 entry with a type of 'track-property'.  If
    used, publishers MUST include the Track property in the PUBLISH
-   message (publisher-initiated flow) or SUBSCRIBE_OK message
-   (subscriber-initiated flow).
+   message (publisher-initiated flow) or SUBSCRIBE_OK or FETCH_OK
+   message (subscriber-initiated flow).
 
    If this initialization data might change over the life of the track,
    then the property MUST be added as an Object property.  Since
@@ -3735,7 +3761,7 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
 
    If used, publishers MUST include the MSF_EVENT_TIMELINE_HEADER track
    property in the PUBLISH message (publisher-initiated flow) or
-   SUBSCRIBE_OK message (subscriber-initiated flow).
+   SUBSCRIBE_OK message or FETCH_OK (subscriber-initiated flow).
 
 13.  Security Considerations
 
@@ -3764,7 +3790,7 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
 14.1.  "MOQT URI Fragment Types" registry
 
    This document registers the following entry in the "MOQT URI Fragment
-   Types" registry established by [MoQTransport], Section 15.3:
+   Types" registry established by [MOQT], Section 16.3:
 
          +===============+=======================+===============+
          | Fragment Type | Description           | Specification |
@@ -3798,7 +3824,7 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
       event type.
 
    The initial contents of this registry are empty.  Entries are added
-   by the specifications that define each event type; see Section 10.5
+   by the specifications that define each event type; see Section 8.5
    for known examples.
 
 14.2.1.  Guidance for Designated Experts
@@ -3834,17 +3860,20 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
 
    The MSF_COMPRESSION Track and Object properties (Section 12.1) use
    Property Type value 0x78.  This value falls within the range that
-   [MoQTransport], Section 15.8 reserves for application-specific use,
-   for which IANA registration is not permitted.  Accordingly, this
-   document requests no IANA action for these Property Type values; they
-   are defined directly by this specification and require no
-   coordination with IANA.
+   [MOQT], Section 8.4 reserves for application-specific use, for which
+   IANA registration is not permitted.  Accordingly, this document
+   requests no IANA action for these Property Type values; they are
+   defined directly by this specification and require no coordination
+   with IANA.
 
-   Implementers should note the caveat in [MoQTransport], Section 15.8
-   regarding this range: because application-specific codepoints are not
-   coordinated across independently developed extensions, an endpoint
-   processing tracks from uncoordinated sources could encounter the same
-   Property Type value used with different semantics.
+   The MSF_EVENT_TIMELINE_HEADER Track property (Section 12.3.1) uses
+   Property Type value 0x7B, which falls within the same range and
+   likewise requires no IANA action.  Implementers should note the
+   caveat in [MOQT], Section 8.4 regarding this range: because
+   application-specific codepoints are not coordinated across
+   independently developed extensions, an endpoint processing tracks
+   from uncoordinated sources could encounter the same Property Type
+   value used with different semantics.
 
 14.4.  "MSF Compression Algorithms" registry
 
@@ -3888,10 +3917,6 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
               RFC 1952, DOI 10.17487/RFC1952, May 1996,
               <https://www.rfc-editor.org/rfc/rfc1952>.
 
-   [IMSC1]    "W3C, TTML Profiles for Internet Media Subtitles and
-              Captions 1.0 (IMSC1)", April 2016,
-              <https://www.w3.org/TR/ttml-imsc1/>.
-
    [ITU-R-TF.460-6]
               ITU-R, "Standard-frequency and time-signal emissions",
               ITU-R Recommendation TF.460-6, February 2002,
@@ -3908,9 +3933,9 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
 
    [LOC]      Zanaty, M., Nandakumar, S., and P. Thatcher, "Low Overhead
               Media Container", Work in Progress, Internet-Draft, draft-
-              ietf-moq-loc-02, 15 March 2026,
+              ietf-moq-loc-05, 2 November 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-moq-loc-
-              02>.
+              05>.
 
    [MIME]     Freed, N., Klensin, J., and T. Hansen, "Media Type
               Specifications and Registration Procedures", BCP 13,
@@ -3930,12 +3955,11 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
               <https://datatracker.ietf.org/doc/html/draft-jennings-moq-
               metrics-03>.
 
-   [MoQTransport]
-              Nandakumar, S., Vasiliev, V., Swett, I., and A. Frindell,
+   [MOQT]     Nandakumar, S., Vasiliev, V., Swett, I., and A. Frindell,
               "Media over QUIC Transport", Work in Progress, Internet-
-              Draft, draft-ietf-moq-transport-19, 6 July 2026,
+              Draft, draft-ietf-moq-transport-23, 2 November 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-moq-
-              transport-19>.
+              transport-23>.
 
    [POSIX]    IEEE and The Open Group, "IEEE Standard for Information
               Technology--Portable Operating System Interface
@@ -3965,15 +3989,17 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
 
-   [RFC8259]  Bray, T., Ed., "The JavaScript Object Notation (JSON) Data
-              Interchange Format", STD 90, RFC 8259,
-              DOI 10.17487/RFC8259, December 2017,
-              <https://www.rfc-editor.org/rfc/rfc8259>.
-
    [RFC9000]  Iyengar, J., Ed. and M. Thomson, Ed., "QUIC: A UDP-Based
               Multiplexed and Secure Transport", RFC 9000,
               DOI 10.17487/RFC9000, May 2021,
               <https://www.rfc-editor.org/rfc/rfc9000>.
+
+   [SCTE214-1]
+              "SCTE 214-1: MPEG DASH for IP-Based Cable Services Part 1
+              - MPD Constraints and Extensions", 2022,
+              <https://www.scte.org/standards/library/catalog/scte-
+              214-1-mpeg-dash-for-ip-based-cable-services-part-1-mpd-
+              constraints-and-extensions/>.
 
    [SecureObjects]
               Jennings, C. F., Nandakumar, S., and R. Barnes, "End-to-
@@ -3991,10 +4017,6 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
               "WebCodecs Codec Registry", September 2024,
               <https://www.w3.org/TR/webcodecs-codec-registry/>.
 
-   [WEBVTT]   "World Wide Web Consortium (W3C), WebVTT: The Web Video
-              Text Tracks Format", April 2019,
-              <https://www.w3.org/TR/webvtt1/>.
-
 15.2.  Informative References
 
    [E2EE-MLS] Jennings, C. F., Nandakumar, S., and R. Barnes, "End-to-
@@ -4007,6 +4029,10 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
               Protocol for Networked Measurement and Control Systems",
               IEEE Std 1588-2019, DOI 10.1109/IEEESTD.2020.9120376, June
               2020, <https://doi.org/10.1109/IEEESTD.2020.9120376>.
+
+   [IMSC1]    "W3C, TTML Profiles for Internet Media Subtitles and
+              Captions 1.0 (IMSC1)", April 2016,
+              <https://www.w3.org/TR/ttml-imsc1/>.
 
    [IMSC1-MSF]
               Law, W. and S. Nandakumar, "IMSC1 Packaging for MOQT
@@ -4038,12 +4064,9 @@ moqt://relay.example.com/moqt#namespace--name&token=eyJhbGciOiJFZERTQSJ9...
               <https://datatracker.ietf.org/doc/html/draft-wilaw-moq-
               scte35-event-timeline-00>.
 
-   [SCTE214-1]
-              "SCTE 214-1: MPEG DASH for IP-Based Cable Services Part 1
-              - MPD Constraints and Extensions", 2022,
-              <https://www.scte.org/standards/library/catalog/scte-
-              214-1-mpeg-dash-for-ip-based-cable-services-part-1-mpd-
-              constraints-and-extensions/>.
+   [WEBVTT]   "World Wide Web Consortium (W3C), WebVTT: The Web Video
+              Text Tracks Format", April 2019,
+              <https://www.w3.org/TR/webvtt1/>.
 
    [WebVTT-MSF]
               Law, W. and S. Nandakumar, "WebVTT Packaging for MOQT
@@ -4058,7 +4081,7 @@ Acknowledgments
 
 Contributors
 
-   The following persons where the co-authors of the individual draft
+   The following persons were the co-authors of the individual draft
    (draft-law-moq-warpstreamingformat) this document is based on:
 
    *  Luke Curley
