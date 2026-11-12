@@ -3455,7 +3455,6 @@ The following persons were the co-authors of the individual draft (draft-law-moq
 * Will Law
 
 # Change Log
-{:numbered="false"}
 
 RFC Editor's Note: Please remove this section prior to publication of a final version of this document.
 
