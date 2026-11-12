@@ -5,8 +5,8 @@
 Media Over QUIC                                                   W. Law
 Internet-Draft                                                    Akamai
 Intended status: Informational                             S. Nandakumar
-Expires: 15 May 2027                                               Cisco
-                                                        11 November 2026
+Expires: 16 May 2027                                               Cisco
+                                                        12 November 2026
 
 
                          MOQT Streaming Format
@@ -49,7 +49,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 15 May 2027.
+   This Internet-Draft will expire on 16 May 2027.
 
 Copyright Notice
 
@@ -3349,7 +3349,15 @@ Table of Contents
 
    is rendered as customer-livestream-123--catalog, and a track named
    "café" in the same namespace is rendered as customer-livestream-123--
-   caf.c3.a9.
+   caf.c3.a9.  This difference between the catalog namespace form and
+   the URL namespace form is intentional: the catalog uses slash-
+   separated namespace fields, whereas URLs use the MOQT namespace-name
+   serialization described above, with hyphen separators and period-
+   based byte escaping.
+
+   Publishers wanting easily readable URLs SHOULD use [A-Za-z0-9_] in
+   namespace fields and track names, since those characters need no
+   escaping.
 
 11.1.3.  Example MSF URLs
 
