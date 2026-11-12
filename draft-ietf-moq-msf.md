@@ -2801,7 +2801,13 @@ track object
 ~~~
 
 is rendered as `customer-livestream-123--catalog`, and a track named `"café"`
-in the same namespace is rendered as `customer-livestream-123--caf.c3.a9`.
+in the same namespace is rendered as `customer-livestream-123--caf.c3.a9`. This difference
+between the catalog namespace form and the URL namespace form is intentional: the catalog
+uses slash-separated namespace fields, whereas URLs use the MOQT namespace-name
+serialization described above, with hyphen separators and period-based byte escaping.
+
+Publishers wanting easily readable URLs SHOULD use [A-Za-z0-9_] in namespace fields and
+track names, since those characters need no escaping.
 
 ### Example MSF URLs
 
