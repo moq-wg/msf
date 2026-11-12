@@ -3454,7 +3454,9 @@ a final version of this document.
   catalog integrity, key material in the catalog, metadata exposure, authorization tokens,
   variable substitution, publish tracks and connection URIs, resource exhaustion,
   timing information and track naming. New normative requirements include: a
-  trackBaseKey MUST NOT be carried in a catalog that is not protected end-to-end;
+  trackBaseKey MUST NOT be carried in a catalog unless the catalog is encrypted
+  end-to-end so that only authorized subscribers can read it, or delivered over a channel
+  that relays cannot observe;
   subscribers MUST bound decompressed object size; subscribers MUST detect catalog
   reference cycles; and catalogs MUST be validated after variable substitution.
 * Aligned with draft-ietf-moq-transport-23 terminology: header extensions are now object
@@ -3543,7 +3545,8 @@ a final version of this document.
 
 * New section defining the mapping of catalog strings to MOQT byte values ({{namemapping}}).
   It specifies UTF-8 encoding with no normalization or case folding, byte-exact comparison,
-  prohibition of unpaired surrogates, NUL and BOM, and comparison of raw MOQT bytes against
+  prohibition of unpaired surrogates and NUL in naming fields, prohibition of a BOM at
+  the beginning of the catalog document, and comparison of raw MOQT bytes against
   mapped catalog bytes.
 * New wallclock time definition ({{wallclock}}): POSIX milliseconds since the epoch, UTC-derived.
   Clocks SHOULD be synchronized via NTP or PTP.
@@ -3559,8 +3562,8 @@ a final version of this document.
 * IANA: a new "MOQT Streaming Format (MSF) Parameters" registry group was added.
   * The "MSF Event Timeline Types" registry is now initially empty and adds Designated Expert
     guidance.
-  * MSF property types use the application-specific range and require no IANA action.
-    Draft -01 requested registration.
+  * MSF_COMPRESSION and MSF_EVENT_TIMELINE_HEADER use the application-specific range
+    and require no IANA action. Draft -01 requested registration.
 
 # Acknowledgments
 {:numbered="false"}
