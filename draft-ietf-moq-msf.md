@@ -3453,3 +3453,77 @@ The following persons were the co-authors of the individual draft (draft-law-moq
 * Suhas Nandakumar
 * Kirill Pugin
 * Will Law
+
+# Change Log
+{:numbered="false"}
+
+RFC Editor's Note: Please remove this section prior to publication of a final version of this document.
+
+## Changes since draft-ietf-moq-msf-01
+
+### Editorial and structural
+
+* Introduction rewritten to describe the problem MSF solves on top of MOQT, summarize what MSF specifies, and clarify that relays do not need to understand MSF.
+* Security Considerations section added (previously a placeholder). It covers catalog integrity, key material in the catalog, metadata exposure, authorization tokens, variable substitution, publish tracks and connection URIs, resource exhaustion, timing information and track naming. New normative requirements include: a trackBaseKey MUST NOT be carried in a catalog that is not protected end-to-end; subscribers MUST bound decompressed object size; subscribers MUST detect catalog reference cycles; and catalogs MUST be validated after variable substitution.
+* Aligned with draft-ietf-moq-transport-23 terminology: header extensions are now object properties, SUBSCRIBE_DONE is now PUBLISH_DONE, and the PRIOR_GROUP_ID_GAP property replaces the Prior Group ID Gap extension. References were updated to current versions of MOQT, LOC, C4M, MOQLOG, MOQMETRICS and PrivacyPassAuth.
+* Catalog examples were corrected, and they now use "draft-02" as the version string.
+
+### Media packaging and transmission
+
+* Added LOC to MOQT Stream mapping ({{loc-stream-mapping}}). Publishers select "group" (default) or "object" mode, signaled via the new streamMapping key, and subscribers MUST support both modes. This replaces the -01 requirement that each Object be mapped to a new MOQT Stream. Objects SHOULD be placed on Subgroup 0 unless the mapping mode indicates otherwise.
+* Added Multi-Variant Fast Track Switching. This consists of publisher packaging requirements ({{packagingforswitching}}) and a subscriber switching procedure with switch-point calculation ({{mvfts}}), and enables switching between alternate tracks with dissimilar keyframe intervals.
+
+### Catalog
+
+* A catalog MAY now reference other catalogs, via a new "catalog" packaging value. Only the top-level catalog track MUST be named "catalog".
+* The catalog track SHOULD have a higher publisher priority than the tracks it describes. Subscribers SHOULD use a higher subscriber priority for the catalog subscription.
+* Added an "update" delta operation for modifying fields of an existing track. This removes the -01 rule that track attributes are immutable once declared. Delta updates MUST now carry generatedAt and no other root fields. Illogical operations, such as adding an existing track or removing an unknown one, MUST cause the catalog to be rejected.
+* Added a table of required fields per (packaging, role) pair ({{requiredfields}}).
+* Track namespace is now a '/'-delimited string that maps to MOQT Track Namespace Fields, with 1-32 non-empty fields. Malformed values invalidate the catalog. A declared namespace replaces, rather than extends, the inherited one. Track names MUST be non-empty, and uniqueness now applies to the Full Track Name.
+* depends entries may now reference a renderGroup (JSON Number) as well as a track name (JSON String). Every entry MUST resolve, or the catalog is invalid.
+* New track fields:
+  * packagingMetadata ({{packagingmetadata}})
+  * accessibleWindowTime ({{accessiblewindowtime}}), which defines a DVR window
+  * keyframeSpacing ({{keyframespacing}})
+* New "data" track role.
+* The track-level token field was removed. Publish tracks now use authInfo. The connectionURI and encryption fields were added to the track field table.
+* initDataList gains "track-property" and "object-property" types. Its placement after the tracks array is relaxed from MUST to SHOULD.
+* cipherSuite is now required only when encryptionScheme is "moq-secure-objects".
+* targetLatency and timeline wallclock values are now defined relative to when content entered the encoder. The generatedAt restriction for non-live content was removed.
+* Variable substitution: the restriction on variable-name characters was removed, and '+', '/', '=' and '.' are now permitted in values. Fragment pairs are split at the first '='. Name mapping is applied after substitution.
+
+### Media timeline
+
+* A media timeline track MUST NOT mix the explicit and template formats (-01 allowed both). Entries are ordered by media time, and Group IDs need not be sequential.
+* Catalog requirements now use the packaging field and drop the mimeType requirement. depends may reference renderGroups, with rules on when to reference a renderGroup versus individual tracks. Publishers MUST update depends when a referenced track ceases.
+* Publishers SHOULD trim timelines to the accessible window, and subscribers MUST apply accessibleWindowTime constraints.
+
+### Event timeline
+
+* Index keys changed from lowercase ('t', 'l', 'm') to uppercase ('T', 'L', 'M'). The 'data' field may be any JSON value.
+* Added event timeline header data, carried in the new MSF_EVENT_TIMELINE_HEADER track property ({{eventtimeline-header-track-property}}).
+* depends and mimeType are no longer required. depends MUST list any media timeline tracks that the index references.
+* The mapping of records to Groups is now defined per eventType. Sequential data SHOULD use independent objects at group start, and history-independent data SHOULD use one record per Group.
+* Event timeline tracks may appear in publishTracks.
+* Added a media-time indexing example.
+* Well-known event types ({{wellknowneventtypes}}) moved into this section.
+
+### Log and metrics tracks
+
+* Namespaces are now taken from the catalog namespace field via the standard name mapping. Track names are the ASCII decimal priority or granularity level (previously a single binary byte).
+* Publish authorization uses authInfo instead of token.
+
+### Workflow
+
+* New section defining the mapping of catalog strings to MOQT byte values ({{namemapping}}). It specifies UTF-8 encoding with no normalization or case folding, byte-exact comparison, prohibition of unpaired surrogates, NUL and BOM, and comparison of raw MOQT bytes against mapped catalog bytes.
+* New wallclock time definition ({{wallclock}}): POSIX milliseconds since the epoch, UTC-derived. Clocks SHOULD be synchronized via NTP or PTP.
+* The reserved fragment parameter "c4m" was renamed "cat". The namespace-name encoding section now clarifies its relationship to catalog strings.
+* Ending a live broadcast now uses PUBLISH_DONE.
+
+### MSF properties and IANA
+
+* MSF_COMPRESSION was assigned type 0x78 (track and object). It may also be carried in FETCH_OK.
+* New initialization properties ({{initialization-properties}}): VIDEO_CONFIG (0x0D) and AUDIO_CONFIG (0x0F) carry init data as track or object properties.
+* IANA: a new "MOQT Streaming Format (MSF) Parameters" registry group was added.
+  * The "MSF Event Timeline Types" registry is now initially empty and adds Designated Expert guidance.
+  * MSF property types use the application-specific range and require no IANA action. Draft -01 requested registration.
