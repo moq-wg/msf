@@ -6929,7 +6929,9 @@ understand MSF.<a href="#appendix-A.1.1-1.1.1" class="pilcrow">¶</a></p>
 catalog integrity, key material in the catalog, metadata exposure, authorization tokens,
 variable substitution, publish tracks and connection URIs, resource exhaustion,
 timing information and track naming. New normative requirements include: a
-trackBaseKey <span class="bcp14">MUST NOT</span> be carried in a catalog that is not protected end-to-end;
+trackBaseKey <span class="bcp14">MUST NOT</span> be carried in a catalog unless the catalog is encrypted
+end-to-end so that only authorized subscribers can read it, or delivered over a channel
+that relays cannot observe;
 subscribers <span class="bcp14">MUST</span> bound decompressed object size; subscribers <span class="bcp14">MUST</span> detect catalog
 reference cycles; and catalogs <span class="bcp14">MUST</span> be validated after variable substitution.<a href="#appendix-A.1.1-1.2.1" class="pilcrow">¶</a></p>
 </li>
@@ -7124,7 +7126,8 @@ binary byte).<a href="#appendix-A.1.6-1.1.1" class="pilcrow">¶</a></p>
 <li class="normal" id="appendix-A.1.7-1.1">
               <p id="appendix-A.1.7-1.1.1">New section defining the mapping of catalog strings to MOQT byte values (<a href="#namemapping" class="auto internal xref">Section 11.2</a>).
 It specifies UTF-8 encoding with no normalization or case folding, byte-exact comparison,
-prohibition of unpaired surrogates, NUL and BOM, and comparison of raw MOQT bytes against
+prohibition of unpaired surrogates and NUL in naming fields, prohibition of a BOM at
+the beginning of the catalog document, and comparison of raw MOQT bytes against
 mapped catalog bytes.<a href="#appendix-A.1.7-1.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="appendix-A.1.7-1.2">
@@ -7162,8 +7165,8 @@ AUDIO_CONFIG (0x0F) carry init data as track or object properties.<a href="#appe
 guidance.<a href="#appendix-A.1.8-1.3.2.1.1" class="pilcrow">¶</a></p>
 </li>
                 <li class="normal" id="appendix-A.1.8-1.3.2.2">
-                  <p id="appendix-A.1.8-1.3.2.2.1">MSF property types use the application-specific range and require no IANA action.
-Draft -01 requested registration.<a href="#appendix-A.1.8-1.3.2.2.1" class="pilcrow">¶</a></p>
+                  <p id="appendix-A.1.8-1.3.2.2.1">MSF_COMPRESSION and MSF_EVENT_TIMELINE_HEADER use the application-specific range
+and require no IANA action. Draft -01 requested registration.<a href="#appendix-A.1.8-1.3.2.2.1" class="pilcrow">¶</a></p>
 </li>
               </ul>
 </li>
