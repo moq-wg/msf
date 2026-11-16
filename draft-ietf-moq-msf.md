@@ -127,8 +127,8 @@ audio, video and associated timed data. MSF specifies:
 * how subscribers switch between alternate tracks with consistent group durations,
   for adaptive bitrate playback ({{altgroup}}), as well as across tracks with variable
   group durations ({{mvfts}});
-* how ({{contentprotection}}) and token-based authorization ({{authorization}}) are
-  signalled.
+* how content protection ({{contentprotection}}) and token-based authorization
+  ({{authorization}}) are signalled.
 * how to initiate subscribers to publish tracks, such as might be used to report logs
   and metrics to an analytics system ({{logtrack}}, {{metricstrack}});
 * a URL format for addressing MSF content, and procedures for starting and
